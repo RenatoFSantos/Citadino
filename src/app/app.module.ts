@@ -1,10 +1,10 @@
 import { NgModule, ErrorHandler } from '@angular/core';
 import { IonicApp, IonicModule, IonicErrorHandler } from 'ionic-angular';
 import { MyApp } from './app.component';
-import { TabsPage } from '../pages/tabs/tabs';
-import { VitrinePage } from '../pages/vitrine/vitrine';
-import { GuiaPage } from '../pages/guia/guia';
-import { MensagemPage } from '../pages/mensagem/mensagem';
+import { TabsPage } from './../pages/tabs/tabs';
+import { VitrinePage } from './../pages/vitrine/vitrine';
+import { GuiaPage } from './../pages/guia/guia';
+import { MensagemPage } from './../pages/mensagem/mensagem';
 
 @NgModule({
   declarations: [

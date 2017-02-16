@@ -1,17 +1,16 @@
-import { Component } from '@angular/core';
 
+import { Component } from '@angular/core';
 import { NavController } from 'ionic-angular';
-import { VitrinePage } from '../pages/vitrine/vitrine';
-import { GuiaPage } from '../pages/guia/guia';
-import { MensagemPage } from '../pages/mensagem/mensagem';
+import { MensagemPage } from './../mensagem/mensagem';
+import { GuiaPage } from './../guia/guia';
+import { VitrinePage } from './../vitrine/vitrine';
 
 @Component({
   selector: 'page-tabs',
   templateUrl: 'tabs.html'
 })
 export class TabsPage {
-  // this tells the tabs component which Pages
-  // should be each tab's root Page
+
   tab1Root: any = VitrinePage;
   tab2Root: any = GuiaPage;
   tab3Root: any = MensagemPage;
