@@ -15,7 +15,9 @@ import { MensagemPage } from '../pages/mensagem/mensagem';
     MensagemPage
   ],
   imports: [
-    IonicModule.forRoot(MyApp)
+    IonicModule.forRoot(MyApp, {
+      mode: 'md'
+    })
   ],
   bootstrap: [IonicApp],
   entryComponents: [

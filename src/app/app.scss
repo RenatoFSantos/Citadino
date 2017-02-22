@@ -1,16 +1,39 @@
-// http://ionicframework.com/docs/v2/theming/
+.platform-ios ion-navbar {
+    margin-top: 15px;
+    color: orangered;
+}
 
+.platform-android ion-navbar {
+    top: 0px;
+}
 
-// App Global Sass
-// --------------------------------------------------
-// Put style rules here that you want to apply globally. These
-// styles are for the entire app and not just one component.
-// Additionally, this file can be also used as an entry point
-// to import other Sass files to be included in the output CSS.
-//
-// Shared Sass variables, which can be used to adjust Ionic's
-// default Sass variables, belong in "theme/variables.scss".
-//
-// To declare rules for a specific mode, create a child rule
-// for the .md, .ios, or .wp mode classes. The mode class is
-// automatically applied to the <body> element in the app.
+img.icocit {
+    width:35px; 
+    height:35px; 
+    float: left;
+}
+
+ion-title.citadino {
+  position: absolute;
+  top: 0;
+  left: 0;
+  margin-top: 2px;
+  padding-left: 30px;
+  width: 100%;
+  height: 100%;
+  text-align: left;
+}
+
+@font-face {
+  font-family: 'Lato';
+  font-weight: 400;
+  font-style: normal;
+  src: url('/assets/fonts/Lato-regular/Lato-regular.eot');
+  src: url('/assets/fonts/Lato-regular/Lato-regular.eot?#iefix') format('embedded-opentype'),
+       local('Lato Regular'),
+       local('Lato-regular'),
+       url('/assets/fonts/Lato-regular/Lato-regular.woff2') format('woff2'),
+       url('/assets/fonts/Lato-regular/Lato-regular.woff') format('woff'),
+       url('/assets/fonts/Lato-regular/Lato-regular.ttf') format('truetype'),
+       url('/assets/fonts/Lato-regular/Lato-regular.svg#Lato') format('svg');
+}
