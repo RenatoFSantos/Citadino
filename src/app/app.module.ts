@@ -1,3 +1,4 @@
+import { CtdHeaderComponent } from './../components/ctd-header/ctd-header';
 import { NgModule, ErrorHandler } from '@angular/core';
 import { IonicApp, IonicModule, IonicErrorHandler } from 'ionic-angular';
 import { MyApp } from './app.component';
@@ -12,7 +13,8 @@ import { MensagemPage } from '../pages/mensagem/mensagem';
     TabsPage,
     VitrinePage,
     GuiaPage,
-    MensagemPage
+    MensagemPage,
+    CtdHeaderComponent
   ],
   imports: [
     IonicModule.forRoot(MyApp, {
@@ -25,7 +27,8 @@ import { MensagemPage } from '../pages/mensagem/mensagem';
     TabsPage,
     VitrinePage,
     GuiaPage,
-    MensagemPage
+    MensagemPage,
+    CtdHeaderComponent
   ],
   providers: [{provide: ErrorHandler, useClass: IonicErrorHandler}]
 })

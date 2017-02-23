@@ -1,5 +1,15 @@
 page-vitrine {
-    ion-card.guias {
-        padding-top:86px;
+    ion-card.ctd_card {
+        padding: 0px;
+        border-radius: 10px;
+        line-height: 20%;
     }
+
+    .card-title-md {
+        margin: 0 auto;
+        line-height: 40%;
+        font-size: 2.0rem;
+        padding: 5px 0 5px 0;
+    }
+
 }

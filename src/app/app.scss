@@ -1,5 +1,6 @@
 .platform-ios ion-navbar {
-    margin-top: 15px;
+    margin-top: 0px;
+    height: 40px;
     color: orangered;
 }
 
@@ -22,6 +23,10 @@ ion-title.citadino {
   width: 100%;
   height: 100%;
   text-align: left;
+}
+
+ctd-background {
+    background-color: #C2B49A;
 }
 
 @font-face {
