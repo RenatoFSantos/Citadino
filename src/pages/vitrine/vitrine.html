@@ -3,46 +3,125 @@
         <ctd-header></ctd-header>
     </ion-navbar>
 </ion-header>
+
 <ion-content>
 
     <!-- ANUNCIO TIPO 1 -->
 
-    <ion-card class="ctd_card">
-        <ion-item>
+    <ion-card class="ctd-card">
+        <ion-item (click)="openPub()">
             <ion-avatar item-left>
-                <img src="../assets/img/ctd_avatar_1.png">
+                <img src="assets/img/ctd_avatar_1.png">
             </ion-avatar>
             <h2>Extra Supermercados</h2>
             <p>Veja nossas promoções do dia!</p>
         </ion-item>
-        <img src="../assets/img/ctd_anuncio_1.png" />
+        <img src="assets/img/ctd_anuncio_1.png" (click)="openPub()" />
+        <ion-buttons start>
+            <ctd-buttons></ctd-buttons>
+            <button ion-button icon-only clear color="ctd-button" (click)="openDetalhe(1)">
+                <ion-icon name="alert"></ion-icon>
+            </button>
+        </ion-buttons>
     </ion-card>
 
     <!-- ANUNCIO TIPO 2 -->
 
-    <ion-card class="ctd_card">
+    <!--
+
+    <ion-card class="ctd-card">
         <ion-item>
              <ion-avatar item-left>
-                <img src="../assets/img/ctd_avatar_2.png">
+                <img src="assets/img/ctd_avatar_2.png">
             </ion-avatar>
            <h2>CITADINO</h2>
             <p>O app que faltava!</p>
         </ion-item>
-        <img src="../assets/img/ctd_anuncio_2.jpg" />
-        <ion-card-content>
-            Aproveite as oportunidades que o Citadino traz para o seu negócio e aumente suas vendas.
-        </ion-card-content>
+        <img src="assets/img/ctd_anuncio_2.jpg" />
+        <ion-buttons start>
+            <ctd-buttons></ctd-buttons>
+             <button ion-button icon-only clear color="ctd-button" (click)="openDetalhe(2)">
+                <ion-icon name="alert"></ion-icon>
+            </button>
+       </ion-buttons>
+    </ion-card>
+
+    -->
+
+    <ion-card class="ctd-card">
+        <ion-item>
+             <ion-avatar item-left>
+                <img src="assets/img/ctd_avatar_3.png">
+            </ion-avatar>
+           <h2>Scrap Fashion</h2>
+            <p>Decorando festas e realizando sonhos</p>
+        </ion-item>
+        <img src="assets/img/ctd_anuncio_3.jpg" />
+        <ion-buttons start>
+            <ctd-buttons></ctd-buttons>
+             <button ion-button icon-only clear color="ctd-button" (click)="openDetalhe(2)">
+                <ion-icon name="alert"></ion-icon>
+            </button>
+        </ion-buttons>
     </ion-card>
 
     <!-- ANUNCIO TIPO 3 -->
 
-    <ion-card class="ctd_card">
-        <ion-card-content>
-            <ion-card-title>
-            Extra Supermercados
-            </ion-card-title>
-            <p>Veja nossas promoções do dia!</p>
+    <ion-card class="ctd-card">
+        <ion-item>
+             <ion-thumbnail item-left>
+                <img src="assets/img/thumb_200x200_midilabs.jpg">
+            </ion-thumbnail>
+           <h2>MIDLABS</h2>
+           <p>Transformando ideias em<br>soluções ideais</p>
+        </ion-item>
+        <ion-card-content class="ctd-faixa">
+            (32) 3271-3576 / 9 8416-8592
         </ion-card-content>
-        <img src="../assets/img/ctd_anuncio_1.png" />      
+        <ion-buttons start>
+            <ctd-buttons></ctd-buttons>
+            <button ion-button icon-only clear color="ctd-button" (click)="openDetalhe(3)">
+                <ion-icon name="alert"></ion-icon>
+            </button>
+        </ion-buttons>
+    </ion-card>
+
+    <!-- ANUNCIO TIPO 4 -->
+
+    <ion-card class="ctd-card">
+        <ion-item>
+             <ion-thumbnail item-left>
+                <img src="assets/img/thumb_200x200_kaluana.jpg">
+            </ion-thumbnail>
+           <h2>Kaluanã</h2>
+           <p>O melhor crepe da região</p>
+           <ion-card-content>
+                (32) 3271-3576 / 9 8416-8592
+           </ion-card-content>
+        </ion-item>
+        <ion-buttons start>
+            <ctd-buttons></ctd-buttons>
+            <button ion-button icon-only clear color="ctd-button" (click)="openDetalhe(4)">
+                <ion-icon name="alert"></ion-icon>
+            </button>
+        </ion-buttons>
+    </ion-card>
+
+    <!-- ANUNCIO TIPO 5 -->
+
+    <ion-card class="ctd-card">
+        <ion-item>
+           <ion-avatar item-left>
+               <img src="assets/img/ctd_avatar_4.png">
+           </ion-avatar>
+           <h2>Wagner Pintor</h2>
+           <p>(32) 3271-1201 / 9 9875-9898</p>
+        </ion-item>
+        <ion-buttons start>
+            <ctd-buttons></ctd-buttons>
+            <button ion-button icon-only clear color="ctd-button" (click)="openDetalhe(5)">
+                <ion-icon name="alert"></ion-icon>
+            </button>
+        </ion-buttons>
     </ion-card>
 </ion-content>

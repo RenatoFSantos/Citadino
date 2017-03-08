@@ -25,6 +25,32 @@ ion-title.citadino {
   text-align: left;
 }
 
+ion-toolbar {
+    padding: 0px !important;
+    border: 0px solid #fff !important;
+}
+
+.menu {
+    background-color: #2B3A42;
+}
+
+.menu-cabecalho {
+    color: #fff;
+    background-color: #FFA214;
+
+}
+
+.menu-opcoes {
+    color: #fff;
+    background-color: #3F5765;
+}
+
+.midilabs {
+    color: #fff;
+    font-variant: small-caps; 
+    font-size: 80%;
+}
+
 @font-face {
   font-family: 'Lato';
   font-weight: 400;

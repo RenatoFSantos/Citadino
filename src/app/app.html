@@ -1,1 +1,35 @@
-<ion-nav [root]="rootPage"></ion-nav>
+<ion-menu [content]="menuContent" side="left" id="menu-1" persistent="true">
+  <ion-content class="menu">
+    <ion-toolbar>
+        <ion-item class="menu-cabecalho">
+            <ion-avatar item-left>
+                <img src="/assets/img/adam.jpg">
+            </ion-avatar>
+            <h2>Gustavo</h2>
+        </ion-item>
+    </ion-toolbar>    
+    <ion-list>
+        <button class="menu-opcoes" ion-item *ngFor="let p of pages" (click)="openPage(p, 'left')">
+            <ion-icon name="{{p.icon}}"></ion-icon>
+            {{ p.title }}
+        </button>
+    </ion-list>
+    <ion-item-group>
+    <ion-list>
+        <button class="menu-opcoes" ion-item *ngFor="let p of subpages" (click)="openPage(p, 'left')">
+            <ion-icon name="{{p.icon}}"></ion-icon>
+            {{ p.title }}
+        </button>
+    </ion-list>
+    </ion-item-group>
+    <div style="text-align: center;">
+        <img src="/assets/img/midilabs_80x80.png">
+        <p class="midilabs">TRANSFORMANDO IDEIAS EM SOLUÇÕES IDEAIS</p>
+    </div>
+  
+  </ion-content>
+  
+
+</ion-menu>
+
+<ion-nav swipeBackEnabled="true" #menuContent [root]="rootPage"></ion-nav>
