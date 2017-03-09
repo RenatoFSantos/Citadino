@@ -10,17 +10,54 @@
         <img src="assets/img/smartsite_320x320_scrapfashion.png" (click)="openPub()" />
         <ion-buttons start>
             <ctd-buttons></ctd-buttons>
-            <button ion-button icon-only clear color="ctd-button" (click)="openDetalhe(1)">
-                <ion-icon name="alert"></ion-icon>
-            </button>
         </ion-buttons>
         <ion-item (click)="openPub()">
             <ion-avatar item-left>
                 <img src="assets/img/thumb_200x200_scrap.jpg">
             </ion-avatar>
             <h2>SCRAP FASHION</h2>
-            <p>Atendimento de segunda a sexta de 09:00 as 19:00h</p>
+            <p class="ctd-70"><ion-icon name="alarm"></ion-icon> De segunda a sexta de 09:00 as 19:00h</p>
         </ion-item>
     </ion-card>
-  
+    <p class="titulo">SOBRE</p>
+    <p class="conteudo">
+    Somos especializados em levar nossos clientes para um mundo de fantasias e proporcionar as alegrias de um conto de fadas. Venha conferir os mais variados enfeites, convites e temas para sua festa.
+    </p>
+    <ion-item>
+        <p>PRODUTOS</p>
+        <p>Conheça nossos produtos...</p>
+        <button ion-button small item-right icon-left>
+            <ion-icon name="book"></ion-icon>
+            Produtos
+        </button>
+    </ion-item>
+    <p class="titulo">FALE CONOSCO</p>
+    <ion-item-group>
+        <ion-item>
+            <ion-icon name="chatbubbles"></ion-icon>
+            Envie-nos uma mensagem
+            <button ion-button item-right icon-center color="light">
+                <ion-icon name="chatbubbles"></ion-icon>
+            </button>             
+        </ion-item>
+        <ion-item>
+            <ion-icon name="call"></ion-icon>
+            (32) 9 9965-8973
+            <button ion-button item-right icon-center color="light">
+                <ion-icon name="call"></ion-icon>
+            </button>             
+        </ion-item>
+        <ion-item>
+            <ion-icon name="mail"></ion-icon>
+            contato.scrapfashion@gmail.com
+        </ion-item>
+        <ion-item>
+            <ion-icon name="pin"></ion-icon>
+            Rua Barão de Catas Altas, 240 - Bicas/MG
+        </ion-item>
+        <ion-item>
+            <ion-icon name="globe"></ion-icon>
+            www.scrapfashion.com.br
+        </ion-item>
+    </ion-item-group>
 </ion-content>

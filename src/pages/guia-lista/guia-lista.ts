@@ -1,3 +1,4 @@
+import { SsScrapfashionPage } from './../ss-scrapfashion/ss-scrapfashion';
 import { Component } from '@angular/core';
 import { NavController, NavParams } from 'ionic-angular';
 
@@ -19,4 +20,12 @@ export class GuiaListaPage {
     console.log('ionViewDidLoad GuiaListaPage');
   }
 
+  openSmartSite(site: string) {
+    switch(site) {
+      case 'scrapfashion': 
+        this.navCtrl.push(SsScrapfashionPage);
+      default: {
+      }
+    }
+  }
 }
