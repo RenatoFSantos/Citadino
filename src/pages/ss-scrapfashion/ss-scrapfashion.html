@@ -1,0 +1,26 @@
+<ion-header>
+    <ion-navbar color="ctd-navbar">
+        <ctd-header></ctd-header>
+    </ion-navbar>
+</ion-header>
+
+
+<ion-content>
+    <ion-card class="ctd-card">
+        <img src="assets/img/smartsite_320x320_scrapfashion.png" (click)="openPub()" />
+        <ion-buttons start>
+            <ctd-buttons></ctd-buttons>
+            <button ion-button icon-only clear color="ctd-button" (click)="openDetalhe(1)">
+                <ion-icon name="alert"></ion-icon>
+            </button>
+        </ion-buttons>
+        <ion-item (click)="openPub()">
+            <ion-avatar item-left>
+                <img src="assets/img/thumb_200x200_scrap.jpg">
+            </ion-avatar>
+            <h2>SCRAP FASHION</h2>
+            <p>Atendimento de segunda a sexta de 09:00 as 19:00h</p>
+        </ion-item>
+    </ion-card>
+  
+</ion-content>

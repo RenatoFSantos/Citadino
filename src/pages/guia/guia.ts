@@ -1,3 +1,4 @@
+import { GuiaListaPage } from './../guia-lista/guia-lista';
 import { Component } from '@angular/core';
 import { NavController, NavParams } from 'ionic-angular';
 
@@ -19,4 +20,13 @@ export class GuiaPage {
     console.log('ionViewDidLoad GuiaPage');
   }
 
+  openGuiaLista(guia: string) {
+    switch(guia) {
+      case 'bares':
+        this.navCtrl.push(GuiaListaPage);
+        break;
+      default:
+        break;
+    } 
+  }
 }

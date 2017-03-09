@@ -1,3 +1,5 @@
+import { SsScrapfashionPage } from './../pages/ss-scrapfashion/ss-scrapfashion';
+import { GuiaListaPage } from './../pages/guia-lista/guia-lista';
 import { VitrineAnuncio5Page } from './../pages/vitrine-anuncio-5/vitrine-anuncio-5';
 import { VitrineAnuncio4Page } from './../pages/vitrine-anuncio-4/vitrine-anuncio-4';
 import { VitrineAnuncio3Page } from './../pages/vitrine-anuncio-3/vitrine-anuncio-3';
@@ -29,7 +31,9 @@ import { MensagemPage } from '../pages/mensagem/mensagem';
     VitrineAnuncio2Page,
     VitrineAnuncio3Page,
     VitrineAnuncio4Page,
-    VitrineAnuncio5Page
+    VitrineAnuncio5Page,
+    GuiaListaPage,
+    SsScrapfashionPage
   ],
   imports: [
     IonicModule.forRoot(MyApp, {
@@ -50,7 +54,9 @@ import { MensagemPage } from '../pages/mensagem/mensagem';
     VitrineAnuncio2Page,
     VitrineAnuncio3Page,
     VitrineAnuncio4Page,
-    VitrineAnuncio5Page
+    VitrineAnuncio5Page,
+    GuiaListaPage,
+    SsScrapfashionPage
   ],
   providers: [{provide: ErrorHandler, useClass: IonicErrorHandler}]
 })

@@ -1,3 +1,4 @@
+import { SsScrapfashionPage } from './../ss-scrapfashion/ss-scrapfashion';
 import { VitrineAnuncio5Page } from './../vitrine-anuncio-5/vitrine-anuncio-5';
 import { VitrineAnuncio4Page } from './../vitrine-anuncio-4/vitrine-anuncio-4';
 import { VitrineAnuncio3Page } from './../vitrine-anuncio-3/vitrine-anuncio-3';
@@ -35,6 +36,15 @@ export class VitrinePage {
       this.navCtrl.push(VitrineAnuncio4Page);
     } else if (tipo==5) {
       this.navCtrl.push(VitrineAnuncio5Page);
+    }
+  }
+
+  openSmartSite(site: string) {
+    switch(site) {
+      case 'scrapfashion': 
+        this.navCtrl.push(SsScrapfashionPage);
+      default: {
+      }
     }
   }
 
