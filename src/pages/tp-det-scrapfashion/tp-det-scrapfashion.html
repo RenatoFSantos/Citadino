@@ -1,0 +1,44 @@
+<ion-header>
+    <ion-navbar color="ctd-navbar">
+        <ctd-header></ctd-header>
+    </ion-navbar>
+</ion-header>
+
+<ion-content>
+    <ion-item-group>
+        <ion-item>
+           <ion-thumbnail item-left>
+              <img src="assets/img/thumb_200x200_scrapcaixa.jpg">
+           </ion-thumbnail>
+           <h2>Pote Galinha Pintadinha</h2>
+           <p class="preco">R$10,00 und.</p>
+        </ion-item>
+        <p class="conteudo">
+          Papel 240grs, dupla face, tamanho 10x5cm, pote de vidro. Papel 240grs, dupla face, tamanho 10x5cm, pote de vidro.
+        </p>
+        <hr>         
+        <ion-item>
+          <ion-label>Selecione a quantidade:</ion-label>
+          <ion-select [(ngModel)]="gaming">
+            <ion-option value="1" selected="true">1</ion-option>
+            <ion-option value="2">2</ion-option>
+            <ion-option value="3">3</ion-option>
+            <ion-option value="4">4</ion-option>
+            <ion-option value="5">5</ion-option>
+            <ion-option value="10">10</ion-option>
+          </ion-select>
+        </ion-item>
+        <ion-item>
+          <ion-buttons start>
+              <ctd-buttons></ctd-buttons>
+          </ion-buttons>
+          <ion-buttons end>
+              <button ion-button item-right icon-left color="light">
+                  <ion-icon name="checkmark"></ion-icon>
+                  Confirma
+              </button>
+          </ion-buttons>
+        </ion-item>
+    </ion-item-group>
+   
+</ion-content>
