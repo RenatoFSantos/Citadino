@@ -36,7 +36,8 @@ import { MensagemPage } from '../pages/mensagem/mensagem';
     SsScrapfashionPage
   ],
   imports: [
-    IonicModule.forRoot(MyApp, {
+    IonicModule.forRoot(MyApp, 
+    {
       mode: 'md'
     })
   ],
