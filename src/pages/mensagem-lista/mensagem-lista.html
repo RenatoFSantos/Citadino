@@ -1,0 +1,42 @@
+<ion-header>
+    <ion-navbar color="ctd-navbar">
+        <ctd-header></ctd-header>
+    </ion-navbar>
+</ion-header>
+
+<ion-content>
+     <ion-item-group>
+           <ion-item>
+            <ion-avatar item-left>
+                <img src="assets/img/thumb_200x200_cafedalu.jpg">
+            </ion-avatar>
+            <h2>Café da Lú</h2>
+            <p>O melhor café da cidade</p>
+            <button ion-button clear item-right (click)="openMensagemPage()">
+             <ion-icon ios="ios-arrow-forward" md="md-arrow-forward"></ion-icon>
+            </button>
+        </ion-item>
+        <ion-item-divider color="light"></ion-item-divider>
+        <ion-item detail-push>
+            <ion-avatar item-left>
+                <img src="assets/img/thumb_200x200_scrap.jpg">
+            </ion-avatar>
+            <h2>Scrap Fashion</h2>
+            <p>Decorando festas e realizando sonhos</p>
+            <button ion-button clear item-right (click)="openMensagemPage()"> 
+               <ion-icon ios="ios-arrow-forward" md="md-arrow-forward"></ion-icon>
+            </button>
+        </ion-item>
+        <ion-item-divider color="light"></ion-item-divider>
+        <ion-item detail-push>
+            <ion-avatar item-left>
+                <img src="assets/img/thumb_200x200_midilabs.jpg">
+            </ion-avatar>
+            <h2>MIDLABS</h2>
+            <p>Transformando ideias em<br>soluções ideais</p>
+            <button ion-button clear item-right (click)="openMensagemPage()">
+               <ion-icon ios="ios-arrow-forward" md="md-arrow-forward"></ion-icon>
+            </button>
+        </ion-item>    
+    </ion-item-group>
+</ion-content>
