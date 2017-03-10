@@ -23,7 +23,7 @@
         <ion-item>
           <ion-label>Quantidade:</ion-label>
           <ion-select [(ngModel)]="gaming" placeholder="0">
-            <ion-option value="1" selected="true">1</ion-option>
+            <ion-option value="1" selected>1</ion-option>
             <ion-option value="2">2</ion-option>
             <ion-option value="3">3</ion-option>
             <ion-option value="4">4</ion-option>
@@ -37,7 +37,7 @@
         </ion-item>
         <ion-item>
           <ion-buttons end>
-              <button ion-button item-right icon-left color="primary">
+              <button ion-button item-right icon-left color="primary" (click)="openPedido()">
                   <ion-icon name="checkmark"></ion-icon>
                   Confirma
               </button>

@@ -1,3 +1,4 @@
+import { TpScrapfashionPage } from './../tp-scrapfashion/tp-scrapfashion';
 import { Component } from '@angular/core';
 import { NavController, NavParams } from 'ionic-angular';
 
@@ -19,4 +20,12 @@ export class TpPedScrapfashionPage {
     console.log('ionViewDidLoad TpPedScrapfashionPage');
   }
 
+  openTabelaPreco(site: string) {
+    switch(site) {
+      case 'scrapfashion':
+        this.navCtrl.push(TpScrapfashionPage);
+      default:
+        break;
+    } 
+  }
 }

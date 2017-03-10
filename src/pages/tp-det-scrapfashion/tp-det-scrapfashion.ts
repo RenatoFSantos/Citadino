@@ -1,3 +1,4 @@
+import { TpPedScrapfashionPage } from './../tp-ped-scrapfashion/tp-ped-scrapfashion';
 import { Component } from '@angular/core';
 import { NavController, NavParams } from 'ionic-angular';
 
@@ -19,4 +20,7 @@ export class TpDetScrapfashionPage {
     console.log('ionViewDidLoad TpDetScrapfashionPage');
   }
 
+  openPedido() {
+    this.navCtrl.push(TpPedScrapfashionPage);
+  }
 }

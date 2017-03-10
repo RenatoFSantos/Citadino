@@ -1,18 +1,74 @@
-<!--
-  Generated template for the TpPedScrapfashion page.
-
-  See http://ionicframework.com/docs/v2/components/#navigation for more info on
-  Ionic pages and navigation.
--->
 <ion-header>
-
-  <ion-navbar>
-    <ion-title>tp-ped-scrapfashion</ion-title>
-  </ion-navbar>
-
+    <ion-navbar color="ctd-navbar">
+        <ctd-header></ctd-header>
+    </ion-navbar>
 </ion-header>
 
+<ion-content>
 
-<ion-content padding>
+    <ion-card class="ctd-card">
+        <ion-item>
+             <ion-thumbnail item-left>
+                <img src="assets/img/thumb_200x200_scrapcaixa.jpg">
+            </ion-thumbnail>
+           <h2>Pote Galinha Pintadinha</h2>
+           <p>R$10,00 x 10</p>
+           <p class="preco">R$100,00</p>
+           <button ion-button item-right icon-only clear>
+               <ion-icon name="trash"></ion-icon>
+           </button>
+        </ion-item>
+    </ion-card>
+    <ion-card class="ctd-card">
+      <ion-list> 
+        <ion-item>
+          <h2>Subtotal</h2>
+          <p item-right>R$100,00</p>
+        </ion-item>
+        <ion-item>
+          <h2>Entrega</h2>
+          <p item-right>R$5,00</p>
+        </ion-item>
+        <ion-item color="light">
+          <h2>Total Geral</h2>
+          <p class="preco" item-right>R$105,00</p>
+        </ion-item>
+      </ion-list>
+    </ion-card>
+
+    <ion-card class="ctd-card">
+      <ion-item-group> 
+        <ion-item>
+          <ion-label>Forma de Pagamento:</ion-label>
+          <ion-select [(ngModel)]="dinheiro">
+            <ion-option value="dinheiro" selected>Dinheiro</ion-option>
+            <ion-option value="cheque">Cheque</ion-option>
+            <ion-option value="cartao">Cartão</ion-option>
+            <ion-option value="vale">Vale</ion-option>
+          </ion-select>
+        </ion-item>
+        <ion-item>
+          <ion-label>Endereço de Entrega:</ion-label>
+          <ion-select [(ngModel)]="endereco">
+            <ion-option value="end-1" selected>Rua Ildeu Fernandes Alhadas, 103</ion-option>
+            <ion-option value="end-2">Rua Barão de Catas Altas, 240</ion-option>
+          </ion-select>
+        </ion-item>
+        <ion-item>
+          <h2>Contato</h2>
+          <p class="preco" item-right>Ana - (32) 3271-1525</p>
+        </ion-item>
+      </ion-item-group>
+      <ion-item>
+        <button ion-button color="primary" full large>Finalizar Pedido</button>
+      </ion-item>
+      <ion-item>
+        <button ion-button item-right icon-left color="light" full (click)="openTabelaPreco('scrapfashion')">
+            <ion-icon name="cart"></ion-icon>
+            Continuar comprando...
+        </button>
+      </ion-item>
+    </ion-card>
+
 
 </ion-content>
