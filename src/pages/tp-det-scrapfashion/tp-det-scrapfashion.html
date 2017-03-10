@@ -10,6 +10,9 @@
            <ion-thumbnail item-left>
               <img src="assets/img/thumb_200x200_scrapcaixa.jpg">
            </ion-thumbnail>
+           <ion-buttons end>
+              <ctd-buttons></ctd-buttons>
+           </ion-buttons>
            <h2>Pote Galinha Pintadinha</h2>
            <p class="preco">R$10,00 und.</p>
         </ion-item>
@@ -18,22 +21,23 @@
         </p>
         <hr>         
         <ion-item>
-          <ion-label>Selecione a quantidade:</ion-label>
-          <ion-select [(ngModel)]="gaming">
+          <ion-label>Quantidade:</ion-label>
+          <ion-select [(ngModel)]="gaming" placeholder="0">
             <ion-option value="1" selected="true">1</ion-option>
             <ion-option value="2">2</ion-option>
             <ion-option value="3">3</ion-option>
             <ion-option value="4">4</ion-option>
             <ion-option value="5">5</ion-option>
+            <ion-option value="6">6</ion-option>
+            <ion-option value="7">7</ion-option>
+            <ion-option value="8">8</ion-option>
+            <ion-option value="9">9</ion-option>
             <ion-option value="10">10</ion-option>
           </ion-select>
         </ion-item>
         <ion-item>
-          <ion-buttons start>
-              <ctd-buttons></ctd-buttons>
-          </ion-buttons>
           <ion-buttons end>
-              <button ion-button item-right icon-left color="light">
+              <button ion-button item-right icon-left color="primary">
                   <ion-icon name="checkmark"></ion-icon>
                   Confirma
               </button>
