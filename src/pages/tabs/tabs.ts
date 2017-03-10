@@ -1,3 +1,4 @@
+import { MensagemListaPage } from './../mensagem-lista/mensagem-lista';
 
 import { Component } from '@angular/core';
 import { NavController } from 'ionic-angular';
@@ -13,7 +14,7 @@ export class TabsPage {
 
   tab1Root: any = VitrinePage;
   tab2Root: any = GuiaPage;
-  tab3Root: any = MensagemPage;
+  tab3Root: any = MensagemListaPage;
 
   constructor(public navCtrl: NavController) {
 

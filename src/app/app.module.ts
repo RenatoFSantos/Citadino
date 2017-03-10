@@ -1,5 +1,9 @@
+<<<<<<< HEAD
 import { TpDetScrapfashionPage } from './../pages/tp-det-scrapfashion/tp-det-scrapfashion';
 import { TpScrapfashionPage } from './../pages/tp-scrapfashion/tp-scrapfashion';
+=======
+import { MensagemListaPage } from './../pages/mensagem-lista/mensagem-lista';
+>>>>>>> 1814775005515acf9fb0a6897bf2a5285e325b57
 import { SsScrapfashionPage } from './../pages/ss-scrapfashion/ss-scrapfashion';
 import { GuiaListaPage } from './../pages/guia-lista/guia-lista';
 import { VitrineAnuncio5Page } from './../pages/vitrine-anuncio-5/vitrine-anuncio-5';
@@ -26,6 +30,7 @@ import { MensagemPage } from '../pages/mensagem/mensagem';
     VitrinePage,
     GuiaPage,
     MensagemPage,
+    MensagemListaPage,
     CtdHeaderComponent,
     CtdButtonsComponent,
     AnuncioFullPage,
@@ -52,6 +57,7 @@ import { MensagemPage } from '../pages/mensagem/mensagem';
     VitrinePage,
     GuiaPage,
     MensagemPage,
+    MensagemListaPage,
     CtdHeaderComponent,
     CtdButtonsComponent,
     AnuncioFullPage,
