@@ -1,5 +1,5 @@
 page-mensagem {
-   ion-content {
+   ion-content.mensagem {
             background-color: #c2b49a !important;
         }
 
@@ -9,7 +9,7 @@ page-mensagem {
         line-height: 20%;
     }
 
- ion-icon {
+ ion-icon.stMensagem {
      line-height:0 !important;
      font-size: 0.9em !important;
  }
