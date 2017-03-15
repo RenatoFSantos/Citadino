@@ -2,7 +2,6 @@ import { MensagemListaPage } from './../mensagem-lista/mensagem-lista';
 
 import { Component } from '@angular/core';
 import { NavController } from 'ionic-angular';
-import { MensagemPage } from '../mensagem/mensagem';
 import { GuiaPage } from '../guia/guia';
 import { VitrinePage } from '../vitrine/vitrine';
 

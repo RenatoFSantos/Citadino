@@ -1,6 +1,6 @@
 import { TpScrapfashionPage } from './../tp-scrapfashion/tp-scrapfashion';
 import { Component } from '@angular/core';
-import { NavController, NavParams } from 'ionic-angular';
+import { NavController, NavParams, AlertController } from 'ionic-angular';
 
 /*
   Generated class for the TpPedScrapfashion page.
@@ -14,7 +14,7 @@ import { NavController, NavParams } from 'ionic-angular';
 })
 export class TpPedScrapfashionPage {
 
-  constructor(public navCtrl: NavController, public navParams: NavParams) {}
+  constructor(public navCtrl: NavController, public navParams: NavParams, private alertCtrl: AlertController) {}
 
   ionViewDidLoad() {
     console.log('ionViewDidLoad TpPedScrapfashionPage');
@@ -28,4 +28,27 @@ export class TpPedScrapfashionPage {
         break;
     } 
   }
+
+  showConfirm() {
+    let confirm = this.alertCtrl.create({
+      title: 'Finalizar Pedido',
+      message: 'Deseja finalizar seu pedido?',
+      buttons: [
+        {
+          text: 'Ainda não!',
+          handler: () => {
+            console.log('Disagree clicked');
+          }
+        },
+        {
+          text: 'Finalizar',
+          handler: () => {
+            console.log('Agree clicked');
+          }
+        }
+      ]
+    });
+    confirm.present();
+  }
+  
 }

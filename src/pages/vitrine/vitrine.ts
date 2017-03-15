@@ -1,3 +1,4 @@
+import { VitrineAnuncio6Page } from './../vitrine-anuncio-6/vitrine-anuncio-6';
 import { SsScrapfashionPage } from './../ss-scrapfashion/ss-scrapfashion';
 import { VitrineAnuncio5Page } from './../vitrine-anuncio-5/vitrine-anuncio-5';
 import { VitrineAnuncio4Page } from './../vitrine-anuncio-4/vitrine-anuncio-4';
@@ -6,7 +7,7 @@ import { VitrineAnuncio2Page } from './../vitrine-anuncio-2/vitrine-anuncio-2';
 import { VitrineAnuncio1Page } from './../vitrine-anuncio-1/vitrine-anuncio-1';
 import { AnuncioFullPage } from './../anuncio-full/anuncio-full';
 import { Component } from '@angular/core';
-import { NavController, NavParams } from 'ionic-angular';
+import { NavController, NavParams, AlertController } from 'ionic-angular';
 
 
 @Component({
@@ -15,7 +16,7 @@ import { NavController, NavParams } from 'ionic-angular';
 })
 export class VitrinePage {
 
-  constructor(public navCtrl: NavController, public navParams: NavParams) {}
+  constructor(public navCtrl: NavController, public navParams: NavParams, private alertCtrl: AlertController) {}
 
   ionViewDidLoad() {
     console.log('ionViewDidLoad VitrinePage');
@@ -26,16 +27,27 @@ export class VitrinePage {
   }
 
   openDetalhe(tipo: number) {
-    if (tipo==1) {
-      this.navCtrl.push(VitrineAnuncio1Page);
-    } else if (tipo==2) {
-      this.navCtrl.push(VitrineAnuncio2Page);
-    } else if (tipo==3) {
-      this.navCtrl.push(VitrineAnuncio3Page);
-    } else if (tipo==4) {
-      this.navCtrl.push(VitrineAnuncio4Page);
-    } else if (tipo==5) {
-      this.navCtrl.push(VitrineAnuncio5Page);
+    switch(tipo) {
+      case 1:
+        this.navCtrl.push(VitrineAnuncio1Page);
+        break;
+      case 2:
+        this.navCtrl.push(VitrineAnuncio2Page);
+        break;
+      case 3:
+        this.navCtrl.push(VitrineAnuncio3Page);
+        break;
+      case 4:
+        this.navCtrl.push(VitrineAnuncio4Page);
+        break;
+      case 5:
+        this.navCtrl.push(VitrineAnuncio5Page);
+        break;
+      case 6:
+        this.navCtrl.push(VitrineAnuncio6Page);
+        break;
+      default:
+        break;
     }
   }
 
@@ -46,6 +58,22 @@ export class VitrinePage {
       default: {
       }
     }
+  }
+
+  showPromocao() {
+    let confirm = this.alertCtrl.create({
+      title: 'Parabéns!',
+      message: 'Você ganhou este cupom de desconto!<br>Guarde este número para resgatar esta promoção!<br>CTDN943587220012',
+      buttons: [
+         {
+          text: 'Obrigado!',
+          handler: () => {
+            console.log('Agree clicked');
+          }
+        }
+      ]
+    });
+    confirm.present();
   }
 
 }

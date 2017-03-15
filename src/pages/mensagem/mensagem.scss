@@ -3,19 +3,19 @@ page-mensagem {
             background-color: #c2b49a !important;
         }
 
- ion-card.ctd-card {
-        padding: 0px;
-        border-radius: 10px;
-        line-height: 20%;
+    ion-card.ctd-card {
+            padding: 0px;
+            border-radius: 10px;
+            line-height: 20%;
+        }
+
+    ion-icon.ctd-ico {
+        line-height:0 !important;
+        font-size: 0.9em !important;
     }
 
- ion-icon {
-     line-height:0 !important;
-     font-size: 0.9em !important;
- }
-
- .fontMsgStatus {
-    font-size: 70%;
- }
+    .fontMsgStatus {
+        font-size: 70%;
+    }
 
 }

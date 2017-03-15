@@ -1,9 +1,11 @@
+import { GuiaContatoPage } from './../pages/guia-contato/guia-contato';
 import { TpPedScrapfashionPage } from './../pages/tp-ped-scrapfashion/tp-ped-scrapfashion';
 import { TpDetScrapfashionPage } from './../pages/tp-det-scrapfashion/tp-det-scrapfashion';
 import { TpScrapfashionPage } from './../pages/tp-scrapfashion/tp-scrapfashion';
 import { MensagemListaPage } from './../pages/mensagem-lista/mensagem-lista';
 import { SsScrapfashionPage } from './../pages/ss-scrapfashion/ss-scrapfashion';
 import { GuiaListaPage } from './../pages/guia-lista/guia-lista';
+import { VitrineAnuncio6Page } from './../pages/vitrine-anuncio-6/vitrine-anuncio-6';
 import { VitrineAnuncio5Page } from './../pages/vitrine-anuncio-5/vitrine-anuncio-5';
 import { VitrineAnuncio4Page } from './../pages/vitrine-anuncio-4/vitrine-anuncio-4';
 import { VitrineAnuncio3Page } from './../pages/vitrine-anuncio-3/vitrine-anuncio-3';
@@ -37,11 +39,13 @@ import { MensagemPage } from '../pages/mensagem/mensagem';
     VitrineAnuncio3Page,
     VitrineAnuncio4Page,
     VitrineAnuncio5Page,
+    VitrineAnuncio6Page,
     GuiaListaPage,
     SsScrapfashionPage,
     TpScrapfashionPage,
     TpDetScrapfashionPage,
-    TpPedScrapfashionPage
+    TpPedScrapfashionPage,
+    GuiaContatoPage
   ],
   imports: [
     IonicModule.forRoot(MyApp, 
@@ -65,11 +69,13 @@ import { MensagemPage } from '../pages/mensagem/mensagem';
     VitrineAnuncio3Page,
     VitrineAnuncio4Page,
     VitrineAnuncio5Page,
+    VitrineAnuncio6Page,
     GuiaListaPage,
     SsScrapfashionPage,
     TpScrapfashionPage,
     TpDetScrapfashionPage,
-    TpPedScrapfashionPage
+    TpPedScrapfashionPage,
+    GuiaContatoPage
   ],
   providers: [{provide: ErrorHandler, useClass: IonicErrorHandler}]
 })

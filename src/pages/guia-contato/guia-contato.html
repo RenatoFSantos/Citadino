@@ -1,0 +1,33 @@
+<ion-header>
+    <ion-navbar color="ctd-navbar">
+        <ctd-header></ctd-header>
+    </ion-navbar>
+</ion-header>
+
+<ion-content>
+  <ion-item-group>
+    <ion-item-divider color="ctd-subtitulo">OPÇÕES DE CONTATO</ion-item-divider>
+    <ion-item>
+          <button ion-button icon-only color="light" large>
+            <ion-icon name="call"></ion-icon>
+          </button>
+          <span class="ctd-tel">(32) 3271-2311</span>
+    </ion-item>  
+    <ion-item>
+        <button ion-button icon-only color="light" large>
+          <ion-icon name="chatbubbles"></ion-icon>
+        </button>
+        <span class="ctd-msg">Enviar uma mensagem</span>
+    </ion-item>  
+    <ion-item>
+        <button ion-button icon-only color="light" large (click)="openSmartSite('scrapfashion')">
+          <ion-icon name="globe"></ion-icon>
+        </button>
+        <span class="ctd-www">Acessar site</span>
+    </ion-item>  
+  </ion-item-group>
+  <button ion-button item-right full (click)="dismiss()">
+    <ion-icon name="exit"></ion-icon>
+    Fechar
+  </button>
+</ion-content>

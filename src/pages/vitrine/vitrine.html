@@ -27,8 +27,6 @@
 
     <!-- ANUNCIO TIPO 2 -->
 
-    
-
     <ion-card class="ctd-card">
         <ion-item>
              <ion-avatar item-left>
@@ -61,6 +59,12 @@
                 <ion-icon name="alert"></ion-icon>
             </button>
         </ion-buttons>
+    </ion-card>
+
+    <!-- PROMOÇAO -->
+
+    <ion-card class="ctd-card" (click)="showPromocao()">
+        <img src="assets/img/ctd_promocao_1.png"/>
     </ion-card>
 
     <!-- ANUNCIO TIPO 3 -->
@@ -110,11 +114,14 @@
     <ion-card class="ctd-card">
         <ion-item>
            <ion-avatar item-left>
-               <img src="assets/img/ctd_avatar_4.png">
+               <img src="assets/img/ctd_avatar_5.png">
            </ion-avatar>
-           <h2>Wagner Pintor</h2>
-           <p>(32) 3271-1201 / 9 9875-9898</p>
+           <h2>Sapateiro</h2>
+           <p>(32) 3271-3344 / 9 9456-8989</p>
         </ion-item>
+        <ion-card-content>
+            Mussum Ipsum, cacilds vidis litro abertis. Viva Forevis aptent taciti sociosqu ad litora torquent Atirei o pau no gatis, per gatis num morreus. Ta deprimidis, eu conheço uma cachacis que pode alegrar sua vidis.
+        </ion-card-content>
         <ion-buttons start>
             <ctd-buttons></ctd-buttons>
             <button ion-button icon-only clear color="ctd-button" (click)="openDetalhe(5)">
@@ -122,4 +129,25 @@
             </button>
         </ion-buttons>
     </ion-card>
+
+    <!-- ANUNCIO TIPO 6 -->
+
+    <ion-card class="ctd-card">
+        <ion-item>
+           <ion-avatar item-left>
+               <img src="assets/img/ctd_avatar_4.png">
+           </ion-avatar>
+           <h2>Wagner Pintor</h2>
+           <p>(32) 3271-1201 / 9 9875-9898</p>
+        </ion-item>
+        <ion-buttons start>
+            <ctd-buttons></ctd-buttons>
+            <button ion-button icon-only clear color="ctd-button" (click)="openDetalhe(6)">
+                <ion-icon name="alert"></ion-icon>
+            </button>
+        </ion-buttons>
+    </ion-card>
+
+
+
 </ion-content>

@@ -13,6 +13,24 @@ import { NavController, NavParams } from 'ionic-angular';
 })
 export class AnuncioFullPage {
 
+  slides = [
+      {
+        title: "Slide-1",
+        description: "Teste de Slide-1",
+        image: "assets/img/slide-1.jpg",
+      },
+      {
+        title: "Slide-2",
+        description: "Teste de Slide-2",
+        image: "assets/img/slide-2.jpg",
+      },
+      {
+        title: "Slide-3",
+        description: "Teste de Slide-3",
+        image: "assets/img/slide-3.jpg",
+      }
+  ];  
+
   constructor(public navCtrl: NavController, public navParams: NavParams) {}
 
   ionViewDidLoad() {
