@@ -1,3 +1,7 @@
+import { RelatFidelidadePage } from './../pages/relat-fidelidade/relat-fidelidade';
+import { RelatPedidoPage } from './../pages/relat-pedido/relat-pedido';
+import { RelatoriosListaPage } from './../pages/relatorios-lista/relatorios-lista';
+import { NoticiaFullPage } from './../pages/noticia-full/noticia-full';
 import { GuiaContatoPage } from './../pages/guia-contato/guia-contato';
 import { TpPedScrapfashionPage } from './../pages/tp-ped-scrapfashion/tp-ped-scrapfashion';
 import { TpDetScrapfashionPage } from './../pages/tp-det-scrapfashion/tp-det-scrapfashion';
@@ -45,7 +49,11 @@ import { MensagemPage } from '../pages/mensagem/mensagem';
     TpScrapfashionPage,
     TpDetScrapfashionPage,
     TpPedScrapfashionPage,
-    GuiaContatoPage
+    GuiaContatoPage,
+    NoticiaFullPage,
+    RelatoriosListaPage,
+    RelatPedidoPage,
+    RelatFidelidadePage
   ],
   imports: [
     IonicModule.forRoot(MyApp, 
@@ -75,7 +83,11 @@ import { MensagemPage } from '../pages/mensagem/mensagem';
     TpScrapfashionPage,
     TpDetScrapfashionPage,
     TpPedScrapfashionPage,
-    GuiaContatoPage
+    GuiaContatoPage,
+    NoticiaFullPage,
+    RelatoriosListaPage,
+    RelatPedidoPage,
+    RelatFidelidadePage
   ],
   providers: [{provide: ErrorHandler, useClass: IonicErrorHandler}]
 })

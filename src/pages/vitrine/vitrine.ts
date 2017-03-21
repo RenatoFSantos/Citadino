@@ -1,3 +1,4 @@
+import { NoticiaFullPage } from './../noticia-full/noticia-full';
 import { VitrineAnuncio6Page } from './../vitrine-anuncio-6/vitrine-anuncio-6';
 import { SsScrapfashionPage } from './../ss-scrapfashion/ss-scrapfashion';
 import { VitrineAnuncio5Page } from './../vitrine-anuncio-5/vitrine-anuncio-5';
@@ -22,8 +23,18 @@ export class VitrinePage {
     console.log('ionViewDidLoad VitrinePage');
   }
 
-  openPub():void {
-    this.navCtrl.push(AnuncioFullPage);
+  openPub(opcao: number):void {
+    switch(opcao) {
+      case 1: 
+        this.navCtrl.push(AnuncioFullPage);
+        break;
+      case 2: 
+        this.navCtrl.push(NoticiaFullPage);
+        break;
+      default:
+        break;        
+    }
+    
   }
 
   openDetalhe(tipo: number) {

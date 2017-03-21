@@ -1,0 +1,25 @@
+<ion-header>
+    <ion-navbar color="ctd-navbar">
+        <ctd-header></ctd-header>
+    </ion-navbar>
+</ion-header>
+
+<ion-content>
+  <ion-item-group>
+    <ion-item-divider color="ctd-subtitulo">RELATÓRIOS ESTATÍSTICOS</ion-item-divider>
+  </ion-item-group>
+  <ion-grid>
+      <ion-row>
+          <ion-col width-50><img src="assets/img/relat_pedidos.png" (click)="openRelat('pedido')"></ion-col>
+          <ion-col width-50><img src="assets/img/relat_fidelidade.png" (click)="openRelat('fidelidade')"></ion-col>
+      </ion-row>
+      <ion-row>
+          <ion-col width-50><img src="assets/img/relat_avaliacao.png"></ion-col>
+          <ion-col width-50><img src="assets/img/relat_agenda.png"></ion-col>
+      </ion-row>
+      <ion-row>
+          <ion-col width-50><img src="assets/img/relat_financeiro.png"></ion-col>
+          <ion-col width-50><img src="assets/img/relat_credito.png"></ion-col>
+      </ion-row>
+  </ion-grid>
+</ion-content>

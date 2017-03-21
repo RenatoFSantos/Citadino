@@ -19,8 +19,4 @@ export class GuiaListaPage {
     modal.present();
   }
 
-  dismiss() {
-    this.viewCtrl.dismiss();
-  }
-
 }

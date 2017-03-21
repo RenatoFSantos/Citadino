@@ -1,0 +1,65 @@
+<ion-header>
+    <ion-navbar color="ctd-navbar">
+        <ctd-header></ctd-header>
+    </ion-navbar>
+</ion-header>
+ 
+<ion-content>
+  <ion-item-group>
+    <ion-item-divider color="ctd-subtitulo">FIDELIDADE</ion-item-divider>
+    <ion-item (tap)="tapEvent($event)">
+      <ion-icon name="people"></ion-icon>
+      Total clientes atendidos
+      <ion-note color="dark" item-right>
+        {{flagView}}
+      </ion-note>
+    </ion-item>
+    <!--<div *ngIf="flagView">
+      <ion-card>
+        <ion-card-header>
+          Evolução Atendimento
+        </ion-card-header>
+        <ion-card-content>
+          <canvas #lineCanvas></canvas>
+        </ion-card-content>
+      </ion-card>
+    </div>-->
+    <ion-item>
+      <ion-icon name="star"></ion-icon>
+        Favoritos
+      <ion-note color="dark" item-right>
+        34
+      </ion-note>
+    </ion-item>
+    <ion-item>
+      <ion-icon name="eye"></ion-icon>
+        Fãs
+      <ion-note color="dark" item-right>
+        44
+      </ion-note>
+    </ion-item>
+    <ion-item>
+      <ion-icon name="pin"></ion-icon>
+        Índice Avaliação Empresa
+      <ion-note color="dark" item-right>
+        78%
+      </ion-note>
+    </ion-item>
+    <ion-item>
+      <ion-icon name="pin"></ion-icon>
+        Índice Avaliação Produtos/Serviços
+      <ion-note color="dark" item-right>
+        31%
+      </ion-note>
+    </ion-item>
+  </ion-item-group>
+  <ion-card>
+    <ion-card-header>
+      Evolução Atendimento
+    </ion-card-header>
+    <ion-card-content>
+      <canvas #lineCanvas></canvas>
+    </ion-card-content>
+  </ion-card>
+</ion-content>
+

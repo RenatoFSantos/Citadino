@@ -1,0 +1,26 @@
+page-noticia-full {
+    ion-content {
+        background-color: #FFF !important;
+    }
+
+    ion-content p {
+        text-align: justify;
+
+    }
+
+    .lista {
+        text-align: justify;
+        background-color: #c2b49a;
+        font-size: 95%;
+    }
+
+    ol {
+        margin-left: 10px !important;
+        padding: 3px !important;
+    }
+
+    img {
+        margin-left: 50px;
+        text-align: center;
+    }
+}

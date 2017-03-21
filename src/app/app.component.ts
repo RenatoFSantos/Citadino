@@ -1,3 +1,4 @@
+import { RelatoriosListaPage } from './../pages/relatorios-lista/relatorios-lista';
 import { MensagemPage } from './../pages/mensagem/mensagem';
 import { GuiaPage } from './../pages/guia/guia';
 import { VitrinePage } from './../pages/vitrine/vitrine';
@@ -26,6 +27,7 @@ export class MyApp {
 
     this.subpages = [
       {component: null, title: 'Configurações', icon: 'options'},
+      {component: RelatoriosListaPage, title: 'Estatísticas', icon: 'pie'},
       {component: null, title: 'Favoritos', icon: 'star'},
       {component: null, title: 'Contato', icon: 'contact'},
       {component: null, title: 'Sobre', icon: 'information-circle'},

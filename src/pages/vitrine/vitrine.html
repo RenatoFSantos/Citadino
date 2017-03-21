@@ -16,7 +16,7 @@
             <h2>Extra Supermercados</h2>
             <p>Veja nossas promoções do dia!</p>
         </ion-item>
-        <img src="assets/img/ctd_anuncio_1.png" (click)="openPub()" />
+        <img src="assets/img/ctd_anuncio_1.png" (click)="openPub(1)" />
         <ion-buttons start>
             <ctd-buttons></ctd-buttons>
             <button ion-button icon-only clear color="ctd-button" (click)="openDetalhe(1)">
@@ -65,6 +65,21 @@
 
     <ion-card class="ctd-card" (click)="showPromocao()">
         <img src="assets/img/ctd_promocao_1.png"/>
+    </ion-card>
+
+    <!-- INFORME CITADINO -->
+
+    <ion-card class="ctd-card" color="ctd-noticia" (click)="openPub(2)">
+        <ion-item color="ctd-subtitulo">
+             <ion-avatar item-left>
+                <img src="assets/img/thumb_200x200_citadino.png">
+            </ion-avatar>
+           <h2>Notícias</h2>
+           <p>Dengue - Prevenção</p>
+        </ion-item>
+        <ion-card-content class="ctd-texto">
+            Para tomar medidas preventivas e impedir que a dengue chegue até a sua cidade ou município, a melhor atitude é combater os focos de acúmulo de água.
+        </ion-card-content>
     </ion-card>
 
     <!-- ANUNCIO TIPO 3 -->
