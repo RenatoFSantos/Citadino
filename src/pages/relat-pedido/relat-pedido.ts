@@ -26,7 +26,6 @@ export class RelatPedidoPage {
 
   ionViewDidLoad() {
 
-
         this.barChart = new Chart(this.barCanvas.nativeElement, {
  
             type: 'bar',
