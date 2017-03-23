@@ -1,0 +1,48 @@
+<ion-header>
+    <ion-navbar>
+        <img class="icocit" src="assets/img/icon.png" />
+        <ion-title class="citadino">
+            CITADINO
+        </ion-title>
+        <button ion-button menuToggle right>
+        <ion-icon name="menu" ></ion-icon>
+    </button>
+    </ion-navbar>
+</ion-header>
+
+
+<ion-content>
+    <div class="logo">
+        <img src="assets/img/icon.png" alt="CITADINO">
+    </div>
+
+    <form #loginForm="ngForm" novalidate>
+
+        <ion-item>
+            <ion-label>E-mail</ion-label>
+            <ion-input [(ngModel)]="loginUser.email" name="email" type="text" #email="ngModel" spellcheck="false" autocapitalize="off"
+                required>
+            </ion-input>
+        </ion-item>
+        <p ion-text [hidden]="email.valid || submitted == false" color="danger" padding-left>
+            Informe o e-mail.
+        </p>
+
+        <ion-item>
+            <ion-label>Senha</ion-label>
+            <ion-input [(ngModel)]="loginUser.password" name="password" type="password" #password="ngModel" required>
+            </ion-input>
+        </ion-item>
+        <p ion-text [hidden]="password.valid || submitted == false" color="danger" padding-left>
+            Informe a senha.
+        </p>
+
+        <div padding>
+            <button ion-button (click)="login(loginForm)" type="submit" block>Login</button>
+        </div>
+
+        <div padding>
+            <p *ngIf="error" class="error">Error:&nbsp;{{ error.code }}</p>
+        </div>
+    </form>
+</ion-content>

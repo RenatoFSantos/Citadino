@@ -1,6 +1,6 @@
 import { GuiaListaPage } from './../guia-lista/guia-lista';
 import { Component } from '@angular/core';
-import { NavController, NavParams } from 'ionic-angular';
+import { NavController, NavParams, Events } from 'ionic-angular';
 
 /*
   Generated class for the Guia page.
@@ -14,7 +14,11 @@ import { NavController, NavParams } from 'ionic-angular';
 })
 export class GuiaPage {
 
-  constructor(public navCtrl: NavController, public navParams: NavParams) {}
+  constructor(public navCtrl: NavController, public navParams: NavParams, public events:Events) {
+    this.events.subscribe('app:netWork',() => {
+      console.log('teste evento');
+    });
+  }
 
   ionViewDidLoad() {
     console.log('ionViewDidLoad GuiaPage');

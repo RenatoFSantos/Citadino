@@ -1,3 +1,4 @@
+import { Events } from 'ionic-angular';
 import { Component } from '@angular/core';
 
 /*
@@ -14,9 +15,6 @@ export class CtdHeaderComponent {
 
   text: string;
 
-  constructor() {
-    console.log('Hello CtdHeader Component');
-    this.text = 'Hello World';
+  constructor(public events:Events) {  
   }
-
 }

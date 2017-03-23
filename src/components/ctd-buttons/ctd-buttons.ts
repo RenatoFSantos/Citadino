@@ -15,8 +15,6 @@ export class CtdButtonsComponent {
   text: string;
 
   constructor() {
-    console.log('Hello CtdButtons Component');
-    this.text = 'Hello World';
   }
 
 }
