@@ -1,18 +1,56 @@
-<!--
-  Generated template for the Sigin page.
-
-  See http://ionicframework.com/docs/v2/components/#navigation for more info on
-  Ionic pages and navigation.
--->
 <ion-header>
-
-  <ion-navbar>
-    <ion-title>sigin</ion-title>
-  </ion-navbar>
-
+    <ion-navbar color="ctd-navbar">
+        <ctd-header></ctd-header>
+    </ion-navbar>
 </ion-header>
 
 
 <ion-content padding>
+    <form #loginForm="ngForm" novalidate>
+        <ion-item>
+        <ion-grid>
+            <ion-row>
+                <ion-col width-33></ion-col>
+                <ion-col width-33><img src="assets/img/icon.png" alt="CITADINO"/></ion-col>
+                <ion-col width-33></ion-col>
+            </ion-row>
+        </ion-grid>
+        </ion-item>
+        <ion-item>
+            <ion-label floating>Nome do usuário</ion-label>
+            <ion-input [(ngModel)]="loginUser.nome" name="nome" type="text" #email="ngModel" spellcheck="false" autocapitalize="off" required>
+            </ion-input>
+        </ion-item>
+        <ion-item>
+            <ion-label floating>E-mail</ion-label>
+            <ion-input [(ngModel)]="loginUser.email" name="email" type="text" #email="ngModel" spellcheck="false" autocapitalize="off" required>
+            </ion-input>
+        </ion-item>
+        <p ion-text [hidden]="email.valid || submitted == false" color="danger" padding-left>
+            Informe o e-mail.
+        </p>
+        <ion-item>
+            <ion-label floating>Senha</ion-label>
+            <ion-input [(ngModel)]="loginUser.password" name="password" type="password" #password="ngModel" required>
+            </ion-input>
+        </ion-item>
+        <p ion-text [hidden]="password.valid || submitted == false" color="danger" padding-left>
+            Informe a senha.
+        </p>
+        <ion-item>
+            <ion-label floating>Confirmação de senha</ion-label>
+            <ion-input [(ngModel)]="loginUser.password_conf" name="password_conf" type="password" #password="ngModel" required>
+            </ion-input>
+        </ion-item>
+        <p ion-text [hidden]="password.valid || submitted == false" color="danger" padding-left>
+            Confirme a senha digitada.
+        </p>
+        <div padding text-center>
+            <button ion-button block (click)="login(loginForm)" type="submit">Cadastrar</button>
+        </div>
 
+        <div padding>
+            <p *ngIf="error" class="error">Error:&nbsp;{{ error.code }}</p>
+        </div>
+    </form>
 </ion-content>
