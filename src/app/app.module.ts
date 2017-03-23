@@ -1,3 +1,8 @@
+import { SignUpPage } from './../pages/autenticar/signup/signup';
+import { LoginPage } from './../pages/autenticar/login/login';
+import { LoginService } from './../providers/login-service';
+import { DataService } from './../providers/data-service';
+import { TestePage } from './../pages/teste/teste';
 import { RelatFidelidadePage } from './../pages/relat-fidelidade/relat-fidelidade';
 import { RelatPedidoPage } from './../pages/relat-pedido/relat-pedido';
 import { RelatoriosListaPage } from './../pages/relatorios-lista/relatorios-lista';
@@ -53,13 +58,16 @@ import { MensagemPage } from '../pages/mensagem/mensagem';
     NoticiaFullPage,
     RelatoriosListaPage,
     RelatPedidoPage,
-    RelatFidelidadePage
+    RelatFidelidadePage,
+    LoginPage,
+    SignUpPage,
+    TestePage
   ],
   imports: [
-    IonicModule.forRoot(MyApp, 
-    {
-      mode: 'md'
-    })
+    IonicModule.forRoot(MyApp,
+      {
+        mode: 'md'
+      })
   ],
   bootstrap: [IonicApp],
   entryComponents: [
@@ -87,8 +95,11 @@ import { MensagemPage } from '../pages/mensagem/mensagem';
     NoticiaFullPage,
     RelatoriosListaPage,
     RelatPedidoPage,
-    RelatFidelidadePage
+    RelatFidelidadePage,
+    LoginPage,
+    SignUpPage,
+    TestePage
   ],
-  providers: [{provide: ErrorHandler, useClass: IonicErrorHandler}]
+  providers: [{ provide: ErrorHandler, useClass: IonicErrorHandler }, DataService, LoginService]
 })
-export class AppModule {}
+export class AppModule { }
