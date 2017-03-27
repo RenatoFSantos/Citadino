@@ -3,8 +3,6 @@
         <ctd-header></ctd-header>
     </ion-navbar>
 </ion-header>
-
-
 <ion-content padding>
     <ion-grid style="margin-top: 0px; margin-bottom: 0px;">
         <ion-row>
@@ -36,7 +34,7 @@
         </div>
 
         <div padding>
-            <p *ngIf="error" class="error">Error:&nbsp;{{ error.code }}</p>
+            <p *ngIf="error" class="error">Error:&nbsp;{{ error.message }}</p>
         </div>
     </form>
 </ion-content>

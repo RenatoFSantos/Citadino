@@ -1,4 +1,7 @@
-import { LoginService } from './../../../providers/login-service';
+import { NavController, ViewController, Events } from 'ionic-angular';
+import { TabsPage } from './../../tabs/tabs';
+import { LoginService } from './../../../providers/service/login-service';
+import { GlobalVar } from './../../../providers/global-var';
 import { Component } from '@angular/core';
 import { NgForm } from '@angular/forms';
 
@@ -7,30 +10,29 @@ import { NgForm } from '@angular/forms';
   templateUrl: 'login.html'
 })
 export class LoginPage {
+
   loginUser: { username?: string, password?: string } = {};
   submitted = false;
+  error: any
 
-  constructor(public loginSrv: LoginService) { }
+  constructor(public navCtrl: NavController, public loginSrv: LoginService,
+    public glbVar: GlobalVar,
+    private viewCtrl: ViewController,
+    private event:Events) {
+
+  }
 
   login(loginForm: NgForm) {
     this.submitted = true;
-
     if (loginForm.valid) {
       this.loginSrv.logarUsuario(this.loginUser).subscribe(
         (data: any) => {
-          console.log("the data", data.email)
-          // this.dismiss();
+         this.event.publish('usuario:logado', data.name);
+         this.viewCtrl.dismiss();         
         },
-        (error) => {
-          alert("Error Logging In: " + error.message)
-          console.log(error)
+        (err) => {
+          this.error = err;
         });
     }
   }
-
-  // private dismiss(): void {
-  //   this.navCtrl.popToRoot();
-  //   this.viewCtrl.data.cb()
-  // }
-
 }

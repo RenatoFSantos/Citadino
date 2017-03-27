@@ -1,7 +1,9 @@
+import { SplashScreen } from '@ionic-native/splash-screen';
+import { LoginService } from './../providers/service/login-service';
+import { FirebaseService } from './../providers/database/firebase-service';
+import { GlobalVar } from './../providers/global-var';
 import { SignUpPage } from './../pages/autenticar/signup/signup';
 import { LoginPage } from './../pages/autenticar/login/login';
-import { LoginService } from './../providers/login-service';
-import { DataService } from './../providers/data-service';
 import { TestePage } from './../pages/teste/teste';
 import { RelatFidelidadePage } from './../pages/relat-fidelidade/relat-fidelidade';
 import { RelatPedidoPage } from './../pages/relat-pedido/relat-pedido';
@@ -100,6 +102,10 @@ import { MensagemPage } from '../pages/mensagem/mensagem';
     SignUpPage,
     TestePage
   ],
-  providers: [{ provide: ErrorHandler, useClass: IonicErrorHandler }, DataService, LoginService]
+  providers: [{ provide: ErrorHandler, useClass: IonicErrorHandler }, 
+  FirebaseService,
+  LoginService,
+  GlobalVar,
+  SplashScreen]
 })
 export class AppModule { }
