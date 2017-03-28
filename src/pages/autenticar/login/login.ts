@@ -1,7 +1,5 @@
 import { NavController, ViewController, Events } from 'ionic-angular';
-import { TabsPage } from './../../tabs/tabs';
 import { LoginService } from './../../../providers/service/login-service';
-import { GlobalVar } from './../../../providers/global-var';
 import { Component } from '@angular/core';
 import { NgForm } from '@angular/forms';
 
@@ -11,24 +9,22 @@ import { NgForm } from '@angular/forms';
 })
 export class LoginPage {
 
-  loginUser: { username?: string, password?: string } = {};
-  submitted = false;
+  loginUser: { email?: string, password?: string } = {};
   error: any
 
-  constructor(public navCtrl: NavController, public loginSrv: LoginService,
-    public glbVar: GlobalVar,
+  constructor(public navCtrl: NavController,
+    public loginSrv: LoginService,
     private viewCtrl: ViewController,
-    private event:Events) {
+    private event: Events) {
 
   }
 
   login(loginForm: NgForm) {
-    this.submitted = true;
     if (loginForm.valid) {
       this.loginSrv.logarUsuario(this.loginUser).subscribe(
         (data: any) => {
-         this.event.publish('usuario:logado', data.name);
-         this.viewCtrl.dismiss();         
+          this.event.publish('usuario:logado', data.name);
+          this.viewCtrl.dismiss();
         },
         (err) => {
           this.error = err;

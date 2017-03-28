@@ -42,7 +42,7 @@ export class LoginService {
                 observer.error();
               });
           } else {
-            console.log("Usuario nao logado");
+            // console.log("Usuario nao logado");
             observer.error();
           }
         });
@@ -60,7 +60,7 @@ export class LoginService {
               (usuLogado) => {
                 observer.next(usuLogado)
               }, err => {
-                console.log('usuario desconectado');
+                // console.log('usuario desconectado');
               });
           })
           .catch((error) => {
@@ -73,5 +73,18 @@ export class LoginService {
   logout() {
     console.log("close connection");
     return this.fbSrv.getConnect().auth().signOut()
+  }
+
+  salvarLogin(usuario) {
+    return Observable.create(observer => {
+      return this.fbSrv.getConnect().auth().createUserWithEmailAndPassword(usuario.email, usuario.password)
+        .then((authData) => {
+          console.log("Login criado com sucesso", authData);
+          observer.next(authData)
+        }).catch((_error) => {
+          console.log("Login falhou", _error);
+          observer.error(_error)
+        })
+    });
   }
 }

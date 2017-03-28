@@ -1,3 +1,4 @@
+import { CtdHeaderModalComponent } from './../components/ctd-header-modal/ctd-header-modal';
 import { SplashScreen } from '@ionic-native/splash-screen';
 import { LoginService } from './../providers/service/login-service';
 import { FirebaseService } from './../providers/database/firebase-service';
@@ -63,7 +64,8 @@ import { MensagemPage } from '../pages/mensagem/mensagem';
     RelatFidelidadePage,
     LoginPage,
     SignUpPage,
-    TestePage
+    TestePage,
+    CtdHeaderModalComponent
   ],
   imports: [
     IonicModule.forRoot(MyApp,
@@ -100,7 +102,8 @@ import { MensagemPage } from '../pages/mensagem/mensagem';
     RelatFidelidadePage,
     LoginPage,
     SignUpPage,
-    TestePage
+    TestePage,
+    CtdHeaderModalComponent
   ],
   providers: [{ provide: ErrorHandler, useClass: IonicErrorHandler }, 
   FirebaseService,

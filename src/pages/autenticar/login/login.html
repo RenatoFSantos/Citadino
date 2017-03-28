@@ -1,20 +1,21 @@
 <ion-header>
     <ion-navbar color="ctd-navbar">
-        <ctd-header></ctd-header>
+        <ctd-header-modal></ctd-header-modal>
     </ion-navbar>
 </ion-header>
 <ion-content padding>
     <ion-grid style="margin-top: 0px; margin-bottom: 0px;">
         <ion-row>
             <ion-col width-33></ion-col>
-            <ion-col width-33><img src="assets/img/icon.png" alt="CITADINO"/></ion-col>
+            <ion-col width-33><img src="assets/img/icon.png" alt="CITADINO" /></ion-col>
             <ion-col width-33></ion-col>
         </ion-row>
     </ion-grid>
     <form #loginForm="ngForm" novalidate>
         <ion-item>
             <ion-label floating>E-mail</ion-label>
-            <ion-input [(ngModel)]="loginUser.email" name="email" type="text" #email="ngModel" spellcheck="false" autocapitalize="off" required>
+            <ion-input [(ngModel)]="loginUser.email" name="email" type="text" #email="ngModel" spellcheck="false" autocapitalize="off"
+                required>
             </ion-input>
         </ion-item>
         <p ion-text [hidden]="email.valid || submitted == false" color="danger" padding-left>
@@ -29,7 +30,7 @@
             Informe a senha.
         </p>
         <div padding text-center>
-            <button ion-button block (click)="login(loginForm)" type="submit">Login</button>
+            <button ion-button block (click)="login(loginForm)" type="submit">Fazer Login</button>
             <a href="#" style="text-decoration: none;">Esqueci minha senha</a>
         </div>
 

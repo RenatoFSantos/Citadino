@@ -69,8 +69,8 @@ export class MyApp {
         if (page.index) {
           this.nav.setRoot(page.component, { tabIndex: page.index });
         } else {
-          this.nav.setRoot(page.component).catch(() => {
-            console.log("Didn't set nav root");
+          this.nav.setRoot(page.component).catch((e) => {
+            // console.log("Não definiu a raiz do navegador");
           });
         }
         break;
