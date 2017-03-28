@@ -1,7 +1,7 @@
+import { IMenu } from './../Interface/IMenu';
+import { LoginService } from './../providers/service/login-service';
+import { FirebaseService } from './../providers/database/firebase-service';
 import { LoginPage } from './../pages/autenticar/login/login';
-import { UsuarioVO } from './../modelo/usuarioVO';
-import { LoginService } from './../providers/login-service';
-import { DataService } from './../providers/data-service';
 import { MensagemListaPage } from './../pages/mensagem-lista/mensagem-lista';
 import { TestePage } from './../pages/teste/teste';
 import { RelatoriosListaPage } from './../pages/relatorios-lista/relatorios-lista';
@@ -9,53 +9,44 @@ import { GuiaPage } from './../pages/guia/guia';
 import { VitrinePage } from './../pages/vitrine/vitrine';
 
 import { Component, ViewChild } from '@angular/core';
-import { Platform, MenuController, Nav, Events } from 'ionic-angular';
-import { StatusBar, Splashscreen } from 'ionic-native';
+import { Platform, MenuController, Nav, ModalController, Events } from 'ionic-angular';
+import { SplashScreen } from '@ionic-native/splash-screen';
+// import { StatusBar } from '@ionic-native/statusBar';
 import { TabsPage } from '../pages/tabs/tabs';
+import * as enums from './../modelo/dominio/citadinoEnum'
 
 
-export interface PageInterface {
-  title: string;
-  component: any;
-  icon: string;
-  tabComponent?: any;
-  logsOut?: boolean;
-  index?: number;
-}
+
 
 @Component({
   templateUrl: 'app.html'
 })
 export class MyApp {
-  @ViewChild(Nav) nav: Nav;
-  usuario: UsuarioVO;
-  rootPage = TabsPage;  
-  
-  pages: PageInterface[] = [
-    { title: 'Vitrine', component: TabsPage, tabComponent: VitrinePage, index: 0, icon: 'logo-windows' },
-    { title: 'Guia', component: TabsPage, tabComponent: GuiaPage, index: 1, icon: 'compass' },
-    { title: 'Mensagem', component: TabsPage, tabComponent: MensagemListaPage, index: 2, icon: 'chatbubbles' }
-  ];
+  public isLogado = false;
+  public pages: IMenu[];
+  public subpages: IMenu[];
+  public usuarioLog: any;
 
-  subpages: PageInterface[] = [
-    { title: 'Configurações', component: TestePage, icon: 'options' },
-    { title: 'Estatísticas', component: RelatoriosListaPage, icon: 'pie' },
-    { title: 'Favoritos', component: TestePage, icon: 'star' },
-    { title: 'Contato', component: TestePage, icon: 'contact' },
-    { title: 'Sobre', component: TestePage, icon: 'information-circle' },
-    { title: 'Sair', component: TabsPage, icon: 'exit', logsOut: true },
-    { title: 'Login', component: LoginPage, icon: 'log-in' }
-  ]
+  @ViewChild(Nav) nav: Nav;
+  rootPage = TabsPage;
+
+
   constructor(private platform: Platform,
     private menuCtrl: MenuController,
-    private data: DataService,
+    private mdlCtrl: ModalController,
+    private data: FirebaseService,
     private loginSrv: LoginService,
-    public events:Events) {
-    
+    public events: Events,
+    public splashScreen: SplashScreen) {
+
     data.init();
-    platform.ready().then(() => {
-      StatusBar.styleDefault();
-      Splashscreen.hide();
+    this.listenoLoginEvents();
+    this.platformReady();
+  }
+
+  platformReady() {
+    this.platform.ready().then(() => {
+      this.splashScreen.hide();
     });
   }
 
@@ -63,34 +54,43 @@ export class MyApp {
 
     this.loginSrv.getUsuarioLogado().subscribe(
       (usuLogado) => {
-        console.log('usuario conectado');
-        this.usuario = new UsuarioVO();
-        this.usuario.nome = usuLogado.name;
-        //this.rootPage = TabsPage;
+        this.popularMenu(true);
+        this.usuarioLog = usuLogado.name;
       }, err => {
-        //this.rootPage = TabsPage;
+        this.popularMenu(false);
         console.log('usuario desconectado');
-      });     
-  }
-
-  openPage(page: PageInterface) {
-    if (page.index) {
-      this.nav.setRoot(page.component, { tabIndex: page.index });
-    } else {
-      this.nav.setRoot(page.component).catch(() => {
-        console.log("Didn't set nav root");
       });
-    }
+  }
 
-    if (page.logsOut === true) {
-      // Give the menu time to close before changing to logged out
-      setTimeout(() => {
-        // this.userData.logout();
-      }, 1000);
+  openPage(page: IMenu) {
+
+    switch (page.typeMenu) {
+      case enums.ETypeMenu.default:
+        if (page.index) {
+          this.nav.setRoot(page.component, { tabIndex: page.index });
+        } else {
+          this.nav.setRoot(page.component).catch((e) => {
+            // console.log("Não definiu a raiz do navegador");
+          });
+        }
+        break;
+
+      case enums.ETypeMenu.login:
+        let loginModal = this.mdlCtrl.create(LoginPage);
+        loginModal.present();
+        break;
+
+      case enums.ETypeMenu.logout:
+        setTimeout(() => {
+          this.popularMenu(false);
+          this.usuarioLog = '';
+          this.loginSrv.logout();
+        }, 1000);
+        break;
     }
   }
 
-  isActive(page: PageInterface) {
+  isActive(page: IMenu) {
     let childNav = this.nav.getActiveChildNav();
 
     if (childNav) {
@@ -106,13 +106,50 @@ export class MyApp {
     return;
   }
 
-  platformReady() {
-    this.platform.ready().then(() => {
-      Splashscreen.hide();
-    });
+  public popularMenu(value: boolean) {
+
+    try {
+      this.pages = [
+        {
+          title: 'Vitrine', component: TabsPage, tabComponent: VitrinePage, index: 0, icon: 'logo-windows'
+          , typeMenu: enums.ETypeMenu.default
+        },
+        {
+          title: 'Guia', component: TabsPage, tabComponent: GuiaPage, index: 1, icon: 'compass'
+          , typeMenu: enums.ETypeMenu.default
+        },
+        {
+          title: 'Mensagem', component: TabsPage, tabComponent: MensagemListaPage, index: 2, icon: 'chatbubbles'
+          , typeMenu: enums.ETypeMenu.default
+        }
+      ];
+    }
+    catch (e) {
+      console.log.apply(e);
+    }
+
+    this.subpages = [
+      { title: 'Configurações', component: TestePage, icon: 'options', typeMenu: enums.ETypeMenu.default },
+      { title: 'Estatísticas', component: RelatoriosListaPage, icon: 'pie', typeMenu: enums.ETypeMenu.default },
+      { title: 'Favoritos', component: TestePage, icon: 'star', typeMenu: enums.ETypeMenu.default },
+      { title: 'Contato', component: TestePage, icon: 'contact', typeMenu: enums.ETypeMenu.default },
+      { title: 'Sobre', component: TestePage, icon: 'information-circle', typeMenu: enums.ETypeMenu.default }];
+
+    if (value == true) {
+      this.subpages.push({ title: 'Sair', component: TabsPage, icon: 'exit', typeMenu: enums.ETypeMenu.logout });
+    }
+    else {
+      this.subpages.push({ title: 'Login', component: LoginPage, icon: 'log-in', typeMenu: enums.ETypeMenu.login });
+    }
   }
 
-  close(): void {
+  listenoLoginEvents() {
+    this.events.subscribe('usuario:logado', (nomeUsuario) => {
+      if (nomeUsuario != null) {
+        this.usuarioLog = nomeUsuario;
+        this.popularMenu(true);
+      }
+    });
   }
 
 }

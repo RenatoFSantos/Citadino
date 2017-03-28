@@ -5,23 +5,22 @@
                 <ion-avatar item-left>
                     <img src="assets/img/adam.jpg">
                 </ion-avatar>
-                <h2>Gustavo</h2>
+                <h2>{{usuarioLog}}</h2>
             </ion-item>
         </ion-toolbar>
         <ion-list>
             <button class="menu-opcoes" ion-item menuClose *ngFor="let p of pages" (click)="openPage(p)">
-          <ion-icon item-left [name]="p.icon" [color]="isActive(p)"></ion-icon>
-          {{p.title}}
-        </button>
+            <ion-icon item-left [name]="p.icon" [color]="isActive(p)"></ion-icon>
+                {{p.title}}
+            </button>
         </ion-list>
         <ion-item-group>
             <ion-list>
                 <button class="menu-opcoes" ion-item menuClose *ngFor="let p of subpages" (click)="openPage(p)">
                     <ion-icon item-left [name]="p.icon" [color]="isActive(p)"></ion-icon>
                     {{p.title}}
-                </button>                
+                </button>
             </ion-list>
-            
         </ion-item-group>
         <div style="text-align: center;">
             <img src="assets/img/midilabs_80x80.png">

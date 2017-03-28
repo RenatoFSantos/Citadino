@@ -1,22 +1,33 @@
+import { LoginService } from './../../../providers/service/login-service';
 import { Component } from '@angular/core';
-import { NavController, NavParams } from 'ionic-angular';
+import { NavController, ViewController, Events } from 'ionic-angular';
+import { NgForm } from '@angular/forms';
 
-/*
-  Generated class for the Sigin page.
-
-  See http://ionicframework.com/docs/v2/components/#navigation for more info on
-  Ionic pages and navigation.
-*/
 @Component({
   selector: 'page-signup',
   templateUrl: 'signup.html'
 })
 export class SignUpPage {
 
-  constructor(public navCtrl: NavController, public navParams: NavParams) {}
+  loginUser: { name?: string, email?: string, password?: string } = {};
+  error: any
 
-  ionViewDidLoad() {
-    console.log('ionViewDidLoad SiginPage');
+  constructor(public navCtrl: NavController,
+    public loginSrv: LoginService,
+    private viewCtrl: ViewController,
+    private event: Events) { }
+
+  salvar(loginForm: NgForm) {
+    if (loginForm.valid) {
+      this.loginSrv.salvarLogin(this.loginUser).subscribe(
+        (data: any) => {
+          this.event.publish('usuario:logado', data.name);
+          this.viewCtrl.dismiss();
+        },
+        (err) => {
+          this.error = err;
+        });
+    }
   }
 
 }
