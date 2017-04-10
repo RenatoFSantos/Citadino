@@ -24,17 +24,17 @@
                 required>
             </ion-input>
         </ion-item>
-        <p ion-text [hidden]="email.valid || submitted == false" color="danger" padding-left>
+        <!--<p ion-text [hidden]="email.valid || submitted == false" color="danger" padding-left>
             Informe o e-mail.
-        </p>
+        </p>-->
         <ion-item>
             <ion-label floating>Senha</ion-label>
             <ion-input [(ngModel)]="loginUser.password" name="password" type="password" #password="ngModel" required>
             </ion-input>
         </ion-item>
-        <p ion-text [hidden]="password.valid || submitted == false" color="danger" padding-left>
+        <!--<p ion-text [hidden]="password.valid || submitted == false" color="danger" padding-left>
             Informe a senha.
-        </p>
+        </p>-->
         <div padding text-center>
             <button ion-button block (click)="salvar(loginForm)" type="submit">Salvar</button>
         </div>

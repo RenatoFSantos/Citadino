@@ -1,3 +1,4 @@
+import { VitrineService } from './../../providers/service/vitrine-service';
 import { NoticiaFullPage } from './../noticia-full/noticia-full';
 import { VitrineAnuncio6Page } from './../vitrine-anuncio-6/vitrine-anuncio-6';
 import { SsScrapfashionPage } from './../ss-scrapfashion/ss-scrapfashion';
@@ -8,7 +9,7 @@ import { VitrineAnuncio2Page } from './../vitrine-anuncio-2/vitrine-anuncio-2';
 import { VitrineAnuncio1Page } from './../vitrine-anuncio-1/vitrine-anuncio-1';
 import { AnuncioFullPage } from './../anuncio-full/anuncio-full';
 import { Component } from '@angular/core';
-import { NavController, NavParams, AlertController } from 'ionic-angular';
+import { NavController, NavParams, AlertController, Events, LoadingController } from 'ionic-angular';
 
 
 @Component({
@@ -16,29 +17,60 @@ import { NavController, NavParams, AlertController } from 'ionic-angular';
   templateUrl: 'vitrine.html'
 })
 export class VitrinePage {
-
-  constructor(public navCtrl: NavController, public navParams: NavParams, private alertCtrl: AlertController) {}
+  public vitrines: any;
+  public error: any;
+  public loading: any = null;
+  constructor(
+    public navCtrl: NavController,
+    public navParams: NavParams,
+    public events: Events,
+    public loadingCtrl: LoadingController,
+    private alertCtrl: AlertController,
+    private vitrineSrv: VitrineService) { }
 
   ionViewDidLoad() {
-    console.log('ionViewDidLoad VitrinePage');
+    this.loading = this.loadingCtrl.create({
+      content: "Aguarde..."
+    });
+    this.loading.present();
+    this.carregarVitrine();
   }
 
-  openPub(opcao: number):void {
-    switch(opcao) {
-      case 1: 
+  ionViewWillLeave() {
+    console.log('ionViewWillLeave');
+    this.events.subscribe('vitrine:carregada', (callback) => {
+      this.vitrineSrv.desconectarRealTime(callback);
+      console.log('Fechei o realtime');
+    });
+  }
+
+  ionViewDidLeave() {
+    console.log('ionViewDidLeave');
+  }
+
+  openPub(opcao: number): void {
+    switch (opcao) {
+      case 1:
         this.navCtrl.push(AnuncioFullPage);
         break;
-      case 2: 
+      case 2:
         this.navCtrl.push(NoticiaFullPage);
         break;
       default:
-        break;        
+        break;
     }
-    
   }
 
+  doRefresh(refresher) {
+    this.carregarVitrine();
+    setTimeout(() => {
+      refresher.complete();
+    }, 2000);
+  }
+
+
   openDetalhe(tipo: number) {
-    switch(tipo) {
+    switch (tipo) {
       case 1:
         this.navCtrl.push(VitrineAnuncio1Page);
         break;
@@ -62,9 +94,26 @@ export class VitrinePage {
     }
   }
 
+  private carregarVitrine() {
+
+    this.vitrineSrv.listarTodas().subscribe(
+      (result) => {
+        if (result != null) {
+          this.vitrines = result;
+          if (this.loading != null)
+            this.loading.dismiss();
+        }
+      },
+      (err) => {
+        this.error = err;
+        if (this.loading != null)
+          this.loading.dismiss();
+      });
+  }
+
   openSmartSite(site: string) {
-    switch(site) {
-      case 'scrapfashion': 
+    switch (site) {
+      case 'scrapfashion':
         this.navCtrl.push(SsScrapfashionPage);
       default: {
       }
@@ -76,7 +125,7 @@ export class VitrinePage {
       title: 'Parabéns!',
       message: 'Você ganhou este cupom de desconto!<br>Guarde este número para resgatar esta promoção!<br>CTDN943587220012',
       buttons: [
-         {
+        {
           text: 'Obrigado!',
           handler: () => {
             console.log('Agree clicked');

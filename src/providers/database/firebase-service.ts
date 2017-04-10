@@ -19,16 +19,31 @@ export class FirebaseService {
     this.db = firebase.database().ref('/');
   }
 
-  
+
   //Retorna um json do objeto
   public pesquisarPorId(tabela: string, uid: string) {
-    return firebase.database().ref(tabela + uid).once('value').then(
+    return firebase.database().ref('/' + tabela + '/' + uid).once('value').then(
       (dataSnapshot: any) => {
-        return dataSnapshot.val();
+        if (dataSnapshot.val() != null) {
+          return dataSnapshot.val();
+        }
+        else {
+          throw 'Usuário não encontrado';
+        }
       })
       .catch((error: any) => {
         console.log(error);
       });
+  }
+
+  //Retorna os dados de uma tabela
+  public retornaDadosTabela(tabela: string): firebase.database.Reference {
+    return firebase.database().ref().child(tabela);
+  }
+
+  //Retorna os dados de uma tabela
+  public retornaRegistroTabela(tabela: string, uid: string): firebase.database.Reference {
+    return firebase.database().ref('/' + tabela + '/' + uid);
   }
 
   public getConnect() {

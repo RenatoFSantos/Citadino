@@ -1,3 +1,5 @@
+import { VitrineService } from './../providers/service/vitrine-service';
+import { HomeLoginPage } from './../pages/autenticar/homeLogin';
 import { CtdHeaderModalComponent } from './../components/ctd-header-modal/ctd-header-modal';
 import { SplashScreen } from '@ionic-native/splash-screen';
 import { LoginService } from './../providers/service/login-service';
@@ -33,6 +35,7 @@ import { TabsPage } from '../pages/tabs/tabs';
 import { VitrinePage } from '../pages/vitrine/vitrine';
 import { GuiaPage } from '../pages/guia/guia';
 import { MensagemPage } from '../pages/mensagem/mensagem';
+import { BrowserModule } from '@angular/platform-browser';
 
 
 @NgModule({
@@ -65,9 +68,11 @@ import { MensagemPage } from '../pages/mensagem/mensagem';
     LoginPage,
     SignUpPage,
     TestePage,
-    CtdHeaderModalComponent
+    CtdHeaderModalComponent,
+    HomeLoginPage
   ],
   imports: [
+    BrowserModule,
     IonicModule.forRoot(MyApp,
       {
         mode: 'md'
@@ -103,12 +108,15 @@ import { MensagemPage } from '../pages/mensagem/mensagem';
     LoginPage,
     SignUpPage,
     TestePage,
-    CtdHeaderModalComponent
+    CtdHeaderModalComponent,
+    HomeLoginPage
   ],
-  providers: [{ provide: ErrorHandler, useClass: IonicErrorHandler }, 
-  FirebaseService,
-  LoginService,
-  GlobalVar,
-  SplashScreen]
+  providers: [{ provide: ErrorHandler, useClass: IonicErrorHandler },
+    FirebaseService,
+    LoginService,
+    GlobalVar,
+    SplashScreen,
+    VitrineService
+  ]
 })
 export class AppModule { }

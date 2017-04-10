@@ -1,13 +1,10 @@
 import { FirebaseService } from './../database/firebase-service';
-
-import { Events } from 'ionic-angular';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs/Observable';
 
 @Injectable()
 export class LoginService {
-  constructor(private fbSrv: FirebaseService,
-    public events: Events) {
+  constructor(private fbSrv: FirebaseService) {
   }
 
   //Retorna usuário conectado
@@ -33,16 +30,14 @@ export class LoginService {
       observer => {
         return this.onAuthStateChanged((_currentUser) => {
           if (_currentUser) {
-            return this.fbSrv.pesquisarPorId('/usuario/', _currentUser.uid).then(
+            return this.fbSrv.pesquisarPorId('usuario', _currentUser.uid).then(
               (usuLog) => {
-                // console.log("Usuario encontrado" + usuLog.name);
                 observer.next(usuLog);
               })
               .catch((error: any) => {
                 observer.error();
               });
           } else {
-            // console.log("Usuario nao logado");
             observer.error();
           }
         });
@@ -55,35 +50,33 @@ export class LoginService {
       observer => {
         return this.fbSrv.getConnect().auth().signInWithEmailAndPassword(usuario.email, usuario.password).then(
           (authData) => {
-            // console.log('teste' + authData);
             this.getUsuarioLogado().subscribe(
               (usuLogado) => {
-                observer.next(usuLogado)
-              }, err => {
-                // console.log('usuario desconectado');
+                observer.next(usuLogado);
+              }, error => {
+                throw error;
               });
           })
           .catch((error) => {
-            console.log("Falhou autenticação", error);
             observer.error(error);
           });
       });
   }
 
   logout() {
-    console.log("close connection");
-    return this.fbSrv.getConnect().auth().signOut()
+    return this.fbSrv.getConnect().auth().signOut();
   }
 
   salvarLogin(usuario) {
     return Observable.create(observer => {
       return this.fbSrv.getConnect().auth().createUserWithEmailAndPassword(usuario.email, usuario.password)
         .then((authData) => {
-          console.log("Login criado com sucesso", authData);
-          observer.next(authData)
-        }).catch((_error) => {
-          console.log("Login falhou", _error);
-          observer.error(_error)
+          usuario.uid = authData.uid;
+          let usuRef = this.fbSrv.retornaRegistroTabela('usuario', authData.uid);
+          usuRef.set(usuario);
+          observer.next(usuario);
+        }).catch((error) => {
+          observer.error(error);
         })
     });
   }

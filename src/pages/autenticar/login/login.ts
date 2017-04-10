@@ -8,7 +8,6 @@ import { NgForm } from '@angular/forms';
   templateUrl: 'login.html'
 })
 export class LoginPage {
-
   loginUser: { email?: string, password?: string } = {};
   error: any
 
@@ -21,7 +20,7 @@ export class LoginPage {
 
   login(loginForm: NgForm) {
     if (loginForm.valid) {
-      this.loginSrv.logarUsuario(this.loginUser).subscribe(
+         this.loginSrv.logarUsuario(this.loginUser).subscribe(
         (data: any) => {
           this.event.publish('usuario:logado', data.name);
           this.viewCtrl.dismiss();

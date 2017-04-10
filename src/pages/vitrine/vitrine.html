@@ -5,29 +5,65 @@
 </ion-header>
 
 <ion-content>
-
+    <ion-refresher (ionRefresh)="doRefresh($event)">
+        <ion-refresher-content pullingIcon="arrow-dropdown" pullingText="" refreshingSpinner="circles" refreshingText="Aguarde...">
+        </ion-refresher-content>
+    </ion-refresher>
     <!-- ANUNCIO TIPO 1 -->
-
-    <ion-card class="ctd-card">
-        <ion-item (click)="openPub()">
-            <ion-avatar item-left>
-                <img src="assets/img/ctd_avatar_1.png">
-            </ion-avatar>
-            <h2>Mestra Supermercados</h2>
-            <p>Veja nossas promoções do dia!</p>
-        </ion-item>
-        <img src="assets/img/ctd_anuncio_1.png" (click)="openPub(1)" />
-        <ion-buttons start>
-            <ctd-buttons></ctd-buttons>
-            <button ion-button icon-only clear color="ctd-button" (click)="openDetalhe(1)">
+    <ion-card class="ctd-card" *ngFor="let item of vitrines">
+        <div *ngIf="item.tipo_anuncio == 1">
+            <ion-item (click)="openPub()">
+                <ion-avatar item-left>
+                    <img src="{{item.avatar_url}}">
+                </ion-avatar>
+                <h2>{{item.nm_empresa}}</h2>
+                <p>{{item.texto}}</p>
+            </ion-item>
+            <img src="{{item.anuncio_url}}" (click)="openPub(1)" />
+            <ion-buttons start>
+                <ctd-buttons></ctd-buttons>
+                <button ion-button icon-only clear color="ctd-button" (click)="openDetalhe(1)">
                 <ion-icon name="alert"></ion-icon>
             </button>
-        </ion-buttons>
+            </ion-buttons>
+        </div>
+        <div *ngIf="item.tipo_anuncio == 2">
+            <ion-item>
+                <ion-avatar item-left>
+                    <img src="{{item.avatar_url}}">
+                </ion-avatar>
+                <h2>{{item.nm_empresa}}</h2>
+                <p>{{item.texto}}</p>
+            </ion-item>
+            <img src="{{item.anuncio_url}}" />
+            <ion-buttons start>
+                <ctd-buttons></ctd-buttons>
+                <button ion-button icon-only clear color="ctd-button" (click)="openDetalhe(2)">
+                <ion-icon name="alert"></ion-icon>
+            </button>
+            </ion-buttons>
+        </div>
+        <div *ngIf="item.tipo_anuncio == 3">
+            <ion-item>
+                <ion-avatar item-left>
+                    <img src="{{item.avatar_url}}">
+                </ion-avatar>
+                <h2>{{item.nm_empresa}}</h2>
+                <p>{{item.texto}}</p>
+            </ion-item>
+            <img src="{{item.anuncio_url}}" (click)="openSmartSite('scrapfashion')" />
+            <ion-buttons start>
+                <ctd-buttons></ctd-buttons>
+                <button ion-button icon-only clear color="ctd-button" (click)="openDetalhe(2)">
+                <ion-icon name="alert"></ion-icon>
+            </button>
+            </ion-buttons>
+        </div>
     </ion-card>
 
     <!-- ANUNCIO TIPO 2 -->
 
-    <ion-card class="ctd-card">
+    <!--<ion-card class="ctd-card">
         <ion-item>
              <ion-avatar item-left>
                 <img src="assets/img/ctd_avatar_2.png">
@@ -42,15 +78,15 @@
                 <ion-icon name="alert"></ion-icon>
             </button>
        </ion-buttons>
-    </ion-card>
+    </ion-card>-->
 
-    <ion-card class="ctd-card">
+    <!--<ion-card class="ctd-card">
         <ion-item>
              <ion-avatar item-left>
                 <img src="assets/img/ctd_avatar_3.png">
             </ion-avatar>
            <h2>Scrap Fashion</h2>
-            <p>Decorando festas e realizando sonhos</p>
+           <p>Decorando festas e realizando sonhos</p>
         </ion-item>
         <img src="assets/img/ctd_anuncio_3.jpg" (click)="openSmartSite('scrapfashion')" />
         <ion-buttons start>
@@ -59,17 +95,17 @@
                 <ion-icon name="alert"></ion-icon>
             </button>
         </ion-buttons>
-    </ion-card>
+    </ion-card>-->
 
     <!-- PROMOÇAO -->
 
-    <ion-card class="ctd-card" (click)="showPromocao()">
+    <!--<ion-card class="ctd-card" (click)="showPromocao()">
         <img src="assets/img/ctd_promocao_1.png"/>
-    </ion-card>
+    </ion-card>-->
 
     <!-- INFORME CITADINO -->
 
-    <ion-card class="ctd-card" color="ctd-noticia" (click)="openPub(2)">
+    <!--<ion-card class="ctd-card" color="ctd-noticia" (click)="openPub(2)">
         <ion-item color="ctd-subtitulo">
              <ion-avatar item-left>
                 <img src="assets/img/thumb_200x200_citadino.png">
@@ -80,11 +116,11 @@
         <ion-card-content class="ctd-texto">
             Para tomar medidas preventivas e impedir que a dengue chegue até a sua cidade ou município, a melhor atitude é combater os focos de acúmulo de água.
         </ion-card-content>
-    </ion-card>
+    </ion-card>-->
 
     <!-- ANUNCIO TIPO 3 -->
 
-    <ion-card class="ctd-card">
+    <!--<ion-card class="ctd-card">
         <ion-item>
              <ion-thumbnail item-left>
                 <img src="assets/img/thumb_200x200_midilabs.jpg">
@@ -101,11 +137,11 @@
                 <ion-icon name="alert"></ion-icon>
             </button>
         </ion-buttons>
-    </ion-card>
+    </ion-card>-->
 
     <!-- ANUNCIO TIPO 4 -->
 
-    <ion-card class="ctd-card">
+    <!--<ion-card class="ctd-card">
         <ion-item>
              <ion-thumbnail item-left>
                 <img src="assets/img/thumb_200x200_kaluana.jpg">
@@ -122,11 +158,11 @@
                 <ion-icon name="alert"></ion-icon>
             </button>
         </ion-buttons>
-    </ion-card>
+    </ion-card>-->
 
     <!-- ANUNCIO TIPO 5 -->
 
-    <ion-card class="ctd-card">
+    <!--<ion-card class="ctd-card">
         <ion-item>
            <ion-avatar item-left>
                <img src="assets/img/ctd_avatar_5.png">
@@ -143,12 +179,12 @@
                 <ion-icon name="alert"></ion-icon>
             </button>
         </ion-buttons>
-    </ion-card>
+    </ion-card>-->
 
     <!-- ANUNCIO TIPO 6 -->
 
-    <ion-card class="ctd-card">
-        <ion-item>
+    <!--<ion-card class="ctd-card">-->
+    <!--<ion-item>
            <ion-avatar item-left>
                <img src="assets/img/ctd_avatar_4.png">
            </ion-avatar>
@@ -161,7 +197,7 @@
                 <ion-icon name="alert"></ion-icon>
             </button>
         </ion-buttons>
-    </ion-card>
+    </ion-card>-->
 
 
 

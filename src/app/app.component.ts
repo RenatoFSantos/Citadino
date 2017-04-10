@@ -1,7 +1,7 @@
+import { HomeLoginPage } from './../pages/autenticar/homeLogin';
 import { IMenu } from './../Interface/IMenu';
 import { LoginService } from './../providers/service/login-service';
 import { FirebaseService } from './../providers/database/firebase-service';
-import { LoginPage } from './../pages/autenticar/login/login';
 import { MensagemListaPage } from './../pages/mensagem-lista/mensagem-lista';
 import { TestePage } from './../pages/teste/teste';
 import { RelatoriosListaPage } from './../pages/relatorios-lista/relatorios-lista';
@@ -14,9 +14,6 @@ import { SplashScreen } from '@ionic-native/splash-screen';
 // import { StatusBar } from '@ionic-native/statusBar';
 import { TabsPage } from '../pages/tabs/tabs';
 import * as enums from './../modelo/dominio/citadinoEnum'
-
-
-
 
 @Component({
   templateUrl: 'app.html'
@@ -69,14 +66,13 @@ export class MyApp {
         if (page.index) {
           this.nav.setRoot(page.component, { tabIndex: page.index });
         } else {
-          this.nav.setRoot(page.component).catch((e) => {
-            // console.log("Não definiu a raiz do navegador");
+          this.nav.setRoot(page.component).catch((e) => {        
           });
         }
         break;
 
       case enums.ETypeMenu.login:
-        let loginModal = this.mdlCtrl.create(LoginPage);
+        let loginModal = this.mdlCtrl.create(HomeLoginPage);
         loginModal.present();
         break;
 
@@ -139,7 +135,7 @@ export class MyApp {
       this.subpages.push({ title: 'Sair', component: TabsPage, icon: 'exit', typeMenu: enums.ETypeMenu.logout });
     }
     else {
-      this.subpages.push({ title: 'Login', component: LoginPage, icon: 'log-in', typeMenu: enums.ETypeMenu.login });
+      this.subpages.push({ title: 'Login', component: HomeLoginPage, icon: 'log-in', typeMenu: enums.ETypeMenu.login });
     }
   }
 

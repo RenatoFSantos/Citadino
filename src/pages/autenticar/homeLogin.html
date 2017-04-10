@@ -1,0 +1,27 @@
+<ion-header>
+    <ion-navbar color="ctd-navbar">
+        <ctd-header-modal></ctd-header-modal>
+    </ion-navbar>
+</ion-header>
+<ion-content padding>
+    <ion-grid style="margin-top: 0px; margin-bottom: 0px;">
+        <ion-row>
+            <ion-col width-33></ion-col>
+            <ion-col width-33><img src="assets/img/icon.png" alt="CITADINO" /></ion-col>
+            <ion-col width-33></ion-col>
+        </ion-row>
+    </ion-grid>
+    <ion-grid>
+        <ion-row>
+            <ion-col>
+                <button ion-button block (click)="criarConta()" type="submit">Criar uma conta</button>
+            </ion-col>
+        </ion-row>    
+        <ion-row>
+            <ion-col>
+               <button ion-button block (click)="logarUsuario()" type="submit">Fazer Login</button>
+            </ion-col>
+        </ion-row>    
+    </ion-grid>
+    
+</ion-content>

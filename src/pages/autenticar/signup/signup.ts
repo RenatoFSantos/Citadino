@@ -9,7 +9,7 @@ import { NgForm } from '@angular/forms';
 })
 export class SignUpPage {
 
-  loginUser: { name?: string, email?: string, password?: string } = {};
+  loginUser: { uid?:any, name?: string, email?: string, password?: string } = {};
   error: any
 
   constructor(public navCtrl: NavController,
