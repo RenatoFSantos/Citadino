@@ -10,8 +10,8 @@ import { VitrinePage } from './../pages/vitrine/vitrine';
 
 import { Component, ViewChild } from '@angular/core';
 import { Platform, MenuController, Nav, ModalController, Events } from 'ionic-angular';
-import { SplashScreen } from '@ionic-native/splash-screen';
-// import { StatusBar } from '@ionic-native/statusBar';
+import { SplashScreen, } from '@ionic-native/splash-screen';
+import { StatusBar } from '@ionic-native/status-bar';
 import { TabsPage } from '../pages/tabs/tabs';
 import * as enums from './../modelo/dominio/citadinoEnum'
 
@@ -34,21 +34,19 @@ export class MyApp {
     private data: FirebaseService,
     private loginSrv: LoginService,
     public events: Events,
-    public splashScreen: SplashScreen) {
+    public splashScreen: SplashScreen,
+    public statusBar: StatusBar) {
 
-    data.init();
-    this.listenoLoginEvents();
-    this.platformReady();
-  }
-
-  platformReady() {
-    this.platform.ready().then(() => {
-      this.splashScreen.hide();
+    platform.ready().then(() => {
+      statusBar.styleDefault();
+      splashScreen.hide();
     });
+
+    this.listernLoginEvents();
   }
 
   ngOnInit() {
-
+    this.data.init();
     this.loginSrv.getUsuarioLogado().subscribe(
       (usuLogado) => {
         this.popularMenu(true);
@@ -66,7 +64,7 @@ export class MyApp {
         if (page.index) {
           this.nav.setRoot(page.component, { tabIndex: page.index });
         } else {
-          this.nav.setRoot(page.component).catch((e) => {        
+          this.nav.setRoot(page.component).catch((e) => {
           });
         }
         break;
@@ -139,7 +137,7 @@ export class MyApp {
     }
   }
 
-  listenoLoginEvents() {
+  listernLoginEvents() {
     this.events.subscribe('usuario:logado', (nomeUsuario) => {
       if (nomeUsuario != null) {
         this.usuarioLog = nomeUsuario;

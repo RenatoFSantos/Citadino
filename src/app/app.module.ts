@@ -1,3 +1,4 @@
+import { StatusBar } from '@ionic-native/status-bar';
 import { VitrineService } from './../providers/service/vitrine-service';
 import { HomeLoginPage } from './../pages/autenticar/homeLogin';
 import { CtdHeaderModalComponent } from './../components/ctd-header-modal/ctd-header-modal';
@@ -111,12 +112,13 @@ import { BrowserModule } from '@angular/platform-browser';
     CtdHeaderModalComponent,
     HomeLoginPage
   ],
-  providers: [{ provide: ErrorHandler, useClass: IonicErrorHandler },
+  providers: [{ provide: ErrorHandler, useClass: IonicErrorHandler },    
+    SplashScreen,
+    StatusBar,
+    VitrineService,
     FirebaseService,
     LoginService,
-    GlobalVar,
-    SplashScreen,
-    VitrineService
+    GlobalVar
   ]
 })
 export class AppModule { }
