@@ -13,7 +13,7 @@ import { Platform, MenuController, Nav, ModalController, Events } from 'ionic-an
 import { SplashScreen, } from '@ionic-native/splash-screen';
 import { StatusBar } from '@ionic-native/status-bar';
 import { TabsPage } from '../pages/tabs/tabs';
-import * as enums from './../modelo/dominio/citadinoEnum'
+import * as enums from './../model/dominio/citadinoEnum'
 
 @Component({
   templateUrl: 'app.html'
@@ -42,19 +42,19 @@ export class MyApp {
       splashScreen.hide();
     });
 
-    this.listernLoginEvents();
+    // this.listernLoginEvents();
   }
 
   ngOnInit() {
-    this.data.init();
-    this.loginSrv.getUsuarioLogado().subscribe(
-      (usuLogado) => {
+    // this.data.init();
+    // this.loginSrv.getUsuarioLogado().subscribe(
+    //   (usuLogado) => {
         this.popularMenu(true);
-        this.usuarioLog = usuLogado.name;
-      }, err => {
-        this.popularMenu(false);
-        console.log('usuario desconectado');
-      });
+    //     this.usuarioLog = usuLogado.name;
+    //   }, err => {
+    //     this.popularMenu(false);
+    //     console.log('usuario desconectado');
+    //   });
   }
 
   openPage(page: IMenu) {

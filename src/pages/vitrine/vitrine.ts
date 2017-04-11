@@ -29,11 +29,11 @@ export class VitrinePage {
     private vitrineSrv: VitrineService) { }
 
   ionViewDidLoad() {
-    this.loading = this.loadingCtrl.create({
-      content: "Aguarde..."
-    });
-    this.loading.present();
-    this.carregarVitrine();
+    // this.loading = this.loadingCtrl.create({
+    //   content: "Aguarde..."
+    // });
+    // this.loading.present();
+    // this.carregarVitrine();
   }
 
   ionViewWillLeave() {
