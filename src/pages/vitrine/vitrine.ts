@@ -62,10 +62,10 @@ export class VitrinePage {
   }
 
   doRefresh(refresher) {
-    this.carregarVitrine();
-    setTimeout(() => {
-      refresher.complete();
-    }, 2000);
+    // this.carregarVitrine();
+    // setTimeout(() => {
+    //   refresher.complete();
+    // }, 2000);
   }
 
 
