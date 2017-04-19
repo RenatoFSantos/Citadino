@@ -1,6 +1,14 @@
 <ion-header>
     <ion-navbar color="ctd-navbar">
-        <ctd-header-modal></ctd-header-modal>
+        <img class="icocit" src="assets/img/icon.png" />
+        <ion-title class="citadino">
+            CITADINO
+        </ion-title>
+        <ion-buttons right>
+            <button ion-button right (click)="close()">
+        <ion-icon name="md-arrow-back" ></ion-icon>
+    </button>
+        </ion-buttons>
     </ion-navbar>
 </ion-header>
 <ion-content padding>
@@ -11,31 +19,25 @@
             <ion-col width-33></ion-col>
         </ion-row>
     </ion-grid>
-    <form #loginForm="ngForm" novalidate>
-        <ion-item>
-            <ion-label floating>E-mail</ion-label>
-            <ion-input [(ngModel)]="loginUser.email" name="email" type="text" #email="ngModel" spellcheck="false" autocapitalize="off"
-                required>
-            </ion-input>
+    <form [formGroup]="loginForm" (ngSubmit)="onSubmit(loginForm.value)">
+        <ion-item [class.error]="!email.valid && email.touched">
+            <ion-label floating>Email</ion-label>
+            <ion-input type="text" value="" [formControl]="email"></ion-input>
         </ion-item>
-        <p ion-text [hidden]="email.valid || submitted == false" color="danger" padding-left>
-            Informe o e-mail.
-        </p>
-        <ion-item>
+        <div *ngIf="email.hasError('required') && email.touched" class="error-box">* Informe o email.</div>
+        <div *ngIf="email.hasError('isValid') && email.touched" class="error-box">* Informe um email válido.</div>
+        <ion-item [class.error]="!password.valid && password.touched">
             <ion-label floating>Senha</ion-label>
-            <ion-input [(ngModel)]="loginUser.password" name="password" type="password" #password="ngModel" required>
-            </ion-input>
+            <ion-input type="password" value="" [formControl]="password"></ion-input>
         </ion-item>
-        <p ion-text [hidden]="password.valid || submitted == false" color="danger" padding-left>
-            Informe a senha.
-        </p>
+        <div *ngIf="password.hasError('required') && password.touched" class="error-box">* Informe a senha.</div>
+        <div *ngIf="password.hasError('minlength') && password.touched" class="error-box">* Senha com no mínimo de 6 caracteres.</div>
+        <br/><br/>
+        
         <div padding text-center>
-            <button ion-button block (click)="login(loginForm)" type="submit">Fazer Login</button>
-            <a href="#" style="text-decoration: none;">Esqueci minha senha</a>
-        </div>
-
-        <div padding>
-            <p *ngIf="error" class="error">Error:&nbsp;{{ error.message }}</p>
+            <button ion-button type="submit" class="custom-button" [disabled]="!loginForm.valid" block>Fazer Login</button><br/>
+            <!--<button ion-button block (click)="login(loginForm)" type="submit">Fazer Login</button>
+            <a href="#" style="text-decoration: none;">Esqueci minha senha</a>-->
         </div>
     </form>
 </ion-content>

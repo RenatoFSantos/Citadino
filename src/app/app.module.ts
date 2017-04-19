@@ -1,11 +1,7 @@
-import { StatusBar } from '@ionic-native/status-bar';
-import { VitrineService } from './../providers/service/vitrine-service';
+import { CtdHeaderModalComponent } from './../shared/components/ctd-header-modal/ctd-header-modal';
+import { CtdButtonsComponent } from './../shared/components/ctd-buttons/ctd-buttons';
+import { CtdHeaderComponent } from './../shared/components/ctd-header/ctd-header';
 import { HomeLoginPage } from './../pages/autenticar/homeLogin';
-import { CtdHeaderModalComponent } from './../components/ctd-header-modal/ctd-header-modal';
-import { SplashScreen } from '@ionic-native/splash-screen';
-import { LoginService } from './../providers/service/login-service';
-import { FirebaseService } from './../providers/database/firebase-service';
-import { GlobalVar } from './../providers/global-var';
 import { SignUpPage } from './../pages/autenticar/signup/signup';
 import { LoginPage } from './../pages/autenticar/login/login';
 import { TestePage } from './../pages/teste/teste';
@@ -27,10 +23,8 @@ import { VitrineAnuncio3Page } from './../pages/vitrine-anuncio-3/vitrine-anunci
 import { VitrineAnuncio2Page } from './../pages/vitrine-anuncio-2/vitrine-anuncio-2';
 import { VitrineAnuncio1Page } from './../pages/vitrine-anuncio-1/vitrine-anuncio-1';
 import { AnuncioFullPage } from './../pages/anuncio-full/anuncio-full';
-import { CtdHeaderComponent } from './../components/ctd-header/ctd-header';
-import { CtdButtonsComponent } from './../components/ctd-buttons/ctd-buttons';
-import { NgModule, ErrorHandler } from '@angular/core';
-import { IonicApp, IonicModule, IonicErrorHandler } from 'ionic-angular';
+import { NgModule } from '@angular/core';
+import { IonicApp, IonicModule } from 'ionic-angular';
 import { MyApp } from './app.component';
 import { TabsPage } from '../pages/tabs/tabs';
 import { VitrinePage } from '../pages/vitrine/vitrine';
@@ -38,6 +32,8 @@ import { GuiaPage } from '../pages/guia/guia';
 import { MensagemPage } from '../pages/mensagem/mensagem';
 import { BrowserModule } from '@angular/platform-browser';
 
+// providers
+import { APP_PROVIDERS } from '../providers/app.providers';
 
 @NgModule({
   declarations: [
@@ -112,13 +108,6 @@ import { BrowserModule } from '@angular/platform-browser';
     CtdHeaderModalComponent,
     HomeLoginPage
   ],
-  providers: [{ provide: ErrorHandler, useClass: IonicErrorHandler },    
-    SplashScreen,
-    StatusBar,
-    VitrineService,
-    FirebaseService,
-    LoginService,
-    GlobalVar
-  ]
+  providers: [APP_PROVIDERS]
 })
 export class AppModule { }

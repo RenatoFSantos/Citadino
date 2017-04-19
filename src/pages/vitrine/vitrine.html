@@ -5,21 +5,23 @@
 </ion-header>
 
 <ion-content>
-    <!--<ion-refresher (ionRefresh)="doRefresh($event)">
+
+    
+    <ion-refresher (ionRefresh)="doRefresh($event)">
         <ion-refresher-content pullingIcon="arrow-dropdown" pullingText="" refreshingSpinner="circles" refreshingText="Aguarde...">
         </ion-refresher-content>
-    </ion-refresher>-->
+    </ion-refresher>
     <!-- ANUNCIO TIPO 1 -->
-    <!--<ion-card class="ctd-card" *ngFor="let item of vitrines">
-        <div *ngIf="item.tipo_anuncio == 1">
+    <ion-card class="ctd-card" *ngFor="let item of vitrineList">
+        <div *ngIf="item.val().tipo_anuncio == 1">
             <ion-item (click)="openPub()">
                 <ion-avatar item-left>
-                    <img src="{{item.avatar_url}}">
+                    <img src="{{item.val().avatar_url}}">
                 </ion-avatar>
                 <h2>{{item.nm_empresa}}</h2>
                 <p>{{item.texto}}</p>
             </ion-item>
-            <img src="{{item.anuncio_url}}" (click)="openPub(1)" />
+            <img src="{{item.val().anuncio_url}}" (click)="openPub(1)" />
             <ion-buttons start>
                 <ctd-buttons></ctd-buttons>
                 <button ion-button icon-only clear color="ctd-button" (click)="openDetalhe(1)">
@@ -27,15 +29,15 @@
             </button>
             </ion-buttons>
         </div>
-        <div *ngIf="item.tipo_anuncio == 2">
+        <div *ngIf="item.val().tipo_anuncio == 2">
             <ion-item>
                 <ion-avatar item-left>
-                    <img src="{{item.avatar_url}}">
+                    <img src="{{item.val().avatar_url}}">
                 </ion-avatar>
                 <h2>{{item.nm_empresa}}</h2>
                 <p>{{item.texto}}</p>
             </ion-item>
-            <img src="{{item.anuncio_url}}" />
+            <img src="{{item.val().anuncio_url}}" />
             <ion-buttons start>
                 <ctd-buttons></ctd-buttons>
                 <button ion-button icon-only clear color="ctd-button" (click)="openDetalhe(2)">
@@ -43,15 +45,15 @@
             </button>
             </ion-buttons>
         </div>
-        <div *ngIf="item.tipo_anuncio == 3">
+        <div *ngIf="item.val().tipo_anuncio == 3">
             <ion-item>
                 <ion-avatar item-left>
-                    <img src="{{item.avatar_url}}">
+                    <img src="{{item.val().avatar_url}}">
                 </ion-avatar>
                 <h2>{{item.nm_empresa}}</h2>
                 <p>{{item.texto}}</p>
             </ion-item>
-            <img src="{{item.anuncio_url}}" (click)="openSmartSite('scrapfashion')" />
+            <img src="{{item.val().anuncio_url}}" (click)="openSmartSite('scrapfashion')" />
             <ion-buttons start>
                 <ctd-buttons></ctd-buttons>
                 <button ion-button icon-only clear color="ctd-button" (click)="openDetalhe(2)">
@@ -59,160 +61,7 @@
             </button>
             </ion-buttons>
         </div>
-    </ion-card>-->
-
-   <!-- ANUNCIO TIPO 1 -->
-
-       <ion-card class="ctd-card">
-        <ion-item (click)="openPub()">
-            <ion-avatar item-left>
-                <img src="assets/img/ctd_avatar_1.png">
-            </ion-avatar>
-            <h2>Mestra Supermercados</h2>
-            <p>Veja nossas promoções do dia!</p>
-        </ion-item>
-        <img src="assets/img/ctd_anuncio_1.png" (click)="openPub(1)" />
-        <ion-buttons start>
-            <ctd-buttons></ctd-buttons>
-            <button ion-button icon-only clear color="ctd-button" (click)="openDetalhe(1)">
-                <ion-icon name="alert"></ion-icon>
-            </button>
-        </ion-buttons>
-    </ion-card>
-    
-    <!-- ANUNCIO TIPO 2 -->
-
-    <ion-card class="ctd-card">
-        <ion-item>
-             <ion-avatar item-left>
-                <img src="assets/img/ctd_avatar_2.png">
-            </ion-avatar>
-           <h2>CITADINO</h2>
-            <p>O app que faltava!</p>
-        </ion-item>
-        <img src="assets/img/ctd_anuncio_2.jpg"/>
-        <ion-buttons start>
-            <ctd-buttons></ctd-buttons>
-             <button ion-button icon-only clear color="ctd-button" (click)="openDetalhe(2)">
-                <ion-icon name="alert"></ion-icon>
-            </button>
-       </ion-buttons>
     </ion-card>
 
-    <ion-card class="ctd-card">
-        <ion-item>
-             <ion-avatar item-left>
-                <img src="assets/img/ctd_avatar_3.png">
-            </ion-avatar>
-           <h2>Scrap Fashion</h2>
-           <p>Decorando festas e realizando sonhos</p>
-        </ion-item>
-        <img src="assets/img/ctd_anuncio_3.jpg" (click)="openSmartSite('scrapfashion')" />
-        <ion-buttons start>
-            <ctd-buttons></ctd-buttons>
-             <button ion-button icon-only clear color="ctd-button" (click)="openDetalhe(2)">
-                <ion-icon name="alert"></ion-icon>
-            </button>
-        </ion-buttons>
-    </ion-card>
-
-    <!-- PROMOÇAO -->
-
-    <ion-card class="ctd-card" (click)="showPromocao()">
-        <img src="assets/img/ctd_promocao_1.png"/>
-    </ion-card>
-
-    <!-- INFORME CITADINO -->
-
-    <ion-card class="ctd-card" color="ctd-noticia" (click)="openPub(2)">
-        <ion-item color="ctd-subtitulo">
-             <ion-avatar item-left>
-                <img src="assets/img/thumb_200x200_citadino.png">
-            </ion-avatar>
-           <h2>Notícias</h2>
-           <p>Dengue - Prevenção</p>
-        </ion-item>
-        <ion-card-content class="ctd-texto">
-            Para tomar medidas preventivas e impedir que a dengue chegue até a sua cidade ou município, a melhor atitude é combater os focos de acúmulo de água.
-        </ion-card-content>
-    </ion-card>
-
-    <!-- ANUNCIO TIPO 3 -->
-
-    <ion-card class="ctd-card">
-        <ion-item>
-             <ion-thumbnail item-left>
-                <img src="assets/img/thumb_200x200_midilabs.jpg">
-            </ion-thumbnail>
-           <h2>MIDLABS</h2>
-           <p>Transformando ideias em<br>soluções ideais</p>
-        </ion-item>
-        <ion-card-content class="ctd-faixa">
-            (32) 3271-3576 / 9 8416-8592
-        </ion-card-content>
-        <ion-buttons start>
-            <ctd-buttons></ctd-buttons>
-            <button ion-button icon-only clear color="ctd-button" (click)="openDetalhe(3)">
-                <ion-icon name="alert"></ion-icon>
-            </button>
-        </ion-buttons>
-    </ion-card>
-
-    <!-- ANUNCIO TIPO 4 -->
-
-    <ion-card class="ctd-card">
-        <ion-item>
-             <ion-thumbnail item-left>
-                <img src="assets/img/thumb_200x200_kaluana.jpg">
-            </ion-thumbnail>
-           <h2>Kaluanã</h2>
-           <p>O melhor crepe da região</p>
-           <ion-card-content>
-                (32) 3271-3576 / 9 8416-8592
-           </ion-card-content>
-        </ion-item>
-        <ion-buttons start>
-            <ctd-buttons></ctd-buttons>
-            <button ion-button icon-only clear color="ctd-button" (click)="openDetalhe(4)">
-                <ion-icon name="alert"></ion-icon>
-            </button>
-        </ion-buttons>
-    </ion-card>
-    <!-- ANUNCIO TIPO 5 -->
-    <ion-card class="ctd-card">
-        <ion-item>
-           <ion-avatar item-left>
-               <img src="assets/img/ctd_avatar_5.png">
-           </ion-avatar>
-           <h2>Sapateiro</h2>
-           <p>(32) 3271-3344 / 9 9456-8989</p>
-        </ion-item>
-        <ion-card-content>
-            Mussum Ipsum, cacilds vidis litro abertis. Viva Forevis aptent taciti sociosqu ad litora torquent Atirei o pau no gatis, per gatis num morreus. Ta deprimidis, eu conheço uma cachacis que pode alegrar sua vidis.
-        </ion-card-content>
-        <ion-buttons start>
-            <ctd-buttons></ctd-buttons>
-            <button ion-button icon-only clear color="ctd-button" (click)="openDetalhe(4)">
-                <ion-icon name="alert"></ion-icon>
-            </button>
-        </ion-buttons>
-    </ion-card>
-
-    <!-- ANUNCIO TIPO 5 -->
-
-    <ion-card class="ctd-card">
-    <ion-item>
-           <ion-avatar item-left>
-               <img src="assets/img/ctd_avatar_4.png">
-           </ion-avatar>
-           <h2>Wagner Pintor</h2>
-           <p>(32) 3271-1201 / 9 9875-9898</p>
-        </ion-item>
-        <ion-buttons start>
-            <ctd-buttons></ctd-buttons>
-            <button ion-button icon-only clear color="ctd-button" (click)="openDetalhe(5)">
-                <ion-icon name="alert"></ion-icon>
-            </button>
-        </ion-buttons>
-    </ion-card>
+   
 </ion-content>

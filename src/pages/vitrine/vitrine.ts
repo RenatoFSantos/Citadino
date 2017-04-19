@@ -1,3 +1,4 @@
+
 import { VitrineService } from './../../providers/service/vitrine-service';
 import { NoticiaFullPage } from './../noticia-full/noticia-full';
 import { VitrineAnuncio6Page } from './../vitrine-anuncio-6/vitrine-anuncio-6';
@@ -12,28 +13,36 @@ import { Component } from '@angular/core';
 import { NavController, NavParams, AlertController, Events, LoadingController } from 'ionic-angular';
 
 
+
 @Component({
   selector: 'page-vitrine',
   templateUrl: 'vitrine.html'
 })
+
 export class VitrinePage {
-  public vitrines: any;
+  // public vitrines: any;
   public error: any;
   public loading: any = null;
+
+  public vitrineList = [];
+
+  public lengthPage = 5;
+
   constructor(
     public navCtrl: NavController,
     public navParams: NavParams,
     public events: Events,
     public loadingCtrl: LoadingController,
     private alertCtrl: AlertController,
-    private vitrineSrv: VitrineService) { }
+    private vitrineSrv: VitrineService) {
+  }
 
   ionViewDidLoad() {
     // this.loading = this.loadingCtrl.create({
     //   content: "Aguarde..."
     // });
     // this.loading.present();
-    // this.carregarVitrine();
+    this.carregarVitrine();
   }
 
   ionViewWillLeave() {
@@ -62,10 +71,12 @@ export class VitrinePage {
   }
 
   doRefresh(refresher) {
-    // this.carregarVitrine();
-    // setTimeout(() => {
-    //   refresher.complete();
-    // }, 2000);
+    this.lengthPage += 5;
+    console.log(this.lengthPage);
+    this.carregarVitrine();
+    setTimeout(() => {
+      refresher.complete();
+    }, 2000);
   }
 
 
@@ -95,20 +106,42 @@ export class VitrinePage {
   }
 
   private carregarVitrine() {
+    let self = this;
+    // this.vitrineSrv.findAll().then(
+    //   (snap) => {
+    //     console.log('Snap ' + snap);
+    //     if (snap != null) {
+    //       this.vitrineList = snap;
+    //       if (this.loading != null)
+    //         this.loading.dismiss();
+    //     }
+    //   },
+    //   (err) => {
+    //     this.error = err;
+    //     if (this.loading != null)
+    //       this.loading.dismiss();
+    //   });
 
-    this.vitrineSrv.listarTodas().subscribe(
-      (result) => {
-        if (result != null) {
-          this.vitrines = result;
-          if (this.loading != null)
-            this.loading.dismiss();
-        }
-      },
-      (err) => {
-        this.error = err;
-        if (this.loading != null)
-          this.loading.dismiss();
-      });
+    //  this.vitrineSrv.getPaginatedList(this.lengthPage).then( paginatedCountryList => 
+    //  {
+    //     console.log("Entrei");
+    //     console.log(paginatedCountryList);
+    //     this.vitrineList = paginatedCountryList;
+    //  });
+
+    // this.vitrineSrv.listarTodas().subscribe(
+    //   (result) => {
+    //     if (result != null) {
+    //       this.vitrineList = result;
+    //       if (this.loading != null)
+    //         this.loading.dismiss();
+    //     }
+    //   },
+    //   (err) => {
+    //     this.error = err;
+    //     if (this.loading != null)
+    //       this.loading.dismiss();
+    //   });
   }
 
   openSmartSite(site: string) {
