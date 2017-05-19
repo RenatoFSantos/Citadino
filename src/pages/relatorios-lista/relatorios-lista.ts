@@ -1,7 +1,7 @@
 import { RelatFidelidadePage } from './../relat-fidelidade/relat-fidelidade';
 import { RelatPedidoPage } from './../relat-pedido/relat-pedido';
-import { Component } from '@angular/core';
-import { NavController, NavParams } from 'ionic-angular';
+import { Component, OnInit } from '@angular/core';
+import { NavController, NavParams, ViewController } from 'ionic-angular';
 
 /*
   Generated class for the RelatoriosLista page.
@@ -13,16 +13,21 @@ import { NavController, NavParams } from 'ionic-angular';
   selector: 'page-relatorios-lista',
   templateUrl: 'relatorios-lista.html'
 })
-export class RelatoriosListaPage {
+export class RelatoriosListaPage implements OnInit {
 
-  constructor(public navCtrl: NavController, public navParams: NavParams) {}
+  constructor(public navCtrl: NavController, public navParams: NavParams) {
 
+  }
+
+  ngOnInit() { };
+
+  
   ionViewDidLoad() {
     console.log('ionViewDidLoad RelatoriosListaPage');
   }
 
   openRelat(nome: string) {
-    switch(nome) {
+    switch (nome) {
       case 'pedido':
         this.navCtrl.push(RelatPedidoPage);
         break;

@@ -1,6 +1,9 @@
+import { LoginPage } from './../pages/autenticar/login/login';
+import { SqLiteService } from './../providers/database/sqlite-service';
+import { GlobalVar } from './../shared/global-var';
+import { NetworkService } from './../providers/service/network-service';
 import { UsuarioVO } from './../model/usuarioVO';
 import { IMenu } from './../shared/interfaces';
-import { Network } from '@ionic-native/Network';
 import { LoginService } from './../providers/service/login-service';
 import { FirebaseService } from './../providers/database/firebase-service';
 
@@ -12,8 +15,11 @@ import { GuiaPage } from './../pages/guia/guia';
 import { VitrinePage } from './../pages/vitrine/vitrine';
 import { TabsPage } from '../pages/tabs/tabs';
 
-import { Component, ViewChild } from '@angular/core';
-import { Platform, MenuController, Nav, ModalController, Events } from 'ionic-angular';
+import { Component, ViewChild, OnInit } from '@angular/core';
+import {
+  Platform, MenuController, Nav,
+  ModalController, Events, ToastController
+} from 'ionic-angular';
 import { SplashScreen, } from '@ionic-native/splash-screen';
 import { StatusBar } from '@ionic-native/status-bar';
 import * as enums from './../model/dominio/citadinoEnum'
@@ -23,123 +29,166 @@ declare var window: any;
 @Component({
   templateUrl: 'app.html'
 })
-export class MyApp {
+export class MyApp implements OnInit {
   @ViewChild(Nav) nav: Nav;
-  public isLogado = false;
+
   public pages: IMenu[];
   public subpages: IMenu[];
-  public userLogged:UsuarioVO = new UsuarioVO();
+  public userLogged: UsuarioVO = new UsuarioVO();
   public rootPage: any;
   public firebaseConnectionAttempts: number = 0;
-
 
   constructor(private platform: Platform,
     private menuCtrl: MenuController,
     private mdlCtrl: ModalController,
-    private fbs: FirebaseService,
+    private fbService: FirebaseService,
+    private sqService: SqLiteService,
     private loginSrv: LoginService,
     private events: Events,
     private splashScreen: SplashScreen,
     private statusBar: StatusBar,
-    private network: Network) {
-
-    var self = this;
-    self.listernLoginEvents();
+    private netService: NetworkService,
+    private toastCtrl: ToastController,
+    private globalVar: GlobalVar) {
 
     platform.ready().then(() => {
-      if (window.cordova) {
-        self.statusBar.styleDefault();
-        self.listernLoginEvents();
-        self.listernConnection();
-        self.listernDisconnect();
-        self.splashScreen.hide();
+      this.statusBar.styleDefault();
+      this.userLoggedEvent();
 
-        // console.log('in ready..');
-        // let array: string[] = platform.platforms();
-        // console.log(array);
-        // self.sqliteService.InitDatabase();
-      }
-      else {
-        self.listernLoginEvents();
-        self.listernConnection();
-        self.listernDisconnect();
-        self.splashScreen.hide();
+      if (window.cordova) {
+        this.netService.initializeNetworkEvents();
+        this.networkDisconnectEvent();
+        this.networkConnectionEvent();
+        this.sqService.InitDatabase();
       }
     });
   }
 
   ngOnInit() {
-    let self = this;
-    self.checkFirebase();
+    this.checkFirebase();
   }
+
 
   checkFirebase() {
     let self = this;
-    if (!self.fbs.isFirebaseConnected()) {
+    if (!self.globalVar.getIsFirebaseConnected()) {
       setTimeout(function () {
-        console.log('Retry : ' + self.firebaseConnectionAttempts);
         self.firebaseConnectionAttempts++;
+
         if (self.firebaseConnectionAttempts < 5) {
+          console.log(self.firebaseConnectionAttempts);
           self.checkFirebase();
         } else {
-          // self.internetConnected = false;
-          // self.dataService.goOffline();
-          // self.loadSqliteThreads();
-          console.log("Não foi possível conectar no banco de dados")
+          self.splashScreen.hide();
+          self.rootPage = LoginPage;
+          self.fbService.goOffline();
         }
       }, 1000);
     }
     else {
-      self.loginSrv.getUserDetail().subscribe((userRef) => {
-        self.popularMenu(true);
-        self.userLogged = userRef.val();
-        self.rootPage = TabsPage;
-      }, error => {
+      let userCurrent = self.loginSrv.getLoggedInUser();
+      if (userCurrent != null) {
+        console.log("userCurrent " + userCurrent.uid);
+        this.loginSrv.getUserDetail(userCurrent.uid).then((userRef) => {
+          self.popularMenu(true);
+          self.userLogged = userRef.val();
+          self.splashScreen.hide();
+          self.rootPage = TabsPage;
+        }).cath((error) => {
+          self.splashScreen.hide();
+          self.rootPage = HomeLoginPage;
+        });
+      } else {
+        self.splashScreen.hide();
         self.rootPage = HomeLoginPage;
-      });
+      }
     }
   }
 
-  listernConnection() {
-    var self = this;
-    self.network.onConnect().subscribe(() => {
+  networkConnectionEvent() {
+    this.events.subscribe('network:online', () => {
       setTimeout(() => {
-        self.fbs.goOnline();
-        self.events.publish('network:connected', true);
+        this.netService.closeStatusConnection();
+        this.fbService.goOnline();
       }, 3000);
     });
   }
 
-
-  listernDisconnect() {
-    var self = this;
-    self.network.onDisconnect().subscribe(() => {
-      self.fbs.goOffline();
-      self.events.publish('network:connected', false);
+  networkDisconnectEvent() {
+    this.events.subscribe('network:offline', () => {
+      this.netService.getStatusConnection();
+      this.fbService.goOffline();
     });
   }
 
+  userLoggedEvent() {
+    this.events.subscribe('usuario:logado', (isFirebase, data) => {
+      if (isFirebase) {
+        let userCurrent = this.loginSrv.getLoggedInUser();
+        if (userCurrent != null) {
+          this.loginSrv.getUserDetail(userCurrent.uid).then((userRef) => {
+            this.popularMenu(true);
+            this.userLogged = userRef.val();
+            this.nav.setRoot(TabsPage);
+          }).catch((error) => {
+            this.nav.setRoot(HomeLoginPage);
+          });
+        } else {
+          this.nav.setRoot(HomeLoginPage);
+        }
+      } else {
+        this.popularMenu(true);
+        this.userLogged = this.populateObjectUser(data);
+        this.nav.setRoot(TabsPage);
+      }
+    });
+  }
+
+  populateObjectUser(data: any): UsuarioVO {
+    var object = new UsuarioVO();
+    let imageData = "assets/img/profile/profile.png";
+
+    for (var i = 0; i < data.rows.length; i++) {
+
+      object.usua_uid_authentic = data.rows.item(i).usua_uid_authentic;
+      object.usua_nm_usuario = data.rows.item(i).usua_nm_usuario;
+      object.usua_ds_email = data.rows.item(i).usua_ds_email;
+      object.usua_tx_senha = data.rows.item(i).usua_tx_senha;
+      object.usua_ds_url_profile = imageData;
+
+    }
+
+    return object;
+  }
+
   openPage(page: IMenu) {
-    var self = this;
+    let params = {};
+
     switch (page.typeMenu) {
       case enums.ETypeMenu.default:
+
         if (page.index) {
-          self.nav.setRoot(page.component, { tabIndex: page.index });
-        } else {
-          self.nav.setRoot(page.component).catch((e) => {
+          params = { tabIndex: page.index };
+        }
+
+        if (this.nav.getActiveChildNav() && page.index != undefined) {
+          this.nav.getActiveChildNav().select(page.index);       
+        } else {    
+          this.nav.push(page.component, params).catch((err: any) => {
+            console.log(`Didn't set nav root: ${err}`);
           });
         }
         break;
 
       case enums.ETypeMenu.login:
-        let loginModal = self.mdlCtrl.create(HomeLoginPage);
+        let loginModal = this.mdlCtrl.create(HomeLoginPage);
         loginModal.present();
         break;
 
       case enums.ETypeMenu.logout:
         setTimeout(() => {
-          self.nav.setRoot(HomeLoginPage);
-          self.loginSrv.signOut();
+          this.nav.setRoot(HomeLoginPage);
+          this.loginSrv.signOut();
         }, 1000);
         break;
     }
@@ -193,24 +242,5 @@ export class MyApp {
     if (value == true) {
       this.subpages.push({ title: 'Sair', component: TabsPage, icon: 'exit', typeMenu: enums.ETypeMenu.logout });
     }
-    // else {
-    //   this.subpages.push({ title: 'Login', component: HomeLoginPage, icon: 'log-in', typeMenu: enums.ETypeMenu.login });
-    // }
   }
-
-  listernLoginEvents() {
-    var self = this;
-    self.events.subscribe('usuario:logado', (loggedInUser) => {  
-      if (loggedInUser) {
-        self.loginSrv.getUserDetail().subscribe((userRef) => { 
-          self.popularMenu(true);
-          self.userLogged = userRef.val();
-          self.nav.setRoot(TabsPage);
-        }, error => {
-          self.nav.setRoot(HomeLoginPage);
-        });
-      }
-    });
-  }
-
 }

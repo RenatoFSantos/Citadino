@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en" dir="ltr">
+
 <head>
   <meta charset="UTF-8">
   <title>Ionic App</title>
@@ -10,9 +11,6 @@
   <link rel="icon" type="image/x-icon" href="assets/icon/favicon.ico">
   <link rel="manifest" href="manifest.json">
   <meta name="theme-color" content="#4e8ef7">
-  
-  <!-- cordova.js required for cordova apps -->
-  <script src="cordova.js"></script>
 
   <!-- un-comment this code to enable service worker
   <script>
@@ -26,11 +24,31 @@
   <link href="build/main.css" rel="stylesheet">
 
 </head>
+
 <body>
 
   <!-- Ionic's root component and where the app will load -->
   <ion-app></ion-app>
 
+
+  <script src="https://www.gstatic.com/firebasejs/3.9.0/firebase.js"></script>
+  <script>
+    // Initialize Firebase
+    var config = {
+      apiKey: "AIzaSyByJsiNAYX6741uxiw-TSokabtN64DeTMk",
+      authDomain: "citadino-c0c79.firebaseapp.com",
+      databaseURL: "https://citadino-c0c79.firebaseio.com",
+      projectId: "citadino-c0c79",
+      storageBucket: "citadino-c0c79.appspot.com",
+      messagingSenderId: "75420061601"
+    };
+    firebase.initializeApp(config);
+
+  </script>
+
+  <!-- cordova.js required for cordova apps -->
+  <script src="cordova.js"></script>
+  
   <!-- The polyfills js is generated during the build process -->
   <script src="build/polyfills.js"></script>
 
@@ -38,4 +56,5 @@
   <script src="build/main.js"></script>
 
 </body>
+
 </html>

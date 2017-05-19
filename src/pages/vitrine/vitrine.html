@@ -6,62 +6,87 @@
 
 <ion-content>
 
-    
-    <ion-refresher (ionRefresh)="doRefresh($event)">
-        <ion-refresher-content pullingIcon="arrow-dropdown" pullingText="" refreshingSpinner="circles" refreshingText="Aguarde...">
-        </ion-refresher-content>
+    <ion-refresher (ionRefresh)="reloadVitrines($event)">
+        <ion-refresher-content></ion-refresher-content>
     </ion-refresher>
-    <!-- ANUNCIO TIPO 1 -->
-    <ion-card class="ctd-card" *ngFor="let item of vitrineList">
-        <div *ngIf="item.val().tipo_anuncio == 1">
+
+    <div *ngIf="loading">
+        <img src="assets/img/ring.gif" style="display:block; margin:auto" />
+    </div>
+
+    <ion-card class="ctd-card" *ngFor="let item of vitrines">
+        <div *ngIf="item.tian_sq_tipoanuncio == 1">
             <ion-item (click)="openPub()">
                 <ion-avatar item-left>
-                    <img src="{{item.val().avatar_url}}">
+                    <img src="{{item.anun_tx_urlavatar}}">
                 </ion-avatar>
-                <h2>{{item.nm_empresa}}</h2>
-                <p>{{item.texto}}</p>
+                <h2>{{item.anun_tx_titulo}}</h2>
+                <p>{{item.anun_tx_subtitulo}}</p>
             </ion-item>
-            <img src="{{item.val().anuncio_url}}" (click)="openPub(1)" />
+            <img src="{{item.anun_tx_urlbanner}}" (click)="openPub(1, item)" />
             <ion-buttons start>
                 <ctd-buttons></ctd-buttons>
-                <button ion-button icon-only clear color="ctd-button" (click)="openDetalhe(1)">
-                <ion-icon name="alert"></ion-icon>
-            </button>
             </ion-buttons>
         </div>
-        <div *ngIf="item.val().tipo_anuncio == 2">
+        <div *ngIf="item.tian_sq_tipoanuncio == 2">
             <ion-item>
                 <ion-avatar item-left>
-                    <img src="{{item.val().avatar_url}}">
+                    <img src="{{item.anun_tx_urlavatar}}">
                 </ion-avatar>
-                <h2>{{item.nm_empresa}}</h2>
-                <p>{{item.texto}}</p>
+                <h2>{{item.anun_tx_titulo}}</h2>
+                <p>{{item.anun_tx_subtitulo}}</p>
             </ion-item>
-            <img src="{{item.val().anuncio_url}}" />
+            <img src="{{item.anun_tx_urlbanner}}" />
             <ion-buttons start>
                 <ctd-buttons></ctd-buttons>
-                <button ion-button icon-only clear color="ctd-button" (click)="openDetalhe(2)">
-                <ion-icon name="alert"></ion-icon>
-            </button>
             </ion-buttons>
         </div>
-        <div *ngIf="item.val().tipo_anuncio == 3">
+        <div *ngIf="item.tian_sq_tipoanuncio == 3">
             <ion-item>
                 <ion-avatar item-left>
-                    <img src="{{item.val().avatar_url}}">
+                    <img src="{{item.anun_tx_urlavatar}}">
                 </ion-avatar>
-                <h2>{{item.nm_empresa}}</h2>
-                <p>{{item.texto}}</p>
+                <h2>{{item.anun_tx_titulo}}</h2>
+                <p>{{item.anun_tx_subtitulo}}</p>
             </ion-item>
-            <img src="{{item.val().anuncio_url}}" (click)="openSmartSite('scrapfashion')" />
+            <ion-card-content class="ctd-faixa">
+                {{item.anun_tx_texto}}
+            </ion-card-content>
             <ion-buttons start>
                 <ctd-buttons></ctd-buttons>
-                <button ion-button icon-only clear color="ctd-button" (click)="openDetalhe(2)">
-                <ion-icon name="alert"></ion-icon>
-            </button>
+
+            </ion-buttons>
+        </div>
+        <div *ngIf="item.tian_sq_tipoanuncio == 4">
+            <ion-item>
+                <ion-avatar item-left>
+                    <img src="{{item.anun_tx_urlicon}}">
+                </ion-avatar>
+                <h2>{{item.anun_tx_titulo}}</h2>
+                <p>{{item.anun_tx_subtitulo}}</p>
+            </ion-item>
+            <ion-card-content>
+                {{item.anun_tx_texto}}
+            </ion-card-content>
+            <ion-buttons start>
+                <ctd-buttons></ctd-buttons>
+            </ion-buttons>
+        </div>
+        <div *ngIf="item.tian_sq_tipoanuncio == 5">
+            <ion-item>
+                <ion-avatar item-left>
+                    <img src="{{item.anun_tx_urlicon}}">
+                </ion-avatar>
+                <h2>{{item.anun_tx_titulo}}</h2>
+                <p>{{item.anun_tx_subtitulo}}</p>
+            </ion-item>
+            <ion-buttons start>
+                <ctd-buttons></ctd-buttons>
             </ion-buttons>
         </div>
     </ion-card>
 
-   
+    <ion-infinite-scroll (ionInfinite)="doInfinite($event)">
+        <ion-infinite-scroll-content></ion-infinite-scroll-content>
+    </ion-infinite-scroll>
 </ion-content>

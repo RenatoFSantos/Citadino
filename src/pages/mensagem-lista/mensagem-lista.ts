@@ -8,7 +8,9 @@ import { NavController, NavParams } from 'ionic-angular';
 })
 export class MensagemListaPage {
 
-  constructor(public navCtrl: NavController, public navParams: NavParams) { }
+  constructor(public navCtrl: NavController, public navParams: NavParams) { 
+    console.log("Construtor Mensagem Lista");
+  }
 
   openMensagemPage() {
     this.navCtrl.push(MensagemPage);

@@ -15,3 +15,7 @@ export interface UserCredentials {
 export interface ValidationResult {
     [key: string]: boolean;
 }
+
+export interface Predicate<T> {
+    (item: T): boolean;
+}

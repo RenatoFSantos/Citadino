@@ -1,4 +1,5 @@
-import { FirebaseService } from './../../../providers/database/firebase-service';
+import { SqLiteService } from './../../../providers/database/sqlite-service';
+import { GlobalVar } from './../../../shared/global-var';
 import { UserCredentials } from './../../../shared/interfaces';
 import { EmailValidator } from './../../../shared/validators/email.validator';
 import { HomeLoginPage } from './../homeLogin';
@@ -18,13 +19,13 @@ export class SignUpPage implements OnInit {
   usua_tx_senha: AbstractControl;
 
   constructor(private loginService: LoginService,
-    private fbService: FirebaseService,
     private loadingCtrl: LoadingController,
     private toastCtrl: ToastController,
     private navCtrl: NavController,
     private viewCtrl: ViewController,
     private event: Events,
-    private fb: FormBuilder) { }
+    private fb: FormBuilder,
+    private globalVar: GlobalVar) { }
 
   ngOnInit() {
     this.createLoginForm = this.fb.group({
@@ -56,7 +57,11 @@ export class SignUpPage implements OnInit {
       loader.present();
 
       self.loginService.registerUser(newUser).then((result) => {
-        self.loginService.addUser(signupForm,
+        
+        self.loginService.addUserSQ(signupForm, 
+         self.loginService.getLoggedInUser().uid);
+
+        self.loginService.addUserFB(signupForm,
           self.loginService.getLoggedInUser().uid);
 
         self.CreateAndUploadDefaultImage();
@@ -111,7 +116,7 @@ export class SignUpPage implements OnInit {
       cacheControl: 'no-cache',
     };
 
-    var uploadTask = self.fbService.getStorageRef().child('images/' + uid + '/profile.png').put(file, metadata);
+    var uploadTask = self.loginService.getStorageRef().child('images/profile/' + uid + '/profile.png').put(file, metadata);
 
     uploadTask.on('state_changed',
       function (snapshot) {
@@ -131,23 +136,10 @@ export class SignUpPage implements OnInit {
         // });
       }, function () {
         var downloadURL = uploadTask.snapshot.downloadURL;
-        self.loginService.setUserImage(uid, downloadURL);   
-         self.event.publish('usuario:logado', true);
+        self.loginService.setUserImage(uid, downloadURL);
+        self.event.publish('usuario:logado', true);
       });
   }
-
-  // saveLogin(loginForm: NgForm) {
-  //   if (loginForm.valid) {
-  //     this.loginSrv.saveLogin(this.usuario).subscribe(
-  //       (usuario: any) => {
-  //         this.event.publish('usuario:logado', usuario.usua_nm_usuario);
-  //         this.navCtrl.setRoot(TabsPage);
-  //       },
-  //       (err) => {
-  //         this.error = err;
-  //       });
-  //   }
-  // }
   close() {
     this.navCtrl.setRoot(HomeLoginPage);
   }

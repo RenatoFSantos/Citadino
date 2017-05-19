@@ -15,6 +15,7 @@ import { NavController, NavParams, Events } from 'ionic-angular';
 export class GuiaPage {
 
   constructor(public navCtrl: NavController, public navParams: NavParams, public events:Events) {
+    console.log("Construtor Guia");
     this.events.subscribe('app:netWork',() => {
       console.log('teste evento');
     });

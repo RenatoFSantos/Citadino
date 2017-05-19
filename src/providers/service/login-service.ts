@@ -1,3 +1,4 @@
+import { SqLiteService } from './../database/sqlite-service';
 import { UsuarioVO } from './../../model/usuarioVO';
 import { UserCredentials } from './../../shared/interfaces';
 import { FirebaseService } from './../database/firebase-service';
@@ -7,91 +8,77 @@ import { Observable } from 'rxjs/Observable';
 @Injectable()
 export class LoginService {
 
-  public usersRef: any;
+  private usersRef: any;
 
-  constructor(public fbService: FirebaseService) {
-    let self = this;
-    self.usersRef = fbService.getDataBase().ref('/usuario');
+  constructor(private fbService: FirebaseService,
+    private sqService: SqLiteService) {
+    this.usersRef = fbService.getDataBase().ref('/usuario');
   }
 
-  // private onAuthStateChanged(_function) {
-  //   return this.fbService.getFireBase().auth().onAuthStateChanged((_currentUser) => {
-  //     if (_currentUser) {
-  //       _function(_currentUser);
-  //     } else {
-  //       _function(null)
-  //     }
-  //   });
-  // }
+  //Retorna Ref de storage
+  getStorageRef() {
+    return this.fbService.getStorageRef();
+  }
+
   onAuthStateChanged(callback) {
-    let self = this;
-    return self.fbService.getFireBase().auth().onAuthStateChanged(callback);
+    return this.fbService.getFireBase().auth().onAuthStateChanged(callback);
   }
 
-  // public getUserAuth() {
-  //   return this.fbService.getFireBase().auth().currentUser;
-  // }
+  //Retorna Usuario Autenticado
   getLoggedInUser() {
-    let self = this;
-    return self.fbService.getFireBase().auth().currentUser;
+    return this.fbService.getFireBase().auth().currentUser;
   }
 
-  //Logar Usuario
-  // login(email: string, password: string) {
-  //   return Observable.create(
-  //     observer => {
-  //       return this.fbSrv.getConnect().auth().signInWithEmailAndPassword(email, password).then(
-  //         (authData) => {
-  //           this.getUserDetail().subscribe(
-  //             (usuLogado) => {
-  //               observer.next(usuLogado);
-  //             }, error => {
-  //               throw "Usuário não cadastrado.";
-  //             });
-  //         })
-  //         .catch((error) => {
-  //           error.message = "Usuário não cadastrado."
-  //           observer.error(error);
-  //         });
-  //     });
-  // }
-  signInUser(email: string, password: string) {
+  //Login de Usuário Firebase
+  signInUserFB(email: string, password: string) {
     let self = this;
     return self.fbService.getFireBase().auth().signInWithEmailAndPassword(email, password);
   }
 
-  // logout() {
-  //   return this.fbSrv.getConnect().auth().signOut();
-  // }
+  //Login de Usuário SqLite
+  signInUserSQ(email: string, password: string) {
+     let query: string = "SELECT usua_id, usua_uid_authentic, usua_nm_usuario,";
+    query = query + "usua_ds_email, usua_tx_senha ";
+    query = query + "from Usuario ";
+    query = query + "WHERE usua_ds_email = ? ";
+    query = query + "and usua_tx_senha = ? ";
+
+    return this.sqService.pesquisar(query, [email, password]);
+  }
+
+  //Desconecta usuário Logado
   signOut() {
-    let self = this;
-    return self.fbService.getFireBase().auth().signOut();
+    return this.fbService.getFireBase().auth().signOut();
   }
 
-  // saveLogin(usuario: any) {
-  //     return Observable.create(observer => {
-  //       return this.fbSrv.getConnect().auth().createUserWithEmailAndPassword(usuario.usua_ds_email, usuario.usua_tx_senha)
-  //         .then((authData) => {
-  //           let usuarioRef = this.fbSrv.returnRef("usuario", authData.uid);
-  //           usuarioRef.set(usuario);
-  //           observer.next(usuario);
-  //         }).catch((error) => {
-  //           observer.error(error);
-  //         })
-  //     });
-  //   }
+  //Cria autenticação do usuário
   registerUser(user: UserCredentials) {
-    let self = this;
-    return self.fbService.getFireBase().auth().createUserWithEmailAndPassword(user.email, user.password);
+    return this.fbService.getFireBase().auth().createUserWithEmailAndPassword(user.email, user.password);
   }
 
-  addUser(user: UsuarioVO, uid: string) {
-    let self = this;
-    self.usersRef.child(uid).update({
+  addUserFB(user: UsuarioVO, uid: string) {
+    this.usersRef.child(uid).update({
       usua_nm_usuario: user.usua_nm_usuario,
       usua_ds_email: user.usua_ds_email,
       usua_tx_senha: user.usua_tx_senha
     });
+  }
+
+  addUserSQ(user: UsuarioVO, uid: string) {
+    let self = this;
+    let query: string = "INSERT INTO Usuario (";
+    query = query + "usua_uid_authentic,usua_nm_usuario,";
+    query = query + "usua_ds_email,usua_tx_senha) ";
+    query = query + "Values (?,?, ?, ?)";
+
+    self.sqService.inserir(query, [uid, user.usua_nm_usuario, user.usua_ds_email, user.usua_tx_senha]).then(
+      (data) => {
+        console.log("Usuario incluído com sucesso");
+        return true;
+      }, (err) => {
+        console.error('Error ao inserir o usuário: ', err);
+        throw 'Error ao inserir o usuário: ' + err.message;
+      });
   }
 
   setUserImage(uid: string, urlProfile) {
@@ -101,41 +88,25 @@ export class LoginService {
     });
   }
 
-  //Retorna usuario logado
-  // public getUserDetail() {
+  // getUserDetail(): any {
+  //   let self = this;
   //   return Observable.create(
   //     observer => {
-  //       return this.onAuthStateChanged((_currentUser) => {
-  //         if (_currentUser) {
-  //           return this.fbSrv.findByKey('usuario', _currentUser.uid).then(
-  //             (usuLogado) => {
-  //               observer.next(usuLogado);
-  //             })
-  //             .catch((error: any) => {
-  //               observer.error();
-  //             });
-  //         } else {
-  //           observer.error();
-  //         }
-  //       });
+  //       if (self.getLoggedInUser() != null) {
+  //         self.usersRef.child(self.getLoggedInUser().uid).once('value')
+  //           .then((userRef) => {
+  //             observer.next(userRef);
+  //           }).catch((error) => {
+  //             observer.error();
+  //           });
+  //       }
+  //       else {
+  //         observer.error();
+  //       }
   //     });
   // }
 
-  getUserDetail(): any {
-    let self = this;
-    return Observable.create(
-      observer => {
-        if (self.getLoggedInUser() != null) {
-          self.usersRef.child(self.getLoggedInUser().uid).once('value')
-            .then((userRef) => {
-              observer.next(userRef);
-            }).catch((error) => {
-              observer.error();
-            });
-        }
-        else {
-          observer.error();
-        }
-      });
+  public getUserDetail(uid:string) {
+     return this.usersRef.child(uid).once('value');
   }
 }

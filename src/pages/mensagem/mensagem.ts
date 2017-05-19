@@ -13,7 +13,9 @@ import { NavController, NavParams } from 'ionic-angular';
 })
 export class MensagemPage {
 
-  constructor(public navCtrl: NavController, public navParams: NavParams) {}
+  constructor(public navCtrl: NavController, public navParams: NavParams) {
+     console.log("Construtor Guia");
+  }
 
   ionViewDidLoad() {
     console.log('ionViewDidLoad MensagemPage');

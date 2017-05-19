@@ -5,30 +5,37 @@ import { Injectable } from '@angular/core';
 @Injectable()
 export class SqLiteService {
 
-  db:any;
+  private dataBase: SQLiteObject;
 
-  constructor(private sqlite: SQLite) {    
+  constructor(private sqlite: SQLite) {
   }
 
-  openDatabase() {
-    this.sqlite.create({
-      name: 'citadinoDB.db',
-      location: 'default'
-    }).then((objDb: SQLiteObject) => {
-        this.db = objDb;
-    }).catch(e => console.log(e));
+  InitDatabase() {
+    var self = this;
+    let dbCreate = new SQLite();
+    dbCreate.create({
+      name: 'citadinodb.db',
+      location: 'default' // the location field is required
+      // iosDatabaseLocation: 'Documents'
+    }).then((db: SQLiteObject) => {
+      self.dataBase = db;
+      self.createUser();
+      // self.dropUser();
+    }, (err) => {
+      console.error('Não foi possível abri o banco de dados: ', err);
+    });
   }
 
-  criarTabela(sqlCreate: string) {
-    return this.db.executeSql(sqlCreate, {});
+  public getDataBase() {
+    return this.dataBase;
   }
 
   deletarPorId(sqlDelete: string, id: any) {
-    return this.db.executeSql(sqlDelete, {id});
+    return this.dataBase.executeSql(sqlDelete, { id });
   }
 
   listarTodos(sqlList: string) {
-    return this.db.executeSql(sqlList, {})
+    return this.dataBase.executeSql(sqlList, {})
       .then(response => {
         let object = [];
         for (let index = 0; index < response.rows.length; index++) {
@@ -38,11 +45,46 @@ export class SqLiteService {
       });
   }
 
-  atualizar(sqlUpdate: any, sqlParm:any) {
-    return this.db.executeSql(sqlUpdate, {sqlParm});
+  atualizar(sqlUpdate: any, sqlParm: any) {
+    return this.dataBase.executeSql(sqlUpdate, { sqlParm });
   }
 
-  inserir(sqlInsert:string, sqlParam:any) {
-    return this.db.executeSql(sqlInsert, {sqlParam});
+  inserir(sqlInsert: string, sqlParam: any) {
+    console.log("teste paramentros " + sqlParam);
+    return this.dataBase.executeSql(sqlInsert, sqlParam);
   }
+
+  private createUser() {
+    var self = this;
+    var query = "CREATE TABLE IF NOT EXISTS Usuario ( ";
+    query = query + "usua_id INTEGER PRIMARY KEY AUTOINCREMENT,";
+    query = query + "usua_uid_authentic TEXT,";
+    query = query + "usua_nm_usuario TEXT,";
+    query = query + "usua_ds_email TEXT,";
+    query = query + "usua_tx_senha TEXT );";
+
+
+    self.dataBase.executeSql(query, {}).then((data) => {
+      console.log("Tabela criada " + data);
+    }, (err) => {
+      console.error('Não foi possível criar a tabela Usuario: ', err);
+    });
+  }
+
+  pesquisar(sqlquery: any, sqlParm: any) {
+    console.log("Query " + sqlquery);
+    console.log("Parametros " + sqlParm);
+    return this.dataBase.executeSql(sqlquery, sqlParm );
+  }
+
+  private dropUser() {
+    var query = "DROP TABLE Usuario";
+
+    this.dataBase.executeSql(query, {}).then((data) => {
+      console.log("Tabela foi excluida  " + data);
+    }, (err) => {
+      console.error('Não foi possível excluir a tabela Usuario: ', err);
+    });
+  }
+
 }

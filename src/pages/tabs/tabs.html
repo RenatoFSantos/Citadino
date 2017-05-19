@@ -1,5 +1,5 @@
-<ion-tabs [selectedIndex]="selectedIndex">
-  <ion-tab [root]="tab1Root" tabTitle="Vitrine" tabIcon="logo-windows"></ion-tab>
-  <ion-tab [root]="tab2Root" tabTitle="Guia" tabIcon="compass"></ion-tab>
-  <ion-tab [root]="tab3Root" tabTitle="Mensagem" tabIcon="chatbubbles"></ion-tab>
+<ion-tabs #vitrineTabs [selectedIndex]="selectedIndex">
+  <ion-tab #content [root]="tab1Root" tabTitle="Vitrine" tabIcon="logo-windows" tabBadge="{{newThreads}}" tabBadgeStyle="danger">></ion-tab>
+  <ion-tab #content [root]="tab2Root" tabTitle="Guia" tabIcon="compass"></ion-tab>
+  <ion-tab #content [root]="tab3Root" tabTitle="Mensagem" tabIcon="chatbubbles"></ion-tab>
 </ion-tabs>
