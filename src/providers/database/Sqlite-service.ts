@@ -58,7 +58,7 @@ export class SqLiteService {
     var self = this;
     var query = "CREATE TABLE IF NOT EXISTS Usuario ( ";
     query = query + "usua_id INTEGER PRIMARY KEY AUTOINCREMENT,";
-    query = query + "usua_uid_authentic TEXT,";
+    query = query + "usua_sq_id TEXT,";
     query = query + "usua_nm_usuario TEXT,";
     query = query + "usua_ds_email TEXT,";
     query = query + "usua_tx_senha TEXT );";
@@ -75,16 +75,6 @@ export class SqLiteService {
     console.log("Query " + sqlquery);
     console.log("Parametros " + sqlParm);
     return this.dataBase.executeSql(sqlquery, sqlParm );
-  }
-
-  private dropUser() {
-    var query = "DROP TABLE Usuario";
-
-    this.dataBase.executeSql(query, {}).then((data) => {
-      console.log("Tabela foi excluida  " + data);
-    }, (err) => {
-      console.error('Não foi possível excluir a tabela Usuario: ', err);
-    });
-  }
+  }  
 
 }

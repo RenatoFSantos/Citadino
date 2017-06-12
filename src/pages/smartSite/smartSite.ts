@@ -1,4 +1,3 @@
-import { TpScrapfashionPage } from './../tp-scrapfashion/tp-scrapfashion';
 import { Component } from '@angular/core';
 import { NavController, NavParams } from 'ionic-angular';
 
@@ -9,10 +8,10 @@ import { NavController, NavParams } from 'ionic-angular';
   Ionic pages and navigation.
 */
 @Component({
-  selector: 'page-ss-scrapfashion',
-  templateUrl: 'ss-scrapfashion.html'
+  selector: 'page-smartSite',
+  templateUrl: 'smartSite.html'
 })
-export class SsScrapfashionPage {
+export class SmartSitePage {
 
   constructor(public navCtrl: NavController, public navParams: NavParams) {}
 
@@ -20,12 +19,12 @@ export class SsScrapfashionPage {
     console.log('ionViewDidLoad SsScrapfashionPage');
   }
 
-  openTabelaPreco(site: string) {
-    switch(site) {
-      case 'scrapfashion':
-        this.navCtrl.push(TpScrapfashionPage);
-      default:
-        break;
-    } 
-  }
+  // openTabelaPreco(site: string) {
+  //   switch(site) {
+  //     case 'scrapfashion':
+  //       this.navCtrl.push(TpScrapfashionPage);
+  //     default:
+  //       break;
+  //   } 
+  // }
 }

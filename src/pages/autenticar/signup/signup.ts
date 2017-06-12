@@ -1,12 +1,11 @@
-import { SqLiteService } from './../../../providers/database/sqlite-service';
+import { UsuarioService } from './../../../providers/service/usuario-service';
 import { GlobalVar } from './../../../shared/global-var';
 import { UserCredentials } from './../../../shared/interfaces';
 import { EmailValidator } from './../../../shared/validators/email.validator';
 import { HomeLoginPage } from './../homeLogin';
-import { LoginService } from './../../../providers/service/login-service';
 import { Component, OnInit } from '@angular/core';
-import { NavController, ViewController, Events, ModalController, LoadingController, ToastController } from 'ionic-angular';
-import { NgForm, FormGroup, AbstractControl, FormBuilder, Validators } from '@angular/forms';
+import { NavController, ViewController, Events, LoadingController, ToastController } from 'ionic-angular';
+import { FormGroup, AbstractControl, FormBuilder, Validators } from '@angular/forms';
 
 @Component({
   selector: 'page-signup',
@@ -18,7 +17,7 @@ export class SignUpPage implements OnInit {
   usua_ds_email: AbstractControl;
   usua_tx_senha: AbstractControl;
 
-  constructor(private loginService: LoginService,
+  constructor(private loginService: UsuarioService,
     private loadingCtrl: LoadingController,
     private toastCtrl: ToastController,
     private navCtrl: NavController,
@@ -57,11 +56,10 @@ export class SignUpPage implements OnInit {
       loader.present();
 
       self.loginService.registerUser(newUser).then((result) => {
-        
-        self.loginService.addUserSQ(signupForm, 
-         self.loginService.getLoggedInUser().uid);
-
         self.loginService.addUserFB(signupForm,
+          self.loginService.getLoggedInUser().uid);
+
+        self.loginService.addUserSQ(signupForm,
           self.loginService.getLoggedInUser().uid);
 
         self.CreateAndUploadDefaultImage();
@@ -116,7 +114,7 @@ export class SignUpPage implements OnInit {
       cacheControl: 'no-cache',
     };
 
-    var uploadTask = self.loginService.getStorageRef().child('images/profile/' + uid + '/profile.png').put(file, metadata);
+    var uploadTask = self.loginService.getStorageRef().child('images/usuario/' + uid + '/profile.png').put(file, metadata);
 
     uploadTask.on('state_changed',
       function (snapshot) {

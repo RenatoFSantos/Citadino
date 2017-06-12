@@ -1,7 +1,7 @@
 import { RelatFidelidadePage } from './../relat-fidelidade/relat-fidelidade';
 import { RelatPedidoPage } from './../relat-pedido/relat-pedido';
 import { Component, OnInit } from '@angular/core';
-import { NavController, NavParams, ViewController } from 'ionic-angular';
+import { NavController, NavParams } from 'ionic-angular';
 
 /*
   Generated class for the RelatoriosLista page.
@@ -16,7 +16,6 @@ import { NavController, NavParams, ViewController } from 'ionic-angular';
 export class RelatoriosListaPage implements OnInit {
 
   constructor(public navCtrl: NavController, public navParams: NavParams) {
-
   }
 
   ngOnInit() { };

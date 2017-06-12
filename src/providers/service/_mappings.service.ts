@@ -1,4 +1,4 @@
-import { ItemsService } from './items.service';
+import { ItemsService } from './_items.service';
 import { VitrineVO } from './../../model/vitrineVO';
 import { Injectable } from '@angular/core';
 
@@ -42,8 +42,7 @@ export class MappingsService {
         return vitrines;
     }
 
-    getThread(snapshot: any, key: string): VitrineVO {
-        console.log("anun_sq_anuncio " + snapshot.anun_sq_anuncio);
+    getThread(snapshot: any, key: string): VitrineVO {  
         let vitrine: VitrineVO = {
             agen_sq_agenda: key,
             agen_dt_agendada: snapshot.agen_dt_agendada,

@@ -51,15 +51,21 @@ ion-toolbar {
 }
 
 @font-face {
-  font-family: 'Lato';
+  font-family: 'Lato-regular';
   font-weight: 400;
   font-style: normal;
-  src: url('/assets/fonts/Lato-regular/Lato-regular.eot');
-  src: url('/assets/fonts/Lato-regular/Lato-regular.eot?#iefix') format('embedded-opentype'),
-       local('Lato Regular'),
-       local('Lato-regular'),
-       url('/assets/fonts/Lato-regular/Lato-regular.woff2') format('woff2'),
-       url('/assets/fonts/Lato-regular/Lato-regular.woff') format('woff'),
-       url('/assets/fonts/Lato-regular/Lato-regular.ttf') format('truetype'),
-       url('/assets/fonts/Lato-regular/Lato-regular.svg#Lato') format('svg');
+  src: url('/assets/fonts/Lato-regular.eot');
+  src: url('/assets/fonts/Lato-regular.eot?#iefix') format('embedded-opentype'),
+       url('/assets/fonts/Lato-regular.woff2') format('woff2'),
+       url('/assets/fonts/Lato-regular.woff') format('woff'),
+       url('/assets/fonts/Lato-regular.ttf') format('truetype'),
+       url('/assets/fonts/Lato-regular.svg#Lato') format('svg');
 }
+
+.modal-wrapper {
+    width: 100%;
+    height: 100%;
+    top: 0;
+    left: 0;
+}
+

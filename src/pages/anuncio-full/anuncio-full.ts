@@ -1,5 +1,4 @@
 import { SlideVO } from './../../model/slideVO';
-import { VitrineVO } from './../../model/vitrineVO';
 import { Component } from '@angular/core';
 import { NavController, NavParams } from 'ionic-angular';
 
@@ -15,28 +14,9 @@ import { NavController, NavParams } from 'ionic-angular';
 })
 export class AnuncioFullPage {
 
-  // slides = [
-  //     {
-  //       title: "Slide-1",
-  //       description: "Teste de Slide-1",
-  //       image: "assets/img/slide-1.jpg",
-  //     },
-  //     {
-  //       title: "Slide-2",
-  //       description: "Teste de Slide-2",
-  //       image: "assets/img/slide-2.jpg",
-  //     },
-  //     {
-  //       title: "Slide-3",
-  //       description: "Teste de Slide-3",
-  //       image: "assets/img/slide-3.jpg",
-  //     }
-  // ];  
-
-  public slides: Array<SlideVO> = [];
+ public slides: Array<SlideVO> = [];
 
   constructor(public navCtrl: NavController, public params: NavParams) {
-    let anuncio: any;
     if (params != null && params.get("anuncio") != null) {
         this.createObjSlide(params.get("anuncio"));
     }

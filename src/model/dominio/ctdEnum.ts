@@ -4,6 +4,11 @@ export enum ETypeMenu {
     logout = <number>2
 }
 
+export enum DateFormat {
+    ptBR = <number>0,
+    enUS = <number>1
+}
+
 export enum Connection {
     UNKNOWN = <any>"unknown",
     ETHERNET = <any>"ethernet",

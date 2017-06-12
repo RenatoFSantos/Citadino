@@ -5,7 +5,22 @@
 </ion-header>
 
 <ion-content>
-     <ion-item-group>
+    <ion-item-group>
+        <ion-item *ngFor="let item of mensagens" (click)="openMensagemPage(item)">
+            <ion-avatar item-left>
+                <img src="{{item.mens_tx_logo_marca}}">
+            </ion-avatar>
+            <h2>{{item.mens_nome}}</h2>
+            <!--<p>O melhor café da cidade</p>-->
+            <button ion-button clear item-right>
+             <ion-icon ios="ios-arrow-forward" md="md-arrow-forward"></ion-icon>
+            </button>
+        </ion-item>
+        <button ion-item (click)="openNovaMensagem()">
+        </button>
+    </ion-item-group>
+
+        <!--<ion-item-group>
         <ion-item (click)="openMensagemPage()">
             <ion-avatar item-left>
                 <img src="assets/img/thumb_200x200_cafedalu.jpg">
@@ -38,5 +53,5 @@
                <ion-icon ios="ios-arrow-forward" md="md-arrow-forward"></ion-icon>
             </button>
         </ion-item>    
-    </ion-item-group>
+    </ion-item-group>-->
 </ion-content>

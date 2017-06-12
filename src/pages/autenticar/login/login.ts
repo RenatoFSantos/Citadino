@@ -1,11 +1,9 @@
+import { UsuarioService } from './../../../providers/service/usuario-service';
 import { NetworkService } from './../../../providers/service/network-service';
-import { UsuarioVO } from './../../../model/usuarioVO';
 import { GlobalVar } from './../../../shared/global-var';
 import { UserCredentials } from './../../../shared/interfaces';
-import { TabsPage } from './../../tabs/tabs';
 import { HomeLoginPage } from './../homeLogin';
 import { NavController, Events, LoadingController, ToastController } from 'ionic-angular';
-import { LoginService } from './../../../providers/service/login-service';
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators, AbstractControl } from '@angular/forms';
 import { EmailValidator } from './../../../shared/validators/email.validator';
@@ -19,14 +17,13 @@ export class LoginPage implements OnInit {
   loginForm: FormGroup;
   email: AbstractControl;
   password: AbstractControl;
-  private toast: any;
 
   constructor(private nav: NavController,
     private loadingCtrl: LoadingController,
     private toastCtrl: ToastController,
     private fb: FormBuilder,
     private event: Events,
-    private loginSrv: LoginService,
+    private loginSrv: UsuarioService,
     private globalVar: GlobalVar,
     private netService: NetworkService) {
   }
@@ -58,8 +55,7 @@ export class LoginPage implements OnInit {
     if (self.loginForm.valid) {
 
       let loading = self.loadingCtrl.create({
-        spinner: 'circles',
-        duration: 4000
+        spinner: 'circles'
       });
 
       loading.present();
@@ -70,8 +66,6 @@ export class LoginPage implements OnInit {
       };
 
       let resultFindUser: any;
-
-      // self.globalVar.setIsFirebaseConnected(false);
 
       if (self.globalVar.getIsFirebaseConnected()) {
         resultFindUser = this.loginSrv.signInUserFB(user.email, user.password);
@@ -84,9 +78,7 @@ export class LoginPage implements OnInit {
           console.log("obj data " + data);
           if (data != null) {
             self.event.publish('usuario:logado', self.globalVar.getIsFirebaseConnected(), data);
-            self.nav.setRoot(TabsPage);
             loading.dismiss();
-
           } else {
             this.createAlert("Usuário não encontrado");
           }

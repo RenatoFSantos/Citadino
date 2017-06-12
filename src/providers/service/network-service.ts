@@ -2,7 +2,7 @@ import { GlobalVar } from './../../shared/global-var';
 import { Injectable } from '@angular/core';
 import { Network } from '@ionic-native/Network';
 import { Events, ToastController } from 'ionic-angular';
-import * as enums from './../../model/dominio/citadinoEnum';
+import * as enums from './../../model/dominio/ctdEnum';
 
 
 @Injectable()
@@ -45,12 +45,10 @@ export class NetworkService {
   }
 
   public closeStatusConnection() {
-
     if (this.toast != null) {
       this.toast.dismiss();
       this.toast = null;
       this.globalVar.setIsNetworkConnected(true);
-
     }
   }
 

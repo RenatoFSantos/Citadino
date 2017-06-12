@@ -14,7 +14,7 @@ export class HomeLoginPage implements OnInit {
     public event: Events) { }
 
   ngOnInit() {
-    this.event.subscribe('network:connected', this.networkConnected);  
+    // this.event.subscribe('network:connected', this.networkConnected);  
   }
 
   criarConta() {
@@ -26,7 +26,7 @@ export class HomeLoginPage implements OnInit {
   }
 
   public networkConnected = (connection) => {
-    console.log("Teste de conexao: " + connection);
+    // console.log("Teste de conexao: " + connection);
 
     // if (self.internetConnected) {
     //   self.vitrines = [];

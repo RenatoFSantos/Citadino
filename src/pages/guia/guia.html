@@ -4,38 +4,31 @@
     </ion-navbar>
 </ion-header>
 
-<ion-content >
-    <ion-searchbar placeholder="Encontre um parceiro..."></ion-searchbar>
-    <ion-grid>
-        <ion-row>
-            <ion-col width-33><img src="assets/img/ctg_restaurante.png" (click)="openGuiaLista('bares')"></ion-col>
-            <ion-col width-33><img src="assets/img/ctg_emergencia.png"></ion-col>
-            <ion-col width-33><img src="assets/img/ctg_classificado.png"></ion-col>
-        </ion-row>
-        <ion-row>
-            <ion-col width-33><img src="assets/img/ctg_banco.png"></ion-col>
-            <ion-col width-33><img src="assets/img/ctg_advogado.png"></ion-col>
-            <ion-col width-33><img src="assets/img/ctg_escola.png"></ion-col>
-        </ion-row>
-        <ion-row>
-            <ion-col width-33><img src="assets/img/ctg_emprego.png"></ion-col>
-            <ion-col width-33><img src="assets/img/ctg_fabrica.png"></ion-col>
-            <ion-col width-33><img src="assets/img/ctg_hotel.png"></ion-col>
-        </ion-row>
-        <ion-row>
-            <ion-col width-33><img src="assets/img/ctg_imobiliaria.png"></ion-col>
-            <ion-col width-33><img src="assets/img/ctg_lanchonete.png"></ion-col>
-            <ion-col width-33><img src="assets/img/ctg_mecanica.png"></ion-col>
-        </ion-row>
-        <ion-row>
-            <ion-col width-33><img src="assets/img/ctg_mercado.png"></ion-col>
-            <ion-col width-33><img src="assets/img/ctg_moda.png"></ion-col>
-            <ion-col width-33><img src="assets/img/ctg_presente.png"></ion-col>
-        </ion-row>
-        <ion-row>
-            <ion-col width-33><img src="assets/img/ctg_utilpublica.png"></ion-col>
-            <ion-col width-33><img src="assets/img/ctg_saude.png"></ion-col>
-            <ion-col width-33><img src="assets/img/ctg_veterinaria.png"></ion-col>
-        </ion-row>
-    </ion-grid>
+<ion-content>
+    <ion-searchbar [(ngModel)]="searchDescritor" [formControl]="searchControl" (ionInput)="onSearchInput()" placeholder="" (ionClear)="onCleanInput()"></ion-searchbar>
+
+    <div *ngIf="searching" class="spinner-container">
+        <ion-spinner></ion-spinner>
+    </div>
+
+    <div *ngIf="descritorEnable == false">
+        <ion-grid>
+            <ion-row *ngFor="let itemRow of categorias">
+                <ion-col width-33 *ngFor="let itemCol of itemRow">
+                    <img src="{{itemCol.cate_tx_imagem}}" (click)="openGuiaCategoria(itemCol.cate_nm_categoria, itemCol.cate_sq_id)">
+                </ion-col>
+            </ion-row>
+        </ion-grid>
+    </div>
+
+    <div *ngIf="descritorEnable == true">
+         <ion-item-group>
+            <ion-item *ngFor="let item of descritores">
+                <button ion-item  (click)="openGuiaDescritor(item.desc_nm_descritor, item.desc_sq_id)">
+                {{item.desc_nm_descritor}}
+                </button>
+            </ion-item>
+         </ion-item-group>
+    </div>
+
 </ion-content>

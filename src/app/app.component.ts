@@ -1,12 +1,11 @@
+import { UsuarioService } from './../providers/service/usuario-service';
 import { LoginPage } from './../pages/autenticar/login/login';
 import { SqLiteService } from './../providers/database/sqlite-service';
 import { GlobalVar } from './../shared/global-var';
 import { NetworkService } from './../providers/service/network-service';
 import { UsuarioVO } from './../model/usuarioVO';
 import { IMenu } from './../shared/interfaces';
-import { LoginService } from './../providers/service/login-service';
 import { FirebaseService } from './../providers/database/firebase-service';
-
 import { HomeLoginPage } from './../pages/autenticar/homeLogin';
 import { MensagemListaPage } from './../pages/mensagem-lista/mensagem-lista';
 import { TestePage } from './../pages/teste/teste';
@@ -22,7 +21,7 @@ import {
 } from 'ionic-angular';
 import { SplashScreen, } from '@ionic-native/splash-screen';
 import { StatusBar } from '@ionic-native/status-bar';
-import * as enums from './../model/dominio/citadinoEnum'
+import * as enums from './../model/dominio/ctdEnum'
 
 declare var window: any;
 
@@ -43,7 +42,7 @@ export class MyApp implements OnInit {
     private mdlCtrl: ModalController,
     private fbService: FirebaseService,
     private sqService: SqLiteService,
-    private loginSrv: LoginService,
+    private loginSrv: UsuarioService,
     private events: Events,
     private splashScreen: SplashScreen,
     private statusBar: StatusBar,
@@ -65,17 +64,18 @@ export class MyApp implements OnInit {
   }
 
   ngOnInit() {
-    this.checkFirebase();
+    var self = this;
+    self.checkFirebase();
   }
-
 
   checkFirebase() {
     let self = this;
+
     if (!self.globalVar.getIsFirebaseConnected()) {
       setTimeout(function () {
         self.firebaseConnectionAttempts++;
-
         if (self.firebaseConnectionAttempts < 5) {
+          //retirar
           console.log(self.firebaseConnectionAttempts);
           self.checkFirebase();
         } else {
@@ -86,60 +86,78 @@ export class MyApp implements OnInit {
       }, 1000);
     }
     else {
+
+      //refatorar
+      //Cria um método para verificar se o firebase retornou
+      this.mensagemEvent();
+
       let userCurrent = self.loginSrv.getLoggedInUser();
+
       if (userCurrent != null) {
-        console.log("userCurrent " + userCurrent.uid);
-        this.loginSrv.getUserDetail(userCurrent.uid).then((userRef) => {
-          self.popularMenu(true);
-          self.userLogged = userRef.val();
-          self.splashScreen.hide();
-          self.rootPage = TabsPage;
-        }).cath((error) => {
-          self.splashScreen.hide();
-          self.rootPage = HomeLoginPage;
+        self.loginSrv.getUserDetail(userCurrent.uid).then((userRef) => {
+          if (userRef != null) {
+            self.popularMenu(true);
+            self.userLogged = userRef.val();
+            self.rootPage = TabsPage;
+            self.splashScreen.hide();
+          }
+          else {
+            self.rootPage = HomeLoginPage;
+            self.splashScreen.hide();
+          }
         });
       } else {
-        self.splashScreen.hide();
         self.rootPage = HomeLoginPage;
+        self.splashScreen.hide();
       }
     }
   }
 
   networkConnectionEvent() {
-    this.events.subscribe('network:online', () => {
+    var self = this;
+    self.events.subscribe('network:online', () => {
       setTimeout(() => {
-        this.netService.closeStatusConnection();
-        this.fbService.goOnline();
+        self.netService.closeStatusConnection();
+        self.fbService.goOnline();
       }, 3000);
     });
   }
 
   networkDisconnectEvent() {
-    this.events.subscribe('network:offline', () => {
-      this.netService.getStatusConnection();
-      this.fbService.goOffline();
+    var self = this;
+    self.events.subscribe('network:offline', () => {
+      self.netService.getStatusConnection();
+      self.fbService.goOffline();
     });
   }
 
   userLoggedEvent() {
-    this.events.subscribe('usuario:logado', (isFirebase, data) => {
+    var self = this;
+    self.events.subscribe('usuario:logado', (isFirebase, data) => {
+      console.log("Usuario Criado");
       if (isFirebase) {
-        let userCurrent = this.loginSrv.getLoggedInUser();
+        let userCurrent = self.loginSrv.getLoggedInUser();
         if (userCurrent != null) {
-          this.loginSrv.getUserDetail(userCurrent.uid).then((userRef) => {
-            this.popularMenu(true);
-            this.userLogged = userRef.val();
-            this.nav.setRoot(TabsPage);
-          }).catch((error) => {
-            this.nav.setRoot(HomeLoginPage);
+          self.loginSrv.getUserDetail(userCurrent.uid).then((userRef) => {
+            if (userRef != null) {
+              self.popularMenu(true);
+              self.userLogged = userRef.val();
+              self.nav.setRoot(TabsPage);
+              console.log("Envio para tab");
+
+            } else {
+              self.nav.setRoot(HomeLoginPage);
+              console.log("userRef null");
+            }
           });
         } else {
-          this.nav.setRoot(HomeLoginPage);
+          console.log("envio para home");
+          self.nav.setRoot(HomeLoginPage);
         }
       } else {
-        this.popularMenu(true);
-        this.userLogged = this.populateObjectUser(data);
-        this.nav.setRoot(TabsPage);
+        self.popularMenu(true);
+        self.userLogged = this.populateObjectUser(data);
+        self.nav.setRoot(TabsPage);
       }
     });
   }
@@ -150,11 +168,11 @@ export class MyApp implements OnInit {
 
     for (var i = 0; i < data.rows.length; i++) {
 
-      object.usua_uid_authentic = data.rows.item(i).usua_uid_authentic;
+      object.usua_sq_id = data.rows.item(i).usua_sq_id;
       object.usua_nm_usuario = data.rows.item(i).usua_nm_usuario;
       object.usua_ds_email = data.rows.item(i).usua_ds_email;
       object.usua_tx_senha = data.rows.item(i).usua_tx_senha;
-      object.usua_ds_url_profile = imageData;
+      object.usua_tx_urlprofile = imageData;
 
     }
 
@@ -172,8 +190,8 @@ export class MyApp implements OnInit {
         }
 
         if (this.nav.getActiveChildNav() && page.index != undefined) {
-          this.nav.getActiveChildNav().select(page.index);       
-        } else {    
+          this.nav.getActiveChildNav().select(page.index);
+        } else {
           this.nav.push(page.component, params).catch((err: any) => {
             console.log(`Didn't set nav root: ${err}`);
           });
@@ -242,5 +260,44 @@ export class MyApp implements OnInit {
     if (value == true) {
       this.subpages.push({ title: 'Sair', component: TabsPage, icon: 'exit', typeMenu: enums.ETypeMenu.logout });
     }
+  }
+
+  public mensagemEvent() {
+
+    if (this.globalVar.getIsFirebaseConnected()) {
+
+      let userCurrent = this.loginSrv.getLoggedInUser();
+
+      this.fbService.getDataBase().ref(`/usuario/${userCurrent.uid}/mensagem/`).on('child_changed', this.onMensagemAlterada);
+
+      this.fbService.getDataBase().ref(`/usuario/${userCurrent.uid}/mensagem/`).on('child_added', this.onMensagemAdicionada);
+    }
+  }
+
+  public onMensagemAdicionada = (childSnapshot, prevChildKey) => {
+    var self = this;
+    var pkMensagem = childSnapshot.key;
+    console.log(childSnapshot.val());
+    console.log(pkMensagem);
+    console.log("Adicionado");
+
+    // let view = this.nav.getActive();
+    // console.log(view);
+    // if(view.instance instanceof MyPage) { 
+      // Você já está nesta página 
+    // }
+
+  }
+
+  public onMensagemAlterada = (childSnapshot, prevChildKey) => {
+    var self = this;
+    var pkMensagem = childSnapshot.key;
+    console.log(childSnapshot.val());
+    console.log(pkMensagem);
+    console.log("Alterado");
+
+    // let view = this.nav.getActive();
+    // console.log(view);
+
   }
 }

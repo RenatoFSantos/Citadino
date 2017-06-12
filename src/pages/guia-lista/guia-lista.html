@@ -5,8 +5,22 @@
 </ion-header>
 
 <ion-content>
-  <ion-item-group>
-    <ion-item-divider color="ctd-subtitulo">BARES E RESTAURANTES</ion-item-divider>
+    <ion-item-group>
+        <ion-item-divider color="ctd-subtitulo">{{categoriaNome}}</ion-item-divider>
+        <ion-item *ngFor="let item of empresas">
+            <ion-item-divider *ngIf="item.isIndexNome == true" color="ctd-background">{{item.empr_nm_razaosocial}}</ion-item-divider>
+            <div *ngIf="item.isIndexNome == false" (click)="openGuia(item)">
+                <ion-avatar item-left style="float:left">
+                    <img src="{{item.empr_tx_logomarca}}">
+                </ion-avatar>
+                <h2>{{item.empr_nm_razaosocial}}</h2>
+                <p>{{item.empr_tx_endereco}}<br>{{item.empr_tx_telefone_1}}</p>
+            </div>
+        </ion-item>
+    </ion-item-group>
+
+    <!--<ion-item-group>-->
+    <!--<ion-item-divider color="ctd-subtitulo">BARES E RESTAURANTES</ion-item-divider>
     <ion-item-divider color="ctd-background">C</ion-item-divider>
     <ion-item (click)="openGuiaContato()">
         <ion-avatar item-left>
@@ -47,5 +61,5 @@
         <h2>Scrap Fashion</h2>
         <p>Rua Barão de Catas Altas 240<br>(32) 3271-1201/9 9987-0989</p>      
     </ion-item>  
-  </ion-item-group>
+  </ion-item-group>-->
 </ion-content>

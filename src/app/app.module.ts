@@ -1,3 +1,4 @@
+import { SmartSitePage } from './../pages/smartSite/smartSite';
 import { CtdHeaderModalComponent } from './../shared/components/ctd-header-modal/ctd-header-modal';
 import { CtdButtonsComponent } from './../shared/components/ctd-buttons/ctd-buttons';
 import { CtdHeaderComponent } from './../shared/components/ctd-header/ctd-header';
@@ -14,7 +15,6 @@ import { TpPedScrapfashionPage } from './../pages/tp-ped-scrapfashion/tp-ped-scr
 import { TpDetScrapfashionPage } from './../pages/tp-det-scrapfashion/tp-det-scrapfashion';
 import { TpScrapfashionPage } from './../pages/tp-scrapfashion/tp-scrapfashion';
 import { MensagemListaPage } from './../pages/mensagem-lista/mensagem-lista';
-import { SsScrapfashionPage } from './../pages/ss-scrapfashion/ss-scrapfashion';
 import { GuiaListaPage } from './../pages/guia-lista/guia-lista';
 import { AnuncioFullPage } from './../pages/anuncio-full/anuncio-full';
 import { NgModule } from '@angular/core';
@@ -25,9 +25,28 @@ import { VitrinePage } from '../pages/vitrine/vitrine';
 import { GuiaPage } from '../pages/guia/guia';
 import { MensagemPage } from '../pages/mensagem/mensagem';
 import { BrowserModule } from '@angular/platform-browser';
+import { CloudSettings, CloudModule } from '@ionic/cloud-angular';
+import { AngularFireModule } from 'angularfire2';
+import { AngularFireDatabaseModule } from 'angularfire2/database';
+
 
 // providers
 import { APP_PROVIDERS } from '../providers/app.providers';
+
+export const firebaseConfig = {
+  apiKey: "AIzaSyByJsiNAYX6741uxiw-TSokabtN64DeTMk",
+  authDomain: "citadino-c0c79.firebaseapp.com",
+  databaseURL: "https://citadino-c0c79.firebaseio.com",
+  projectId: "citadino-c0c79",
+  storageBucket: "citadino-c0c79.appspot.com",
+  messagingSenderId: "75420061601"
+};
+
+const cloudSettings: CloudSettings = {
+  'core': {
+    'app_id': 'c02b7f31'
+  }
+};
 
 @NgModule({
   declarations: [
@@ -39,9 +58,9 @@ import { APP_PROVIDERS } from '../providers/app.providers';
     MensagemListaPage,
     CtdHeaderComponent,
     CtdButtonsComponent,
-    AnuncioFullPage,  
+    AnuncioFullPage,
     GuiaListaPage,
-    SsScrapfashionPage,
+    SmartSitePage,
     TpScrapfashionPage,
     TpDetScrapfashionPage,
     TpPedScrapfashionPage,
@@ -61,7 +80,10 @@ import { APP_PROVIDERS } from '../providers/app.providers';
     IonicModule.forRoot(MyApp,
       {
         mode: 'md'
-      })
+      }),
+    AngularFireModule.initializeApp(firebaseConfig),
+    AngularFireDatabaseModule,
+    CloudModule.forRoot(cloudSettings)
   ],
   bootstrap: [IonicApp],
   entryComponents: [
@@ -75,7 +97,7 @@ import { APP_PROVIDERS } from '../providers/app.providers';
     CtdButtonsComponent,
     AnuncioFullPage,
     GuiaListaPage,
-    SsScrapfashionPage,
+    SmartSitePage,
     TpScrapfashionPage,
     TpDetScrapfashionPage,
     TpPedScrapfashionPage,

@@ -1,27 +1,35 @@
-import { MappingsService } from './service/mappings.service';
-import { ItemsService } from './service/items.service';
+import { MensagemService } from './service/mensagem-service';
+import { UsuarioService } from './service/usuario-service';
+import { EmpresaService } from './service/empresa-service';
+import { GuiaService } from './service/guia-service';
+import { MappingsService } from './service/_mappings.service';
+import { ItemsService } from './service/_items.service';
 import { SQLite } from '@ionic-native/sqlite';
 import { SqLiteService } from './database/sqlite-service';
 import { GlobalVar } from './../shared/global-var';
 import { NetworkService } from './service/network-service';
-import { AgendaService } from './service/angenda-service';
+import { VitrineService } from './service/vitrine-service';
 import { Network } from '@ionic-native/Network';
-import { LoginService } from './service/login-service';
 import { FirebaseService } from './database/firebase-service';
 import { StatusBar } from '@ionic-native/status-bar';
 import { SplashScreen } from '@ionic-native/splash-screen';
+import { ElasticModule } from 'angular2-elastic';
 
 export const APP_PROVIDERS = [
     SplashScreen,
     StatusBar,    
     Network,
     SQLite,
-    AgendaService,
+    VitrineService,
+    EmpresaService,
+    GuiaService,
     FirebaseService,
     SqLiteService,
-    LoginService,
+    UsuarioService,
     ItemsService,
     MappingsService,
     GlobalVar,
-    NetworkService
+    NetworkService,
+    MensagemService,
+    ElasticModule
 ];

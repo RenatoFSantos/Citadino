@@ -27,16 +27,24 @@ export class TabsPage implements OnInit {
   ngOnInit() {
     this.startListening();
   }
-  
+
   startListening() {
     var self = this;
 
-    self.events.subscribe('thread:created', (threadData) => {
-      if (self.newThreads === '') {
-        self.newThreads = '1';
-      } else {
-        self.newThreads = (+self.newThreads + 1).toString();
+    self.events.subscribe('thread:created', (newVitrines: Array<any>) => {
+      if (newVitrines != null) {
+
+        console.log("Tamanho " + newVitrines.length.toString());
+        self.newThreads = newVitrines.length.toString();
       }
+      else {
+        self.newThreads = '';
+      }
+      // if (self.newThreads === '') {
+      //   self.newThreads = '1';
+      // } else {
+      //   self.newThreads = (+self.newThreads + 1).toString();
+      // }
     });
 
     self.events.subscribe('threads:viewed', (threadData) => {

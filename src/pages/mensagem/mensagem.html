@@ -1,62 +1,39 @@
 <ion-header>
     <ion-navbar color="ctd-navbar">
-        <ctd-header></ctd-header>
+        <ctd-header-modal [titulo]=[(nameFrom)] [pathImage]=[(pathImage)]></ctd-header-modal>
     </ion-navbar>
 </ion-header>
 
 <ion-content>
-
-    <ion-grid>
-        <ion-row>
-            <ion-col width-90>
-                <ion-card class="ctd-card">
-                    <ion-card-content right>
-                        Bom dia !!! Gostaria de saber mais sobre sua empresa.
-                    </ion-card-content>
-                      <ion-row style="padding-bottom: 5px;">
-                          <ion-col width-90 right text-right class="fontMsgStatus">09/03/2017 - 17:17</ion-col>
-                          <ion-col width-10>                            
-                             <ion-icon class="ctd-ico" name="checkmark-circle"></ion-icon>
-                          </ion-col>
-                      </ion-row>
-                </ion-card>
-            </ion-col>
-            <ion-col width-10>
-              
-            </ion-col>
-        </ion-row>
-        <ion-row>
-              <ion-col width-10>
-              
-            </ion-col>
-            <ion-col width-90 style="text-align: left">
-                <ion-card class="ctd-card" style="background-color: #e0f7ca;">
-                    <ion-card-content>
-                        Por favor entre em contato com o telefone 98888-9999
-                    </ion-card-content>
-                     <ion-row style="padding-bottom: 5px;">
-                          <ion-col class="ctd-ico" right text-right class="fontMsgStatus">09/03/2017 - 17:30</ion-col>                  
-                      </ion-row>
-                </ion-card>
-            </ion-col>
-        </ion-row>
-         <ion-row>
-            <ion-col width-90>
-                <ion-card class="ctd-card">
-                    <ion-card-content>
-                        Obrigado.
-                    </ion-card-content>
-                      <ion-row style="padding-bottom: 5px;">
-                          <ion-col width-90 right text-right class="fontMsgStatus">09/03/2017 - 17:30</ion-col>
-                          <ion-col width-10>                            
-                             <ion-icon class="ctd-ico" name="checkmark"></ion-icon>
-                          </ion-col>
-                      </ion-row>
-                </ion-card>
-            </ion-col>
-            <ion-col width-10>
-              
-            </ion-col>
-        </ion-row>
-    </ion-grid>
+    <ion-list no-lines>
+        <ion-item *ngFor="let msg of mensagens | async" style="background-color:#c2b49a !important">
+            <div class="chatBubble">
+                <!--<img class="profile-pic {{msg.position}}" src="{{msg.img}}">-->
+                <div class="chat-bubble" [ngClass]="{'right': uid === msg.from, 'left': uid != msg.from}">
+                    <div class="message">{{msg.mensagem}}</div>
+                    <div class="message-detail">
+                        <span style="font-weight:bold;">{{msg.user}}</span>
+                        <span>{{msg.dateTime}}</span>
+                    </div>
+                </div>
+            </div>
+        </ion-item>
+    </ion-list>
 </ion-content>
+
+<ion-footer>
+    <ion-toolbar>
+        <ion-row>
+            <!--<ion-col width-05>
+                <ion-spinner *ngIf="!(mensagens)"></ion-spinner>
+            </ion-col>-->
+            <ion-col col-10 [hidden]="!mensagens">
+                <ion-textarea fz-elastic placeholder="Entre com a mensagem" [(ngModel)]="mensagem"></ion-textarea>
+            </ion-col>
+            <ion-col col-2 [hidden]="!mensagens">
+                <button ion-button (click)="enviarMensagem()"><ion-icon name="send"></ion-icon></button>
+            </ion-col>
+        </ion-row>
+
+    </ion-toolbar>
+</ion-footer>

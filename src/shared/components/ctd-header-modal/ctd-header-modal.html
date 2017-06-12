@@ -1,11 +1,13 @@
 <ion-navbar>
-    <img class="icocit" src="assets/img/icon.png"/>
+    <ion-avatar item-left style="float:left">
+        <img class="icocit" src="{{pathImage}}" />
+    </ion-avatar>
     <ion-title class="citadino">
-      CITADINO
+        {{titulo}}
     </ion-title>
     <ion-buttons right>
-       <button ion-button right (click)="close()">
+        <button ion-button right (click)="close()">
         <ion-icon name="md-arrow-back" ></ion-icon>
     </button>
-    </ion-buttons>   
-</ion-navbar>   
+    </ion-buttons>
+</ion-navbar>

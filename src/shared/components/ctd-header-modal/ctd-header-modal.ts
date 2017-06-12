@@ -1,5 +1,5 @@
 import { ViewController } from 'ionic-angular';
-import { Component } from '@angular/core';
+import { Component, Input } from '@angular/core';
 
 @Component({
   selector: 'ctd-header-modal',
@@ -7,9 +7,16 @@ import { Component } from '@angular/core';
 })
 export class CtdHeaderModalComponent {
 
- constructor(public viewCtrl: ViewController) {
-  }
+  @Input() 
+  public titulo:string = "CITADINO";
+
+  @Input() 
+  public pathImage:string = "assets/img/icon.png";
+
+ constructor(public viewCtrl: ViewController) {}
+
   close() {
     this.viewCtrl.dismiss();
   }
+
 }

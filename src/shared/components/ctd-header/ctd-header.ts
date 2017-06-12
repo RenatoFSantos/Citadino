@@ -1,14 +1,18 @@
 import { Events } from 'ionic-angular';
-import { Component } from '@angular/core';
+import { Component, Input } from '@angular/core';
 
 @Component({
   selector: 'ctd-header',
   templateUrl: 'ctd-header.html'
 })
+
 export class CtdHeaderComponent {
+  @Input() 
+  public titulo:string = "CITADINO";
 
-  text: string;
+  @Input() 
+  public pathImage:string = "assets/img/icon.png";
 
-  constructor(public events:Events) {  
+  constructor(public events:Events) {
   }
 }

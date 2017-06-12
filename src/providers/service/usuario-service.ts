@@ -3,10 +3,9 @@ import { UsuarioVO } from './../../model/usuarioVO';
 import { UserCredentials } from './../../shared/interfaces';
 import { FirebaseService } from './../database/firebase-service';
 import { Injectable } from '@angular/core';
-import { Observable } from 'rxjs/Observable';
 
 @Injectable()
-export class LoginService {
+export class UsuarioService {
 
   private usersRef: any;
 
@@ -37,7 +36,7 @@ export class LoginService {
 
   //Login de Usuário SqLite
   signInUserSQ(email: string, password: string) {
-     let query: string = "SELECT usua_id, usua_uid_authentic, usua_nm_usuario,";
+    let query: string = "SELECT usua_id, usua_sq_id, usua_nm_usuario,";
     query = query + "usua_ds_email, usua_tx_senha ";
     query = query + "from Usuario ";
     query = query + "WHERE usua_ds_email = ? ";
@@ -58,6 +57,7 @@ export class LoginService {
 
   addUserFB(user: UsuarioVO, uid: string) {
     this.usersRef.child(uid).update({
+      usua_sq_id: uid,
       usua_nm_usuario: user.usua_nm_usuario,
       usua_ds_email: user.usua_ds_email,
       usua_tx_senha: user.usua_tx_senha
@@ -67,7 +67,7 @@ export class LoginService {
   addUserSQ(user: UsuarioVO, uid: string) {
     let self = this;
     let query: string = "INSERT INTO Usuario (";
-    query = query + "usua_uid_authentic,usua_nm_usuario,";
+    query = query + "usua_sq_id,usua_nm_usuario,";
     query = query + "usua_ds_email,usua_tx_senha) ";
     query = query + "Values (?,?, ?, ?)";
 
@@ -83,30 +83,28 @@ export class LoginService {
 
   setUserImage(uid: string, urlProfile) {
     this.usersRef.child(uid).update({
-      usua_ds_url_profile: urlProfile,
+      usua_tx_url_profile: urlProfile,
       image: true
     });
   }
 
-  // getUserDetail(): any {
-  //   let self = this;
-  //   return Observable.create(
-  //     observer => {
-  //       if (self.getLoggedInUser() != null) {
-  //         self.usersRef.child(self.getLoggedInUser().uid).once('value')
-  //           .then((userRef) => {
-  //             observer.next(userRef);
-  //           }).catch((error) => {
-  //             observer.error();
-  //           });
-  //       }
-  //       else {
-  //         observer.error();
-  //       }
-  //     });
-  // }
 
-  public getUserDetail(uid:string) {
-     return this.usersRef.child(uid).once('value');
+  public getUsersRef() {
+    return this.usersRef;
   }
+
+  public getUserDetail(uid: string): any {
+    return this.usersRef.child(uid).once('value');
+  }
+
+  public getEmpresaPorUsuario(usuarioKey:string) {
+      return this.usersRef.child(usuarioKey).child("empresa")
+      .orderByChild("empr_nm_razaosocial").once("value");
+  }
+
+ public getMensagens() {
+    let userCurrent = this.getLoggedInUser();
+    return this.usersRef.child(userCurrent.uid).child("mensagem").once("value");
+  }
+
 }
