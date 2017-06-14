@@ -35,7 +35,6 @@ export class MensagemPage {
 
     mensSrv.getMensagens(this.uid, this.interlocutor)
       .then((snapShot: any) => {
-
         this.mensagens = this.mensSrv.listMensagens(snapShot);
       });
   }
@@ -65,7 +64,7 @@ export class MensagemPage {
           this.mensSrv.addMensagems(this.uid, this.interlocutor);
         }
         else {
-          this.fbSrv.getDataBase().ref(`/usuario/${this.interlocutor}/mensagem/${this.uid}`).set(new Date().getTime());
+          this.fbSrv.getDataBase().ref(`/usuario/${this.interlocutor}/mensagem/${this.uid}`).set(true);
         }
 
         this.mensagens.push(chat).then(() => {
@@ -80,4 +79,8 @@ export class MensagemPage {
 
     }
   };
+
+  statusMensagemEvent() {
+    
+  }
 }

@@ -215,5 +215,7 @@ export class VitrinePage implements OnInit {
     }
   }
 
+
+
 }
 

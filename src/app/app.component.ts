@@ -1,3 +1,5 @@
+import { MensagemPage } from './../pages/mensagem/mensagem';
+import { MensagemService } from './../providers/service/mensagem-service';
 import { UsuarioService } from './../providers/service/usuario-service';
 import { LoginPage } from './../pages/autenticar/login/login';
 import { SqLiteService } from './../providers/database/sqlite-service';
@@ -13,11 +15,10 @@ import { RelatoriosListaPage } from './../pages/relatorios-lista/relatorios-list
 import { GuiaPage } from './../pages/guia/guia';
 import { VitrinePage } from './../pages/vitrine/vitrine';
 import { TabsPage } from '../pages/tabs/tabs';
-
 import { Component, ViewChild, OnInit } from '@angular/core';
 import {
-  Platform, MenuController, Nav,
-  ModalController, Events, ToastController
+  Platform, MenuController, Nav, ModalController, Events,
+  ToastController, App
 } from 'ionic-angular';
 import { SplashScreen, } from '@ionic-native/splash-screen';
 import { StatusBar } from '@ionic-native/status-bar';
@@ -43,16 +44,19 @@ export class MyApp implements OnInit {
     private fbService: FirebaseService,
     private sqService: SqLiteService,
     private loginSrv: UsuarioService,
+    private msgSrv: MensagemService,
     private events: Events,
     private splashScreen: SplashScreen,
     private statusBar: StatusBar,
     private netService: NetworkService,
     private toastCtrl: ToastController,
-    private globalVar: GlobalVar) {
+    private globalVar: GlobalVar,
+    private app: App) {
 
     platform.ready().then(() => {
       this.statusBar.styleDefault();
       this.userLoggedEvent();
+      this.mensagemNovaEvent();
 
       if (window.cordova) {
         this.netService.initializeNetworkEvents();
@@ -87,11 +91,8 @@ export class MyApp implements OnInit {
     }
     else {
 
-      //refatorar
-      //Cria um método para verificar se o firebase retornou
-      this.mensagemEvent();
-
       let userCurrent = self.loginSrv.getLoggedInUser();
+      this.msgSrv.addMensagemEvent();
 
       if (userCurrent != null) {
         self.loginSrv.getUserDetail(userCurrent.uid).then((userRef) => {
@@ -156,13 +157,31 @@ export class MyApp implements OnInit {
         }
       } else {
         self.popularMenu(true);
-        self.userLogged = this.populateObjectUser(data);
+        self.userLogged = this.preencherObjetoUsuario(data);
         self.nav.setRoot(TabsPage);
       }
     });
   }
 
-  populateObjectUser(data: any): UsuarioVO {
+  mensagemNovaEvent() {
+    this.events.subscribe('mensagem:alterada', (childSnapshot, prevChildKey) => {
+      if (this.app.getActiveNav() != null && this.app.getActiveNav().getActive()) {
+        if (this.app.getActiveNav().getActive().instance instanceof MensagemPage) {
+          let msgPage: MensagemPage = this.app.getActiveNav().getActive().instance;
+          console.log(msgPage.interlocutor);
+        }
+        else {
+          console.log(this.app.getActiveNav().getActive().instance);
+        }
+      }
+      // console.log(this.nav.getActive());
+      // console.log(childSnapshot.val());
+      // console.log(prevChildKey);
+
+    });
+  }
+
+  preencherObjetoUsuario(data: any): UsuarioVO {
     var object = new UsuarioVO();
     let imageData = "assets/img/profile/profile.png";
 
@@ -251,53 +270,16 @@ export class MyApp implements OnInit {
     }
 
     this.subpages = [
-      { title: 'Configurações', component: TestePage, icon: 'options', typeMenu: enums.ETypeMenu.default },
-      { title: 'Estatísticas', component: RelatoriosListaPage, icon: 'pie', typeMenu: enums.ETypeMenu.default },
-      { title: 'Favoritos', component: TestePage, icon: 'star', typeMenu: enums.ETypeMenu.default },
-      { title: 'Contato', component: TestePage, icon: 'contact', typeMenu: enums.ETypeMenu.default },
-      { title: 'Sobre', component: TestePage, icon: 'information-circle', typeMenu: enums.ETypeMenu.default }];
+      // { title: 'Configurações', component: TestePage, icon: 'options', typeMenu: enums.ETypeMenu.default },
+      // { title: 'Estatísticas', component: RelatoriosListaPage, icon: 'pie', typeMenu: enums.ETypeMenu.default },
+      // { title: 'Favoritos', component: TestePage, icon: 'star', typeMenu: enums.ETypeMenu.default },
+      // { title: 'Contato', component: TestePage, icon: 'contact', typeMenu: enums.ETypeMenu.default },
+      // { title: 'Sobre', component: TestePage, icon: 'information-circle', typeMenu: enums.ETypeMenu.default }
+      
+      ];
 
     if (value == true) {
       this.subpages.push({ title: 'Sair', component: TabsPage, icon: 'exit', typeMenu: enums.ETypeMenu.logout });
     }
-  }
-
-  public mensagemEvent() {
-
-    if (this.globalVar.getIsFirebaseConnected()) {
-
-      let userCurrent = this.loginSrv.getLoggedInUser();
-
-      this.fbService.getDataBase().ref(`/usuario/${userCurrent.uid}/mensagem/`).on('child_changed', this.onMensagemAlterada);
-
-      this.fbService.getDataBase().ref(`/usuario/${userCurrent.uid}/mensagem/`).on('child_added', this.onMensagemAdicionada);
-    }
-  }
-
-  public onMensagemAdicionada = (childSnapshot, prevChildKey) => {
-    var self = this;
-    var pkMensagem = childSnapshot.key;
-    console.log(childSnapshot.val());
-    console.log(pkMensagem);
-    console.log("Adicionado");
-
-    // let view = this.nav.getActive();
-    // console.log(view);
-    // if(view.instance instanceof MyPage) { 
-      // Você já está nesta página 
-    // }
-
-  }
-
-  public onMensagemAlterada = (childSnapshot, prevChildKey) => {
-    var self = this;
-    var pkMensagem = childSnapshot.key;
-    console.log(childSnapshot.val());
-    console.log(pkMensagem);
-    console.log("Alterado");
-
-    // let view = this.nav.getActive();
-    // console.log(view);
-
   }
 }
