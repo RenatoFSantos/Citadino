@@ -7,9 +7,9 @@
 <ion-content>
     <ion-searchbar [(ngModel)]="searchDescritor" [formControl]="searchControl" (ionInput)="onSearchInput()" placeholder="" (ionClear)="onCleanInput()"></ion-searchbar>
 
-    <div *ngIf="searching" class="spinner-container">
+    <!--<div *ngIf="searching" class="spinner-container">
         <ion-spinner></ion-spinner>
-    </div>
+    </div>-->
 
     <div *ngIf="descritorEnable == false">
         <ion-grid>
@@ -22,13 +22,13 @@
     </div>
 
     <div *ngIf="descritorEnable == true">
-         <ion-item-group>
+        <ion-item-group>
             <ion-item *ngFor="let item of descritores">
-                <button ion-item  (click)="openGuiaDescritor(item.desc_nm_descritor, item.desc_sq_id)">
+                <button ion-item (click)="openGuiaDescritor(item.desc_nm_descritor, item.desc_sq_id)">
                 {{item.desc_nm_descritor}}
                 </button>
             </ion-item>
-         </ion-item-group>
+        </ion-item-group>
     </div>
 
 </ion-content>

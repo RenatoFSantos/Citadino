@@ -1,3 +1,4 @@
+import { UsuarioVO } from './../../../model/usuarioVO';
 import { UsuarioService } from './../../../providers/service/usuario-service';
 import { GlobalVar } from './../../../shared/global-var';
 import { UserCredentials } from './../../../shared/interfaces';
@@ -48,19 +49,24 @@ export class SignUpPage implements OnInit {
         dismissOnPageChange: true
       });
 
-      let newUser: UserCredentials = {
+      let newAuth: UserCredentials = {
         email: signupForm.usua_ds_email,
         password: signupForm.usua_tx_senha
       };
 
+      let newUser:UsuarioVO = new UsuarioVO();
+      newUser.usua_nm_usuario = signupForm.usua_nm_usuario;
+      newUser.usua_ds_email = signupForm.usua_ds_email;
+      newUser.usua_tx_senha = signupForm.usua_tx_senha;
+
       loader.present();
 
-      self.loginService.registerUser(newUser).then((result) => {
-        self.loginService.addUserFB(signupForm,
-          self.loginService.getLoggedInUser().uid);
+      self.loginService.registerUser(newAuth).then((result) => {
+        newUser.usua_sq_id = self.loginService.getLoggedInUser().uid;
+        self.loginService.addUserFB(newUser);
 
-        self.loginService.addUserSQ(signupForm,
-          self.loginService.getLoggedInUser().uid);
+        // self.loginService.addUserSQ(signupForm,
+        //   self.loginService.getLoggedInUser().uid);
 
         self.CreateAndUploadDefaultImage();
 

@@ -34,12 +34,12 @@ import { AngularFireDatabaseModule } from 'angularfire2/database';
 import { APP_PROVIDERS } from '../providers/app.providers';
 
 export const firebaseConfig = {
-  apiKey: "AIzaSyByJsiNAYX6741uxiw-TSokabtN64DeTMk",
-  authDomain: "citadino-c0c79.firebaseapp.com",
-  databaseURL: "https://citadino-c0c79.firebaseio.com",
-  projectId: "citadino-c0c79",
-  storageBucket: "citadino-c0c79.appspot.com",
-  messagingSenderId: "75420061601"
+  apiKey: "AIzaSyC0maPdTdMQ7ccxuiXHLcZ1IsgeX7qVD6I",
+  authDomain: "citadinodsv.firebaseapp.com",
+  databaseURL: "https://citadinodsv.firebaseio.com",
+  projectId: "citadinodsv",
+  storageBucket: "citadinodsv.appspot.com",
+  messagingSenderId: "180769307423"
 };
 
 const cloudSettings: CloudSettings = {

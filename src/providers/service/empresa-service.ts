@@ -18,5 +18,12 @@ export class EmpresaService {
     return this.empresaRef;
   }
 
+  public getUsuarioPorEmpresa(empresaKey: string) {
+    return this.empresaRef.child(empresaKey).child("usuario").once('value');
+  }
+
+  public getSmartSitePorEmpresa(empresaKey: string) {
+    return this.empresaRef.child(empresaKey).child('smartsite').once('value');
+  }
 
 }

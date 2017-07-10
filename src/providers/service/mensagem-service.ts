@@ -1,3 +1,6 @@
+import { UsuarioVO } from './../../model/usuarioVO';
+import { MensagemVO } from './../../model/mensagemVO';
+import { MensagemPage } from './../../pages/mensagem/mensagem';
 import { Events } from 'ionic-angular';
 import { GlobalVar } from './../../shared/global-var';
 import { AngularFireDatabase } from 'angularfire2/database';
@@ -9,12 +12,11 @@ import 'rxjs/add/operator/map';
 @Injectable()
 export class MensagemService {
 
-  private mensagemRef: any;
   constructor(private usuaSrv: UsuarioService,
     private db: AngularFireDatabase,
     private fbSrv: FirebaseService,
     private globalVar: GlobalVar,
-    private event: Events) { }
+    private events: Events) { }
 
 
   public addMensagems(uid, interlocutor) {
@@ -33,19 +35,17 @@ export class MensagemService {
 
       let userCurrent = this.usuaSrv.getLoggedInUser();
       if (userCurrent != null) {
-        
-        this.fbSrv.getDataBase().ref(`/usuario/${userCurrent.uid}/mensagem/`).on('child_changed', this.onStatusMensagemEvent);
 
-        this.fbSrv.getDataBase().ref(`/usuario/${userCurrent.uid}/mensagem/`).on('child_added', this.onStatusMensagemEvent);
+        this.fbSrv.getDataBase().ref(`/usuario/${userCurrent.uid}/mensagem/`).on('child_changed', this.onMensagemEvent);
+
+        this.fbSrv.getDataBase().ref(`/usuario/${userCurrent.uid}/mensagem/`).on('child_added', this.onMensagemEvent);
       }
-
     }
   }
 
-  private onStatusMensagemEvent = (childSnapshot, prevChildKey) => {
-    this.event.publish('mensagem:alterada', childSnapshot, prevChildKey);
+  private onMensagemEvent = (childSnapshot, prevChildKey) => {
+    this.events.publish('mensagem:alterada', childSnapshot);
   }
-
 
   public listMensagens(value: string) {
     return this.db.list(value);
@@ -68,7 +68,6 @@ export class MensagemService {
       });
     });
   }
-
 
 }
 

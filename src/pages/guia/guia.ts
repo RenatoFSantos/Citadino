@@ -42,11 +42,19 @@ export class GuiaPage implements OnInit {
     this.searchControl.valueChanges
       .debounceTime(700)
       .distinctUntilChanged()
-      .map(v => v) //.toLowerCase().trim()
+      .map(v => v.toLowerCase().trim())
       .subscribe(value => {
         self.descritores = []
         this.searching = false;
         if (value != "") {
+          
+          let loader = this.loadingCtrl.create({
+            content: 'Aguarde...',
+            dismissOnPageChange: true
+          });
+
+          loader.present();
+
           this.guiaSrv.getDescritorPorNome(value).then(snapShot => {
             if (snapShot != null && snapShot.numChildren() > 0) {
               snapShot.forEach(element => {
@@ -60,6 +68,8 @@ export class GuiaPage implements OnInit {
             else {
               this.descritorEnable = true;
             }
+
+             loader.dismiss();
           });
         }
         else {

@@ -37,7 +37,7 @@ export class NetworkService {
           showCloseButton: true,
           closeButtonText: "OK"
         });
-
+        
         this.globalVar.setIsNetworkConnected(false);
         this.toast.present();
       }

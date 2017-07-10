@@ -1,5 +1,6 @@
-import { ItemsService } from './../../providers/service/_items.service';
-import { MappingsService } from './../../providers/service/_mappings.service';
+import { EmpresaService } from './../../providers/service/empresa-service';
+import { ItemsService } from './../../providers/service/_items-service';
+import { MappingsService } from './../../providers/service/_mappings-service';
 import { GlobalVar } from './../../shared/global-var';
 import { NetworkService } from './../../providers/service/network-service';
 import { VitrineVO } from './../../model/vitrineVO';
@@ -7,7 +8,7 @@ import { VitrineService } from './../../providers/service/vitrine-service';
 import { NoticiaFullPage } from './../noticia-full/noticia-full';
 import { AnuncioFullPage } from './../anuncio-full/anuncio-full';
 import { Component, OnInit } from '@angular/core';
-import { NavController, NavParams, AlertController, Events, LoadingController } from 'ionic-angular';
+import { NavController, NavParams, AlertController, Events, LoadingController, ToastController } from 'ionic-angular';
 
 
 @Component({
@@ -17,9 +18,9 @@ import { NavController, NavParams, AlertController, Events, LoadingController } 
 
 export class VitrinePage implements OnInit {
 
-  public seqMunicipio: string = "001";
+  public seqMunicipio: string = "-KoJyCiR1SOOUrRGimAS";
   private startPk: string = "";
-  private limitPage: number = 3;
+  private limitPage: number = 10;
   private rowCount: number = 0;
   private rowCurrent: number = 0;
   private loading: boolean = false;
@@ -38,7 +39,9 @@ export class VitrinePage implements OnInit {
     private vitrineSrv: VitrineService,
     private netService: NetworkService,
     private mappingsService: MappingsService,
-    private itemsService: ItemsService) {
+    private itemsService: ItemsService,
+    private toastCtrl: ToastController,
+    private emprSrv: EmpresaService) {
 
     if (this.globalVar.getIsFirebaseConnected()) {
 
@@ -47,23 +50,34 @@ export class VitrinePage implements OnInit {
       });
       this.loadCtrl.present();
 
-      this.vitrineSrv.getVitrineRef().child(this.seqMunicipio).on('child_added', this.onVitrineAdded);
+      this.vitrineSrv.getVitrineRef().once("value").then((snapShot) => {
+        if (snapShot.exists()) {
+          this.vitrineSrv.getVitrineRef().child(this.seqMunicipio).on('child_added', this.onVitrineAdded);
+          this.loadVitrines();
+          return true;
+        }
+        else {
+          this.loadCtrl.dismiss();
+          return false;
+        }
+      });
 
-      this.loadVitrines();
+    } else {
+      this.createAlert("Ops!!! Não estou conseguindo carregar a vitrine. Tente mais tarde!");
     }
   }
 
   public onVitrineAdded = (childSnapshot, prevChildKey) => {
     var self = this;
-    var pkVitrine = childSnapshot.val().agen_sq_agenda;
+    var pkVitrine = childSnapshot.val().vitr_sq_id;
 
     if (this.vitrines != null && this.vitrines.length > 0) {
       let exist: boolean = this.vitrines.some(campo =>
-        campo.agen_sq_agenda == pkVitrine
+        campo.vitr_sq_id == pkVitrine
       );
 
       if (!exist) {
-        let newVitrine: VitrineVO = self.mappingsService.getThread(childSnapshot.val(), pkVitrine);
+        let newVitrine: VitrineVO = self.mappingsService.getVitrine(childSnapshot.val(), pkVitrine);
         this.newVitrines.push(newVitrine);
         this.events.publish('thread:created', this.newVitrines);
       }
@@ -120,11 +134,11 @@ export class VitrinePage implements OnInit {
 
           self.startPk = self.itemsService.getLastElement(self.itemsService.getKeys(snapshot.val()));
 
-          self.itemsService.reversedItems<VitrineVO>(self.mappingsService.getThreads(snapshot))
+          self.itemsService.reversedItems<VitrineVO>(self.mappingsService.getVitrines(snapshot))
 
             .forEach(function (vitrine) {
               let exist: boolean = self.vitrines.some(campo =>
-                campo.agen_sq_agenda == vitrine.agen_sq_agenda
+                campo.vitr_sq_id == vitrine.vitr_sq_id
               );
 
               if (!exist) {
@@ -176,30 +190,44 @@ export class VitrinePage implements OnInit {
     }
   }
 
-  // openSmartSite(site: string) {
-  //   switch (site) {
-  //     case 'scrapfashion':
-  //       this.navCtrl.push(SsScrapfashionPage);
-  //     default: {
-  //     }
-  //   }
-  // }
+  openPage(empresaKey: string) {
+    // console.log(empresaKey);
+    // this.emprSrv.getEmpresaPorKey(empresaKey).then((snapEmpresa) => {
 
-  showPromocao() {
-    let confirm = this.alertCtrl.create({
-      title: 'Parabéns!',
-      message: 'Você ganhou este cupom de desconto!<br>Guarde este número para resgatar esta promoção!<br>CTDN943587220012',
-      buttons: [
-        {
-          text: 'Obrigado!',
-          handler: () => {
-            console.log('Agree clicked');
-          }
-        }
-      ]
-    });
-    confirm.present();
+    //   if (snapEmpresa.val() != null && snapEmpresa.val().child('plano').exist()) {
+    //     let empresa:EmpresaVO = snapEmpresa.val();
+    //     if (empresa.plano != null) {
+    //       if (plano.plan_in_smartsite == true) {
+    //         console.log("SmartSite");
+    //       }
+    //     }
+    //   }
+    // });
+
+    // console.log(smartSiteKey);
+    // switch (site) {
+    //   case 'scrapfashion':
+    //     this.navCtrl.push(SsScrapfashionPage);
+    //   default: {
+    //   }
+    // }
   }
+
+  // showPromocao() {
+  //   let confirm = this.alertCtrl.create({
+  //     title: 'Parabéns!',
+  //     message: 'Você ganhou este cupom de desconto!<br>Guarde este número para resgatar esta promoção!<br>CTDN943587220012',
+  //     buttons: [
+  //       {
+  //         text: 'Obrigado!',
+  //         handler: () => {
+  //           console.log('Agree clicked');
+  //         }
+  //       }
+  //     ]
+  //   });
+  //   confirm.present();
+  // }
 
   openPub(opcao: number, param: any): void {
     switch (opcao) {
@@ -215,6 +243,15 @@ export class VitrinePage implements OnInit {
     }
   }
 
+  createAlert(errorMessage: string) {
+    let toast = this.toastCtrl.create({
+      message: errorMessage,
+      duration: 4000,
+      position: 'top'
+    });
+
+    toast.present();
+  }
 
 
 }

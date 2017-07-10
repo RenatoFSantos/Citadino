@@ -1,3 +1,4 @@
+import { MappingsService } from './_mappings-service';
 import { SqLiteService } from './../database/sqlite-service';
 import { UsuarioVO } from './../../model/usuarioVO';
 import { UserCredentials } from './../../shared/interfaces';
@@ -10,7 +11,8 @@ export class UsuarioService {
   private usersRef: any;
 
   constructor(private fbService: FirebaseService,
-    private sqService: SqLiteService) {
+              private sqService: SqLiteService,
+              private mapSrv:MappingsService) {
     this.usersRef = fbService.getDataBase().ref('/usuario');
   }
 
@@ -55,13 +57,9 @@ export class UsuarioService {
     return this.fbService.getFireBase().auth().createUserWithEmailAndPassword(user.email, user.password);
   }
 
-  addUserFB(user: UsuarioVO, uid: string) {
-    this.usersRef.child(uid).update({
-      usua_sq_id: uid,
-      usua_nm_usuario: user.usua_nm_usuario,
-      usua_ds_email: user.usua_ds_email,
-      usua_tx_senha: user.usua_tx_senha
-    });
+  addUserFB(user: UsuarioVO) {
+    let userJson = this.mapSrv.getUserJson(user);
+    this.usersRef.child(user.usua_sq_id).update(userJson);
   }
 
   addUserSQ(user: UsuarioVO, uid: string) {

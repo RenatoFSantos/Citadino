@@ -1,6 +1,6 @@
 <ion-header>
     <ion-navbar color="ctd-navbar">
-        <ctd-header-modal [titulo]=[(nameFrom)] [pathImage]=[(pathImage)]></ctd-header-modal>
+        <ctd-header-modal [titulo]=[(mens_nm_enviado)] [pathImage]=[(mens_tx_logo_enviado)]></ctd-header-modal>
     </ion-navbar>
 </ion-header>
 
@@ -9,11 +9,11 @@
         <ion-item *ngFor="let msg of mensagens | async" style="background-color:#c2b49a !important">
             <div class="chatBubble">
                 <!--<img class="profile-pic {{msg.position}}" src="{{msg.img}}">-->
-                <div class="chat-bubble" [ngClass]="{'right': uid === msg.from, 'left': uid != msg.from}">
-                    <div class="message">{{msg.mensagem}}</div>
+                <div class="chat-bubble" [ngClass]="{'right': usua_sq_logado === msg.usua_sq_id_from, 'left': usua_sq_logado != msg.usua_sq_id_from}">
+                    <div class="message">{{msg.mens_txt_mensagem}}</div>
                     <div class="message-detail">
-                        <span style="font-weight:bold;">{{msg.user}}</span>
-                        <span>{{msg.dateTime}}</span>
+                        <span style="font-weight:bold;">{{msg.usua_nm_usuario_from.substring(0,6)}}</span>
+                        <span>{{msg.mens_dt_data}}</span>
                     </div>
                 </div>
             </div>
@@ -28,7 +28,7 @@
                 <ion-spinner *ngIf="!(mensagens)"></ion-spinner>
             </ion-col>-->
             <ion-col col-10 [hidden]="!mensagens">
-                <ion-textarea fz-elastic placeholder="Entre com a mensagem" [(ngModel)]="mensagem"></ion-textarea>
+                <ion-textarea fz-elastic placeholder="Entre com a mensagem" [(ngModel)]="mens_txt_mensagem"></ion-textarea>
             </ion-col>
             <ion-col col-2 [hidden]="!mensagens">
                 <button ion-button (click)="enviarMensagem()"><ion-icon name="send"></ion-icon></button>

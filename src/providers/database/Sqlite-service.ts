@@ -15,8 +15,8 @@ export class SqLiteService {
     let dbCreate = new SQLite();
     dbCreate.create({
       name: 'citadinodb.db',
-      location: 'default' // the location field is required
-      // iosDatabaseLocation: 'Documents'
+      location: 'default', // the location field is required
+      iosDatabaseLocation: 'Documents'
     }).then((db: SQLiteObject) => {
       self.dataBase = db;
       self.createUser();

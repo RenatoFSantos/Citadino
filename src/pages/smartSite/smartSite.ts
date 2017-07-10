@@ -1,30 +1,88 @@
+import { MensagemPage } from './../mensagem/mensagem';
+import { UsuarioService } from './../../providers/service/usuario-service';
+import { EmpresaService } from './../../providers/service/empresa-service';
+import { MensagemService } from './../../providers/service/mensagem-service';
+import { CtdFuncoes } from './../../shared/ctdFuncoes';
+import { SmartsiteVO } from './../../model/smartSiteVO';
+import { SmartSiteService } from './../../providers/service/smartSite-services';
+import { EmpresaVO } from './../../model/empresaVO';
 import { Component } from '@angular/core';
-import { NavController, NavParams } from 'ionic-angular';
+import { NavController, NavParams, Events, LoadingController, ModalController } from 'ionic-angular';
 
-/*
-  Generated class for the SsScrapfashion page.
-
-  See http://ionicframework.com/docs/v2/components/#navigation for more info on
-  Ionic pages and navigation.
-*/
 @Component({
   selector: 'page-smartSite',
   templateUrl: 'smartSite.html'
 })
 export class SmartSitePage {
 
-  constructor(public navCtrl: NavController, public navParams: NavParams) {}
+  public smartSite: SmartsiteVO;
+  public empresa: EmpresaVO;
 
-  ionViewDidLoad() {
-    console.log('ionViewDidLoad SsScrapfashionPage');
+  constructor(public navCtrl: NavController,
+    public navParams: NavParams,
+    public smartSrv: SmartSiteService,
+    public mensSrv: MensagemService,
+    private events: Events,
+    private loadingCtrl: LoadingController,
+    private emprSrv: EmpresaService,
+    private mdlCtrl: ModalController,
+    private usuaSrv: UsuarioService) {
+
+    this.smartSite = navParams.get("smartSite");
+    this.empresa = navParams.get("empresa");
   }
 
-  // openTabelaPreco(site: string) {
-  //   switch(site) {
-  //     case 'scrapfashion':
-  //       this.navCtrl.push(TpScrapfashionPage);
-  //     default:
-  //       break;
-  //   } 
-  // }
+  public openMensagem() {
+    let loader = this.loadingCtrl.create({
+      content: 'Aguarde...',
+      dismissOnPageChange: true
+    });
+
+    loader.present();
+
+    let self = this;
+    let userCurrent = this.usuaSrv.getLoggedInUser();
+    this.usuaSrv.getUserDetail(userCurrent.uid)
+      .then((snapUserFrom) => {
+        this.emprSrv.getUsuarioPorEmpresa(this.empresa.empr_sq_id)
+          .then((snapKeyUserTo) => {
+            let chaveKey: string = Object.keys(snapKeyUserTo.val())[0];
+            this.usuaSrv.getUserDetail(chaveKey)
+              .then((snapUserTo) => {
+
+                let mensParam = {
+                  usua_sq_logado: userCurrent.uid,
+                  usua_sq_id_to: snapUserTo.key,
+                  usua_nm_usuario_to: snapUserTo.val().usua_nm_usuario,
+                  usua_sq_id_from: snapUserFrom.key,
+                  usua_nm_usuario_from: snapUserFrom.val().usua_nm_usuario,
+                  mens_nm_enviado: this.empresa.empr_nm_razaosocial,
+                  mens_tx_logo_enviado: this.empresa.empr_tx_logomarca
+                };
+                // mensagem.mens_nova = false;
+
+                let totalMensage: number = 0;
+                this.usuaSrv.getMensagens().then((snapMsg) => {
+                  snapMsg.forEach(element => {
+
+                    if (element.val() == true) {
+                      totalMensage++;
+                    }
+
+                    this.events.publish('mensagem:nova', totalMensage - 1);
+                  });
+                });
+
+                loader.dismiss();
+                let loginModal = this.mdlCtrl.create(MensagemPage, mensParam);
+                loginModal.present();
+
+              });
+          });
+      });
+  }
+
+  public discar(number: string) {
+    CtdFuncoes.discarTelefone(number);
+  }
 }

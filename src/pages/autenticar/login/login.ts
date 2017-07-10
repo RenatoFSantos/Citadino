@@ -18,6 +18,8 @@ export class LoginPage implements OnInit {
   email: AbstractControl;
   password: AbstractControl;
 
+  private loading: any;
+
   constructor(private nav: NavController,
     private loadingCtrl: LoadingController,
     private toastCtrl: ToastController,
@@ -54,18 +56,18 @@ export class LoginPage implements OnInit {
     console.log("status + " + self.globalVar.getIsFirebaseConnected());
     if (self.loginForm.valid) {
 
-      let loading = self.loadingCtrl.create({
+      this.loading = self.loadingCtrl.create({
         spinner: 'circles'
       });
 
-      loading.present();
+      this.loading.present();
 
       let user: UserCredentials = {
         email: signInForm.email,
         password: signInForm.password
       };
 
-      let resultFindUser: any;
+      let resultFindUser: any = null;
 
       if (self.globalVar.getIsFirebaseConnected()) {
         resultFindUser = this.loginSrv.signInUserFB(user.email, user.password);
@@ -73,22 +75,31 @@ export class LoginPage implements OnInit {
         resultFindUser = this.loginSrv.signInUserSQ(user.email, user.password);
       }
 
-      resultFindUser.then(
-        (data: any) => {
-          console.log("obj data " + data);
-          if (data != null) {
-            self.event.publish('usuario:logado', self.globalVar.getIsFirebaseConnected(), data);
-            loading.dismiss();
-          } else {
-            this.createAlert("Usuário não encontrado");
-          }
-        },
-        (error) => {
-          loading.dismiss().then(() => {
-            this.createAlert(error.message);
-          })
-        });
+      if (resultFindUser != null) {
+        resultFindUser.then(
+          (data: any) => {
+            console.log("obj data " + data);
+            if (data != null) {
+              self.event.publish('usuario:logado', self.globalVar.getIsFirebaseConnected(), data);
+              this.loading.dismiss();
+            } else {
+              this.createAlert("Usuário não encontrado");
+            }
+          },
+          (error) => {
+            this.errorConnection();
+          });
+      }
+      else {
+        this.errorConnection();
+      }
     }
+  }
+
+  private errorConnection(): void {
+    this.loading.dismiss().then(() => {
+      this.createAlert("Ops!!! Não estou conseguindo validar o seu login. Tente mais tarde!");
+    });
   }
 
   close() {

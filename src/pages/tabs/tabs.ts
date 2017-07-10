@@ -1,3 +1,4 @@
+import { UsuarioService } from './../../providers/service/usuario-service';
 import { MensagemListaPage } from './../mensagem-lista/mensagem-lista';
 
 import { Component, OnInit, ViewChild } from '@angular/core';
@@ -17,38 +18,63 @@ export class TabsPage implements OnInit {
   tab3Root: any = MensagemListaPage;
   selectedIndex: number;
   public newThreads: string = '';
+  public novasMensagem: string = '';
 
   constructor(public nav: NavController,
     public navParams: NavParams,
-    public events: Events) {
+    public events: Events,
+    private usuaSrv:UsuarioService) {
     this.selectedIndex = navParams.data.tabIndex || 0;
   }
 
   ngOnInit() {
-    this.startListening();
+    this.newNoticeEvent();
+    this.eventoNovaMensagem();
+    this.totalNovasMensagens();
   }
 
-  startListening() {
+  newNoticeEvent() {
     var self = this;
 
     self.events.subscribe('thread:created', (newVitrines: Array<any>) => {
       if (newVitrines != null) {
-
-        console.log("Tamanho " + newVitrines.length.toString());
         self.newThreads = newVitrines.length.toString();
       }
       else {
         self.newThreads = '';
       }
-      // if (self.newThreads === '') {
-      //   self.newThreads = '1';
-      // } else {
-      //   self.newThreads = (+self.newThreads + 1).toString();
-      // }
     });
 
     self.events.subscribe('threads:viewed', (threadData) => {
       self.newThreads = '';
     });
   }
+
+  eventoNovaMensagem() {
+    var self = this;
+
+    self.events.subscribe('mensagem:nova', (total: number) => {
+      if (total > 0) {
+        self.novasMensagem = total.toString();
+      }
+      else {
+        self.novasMensagem = '';
+      }
+    });
+  }
+
+  private totalNovasMensagens() {
+    let totalMensage: number = 0;
+    this.usuaSrv.getMensagens().then((snapMsg) => {
+      snapMsg.forEach(element => {
+
+        if (element.val() == true) {
+          totalMensage++;
+        }
+
+        this.events.publish('mensagem:nova', totalMensage);
+      });
+    });
+  }
+
 }

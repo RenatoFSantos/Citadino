@@ -1,10 +1,11 @@
-import { EmpresaVO } from './../../model/empresaVO';
+import { MensagemPage } from './../mensagem/mensagem';
+import { MensagemService } from './../../providers/service/mensagem-service';
+import { UsuarioVO } from './../../model/usuarioVO';
 import { MensagemVO } from './../../model/mensagemVO';
 import { EmpresaService } from './../../providers/service/empresa-service';
 import { UsuarioService } from './../../providers/service/usuario-service';
-import { MensagemPage } from './../mensagem/mensagem';
 import { Component, OnInit } from '@angular/core';
-import { NavController, ModalController } from 'ionic-angular';
+import { ModalController, LoadingController, Events } from 'ionic-angular';
 
 @Component({
   selector: 'page-mensagem-lista',
@@ -15,73 +16,108 @@ export class MensagemListaPage implements OnInit {
 
   constructor(private usuaSrv: UsuarioService,
     private emprSrv: EmpresaService,
-    private mdlCtrl: ModalController) {
+    private mdlCtrl: ModalController,
+    private loadingCtrl: LoadingController,
+    private events: Events,
+    private mensSrv: MensagemService) {
   }
 
-  ngOnInit() {
+  ionViewWillEnter() {
+    this.loadMensagens();
+  }
+
+  ngOnInit() { }
+
+  public removeMensagem(usua_sq_id_to: string) {
+    let userCurrent = this.usuaSrv.getLoggedInUser();
+    this.usuaSrv.getUsersRef()
+      .child(userCurrent.uid)
+      .child("mensagem")
+      .child(usua_sq_id_to).remove();
     this.loadMensagens();
   }
 
   private loadMensagens() {
-    this.usuaSrv.getMensagens().then((users) => {
-      users.forEach(user => {
-        let mensagem: MensagemVO = new MensagemVO();
-        this.usuaSrv.getUserDetail(user.key).then((usuario) => {
-
-          mensagem.usua_sq_id = usuario.val().usua_sq_id;
-          // mensagem.usua_uid_authentic = usuario.val().usua_uid_authentic;
-
-          if (usuario.child('empresa').exists()) {
-            usuario.child('empresa').forEach(itemEmpresa => {
-              this.emprSrv.getEmpresaPorKey(
-                itemEmpresa.val().empr_sq_id).then((empresa) => {
-                  mensagem.empr_sq_id = empresa.val().empr_sq_id;
-                  mensagem.mens_nome = empresa.val().empr_nm_razaosocial;
-                  mensagem.mens_tx_logo_marca = empresa.val().empr_tx_logomarca;
-                });
-            });
-          }
-          else {
-            mensagem.mens_nome = usuario.val().usua_nm_usuario;
-            mensagem.mens_tx_logo_marca = usuario.val().usua_tx_url_profile;
-          }
-          this.mensagens.push(mensagem);
-        });
-      });
+    let loader = this.loadingCtrl.create({
+      content: 'Aguarde...',
+      dismissOnPageChange: true
     });
+
+    loader.present();
+    if (this.mensagens != null && this.mensagens.length > 0) {
+      this.mensagens = [];
+    }
+
+    this.usuaSrv.getMensagens()
+      .then((users) => {
+        users.forEach(user => {
+          let mensagem: MensagemVO = new MensagemVO();
+          this.usuaSrv.getUserDetail(user.key).then((usuario) => {
+            mensagem.usua_sq_id_from = this.usuaSrv.getLoggedInUser().uid;
+            mensagem.usua_sq_id_to = usuario.val().usua_sq_id;
+            mensagem.usua_nm_usuario_to = usuario.val().usua_nm_usuario
+            mensagem.mens_nova = user.val();
+
+            if (usuario.child('empresa').exists()) {
+              usuario.child('empresa').forEach(itemEmpresa => {
+                this.emprSrv.getEmpresaPorKey(
+                  itemEmpresa.key).then((empresa) => {
+                    mensagem.mens_nm_enviado = empresa.val().empr_nm_razaosocial;
+                    mensagem.mens_tx_logo_enviado = empresa.val().empr_tx_logomarca;
+                  });
+              });
+            }
+            else {
+              mensagem.mens_nm_enviado = usuario.val().usua_nm_usuario;
+              mensagem.mens_tx_logo_enviado = usuario.val().usua_tx_url_profile;
+            }
+            this.mensagens.push(mensagem);
+          });
+        });
+        loader.dismiss();
+      });
   }
 
   openMensagemPage(mensagem: MensagemVO) {
+    let loader = this.loadingCtrl.create({
+      content: 'Aguarde...',
+      dismissOnPageChange: true
+    });
+
+    loader.present();
+
     let userCurrent = this.usuaSrv.getLoggedInUser();
-    let param = {
-      uid: userCurrent.uid,
-      interlocutor: mensagem.usua_sq_id,
-      nameFrom: mensagem.mens_nome,
-      pathImage: mensagem.mens_tx_logo_marca,
-      user: mensagem.mens_nome.substr(0, 6)
-    };
+    this.usuaSrv.getUserDetail(userCurrent.uid).then((snapUsuario) => {
+      let usuario: UsuarioVO = snapUsuario.val();
+      let mensParam = {
+        usua_sq_logado: usuario.usua_sq_id,
+        usua_sq_id_from: usuario.usua_sq_id,
+        usua_nm_usuario_from: usuario.usua_nm_usuario,
+        usua_sq_id_to: mensagem.usua_sq_id_to,
+        usua_nm_usuario_to: mensagem.usua_nm_usuario_to,
+        mens_nm_enviado: mensagem.mens_nm_enviado,
+        mens_tx_logo_enviado: mensagem.mens_tx_logo_enviado
+      };
 
-    console.log(param);
-    // let param = { uid: userCurrent.uid, interlocutor: '-KjwrnGNL-oVZBYZVkdW'};
+      mensagem.mens_nova = false;
 
-    // this.navCtrl.push(MensagemPage, param);
-    let loginModal = this.mdlCtrl.create(MensagemPage, param);
-    loginModal.present();
+      let totalMensage: number = 0;
+      this.usuaSrv.getMensagens().then((snapMsg) => {
+        snapMsg.forEach(element => {
+
+          if (element.val() == true) {
+            totalMensage++;
+          }
+
+          this.events.publish('mensagem:nova', totalMensage - 1);
+        });
+      });
+
+      loader.dismiss();
+      let loginModal = this.mdlCtrl.create(MensagemPage, mensParam);
+      loginModal.present();
+
+    })
   }
 
-  openNovaMensagem(key: any) {
-    let userCurrent = this.usuaSrv.getLoggedInUser();
-    // let param = { uid: userCurrent.uid, interlocutor: key };
-    let param = {
-      uid: userCurrent.uid,
-      interlocutor: '4s9jJNIQseaOuhhXRXNjeeSNXvj2',
-      //  interlocutor: 'KobfWIv3ADTP6c8fxpYuSlf7V1m1',
-      nameFrom:'',
-      pathImage: '',
-      user: ''
-    };
-
-    let loginModal = this.mdlCtrl.create(MensagemPage, param);
-    loginModal.present();
-  }
 }

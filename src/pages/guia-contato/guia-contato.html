@@ -8,26 +8,26 @@
   <ion-item-group>
     <ion-item-divider color="ctd-subtitulo">OPÇÕES DE CONTATO</ion-item-divider>
     <ion-item>
-        <button ion-button icon-only color="light" large>
+        <button ion-button icon-only color="light" large (click)="discar(empresa.empr_tx_telefone_1)">
           <ion-icon name="call"></ion-icon>
         </button>
-        <span class="ctd-tel">(32)3271-2311</span>
+        <span class="ctd-tel">{{empresa.empr_tx_telefone_1}}</span>
     </ion-item>  
-    <ion-item>
-        <button ion-button icon-only color="light" large>
+    <ion-item *ngIf="empresa.empr_in_mensagem == true">
+        <button ion-button icon-only color="light" large (click)="openMensagem()">
           <ion-icon name="chatbubbles"></ion-icon>
         </button>
         <span class="ctd-msg">Enviar uma mensagem</span>
     </ion-item>  
-    <ion-item>
+    <!--<ion-item>
         <button ion-button icon-only color="light" large (click)="openSmartSite('scrapfashion')">
           <ion-icon name="globe"></ion-icon>
         </button>
         <span class="ctd-www">Acessar site</span>
-    </ion-item>  
+    </ion-item>  -->
   </ion-item-group>
-  <button ion-button item-right icon-left full (click)="dismiss()">
+  <!--<button ion-button item-right icon-left full (click)="dismiss()">
     <ion-icon name="arrow-back"></ion-icon>
     Voltar
-  </button>
+  </button>-->
 </ion-content>

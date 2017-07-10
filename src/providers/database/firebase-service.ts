@@ -1,14 +1,5 @@
 import { GlobalVar } from './../../shared/global-var';
 import { Injectable } from '@angular/core';
-// import firebase from 'firebase';
-
-// const fbConf = {
-//   apiKey: "AIzaSyByJsiNAYX6741uxiw-TSokabtN64DeTMk",
-//   authDomain: "citadino-c0c79.firebaseapp.com",
-//   databaseURL: "https://citadino-c0c79.firebaseio.com",
-//   storageBucket: "citadino-c0c79.appspot.com",
-//   messagingSenderId: "75420061601"
-// };
 
 declare var firebase: any;
 
@@ -20,7 +11,8 @@ export class FirebaseService {
 
   constructor(public globalVar: GlobalVar) {
     var self = this;
-    try {
+    try 
+    {
       self.dataBase = firebase.database();
       self.connectionRef = self.dataBase.ref('.info/connected');
       self.storageRef = firebase.storage().ref();
@@ -37,9 +29,11 @@ export class FirebaseService {
       var connectedRef = self.getConnectionRef();
       connectedRef.on('value', (snap) => {
         if (snap.val() === true) {
-          self.globalVar.setIsFirebaseConnected(true);
+            self.globalVar.setIsFirebaseConnected(true); 
+            console.log("conectado");      
         } else {
-          self.globalVar.setIsFirebaseConnected(false);
+          self.globalVar.setIsFirebaseConnected(false);          
+          console.log("desconectado");
         }
       });
     } catch (error) {

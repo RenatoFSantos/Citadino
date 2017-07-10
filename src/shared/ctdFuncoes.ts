@@ -1,3 +1,4 @@
+import { CallNumber } from '@ionic-native/call-number';
 import * as enums from './../model/dominio/ctdEnum'
 
 export class CtdFuncoes {
@@ -26,7 +27,34 @@ export class CtdFuncoes {
     }
 
     public static convertTimeToStr(value: Date): string {
-         return this.formatTime.format(value);
+        return this.formatTime.format(value);
 
     }
+
+    public static removeEspacosDuplos(strTexto: string): string {
+        while (strTexto.indexOf("  ") > 0)
+            strTexto = strTexto.replace("  ", " ");
+
+        return strTexto;
+    }
+
+    public static removerAcentos(strTexto: string): string {
+        let comAcentos: string = "ÄÅÁÂÀÃäáâàãÉÊËÈéêëèÍÎÏÌíîïìÖÓÔÒÕöóôòõÜÚÛüúûùÇç";
+        let semAcentos: String = "AAAAAAaaaaaEEEEeeeeIIIIiiiiOOOOOoooooUUUuuuuCc";
+
+        for (var index = 0; index < comAcentos.length; index++) {
+            strTexto = strTexto.replace(comAcentos.charAt(index), semAcentos.charAt(index));
+        }
+
+        return strTexto;
+    }
+
+    public static discarTelefone(number: string) {
+        let callNumber: CallNumber = new CallNumber();
+        callNumber.callNumber(number, true)
+            .then(() => console.log('Launched dialer!'))
+            .catch(() => console.log('Error launching dialer'));
+    }
+
+
 }

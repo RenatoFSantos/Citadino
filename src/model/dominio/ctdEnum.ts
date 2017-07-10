@@ -20,3 +20,4 @@ export enum Connection {
     NONE = <any>"none"
 }
 
+

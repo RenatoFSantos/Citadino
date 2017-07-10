@@ -1,3 +1,5 @@
+import { SmartsiteVO } from './../../model/smartSiteVO';
+import { SmartSiteService } from './../../providers/service/smartSite-services';
 import { SmartSitePage } from './../smartSite/smartSite';
 import { EmpresaVO } from './../../model/empresaVO';
 import { EmpresaService } from './../../providers/service/empresa-service';
@@ -19,7 +21,8 @@ export class GuiaListaPage implements OnInit {
   constructor(public navCtrl: NavController,
     public navParams: NavParams,
     public guiaSrv: GuiaService,
-    public emprSrv: EmpresaService) {
+    public emprSrv: EmpresaService,
+    private smartSrv: SmartSiteService) {
 
     this.categoriaNome = navParams.get("categNm");
     this.empresasKey = navParams.get("emprKeys");
@@ -34,12 +37,25 @@ export class GuiaListaPage implements OnInit {
 
   openGuia(empresa: EmpresaVO) {
 
-    if (empresa.plano.plan_in_smartsite == true) {
-      this.navCtrl.push(SmartSitePage, { empresa: empresa });
-    }
-    else {
+    // if (empresa.plano.plan_in_smartsite == true) {
+
+    //   this.emprSrv.getSmartSitePorEmpresa(empresa.empr_sq_id)
+    //     .then((snapSamrEmpr) => {
+    //       if (snapSamrEmpr.exists()) {
+    //         this.smartSrv.getSmartSiteByKey(Object.keys(snapSamrEmpr.val())[0])
+    //           .then((snapSmart) => {
+    //             if (snapSmart.val() != null) {
+    //               let smartSite: SmartsiteVO;
+    //               smartSite = snapSmart.val();
+    //               this.navCtrl.push(SmartSitePage, { smartSite: smartSite, empresa: empresa });
+    //             }
+    //           });
+    //       }
+    //     });
+    // }
+    // else {
       this.navCtrl.push(GuiaContatoPage, { empresa: empresa });
-    }
+    // }
   }
 
   private loadEmpresas() {
@@ -47,6 +63,8 @@ export class GuiaListaPage implements OnInit {
     this.empresasKey.forEach(element => {
       this.emprSrv.getEmpresaPorKey(element).then((snapEmpresa) => {
 
+        //Essa Rotina tem como finalidade de fazer a quebra pela primeira letra do nome do
+        //parceiro
         let indexItem = snapEmpresa.val().empr_nm_razaosocial.substr(0, 1).toLocaleUpperCase();
         if (indexEmpresa == "" || indexEmpresa != indexItem) {
           indexEmpresa = indexItem;

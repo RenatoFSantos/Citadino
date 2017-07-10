@@ -7,7 +7,7 @@ export class VitrineService {
   private vitrineRef: any;
 
   constructor(public fbService: FirebaseService) {
-    this.vitrineRef = this.fbService.getDataBase().ref('municipio_agenda');
+    this.vitrineRef = this.fbService.getDataBase().ref('vitrine');
   }
 
   public getVitrineRef() {
@@ -15,14 +15,14 @@ export class VitrineService {
   }
 
   public getVitrineRefTotal(seqMunicipio: string) {
-    return this.vitrineRef.child(seqMunicipio).orderByChild('agen_sq_agenda').once('value');
+    return this.vitrineRef.child(seqMunicipio).orderByChild('vitr_sq_ordem').once('value');
   }
 
   public getVitrineMunicipio(seqMunicipio: string, limitPage: number, startPk: string) {
     if (startPk == "") {
-      return this.vitrineRef.child(seqMunicipio).orderByChild('agen_sq_agenda').limitToLast(limitPage).once('value');
+      return this.vitrineRef.child(seqMunicipio).orderByChild('vitr_sq_ordem').limitToLast(limitPage).once('value');
     } else {
-      return this.vitrineRef.child(seqMunicipio).orderByChild('agen_sq_agenda').limitToFirst(limitPage).startAt(startPk).once('value');
+      return this.vitrineRef.child(seqMunicipio).orderByChild('vitr_sq_ordem').limitToFirst(limitPage).startAt(startPk).once('value');
     }
   }
 

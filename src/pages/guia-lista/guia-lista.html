@@ -10,7 +10,7 @@
         <ion-item *ngFor="let item of empresas">
             <ion-item-divider *ngIf="item.isIndexNome == true" color="ctd-background">{{item.empr_nm_razaosocial}}</ion-item-divider>
             <div *ngIf="item.isIndexNome == false" (click)="openGuia(item)">
-                <ion-avatar item-left style="float:left">
+                <ion-avatar *ngIf="item.empr_tx_logomarca != ''" item-left style="float:left">
                     <img src="{{item.empr_tx_logomarca}}">
                 </ion-avatar>
                 <h2>{{item.empr_nm_razaosocial}}</h2>

@@ -1,9 +1,11 @@
+import { SmartSiteService } from './service/smartSite-services';
+import { CallNumber } from '@ionic-native/call-number';
 import { MensagemService } from './service/mensagem-service';
 import { UsuarioService } from './service/usuario-service';
 import { EmpresaService } from './service/empresa-service';
 import { GuiaService } from './service/guia-service';
-import { MappingsService } from './service/_mappings.service';
-import { ItemsService } from './service/_items.service';
+import { MappingsService } from './service/_mappings-service';
+import { ItemsService } from './service/_items-service';
 import { SQLite } from '@ionic-native/sqlite';
 import { SqLiteService } from './database/sqlite-service';
 import { GlobalVar } from './../shared/global-var';
@@ -31,5 +33,7 @@ export const APP_PROVIDERS = [
     GlobalVar,
     NetworkService,
     MensagemService,
-    ElasticModule
+    SmartSiteService,
+    ElasticModule,
+    CallNumber
 ];

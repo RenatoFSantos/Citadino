@@ -7,23 +7,26 @@
 
 <ion-content>
     <ion-card class="ctd-card">
-        <img src="assets/img/smartsite_320x320_scrapfashion.png" (click)="openPub()" />
-        <ion-buttons start>
+        <img src="{{smartSite.smar_tx_imagem1}}" (click)="openPub()" />
+        <!--<ion-buttons start>
             <ctd-buttons></ctd-buttons>
-        </ion-buttons>
+        </ion-buttons>-->
         <ion-item (click)="openPub()">
             <ion-avatar item-left>
-                <img src="assets/img/thumb_200x200_scrap.jpg">
+                <img src="{{empresa.empr_tx_logomarca}}">
             </ion-avatar>
-            <h2>SCRAP FASHION</h2>
-            <p class="ctd-70"><ion-icon name="alarm"></ion-icon> De segunda a sexta de 09:00 as 19:00h</p>
+            <h2>{{smartSite.smar_tx_titulo}}</h2>
+                <p class="ctd-70">
+                    <ion-icon name="alarm"></ion-icon>
+                    {{smartSite.smar_tx_subtitulo}}
+                </p>
         </ion-item>
     </ion-card>
     <p class="titulo">SOBRE</p>
     <p class="conteudo">
-    Somos especializados em levar nossos clientes para um mundo de fantasias e proporcionar as alegrias de um conto de fadas. Venha conferir os mais variados enfeites, convites e temas para sua festa.
+        {{smartSite.smar_tx_conteudo}}
     </p>
-    <ion-item>
+    <ion-item *ngIf="smartSite.smar_in_preco == true">
         <p>PRODUTOS</p>
         <p>Conheça nossos produtos...</p>
         <button ion-button small item-right icon-left (click)="openTabelaPreco('scrapfashion')">
@@ -36,28 +39,30 @@
         <ion-item>
             <ion-icon name="chatbubbles"></ion-icon>
             Envie-nos uma mensagem
-            <button ion-button item-right icon-center color="light">
+            <button ion-button item-right icon-center color="light" 
+            (click)="openMensagem()">
                 <ion-icon name="chatbubbles"></ion-icon>
-            </button>             
+            </button>
         </ion-item>
         <ion-item>
             <ion-icon name="call"></ion-icon>
-            (32) 9 9965-8973
-            <button ion-button item-right icon-center color="light">
+            {{empresa.empr_tx_telefone_1}}
+            <button ion-button item-right icon-center color="light"
+             (click)="discar(empresa.empr_tx_telefone_1)">
                 <ion-icon name="call"></ion-icon>
-            </button>             
+            </button>
         </ion-item>
         <ion-item>
             <ion-icon name="mail"></ion-icon>
-            contato.scrapfashion@gmail.com
+            {{empresa.empr_ds_email}}
         </ion-item>
         <ion-item>
             <ion-icon name="pin"></ion-icon>
-            Rua Barão de Catas Altas, 240 - Bicas/MG
+            {{empresa.enderecoCompleto}} 
         </ion-item>
         <ion-item>
             <ion-icon name="globe"></ion-icon>
-            www.scrapfashion.com.br
+            {{empresa.empr_ds_site}}
         </ion-item>
     </ion-item-group>
 </ion-content>
