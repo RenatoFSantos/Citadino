@@ -30,7 +30,6 @@ export class EmpresaVO {
     public categoria: CategoriaVO;
     public plano: PlanoVO;
     public isIndexNome:boolean; 
-    public enderecoCompleto:string;
 
     constructor() {
         this.empr_sq_id = '';
@@ -62,17 +61,4 @@ export class EmpresaVO {
         this.plano = new PlanoVO();
         this.isIndexNome = false; 
     }
-
-    public getEnderecoCompleto():string {
-        let result:string;
-
-        result = this.empr_tx_endereco + 
-        " - " + 
-        this.empr_tx_cidade + 
-        "/" +
-        this.empr_sg_uf;
-
-        return result;
-    }
-
 }

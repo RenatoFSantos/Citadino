@@ -37,25 +37,25 @@ export class GuiaListaPage implements OnInit {
 
   openGuia(empresa: EmpresaVO) {
 
-    // if (empresa.plano.plan_in_smartsite == true) {
+    if (empresa.plano.plan_in_smartsite == true) {
 
-    //   this.emprSrv.getSmartSitePorEmpresa(empresa.empr_sq_id)
-    //     .then((snapSamrEmpr) => {
-    //       if (snapSamrEmpr.exists()) {
-    //         this.smartSrv.getSmartSiteByKey(Object.keys(snapSamrEmpr.val())[0])
-    //           .then((snapSmart) => {
-    //             if (snapSmart.val() != null) {
-    //               let smartSite: SmartsiteVO;
-    //               smartSite = snapSmart.val();
-    //               this.navCtrl.push(SmartSitePage, { smartSite: smartSite, empresa: empresa });
-    //             }
-    //           });
-    //       }
-    //     });
-    // }
-    // else {
+      this.emprSrv.getSmartSitePorEmpresa(empresa.empr_sq_id)
+        .then((snapSamrEmpr) => {
+          if (snapSamrEmpr.exists()) {
+            this.smartSrv.getSmartSiteByKey(Object.keys(snapSamrEmpr.val())[0])
+              .then((snapSmart) => {
+                if (snapSmart.val() != null) {
+                  let smartSite: SmartsiteVO;
+                  smartSite = snapSmart.val();
+                  this.navCtrl.push(SmartSitePage, { smartSite: smartSite, empresa: empresa });
+                }
+              });
+          }
+        });
+    }
+    else {
       this.navCtrl.push(GuiaContatoPage, { empresa: empresa });
-    // }
+    }
   }
 
   private loadEmpresas() {

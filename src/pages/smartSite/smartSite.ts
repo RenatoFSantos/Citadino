@@ -17,6 +17,7 @@ export class SmartSitePage {
 
   public smartSite: SmartsiteVO;
   public empresa: EmpresaVO;
+  public enderecoCompleto: string;
 
   constructor(public navCtrl: NavController,
     public navParams: NavParams,
@@ -30,6 +31,11 @@ export class SmartSitePage {
 
     this.smartSite = navParams.get("smartSite");
     this.empresa = navParams.get("empresa");
+
+  }
+
+  ionViewDidEnter() {
+    this.retornaEnderecoEmpresa();
   }
 
   public openMensagem() {
@@ -84,5 +90,15 @@ export class SmartSitePage {
 
   public discar(number: string) {
     CtdFuncoes.discarTelefone(number);
+  }
+
+  private retornaEnderecoEmpresa() {
+    this.enderecoCompleto = '';
+
+    this.enderecoCompleto = this.empresa.empr_tx_endereco +
+      " - " +
+      this.empresa.empr_tx_cidade +
+      "/" +
+      this.empresa.empr_sg_uf;
   }
 }
