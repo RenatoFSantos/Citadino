@@ -23,10 +23,10 @@
                 <h2>{{item.anun_tx_titulo}}</h2>
                 <p>{{item.anun_tx_subtitulo}}</p>
             </ion-item>
-            <img src="{{item.anun_tx_urlbanner}}" (click)="openPub(1, item)" />
-            <!--<ion-buttons start>
-                <ctd-buttons></ctd-buttons>
-            </ion-buttons>-->
+            <img src="{{item.anun_tx_urlbanner}}"/>
+            <ion-buttons icon-only end>
+                <ctd-buttons [urlSlide]=[(item.anun_tx_urlslide1)] [smartSite]=[(item.anun_in_smartsite)] [empresaKey]=[(item.empr_sq_id)] [vitrine]=[(item)]></ctd-buttons>
+            </ion-buttons>
         </div>
         <div *ngIf="item.tian_sq_id == 'TP-2'">
             <ion-item (click)="openPage(item.empr_sq_id)">
@@ -37,9 +37,9 @@
                 <p>{{item.anun_tx_subtitulo}}</p>
             </ion-item>
             <img src="{{item.anun_tx_urlbanner}}" />
-            <!--<ion-buttons start>
-                <ctd-buttons></ctd-buttons>
-            </ion-buttons>-->
+            <ion-buttons icon-only end>
+                <ctd-buttons [urlSlide]=[(item.anun_tx_urlslide1)] [smartSite]=[(item.anun_in_smartsite)] [empresaKey]=[(item.empr_sq_id)]></ctd-buttons>
+            </ion-buttons>
         </div>
         <div *ngIf="item.tian_sq_id == 'TP-3'">
             <ion-item (click)="openPage(item.empr_sq_id)">
@@ -52,9 +52,9 @@
             <ion-card-content class="ctd-faixa">
                 {{item.anun_tx_texto}}
             </ion-card-content>
-            <!--<ion-buttons start>
-                <ctd-buttons></ctd-buttons>
-            </ion-buttons>-->
+            <ion-buttons icon-only end>
+                <ctd-buttons [urlSlide]=[(item.anun_tx_urlslide1)] [smartSite]=[(item.anun_in_smartsite)] [empresaKey]=[(item.empr_sq_id)]></ctd-buttons>
+            </ion-buttons>
         </div>
         <div *ngIf="item.tian_sq_id == 'TP-4'">
             <ion-item (click)="openPage(item.empr_sq_id)">
@@ -67,9 +67,9 @@
             <ion-card-content>
                 {{item.anun_tx_texto}}
             </ion-card-content>
-            <!--<ion-buttons start>
-                <ctd-buttons></ctd-buttons>
-            </ion-buttons>-->
+            <ion-buttons icon-only end>
+                <ctd-buttons [urlSlide]=[(item.anun_tx_urlslide1)] [smartSite]=[(item.anun_in_smartsite)] [empresaKey]=[(item.empr_sq_id)]></ctd-buttons>
+            </ion-buttons>
         </div>
         <div *ngIf="item.tian_sq_id == 'TP-5'">
             <ion-item (click)="openPage(item.empr_sq_id)">
@@ -79,9 +79,9 @@
                 <h2>{{item.anun_tx_titulo}}</h2>
                 <p>{{item.anun_tx_subtitulo}}</p>
             </ion-item>
-            <!--<ion-buttons start>
-                <ctd-buttons></ctd-buttons>
-            </ion-buttons>-->
+            <ion-buttons icon-only end>
+                <ctd-buttons [urlSlide]=[(item.anun_tx_urlslide1)] [smartSite]=[(item.anun_in_smartsite)] [empresaKey]=[(item.empr_sq_id)]></ctd-buttons>
+            </ion-buttons>
         </div>
     </ion-card>
 

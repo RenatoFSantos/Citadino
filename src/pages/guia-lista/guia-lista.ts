@@ -6,7 +6,7 @@ import { EmpresaService } from './../../providers/service/empresa-service';
 import { GuiaService } from './../../providers/service/guia-service';
 import { GuiaContatoPage } from './../guia-contato/guia-contato';
 import { Component, OnInit } from '@angular/core';
-import { NavController, NavParams } from 'ionic-angular';
+import { NavController, NavParams, ToastController } from 'ionic-angular';
 
 @Component({
   selector: 'page-guia-lista',
@@ -22,7 +22,8 @@ export class GuiaListaPage implements OnInit {
     public navParams: NavParams,
     public guiaSrv: GuiaService,
     public emprSrv: EmpresaService,
-    private smartSrv: SmartSiteService) {
+    private smartSrv: SmartSiteService,
+    private toastCtrl: ToastController) {
 
     this.categoriaNome = navParams.get("categNm");
     this.empresasKey = navParams.get("emprKeys");
@@ -50,6 +51,9 @@ export class GuiaListaPage implements OnInit {
                   this.navCtrl.push(SmartSitePage, { smartSite: smartSite, empresa: empresa });
                 }
               });
+          }
+          else {
+            this.createAlert("Ops!!! Não existe smartSite cadastrado.");
           }
         });
     }
@@ -95,4 +99,13 @@ export class GuiaListaPage implements OnInit {
     });
   }
 
+  createAlert(errorMessage: string) {
+    let toast = this.toastCtrl.create({
+      message: errorMessage,
+      duration: 4000,
+      position: 'top'
+    });
+
+    toast.present();
+  }
 }

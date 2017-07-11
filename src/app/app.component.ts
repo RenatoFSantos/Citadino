@@ -159,7 +159,7 @@ export class MyApp implements OnInit {
 
   preencherObjetoUsuario(data: any): UsuarioVO {
     var object = new UsuarioVO();
-    let imageData = "assets/img/profile/profile.png";
+    // let imageData = "assets/img/profile/profile.png";
 
     for (var i = 0; i < data.rows.length; i++) {
 

@@ -21,4 +21,5 @@ export class VitrineVO {
     public muni_sq_id: string;
     public tian_sq_id: string;
     public agen_sq_id: string;
+    public anun_in_smartsite:boolean;
 }

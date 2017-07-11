@@ -46,7 +46,6 @@ export class SmartSitePage {
 
     loader.present();
 
-    let self = this;
     let userCurrent = this.usuaSrv.getLoggedInUser();
     this.usuaSrv.getUserDetail(userCurrent.uid)
       .then((snapUserFrom) => {

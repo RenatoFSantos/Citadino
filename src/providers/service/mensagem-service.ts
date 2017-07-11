@@ -1,6 +1,3 @@
-import { UsuarioVO } from './../../model/usuarioVO';
-import { MensagemVO } from './../../model/mensagemVO';
-import { MensagemPage } from './../../pages/mensagem/mensagem';
 import { Events } from 'ionic-angular';
 import { GlobalVar } from './../../shared/global-var';
 import { AngularFireDatabase } from 'angularfire2/database';

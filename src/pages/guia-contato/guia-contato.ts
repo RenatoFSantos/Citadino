@@ -5,7 +5,7 @@ import { CtdFuncoes } from './../../shared/ctdFuncoes';
 import { MensagemService } from './../../providers/service/mensagem-service';
 import { EmpresaVO } from './../../model/empresaVO';
 import { Component } from '@angular/core';
-import { NavController, NavParams, ViewController, Events, LoadingController, ModalController } from 'ionic-angular';
+import { NavParams, ViewController, Events, LoadingController, ModalController, ToastController } from 'ionic-angular';
 
 @Component({
   selector: 'page-guia-contato',
@@ -22,7 +22,8 @@ export class GuiaContatoPage {
     private loadingCtrl: LoadingController,
     private emprSrv: EmpresaService,
     private mdlCtrl: ModalController,
-    private usuaSrv:UsuarioService) {
+    private usuaSrv: UsuarioService,
+    private toastCtrl: ToastController) {
 
     this.empresa = navParams.get("empresa");
   }
@@ -39,46 +40,60 @@ export class GuiaContatoPage {
 
     loader.present();
 
-    let self = this;
     let userCurrent = this.usuaSrv.getLoggedInUser();
     this.usuaSrv.getUserDetail(userCurrent.uid)
       .then((snapUserFrom) => {
         this.emprSrv.getUsuarioPorEmpresa(this.empresa.empr_sq_id)
           .then((snapKeyUserTo) => {
-            let chaveKey: string = Object.keys(snapKeyUserTo.val())[0];
-            this.usuaSrv.getUserDetail(chaveKey)
-              .then((snapUserTo) => {
+            if (snapKeyUserTo.exists()) {
+              let chaveKey: string = Object.keys(snapKeyUserTo.val())[0];
+              this.usuaSrv.getUserDetail(chaveKey)
+                .then((snapUserTo) => {
 
-                let mensParam = {
-                  usua_sq_logado: userCurrent.uid,
-                  usua_sq_id_to: snapUserTo.key,
-                  usua_nm_usuario_to: snapUserTo.val().usua_nm_usuario,
-                  usua_sq_id_from: snapUserFrom.key,
-                  usua_nm_usuario_from: snapUserFrom.val().usua_nm_usuario,
-                  mens_nm_enviado: this.empresa.empr_nm_razaosocial,
-                  mens_tx_logo_enviado: this.empresa.empr_tx_logomarca
-                };
-                // mensagem.mens_nova = false;
+                  let mensParam = {
+                    usua_sq_logado: userCurrent.uid,
+                    usua_sq_id_to: snapUserTo.key,
+                    usua_nm_usuario_to: snapUserTo.val().usua_nm_usuario,
+                    usua_sq_id_from: snapUserFrom.key,
+                    usua_nm_usuario_from: snapUserFrom.val().usua_nm_usuario,
+                    mens_nm_enviado: this.empresa.empr_nm_razaosocial,
+                    mens_tx_logo_enviado: this.empresa.empr_tx_logomarca
+                  };
+                  // mensagem.mens_nova = false;
 
-                let totalMensage: number = 0;
-                this.usuaSrv.getMensagens().then((snapMsg) => {
-                  snapMsg.forEach(element => {
+                  let totalMensage: number = 0;
+                  this.usuaSrv.getMensagens().then((snapMsg) => {
+                    snapMsg.forEach(element => {
 
-                    if (element.val() == true) {
-                      totalMensage++;
-                    }
+                      if (element.val() == true) {
+                        totalMensage++;
+                      }
 
-                    this.events.publish('mensagem:nova', totalMensage - 1);
+                      this.events.publish('mensagem:nova', totalMensage - 1);
+                    });
                   });
+
+                  loader.dismiss();
+                  let loginModal = this.mdlCtrl.create(MensagemPage, mensParam);
+                  loginModal.present();
                 });
-
-                loader.dismiss();
-                let loginModal = this.mdlCtrl.create(MensagemPage, mensParam);
-                loginModal.present();
-
-              });
+            }
+            else {
+              loader.dismiss();
+              this.createAlert("Ops!!! Não existe usuário para está empresa.");
+            }
           });
       });
+  }
+
+  createAlert(errorMessage: string) {
+    let toast = this.toastCtrl.create({
+      message: errorMessage,
+      duration: 4000,
+      position: 'top'
+    });
+
+    toast.present();
   }
 
   dismiss() {

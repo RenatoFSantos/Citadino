@@ -5,8 +5,6 @@ import { GlobalVar } from './../../shared/global-var';
 import { NetworkService } from './../../providers/service/network-service';
 import { VitrineVO } from './../../model/vitrineVO';
 import { VitrineService } from './../../providers/service/vitrine-service';
-import { NoticiaFullPage } from './../noticia-full/noticia-full';
-import { AnuncioFullPage } from './../anuncio-full/anuncio-full';
 import { Component, OnInit } from '@angular/core';
 import { NavController, NavParams, AlertController, Events, LoadingController, ToastController } from 'ionic-angular';
 
@@ -229,19 +227,6 @@ export class VitrinePage implements OnInit {
   //   confirm.present();
   // }
 
-  openPub(opcao: number, param: any): void {
-    switch (opcao) {
-      case 1:
-        console.log("enviado " + param);
-        this.navCtrl.push(AnuncioFullPage, { anuncio: param });
-        break;
-      case 2:
-        this.navCtrl.push(NoticiaFullPage);
-        break;
-      default:
-        break;
-    }
-  }
 
   createAlert(errorMessage: string) {
     let toast = this.toastCtrl.create({

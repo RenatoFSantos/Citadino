@@ -41,7 +41,8 @@ export class MappingsService {
                 empr_sq_id: vitrine.empr_sq_id,
                 muni_sq_id: vitrine.muni_sq_id,
                 tian_sq_id: vitrine.tian_sq_id,
-                agen_sq_id: vitrine.agen_sq_id
+                agen_sq_id: vitrine.agen_sq_id,
+                anun_in_smartsite: vitrine.anun_in_smartsite
             });
         });
 
@@ -71,7 +72,8 @@ export class MappingsService {
                 empr_sq_id: snapshot.empr_sq_id,
                 muni_sq_id: snapshot.muni_sq_id,
                 tian_sq_id: snapshot.tian_sq_id,
-                agen_sq_id: snapshot.agen_sq_id
+                agen_sq_id: snapshot.agen_sq_id,
+                anun_in_smartsite:snapshot.anun_in_smartsite
         };
 
         return vitrine;
