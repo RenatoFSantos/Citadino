@@ -69,7 +69,7 @@ export class MensagemListaPage implements OnInit {
             }
             else {
               mensagem.mens_nm_enviado = usuario.val().usua_nm_usuario;
-              mensagem.mens_tx_logo_enviado = usuario.val().usua_tx_url_profile;
+              mensagem.mens_tx_logo_enviado = usuario.val().usua_tx_urlprofile;
             }
             this.mensagens.push(mensagem);
           });
@@ -96,12 +96,10 @@ export class MensagemListaPage implements OnInit {
         usua_sq_id_to: mensagem.usua_sq_id_to,
         usua_nm_usuario_to: mensagem.usua_nm_usuario_to,
         mens_nm_enviado: mensagem.mens_nm_enviado,
-        mens_tx_logo_enviado: mensagem.mens_tx_logo_enviado
+        mens_tx_logo_enviado: usuario.usua_tx_urlprofile != '' ? usuario.usua_tx_urlprofile : ''
       };
 
-      mensagem.mens_nova = false;
-
-      let totalMensage: number = 0;
+       let totalMensage: number = 0;
       this.usuaSrv.getMensagens().then((snapMsg) => {
         snapMsg.forEach(element => {
 
