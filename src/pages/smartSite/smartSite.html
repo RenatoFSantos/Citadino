@@ -35,7 +35,7 @@
     </ion-item>
     <p class="titulo">FALE CONOSCO</p>
     <ion-item-group>
-        <ion-item>
+        <ion-item *ngIf="exibirBtnEnviarMensagem == true">
             <ion-icon name="chatbubbles"></ion-icon>
             Envie-nos uma mensagem
             <button ion-button item-right icon-center color="light" 
