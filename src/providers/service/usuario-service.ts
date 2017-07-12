@@ -81,7 +81,7 @@ export class UsuarioService {
 
   setUserImage(uid: string, urlProfile) {
     this.usersRef.child(uid).update({
-      usua_tx_url_profile: urlProfile,
+      usua_tx_urlprofile: urlProfile,
       image: true
     });
   }

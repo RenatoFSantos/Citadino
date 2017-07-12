@@ -63,21 +63,20 @@ export class SmartSitePage {
                   usua_sq_id_from: snapUserFrom.key,
                   usua_nm_usuario_from: snapUserFrom.val().usua_nm_usuario,
                   mens_nm_enviado: this.empresa.empr_nm_razaosocial,
-                  mens_tx_logo_enviado: this.empresa.empr_tx_logomarca
+                  mens_tx_logo_enviado: this.empresa.empr_tx_logomarca != '' ? this.empresa.empr_tx_logomarca : ''
                 };
-                // mensagem.mens_nova = false;
+                
+                let totalMensage: number = 0;
+                this.usuaSrv.getMensagens().then((snapMsg) => {
+                  snapMsg.forEach(element => {
 
-                // let totalMensage: number = 0;
-                // this.usuaSrv.getMensagens().then((snapMsg) => {
-                //   snapMsg.forEach(element => {
+                    if (element.val() == true) {
+                      totalMensage++;
+                    }
 
-                //     if (element.val() == true) {
-                //       totalMensage++;
-                //     }
-
-                //     this.events.publish('mensagem:nova', totalMensage - 1);
-                //   });
-                // });
+                    this.events.publish('mensagem:nova', totalMensage - 1);
+                  });
+                });
 
                 loader.dismiss();
                 let loginModal = this.mdlCtrl.create(MensagemPage, mensParam);
