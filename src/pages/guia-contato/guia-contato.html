@@ -13,7 +13,7 @@
         </button>
         <span class="ctd-tel">{{empresa.empr_tx_telefone_1}}</span>
     </ion-item>  
-    <ion-item *ngIf="empresa.empr_in_mensagem == true">
+    <ion-item *ngIf="exibirBtnEnviarMensagem == true">
         <button ion-button icon-only color="light" large (click)="openMensagem()">
           <ion-icon name="chatbubbles"></ion-icon>
         </button>

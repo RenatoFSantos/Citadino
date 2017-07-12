@@ -18,6 +18,7 @@ export class SmartSitePage {
   public smartSite: SmartsiteVO;
   public empresa: EmpresaVO;
   public enderecoCompleto: string;
+  public exibirBtnEnviarMensagem:boolean = false;
 
   constructor(public navCtrl: NavController,
     public navParams: NavParams,
@@ -31,11 +32,11 @@ export class SmartSitePage {
 
     this.smartSite = navParams.get("smartSite");
     this.empresa = navParams.get("empresa");
-
+    this. verificarStatusBtnMensagem();
   }
 
   ionViewDidEnter() {
-    this.retornaEnderecoEmpresa();
+    this.retornaEnderecoEmpresa();    
   }
 
   public openMensagem() {
@@ -66,17 +67,17 @@ export class SmartSitePage {
                 };
                 // mensagem.mens_nova = false;
 
-                let totalMensage: number = 0;
-                this.usuaSrv.getMensagens().then((snapMsg) => {
-                  snapMsg.forEach(element => {
+                // let totalMensage: number = 0;
+                // this.usuaSrv.getMensagens().then((snapMsg) => {
+                //   snapMsg.forEach(element => {
 
-                    if (element.val() == true) {
-                      totalMensage++;
-                    }
+                //     if (element.val() == true) {
+                //       totalMensage++;
+                //     }
 
-                    this.events.publish('mensagem:nova', totalMensage - 1);
-                  });
-                });
+                //     this.events.publish('mensagem:nova', totalMensage - 1);
+                //   });
+                // });
 
                 loader.dismiss();
                 let loginModal = this.mdlCtrl.create(MensagemPage, mensParam);
@@ -99,5 +100,22 @@ export class SmartSitePage {
       this.empresa.empr_tx_cidade +
       "/" +
       this.empresa.empr_sg_uf;
+  }
+
+  public verificarStatusBtnMensagem() {   
+    let usuaEmprKey: string;
+    let userCurrent = this.usuaSrv.getLoggedInUser();
+
+    this.emprSrv.getUsuarioPorEmpresa(this.empresa.empr_sq_id)
+    .then((snapKeyUserTo) => {
+        if (snapKeyUserTo.exists()) {
+          usuaEmprKey = Object.keys(snapKeyUserTo.val())[0];
+
+          if (this.empresa.empr_in_mensagem == true
+            && userCurrent.uid != usuaEmprKey) {
+            this.exibirBtnEnviarMensagem = true;
+          }         
+        }
+      });
   }
 }
