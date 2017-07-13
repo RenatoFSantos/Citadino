@@ -79,9 +79,9 @@ export class SmartSitePage {
                   });
                 });
 
-                // loader.dismiss();
-                // let loginModal = this.mdlCtrl.create(MensagemPage, mensParam);
-                // loginModal.present();
+                loader.dismiss();
+                let loginModal = this.mdlCtrl.create(MensagemPage, mensParam);
+                loginModal.present();
 
               });
           });

@@ -71,8 +71,8 @@ export class LoginPage implements OnInit {
 
       if (self.globalVar.getIsFirebaseConnected()) {
         resultFindUser = this.loginSrv.signInUserFB(user.email, user.password);
-      } else {
-        resultFindUser = this.loginSrv.signInUserSQ(user.email, user.password);
+      // } else {
+        // resultFindUser = this.loginSrv.signInUserSQ(user.email, user.password);
       }
 
       if (resultFindUser != null) {

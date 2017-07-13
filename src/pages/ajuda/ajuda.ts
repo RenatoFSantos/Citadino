@@ -20,7 +20,7 @@ export class AjudaPage {
 
   public titulo: string = "CITADINO";
   public exibirTelaAjuda: number = 1;
-  public ajudaLida: boolean = false;
+  public ajudaLida: boolean = true;
   public usuario: UsuarioVO = null;
 
   constructor(private navCtrl: NavController,
