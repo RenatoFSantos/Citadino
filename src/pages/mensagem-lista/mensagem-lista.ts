@@ -96,7 +96,7 @@ export class MensagemListaPage implements OnInit {
         usua_sq_id_to: mensagem.usua_sq_id_to,
         usua_nm_usuario_to: mensagem.usua_nm_usuario_to,
         mens_nm_enviado: mensagem.mens_nm_enviado,
-        mens_tx_logo_enviado: usuario.usua_tx_urlprofile != '' ? usuario.usua_tx_urlprofile : ''
+        mens_tx_logo_enviado: mensagem.mens_tx_logo_enviado != '' ? mensagem.mens_tx_logo_enviado : ''
       };
 
        let totalMensage: number = 0;
