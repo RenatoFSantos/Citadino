@@ -17,6 +17,7 @@ export class UsuarioVO {
     public usua_tx_observacao: string;
     public usua_in_empresa: boolean;
     public usua_tx_urlprofile: string;
+    public usua_in_ajuda:boolean;
     public empresa: EmpresaVO;
  
     constructor() {
@@ -32,6 +33,7 @@ export class UsuarioVO {
         this.usua_nr_reputacao = 0;
         this.usua_tx_observacao = '';
         this.usua_in_empresa = false;
+        this.usua_in_ajuda = false;
         this.empresa = new EmpresaVO();
     }
 }

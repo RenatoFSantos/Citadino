@@ -58,7 +58,7 @@ export class SignUpPage implements OnInit {
       newUser.usua_nm_usuario = signupForm.usua_nm_usuario;
       newUser.usua_ds_email = signupForm.usua_ds_email;
       newUser.usua_tx_senha = signupForm.usua_tx_senha;
-
+    
       loader.present();
 
       self.loginService.registerUser(newAuth).then((result) => {

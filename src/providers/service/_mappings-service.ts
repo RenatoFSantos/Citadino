@@ -92,7 +92,8 @@ export class MappingsService {
                 usua_ds_email: '',
                 usua_nr_reputacao: 0,
                 usua_tx_observacao: '',
-                usua_in_empresa: false
+                usua_in_empresa: false,
+                usua_in_ajuda: false
             }
 
         return json;

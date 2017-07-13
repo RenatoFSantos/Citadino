@@ -20,5 +20,33 @@ page-smartSite {
     ion-item-group ion-item {
         font-size: 90% !important;
         background-color: #ccc !important;
+    }   
+    .loading-ios,
+.loading-md,
+.loading-wp {
+  .my-loading-class {
+    background-color: transparent;
+    box-shadow: none;
+  }
+}
+.loading-md, .loading-wrapper {
+    .myload {
+        background:none !important;
     }
 }
+
+.teste {
+    background-color: transparent;
+    box-shadow: none;
+  }
+
+ .loading-wrapper{
+        background:none;
+        // box-shadow: none;
+      }
+      .img-align{
+        height:80px;
+      }
+}
+
+

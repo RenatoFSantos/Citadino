@@ -7,12 +7,15 @@ import { Component, Input } from '@angular/core';
 })
 
 export class CtdHeaderComponent {
-  @Input() 
-  public titulo:string = "CITADINO";
+  @Input()
+  public titulo: string = "CITADINO";
 
-  @Input() 
-  public pathImage:string = "assets/img/icon.png";
+  @Input()
+  public pathImage: string = "assets/img/icon.png";
 
-  constructor(public events:Events) {
+  @Input()
+  public exibirBotao:boolean = false;
+
+  constructor(public events: Events) {
   }
 }

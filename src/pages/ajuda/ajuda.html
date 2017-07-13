@@ -1,0 +1,20 @@
+<ion-header>
+    <ion-navbar color="ctd-navbar">
+        <ctd-header [exibirBotao]=[(false)]></ctd-header>
+    </ion-navbar>
+</ion-header>
+
+<ion-content class="ajuda" [ngClass]="{'vitrine': exibirTelaAjuda === 2, 'guia': exibirTelaAjuda === 3, 'mensagem': exibirTelaAjuda === 4}">
+  <ion-row>
+    <ion-col width-40>
+      <img src="../../assets/img/arrows-left.png" style="width : 50% ; height : 50%" (click)="firstPage()">
+    </ion-col>
+    <ion-col width-40>
+      <img src="../../assets/img/arrows-right.png" style="width : 50% ; height : 50%" (click)="nextPage()">
+    </ion-col>
+    <ion-col width-20>
+      <img src="../../assets/img/close.png" style="width : 50% ; height : 50%" *ngIf="ajudaLida == false" (click)="close()">
+    </ion-col>
+  </ion-row>
+
+</ion-content>

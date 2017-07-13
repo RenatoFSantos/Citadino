@@ -4,7 +4,7 @@
       <!--CITADINO-->
       {{titulo}}
     </ion-title>
-    <button ion-button menuToggle right>
+    <button *ngIf="exibirBotao[0] == true" ion-button menuToggle right>
         <ion-icon name="menu" ></ion-icon>
     </button>
 </ion-navbar>   
