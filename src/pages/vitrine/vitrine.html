@@ -13,7 +13,6 @@
     <div *ngIf="loading">
         <img src="assets/img/ring.gif" style="display:block; margin:auto" />
     </div>
-
     <ion-card class="ctd-card" *ngFor="let item of vitrines">
         <div *ngIf="item.tian_sq_id == 'TP-1'">
             <ion-item (click)="openPage(item.empr_sq_id)">
