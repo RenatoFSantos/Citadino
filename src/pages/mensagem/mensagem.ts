@@ -32,7 +32,7 @@ export class MensagemPage {
     private mensSrv: MensagemService,
     private fbSrv: FirebaseService,
     private usuaSrv: UsuarioService) {
-           
+
     this.usua_sq_logado = params.data.usua_sq_logado;
     this.usua_sq_id_to = params.data.usua_sq_id_to;
     this.usua_nm_usuario_to = params.data.usua_nm_usuario_to;
@@ -40,11 +40,9 @@ export class MensagemPage {
     this.usua_nm_usuario_from = params.data.usua_nm_usuario_from;
     this.mens_nm_enviado = params.data.mens_nm_enviado;
     this.mens_tx_logo_enviado = params.data.mens_tx_logo_enviado;
-
   }
 
-  ionViewDidEnter() {
-
+  ionViewDidLoad() {
     this.mensSrv.getMensagens(this.usua_sq_id_from, this.usua_sq_id_to)
       .then((snapShot: any) => {
 
@@ -57,8 +55,11 @@ export class MensagemPage {
             }
           });
         this.mensagens = this.mensSrv.listMensagens(snapShot);
-        this.content.scrollToBottom();
       });
+  }
+
+  ionViewDidEnter() {
+    this.content.scrollToBottom();
   }
 
   enviarMensagem() {

@@ -35,6 +35,7 @@ export class MyApp implements OnInit {
   public userLogged: UsuarioVO = new UsuarioVO();
   public rootPage: any;
   public firebaseConnectionAttempts: number = 0;
+  public timeOutSession: any;
 
   constructor(private platform: Platform,
     private menuCtrl: MenuController,
@@ -95,20 +96,24 @@ export class MyApp implements OnInit {
             self.popularMenu(true);
             self.userLogged = userRef.val();
             if (self.userLogged.usua_in_ajuda == true) {
-              self.rootPage = TabsPage;
+              // self.rootPage = TabsPage;
+              this.app.getRootNav().setRoot(TabsPage);
             }
             else {
-              self.rootPage = AjudaPage;
+              // self.rootPage = AjudaPage;
+              this.app.getRootNav().setRoot(AjudaPage);
             }
             self.splashScreen.hide();
           }
           else {
-            self.rootPage = HomeLoginPage;
+            // self.rootPage = HomeLoginPage;
+            this.app.getRootNav().setRoot(HomeLoginPage);
             self.splashScreen.hide();
           }
         });
       } else {
-        self.rootPage = HomeLoginPage;
+        // self.rootPage = HomeLoginPage;
+        this.app.getRootNav().setRoot(HomeLoginPage);
         self.splashScreen.hide();
       }
     }
@@ -147,17 +152,21 @@ export class MyApp implements OnInit {
               self.popularMenu(true);
               self.userLogged = userRef.val();
               if (self.userLogged.usua_in_ajuda == true) {
-                self.rootPage = TabsPage;
+                // self.rootPage = TabsPage;
+                this.app.getRootNav().setRoot(TabsPage);
               }
               else {
-                self.rootPage = AjudaPage;
+                // self.rootPage = AjudaPage;
+                this.app.getRootNav().setRoot(AjudaPage);
               }
             } else {
-              self.nav.setRoot(HomeLoginPage);
+              // self.nav.setRoot(HomeLoginPage);
+              this.app.getRootNav().setRoot(HomeLoginPage);
             }
           });
         } else {
-          self.nav.setRoot(HomeLoginPage);
+          // self.nav.setRoot(HomeLoginPage);
+          this.app.getRootNav().setRoot(HomeLoginPage);
         }
       } else {
         self.popularMenu(true);
@@ -237,12 +246,17 @@ export class MyApp implements OnInit {
         break;
 
       case enums.ETypeMenu.logout:
-        setTimeout(() => {
-          this.nav.setRoot(HomeLoginPage);
+        this.timeOutSession = setTimeout(() => {
           this.usuaSrv.signOut();
+          this.closeSession();
         }, 1000);
         break;
     }
+  }
+
+  public closeSession() {
+    clearTimeout(this.timeOutSession);
+    this.nav.setRoot(HomeLoginPage);
   }
 
   isActive(page: IMenu) {
