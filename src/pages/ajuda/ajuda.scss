@@ -1,20 +1,20 @@
 page-ajuda {
 
     .ajuda {
-        background-image: url("../assets/img/tutorial_tela_1.gif");
+        background-image: url("../assets/img/tutorial-1.png");
         background-repeat: no-repeat;
         background-size: cover;
     }
     .ajuda.vitrine {
-        background-image: url("../assets/img/tutorial_tela_2.gif");
+        background-image: url("../assets/img/tutorial-2.png");
     }
     
     .ajuda.guia {
-        background-image: url("../assets/img/tutorial_tela_3.gif");
+        background-image: url("../assets/img/tutorial-3.png");
     }
 
     .ajuda.mensagem {
-        background-image: url("../assets/img/tutorial_tela_4.gif");
+        background-image: url("../assets/img/tutorial-4.png");
     }
 
     ion-title.citadino {
@@ -30,6 +30,6 @@ page-ajuda {
 
     .col {
         padding: 0px !important;
-        text-align: end !important;
+        text-align: center !important;
     }
 }
