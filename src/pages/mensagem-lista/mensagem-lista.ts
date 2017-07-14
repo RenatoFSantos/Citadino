@@ -99,7 +99,9 @@ export class MensagemListaPage implements OnInit {
         mens_tx_logo_enviado: usuario.usua_tx_urlprofile != '' ? usuario.usua_tx_urlprofile : ''
       };
 
-       let totalMensage: number = 0;
+      mensagem.mens_nova = false;
+
+      let totalMensage: number = 0;
       this.usuaSrv.getMensagens().then((snapMsg) => {
         snapMsg.forEach(element => {
 

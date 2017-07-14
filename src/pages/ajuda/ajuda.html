@@ -6,19 +6,21 @@
 
 <ion-content class="ajuda" [ngClass]="{'vitrine': exibirTelaAjuda === 2, 'guia': exibirTelaAjuda === 3, 'mensagem': exibirTelaAjuda === 4}">
   <ion-row>
-    <ion-col width-45>
+    <ion-col width-10>
+    </ion-col>
+    <ion-col width-40>
       <button ion-button icon-only clear color="ctd-button" (click)="firstPage()">
-          <ion-icon name="ios-arrow-dropleft-outline"></ion-icon>
+          <ion-icon name="ios-arrow-dropleft-circle-outline"></ion-icon>
       </button>
     </ion-col>
-    <ion-col width-45>
+    <ion-col width-40>
       <button ion-button icon-only clear color="ctd-button" (click)="nextPage()">
-          <ion-icon name="ios-arrow-dropright-outline"></ion-icon>
+          <ion-icon name="ios-arrow-dropright-circle-outline"></ion-icon>
       </button>
     </ion-col>
     <ion-col width-10>
       <button ion-button icon-only clear color="ctd-button" *ngIf="ajudaLida == false" (click)="close()">
-          <ion-icon name="ios-close-circle-outline"></ion-icon>
+          <ion-icon name="md-close-circle"></ion-icon>
       </button>
     </ion-col>
   </ion-row>
