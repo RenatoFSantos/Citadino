@@ -1,3 +1,4 @@
+import { AjudaPage } from './../pages/ajuda/ajuda';
 import { MensagemPage } from './../pages/mensagem/mensagem';
 import { MensagemService } from './../providers/service/mensagem-service';
 import { UsuarioService } from './../providers/service/usuario-service';
@@ -60,7 +61,7 @@ export class MyApp implements OnInit {
         this.networkDisconnectEvent();
         this.networkConnectionEvent();
         //Inicializa o servico do sqlLite
-        this.sqService.InitDatabase();
+        // this.sqService.InitDatabase();
       }
     });
   }
@@ -93,7 +94,12 @@ export class MyApp implements OnInit {
           if (userRef != null) {
             self.popularMenu(true);
             self.userLogged = userRef.val();
-            self.rootPage = TabsPage;
+            if (self.userLogged.usua_in_ajuda == true) {
+              self.rootPage = TabsPage;
+            }
+            else {
+              self.rootPage = AjudaPage;
+            }
             self.splashScreen.hide();
           }
           else {
@@ -140,8 +146,12 @@ export class MyApp implements OnInit {
             if (userRef != null) {
               self.popularMenu(true);
               self.userLogged = userRef.val();
-              self.nav.setRoot(TabsPage);
-
+              if (self.userLogged.usua_in_ajuda == true) {
+                self.rootPage = TabsPage;
+              }
+              else {
+                self.rootPage = AjudaPage;
+              }
             } else {
               self.nav.setRoot(HomeLoginPage);
             }
@@ -278,6 +288,7 @@ export class MyApp implements OnInit {
       // { title: 'Estatísticas', component: RelatoriosListaPage, icon: 'pie', typeMenu: enums.ETypeMenu.default },
       // { title: 'Favoritos', component: TestePage, icon: 'star', typeMenu: enums.ETypeMenu.default },
       // { title: 'Contato', component: TestePage, icon: 'contact', typeMenu: enums.ETypeMenu.default },
+      { title: 'Ajuda', component: AjudaPage, icon: 'md-help', typeMenu: enums.ETypeMenu.default }
       // { title: 'Sobre', component: TestePage, icon: 'information-circle', typeMenu: enums.ETypeMenu.default }
 
     ];

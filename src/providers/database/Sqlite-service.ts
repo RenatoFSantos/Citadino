@@ -61,7 +61,8 @@ export class SqLiteService {
     query = query + "usua_sq_id TEXT,";
     query = query + "usua_nm_usuario TEXT,";
     query = query + "usua_ds_email TEXT,";
-    query = query + "usua_tx_senha TEXT );";
+    query = query + "usua_tx_senha TEXT,";
+    query = query + "usua_in_ajuda INTEGER );";
 
 
     self.dataBase.executeSql(query, {}).then((data) => {
@@ -74,7 +75,7 @@ export class SqLiteService {
   pesquisar(sqlquery: any, sqlParm: any) {
     console.log("Query " + sqlquery);
     console.log("Parametros " + sqlParm);
-    return this.dataBase.executeSql(sqlquery, sqlParm );
-  }  
+    return this.dataBase.executeSql(sqlquery, sqlParm);
+  }
 
 }

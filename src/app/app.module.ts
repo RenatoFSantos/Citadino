@@ -1,3 +1,4 @@
+import { AjudaPage } from './../pages/ajuda/ajuda';
 import { SmartSitePage } from './../pages/smartSite/smartSite';
 import { CtdHeaderModalComponent } from './../shared/components/ctd-header-modal/ctd-header-modal';
 import { CtdButtonsComponent } from './../shared/components/ctd-buttons/ctd-buttons';
@@ -73,7 +74,8 @@ const cloudSettings: CloudSettings = {
     SignUpPage,
     TestePage,
     CtdHeaderModalComponent,
-    HomeLoginPage
+    HomeLoginPage,
+    AjudaPage
   ],
   imports: [
     BrowserModule,
@@ -110,7 +112,8 @@ const cloudSettings: CloudSettings = {
     SignUpPage,
     TestePage,
     CtdHeaderModalComponent,
-    HomeLoginPage
+    HomeLoginPage,
+    AjudaPage
   ],
   providers: [APP_PROVIDERS]
 })

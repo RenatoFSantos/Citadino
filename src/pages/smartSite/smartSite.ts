@@ -41,8 +41,9 @@ export class SmartSitePage {
 
   public openMensagem() {
     let loader = this.loadingCtrl.create({
-      content: 'Aguarde...',
-      dismissOnPageChange: true
+      dismissOnPageChange: true,      
+      content: 'Aguarde...'
+     
     });
 
     loader.present();
