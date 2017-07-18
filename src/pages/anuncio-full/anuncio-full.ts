@@ -20,17 +20,9 @@ export class AnuncioFullPage {
     if (params != null && params.get("anuncio") != null) {
         this.createObjSlide(params.get("anuncio"));
     }
-
-    console.log("Slide 01 "  + this.slides[0].imageUrl); 
-    console.log("Slide 02 "  + this.slides[1].imageUrl);
-    console.log("Slide 03 "  + this.slides[2].imageUrl);
-
   }
 
   private createObjSlide(anuncio: any) {
-    console.log("anu 1 " + anuncio.anun_tx_urlslide1);
-    console.log("anu 2 " + anuncio.anun_tx_urlslide2);
-    console.log("anu 3 " + anuncio.anun_tx_urlslide3);
 
     if (anuncio.anun_tx_urlslide1 != null && anuncio.anun_tx_urlslide1 != "") {
       let slide: SlideVO = new SlideVO();

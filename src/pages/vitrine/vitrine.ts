@@ -128,7 +128,7 @@ export class VitrinePage implements OnInit {
       self.vitrineSrv.getVitrineMunicipio(self.seqMunicipio, self.limitPage, self.startPk)
         .then((snapshot) => {
 
-          self.rowCurrent = self.rowCurrent + self.itemsService.getObjectKeysSize(snapshot.val());
+          // self.rowCurrent = self.rowCurrent + self.itemsService.getObjectKeysSize(snapshot.val());
 
           self.startPk = self.itemsService.getLastElement(self.itemsService.getKeys(snapshot.val()));
 
@@ -143,6 +143,8 @@ export class VitrinePage implements OnInit {
                 self.vitrines.push(vitrine);
               }
             });
+
+            self.rowCurrent = self.vitrines.length;
 
           resolve(true);
         });
@@ -188,28 +190,6 @@ export class VitrinePage implements OnInit {
     }
   }
 
-  openPage(empresaKey: string) {
-    // console.log(empresaKey);
-    // this.emprSrv.getEmpresaPorKey(empresaKey).then((snapEmpresa) => {
-
-    //   if (snapEmpresa.val() != null && snapEmpresa.val().child('plano').exist()) {
-    //     let empresa:EmpresaVO = snapEmpresa.val();
-    //     if (empresa.plano != null) {
-    //       if (plano.plan_in_smartsite == true) {
-    //         console.log("SmartSite");
-    //       }
-    //     }
-    //   }
-    // });
-
-    // console.log(smartSiteKey);
-    // switch (site) {
-    //   case 'scrapfashion':
-    //     this.navCtrl.push(SsScrapfashionPage);
-    //   default: {
-    //   }
-    // }
-  }
 
   // showPromocao() {
   //   let confirm = this.alertCtrl.create({

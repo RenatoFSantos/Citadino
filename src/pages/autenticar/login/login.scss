@@ -1,13 +1,71 @@
 page-login {
-    .logo {
-        height: 50% !important;
-        width: 50% !important;
-        align-content: center !important;
-        padding: 0px !important;
+    #login {
+        background: #1c2627 url("../assets/img/login-fundo.jpg") no-repeat center center;
+        -webkit-background-size: cover;
+        -moz-background-size: cover;
+        -o-background-size: cover;
+        background-size: cover;
+
+        .scroll-content {
+            display: table !important;
+            width: 100% !important;
+            height: 100% !important;
+
+            form {
+                display: table-cell;
+                vertical-align: middle;
+
+                .header {
+                    padding-bottom: 20px;
+
+                    img {
+                    display: block;
+                    width: 80%;
+                    margin: 0 auto;
+                    }
+                }
+
+                .button.button-light.active, .button.button-light.activated {
+                    color: #fff;
+                    opacity: inherit;
+                }
+
+                .labelEmail {
+                    margin: 3px !important;
+                }
+
+                .inputEmail {
+                    padding: 5px 5px 5px 5px !important;
+                    height: 10px;
+                    min-height:3.3rem !important;
+                }
+
+                .inputSenha  {
+                    @extend .inputEmail;
+                    padding: 5px 5px 5px 5px !important;                    
+                }
+                
+                .labelSenha {
+                    margin: 5px !important;
+                }
+
+                .btnEnviarSenha {                   
+                    color: #387ef5 !important;
+                    background: transparent !important;
+                    border-color: transparent !important;
+                }
+
+            }
+        }      
     }
 
-    a {
-        text-decoration: none;
+    .item-inner {
+        margin-left: 2px !important;
     }
+
+    .button-md {
+        width: 120px !important;
+    }
+
 
 }

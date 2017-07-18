@@ -1,3 +1,4 @@
+import { LoginPage } from './../pages/autenticar/login/login';
 import { AjudaPage } from './../pages/ajuda/ajuda';
 import { MensagemPage } from './../pages/mensagem/mensagem';
 import { MensagemService } from './../providers/service/mensagem-service';
@@ -8,7 +9,7 @@ import { NetworkService } from './../providers/service/network-service';
 import { UsuarioVO } from './../model/usuarioVO';
 import { IMenu } from './../shared/interfaces';
 import { FirebaseService } from './../providers/database/firebase-service';
-import { HomeLoginPage } from './../pages/autenticar/homeLogin';
+// import { HomeLoginPage } from './../pages/autenticar/homeLogin';
 import { MensagemListaPage } from './../pages/mensagem-lista/mensagem-lista';
 import { GuiaPage } from './../pages/guia/guia';
 import { VitrinePage } from './../pages/vitrine/vitrine';
@@ -35,6 +36,7 @@ export class MyApp implements OnInit {
   public userLogged: UsuarioVO = new UsuarioVO();
   public rootPage: any;
   public firebaseConnectionAttempts: number = 0;
+  public timeOutSession: any;
 
   constructor(private platform: Platform,
     private menuCtrl: MenuController,
@@ -81,7 +83,7 @@ export class MyApp implements OnInit {
           self.checkFirebase();
         } else {
           self.splashScreen.hide();
-          self.rootPage = HomeLoginPage;
+          self.rootPage = LoginPage;
           self.fbService.goOffline();
         }
       }, 1000);
@@ -95,20 +97,28 @@ export class MyApp implements OnInit {
             self.popularMenu(true);
             self.userLogged = userRef.val();
             if (self.userLogged.usua_in_ajuda == true) {
-              self.rootPage = TabsPage;
+              // self.rootPage = TabsPage;
+              // this.app.getRootNav().setRoot(TabsPage);
+              this.app.getActiveNav().setRoot(TabsPage);
             }
             else {
-              self.rootPage = AjudaPage;
+              // self.rootPage = AjudaPage;
+              // this.app.getRootNav().setRoot(AjudaPage);
+               this.app.getActiveNav().setRoot(AjudaPage);
             }
             self.splashScreen.hide();
           }
           else {
-            self.rootPage = HomeLoginPage;
+            // self.rootPage = HomeLoginPage;
+            // this.app.getRootNav().setRoot(LoginPage);
+              this.app.getActiveNav().setRoot(LoginPage);
             self.splashScreen.hide();
           }
         });
       } else {
-        self.rootPage = HomeLoginPage;
+        // self.rootPage = HomeLoginPage;
+        // this.app.getRootNav().setRoot(LoginPage);
+        this.app.getActiveNav().setRoot(LoginPage);
         self.splashScreen.hide();
       }
     }
@@ -147,17 +157,25 @@ export class MyApp implements OnInit {
               self.popularMenu(true);
               self.userLogged = userRef.val();
               if (self.userLogged.usua_in_ajuda == true) {
-                self.rootPage = TabsPage;
+                // self.rootPage = TabsPage;
+                // this.app.getRootNav().setRoot(TabsPage);
+                this.app.getActiveNav().setRoot(TabsPage);
               }
               else {
-                self.rootPage = AjudaPage;
+                // self.rootPage = AjudaPage;
+                // this.app.getRootNav().setRoot(AjudaPage);
+                this.app.getActiveNav().setRoot(AjudaPage);
               }
             } else {
-              self.nav.setRoot(HomeLoginPage);
+              // self.nav.setRoot(HomeLoginPage);
+              // this.app.getRootNav().setRoot(LoginPage);
+              this.app.getActiveNav().setRoot(LoginPage);
             }
           });
         } else {
-          self.nav.setRoot(HomeLoginPage);
+          // self.nav.setRoot(HomeLoginPage);
+          // this.app.getRootNav().setRoot(LoginPage);
+          this.app.getActiveNav().setRoot(LoginPage);
         }
       } else {
         self.popularMenu(true);
@@ -232,17 +250,22 @@ export class MyApp implements OnInit {
         break;
 
       case enums.ETypeMenu.login:
-        let loginModal = this.mdlCtrl.create(HomeLoginPage);
+        let loginModal = this.mdlCtrl.create(LoginPage);
         loginModal.present();
         break;
 
       case enums.ETypeMenu.logout:
-        setTimeout(() => {
-          this.nav.setRoot(HomeLoginPage);
+        this.timeOutSession = setTimeout(() => {
           this.usuaSrv.signOut();
+          this.closeSession();
         }, 1000);
         break;
     }
+  }
+
+  public closeSession() {
+    clearTimeout(this.timeOutSession);
+    this.nav.setRoot(LoginPage);
   }
 
   isActive(page: IMenu) {

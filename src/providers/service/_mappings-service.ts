@@ -1,6 +1,5 @@
 import { CtdFuncoes } from './../../shared/ctdFuncoes';
 import { UsuarioVO } from './../../model/usuarioVO';
-import { ItemsService } from './_items-service';
 import { VitrineVO } from './../../model/vitrineVO';
 import * as enums from './../../model/dominio/ctdEnum';
 import { Injectable } from '@angular/core';
@@ -8,7 +7,7 @@ import { Injectable } from '@angular/core';
 @Injectable()
 export class MappingsService {
 
-    constructor(private itemsService: ItemsService) { }
+    constructor() {}
 
     getVitrines(snapshot: any): Array<VitrineVO> {
         let vitrines: Array<VitrineVO> = [];
@@ -93,7 +92,8 @@ export class MappingsService {
                 usua_nr_reputacao: 0,
                 usua_tx_observacao: '',
                 usua_in_empresa: false,
-                usua_in_ajuda: false
+                usua_in_ajuda: false,
+                usua_tx_urlprofile: user.usua_tx_urlprofile
             }
 
         return json;

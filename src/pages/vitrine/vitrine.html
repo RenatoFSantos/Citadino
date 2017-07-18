@@ -15,7 +15,7 @@
     </div>
     <ion-card class="ctd-card" *ngFor="let item of vitrines">
         <div *ngIf="item.tian_sq_id == 'TP-1'">
-            <ion-item (click)="openPage(item.empr_sq_id)">
+            <ion-item>
                 <ion-avatar item-left>
                     <img src="{{item.anun_tx_urlavatar}}">
                 </ion-avatar>
@@ -28,7 +28,7 @@
             </ion-buttons>
         </div>
         <div *ngIf="item.tian_sq_id == 'TP-2'">
-            <ion-item (click)="openPage(item.empr_sq_id)">
+            <ion-item>
                 <ion-avatar item-left>
                     <img src="{{item.anun_tx_urlavatar}}">
                 </ion-avatar>
@@ -41,7 +41,7 @@
             </ion-buttons>
         </div>
         <div *ngIf="item.tian_sq_id == 'TP-3'">
-            <ion-item (click)="openPage(item.empr_sq_id)">
+            <ion-item >
                 <ion-thumbnail item-left>
                     <img src="{{item.anun_tx_urlavatar}}">
                 </ion-thumbnail>
@@ -56,7 +56,7 @@
             </ion-buttons>
         </div>
         <div *ngIf="item.tian_sq_id == 'TP-4'">
-            <ion-item (click)="openPage(item.empr_sq_id)">
+            <ion-item >
                 <ion-avatar item-left>
                     <img src="{{item.anun_tx_urlicone}}">
                 </ion-avatar>
@@ -71,7 +71,7 @@
             </ion-buttons>
         </div>
         <div *ngIf="item.tian_sq_id == 'TP-5'">
-            <ion-item (click)="openPage(item.empr_sq_id)">
+            <ion-item>
                 <ion-avatar item-left>
                     <img src="{{item.anun_tx_urlicone}}">
                 </ion-avatar>
@@ -84,7 +84,7 @@
         </div>
     </ion-card>
 
-    <ion-infinite-scroll (ionInfinite)="doInfinite($event)" limit="20%">
+    <ion-infinite-scroll (ionInfinite)="doInfinite($event)">
         <ion-infinite-scroll-content loadingSpinner="bubbles" loadingText="Aguarde...">
         </ion-infinite-scroll-content>
     </ion-infinite-scroll>
