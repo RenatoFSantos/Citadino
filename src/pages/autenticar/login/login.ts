@@ -1,3 +1,5 @@
+import { FirebaseService } from './../../../providers/database/firebase-service';
+import { SignUpPage } from './../signup/signup';
 import { UsuarioService } from './../../../providers/service/usuario-service';
 import { NetworkService } from './../../../providers/service/network-service';
 import { GlobalVar } from './../../../shared/global-var';
@@ -27,7 +29,9 @@ export class LoginPage implements OnInit {
     private event: Events,
     private loginSrv: UsuarioService,
     private globalVar: GlobalVar,
-    private netService: NetworkService) {
+    private netService: NetworkService,
+    private navCtrl: NavController,
+    private fbSrv: FirebaseService) {
   }
 
   ngOnInit() {
@@ -71,7 +75,7 @@ export class LoginPage implements OnInit {
 
       if (self.globalVar.getIsFirebaseConnected()) {
         resultFindUser = this.loginSrv.signInUserFB(user.email, user.password);
-      // } else {
+        // } else {
         // resultFindUser = this.loginSrv.signInUserSQ(user.email, user.password);
       }
 
@@ -96,15 +100,14 @@ export class LoginPage implements OnInit {
     }
   }
 
+  public criarConta() {
+    this.navCtrl.setRoot(SignUpPage);
+  }
+
   private errorConnection(): void {
     this.loading.dismiss().then(() => {
       this.createAlert("Ops!!! Não estou conseguindo validar o seu login. Tente mais tarde!");
     });
-  }
-
-  close() {
-    var self = this;
-    self.nav.setRoot(HomeLoginPage);
   }
 
   createAlert(errorMessage: string) {
@@ -115,6 +118,25 @@ export class LoginPage implements OnInit {
     });
 
     toast.present();
+  }
+
+  enviarSenha(): Promise<boolean> {
+    let self = this;
+    if (self.email != null && self.email.value != "") {
+      return new Promise((resolve) => {
+        this.fbSrv.getFireBase().auth().sendPasswordResetEmail(self.email.value)
+          .then(() => {
+            this.createAlert("E-mail enviado com sucesso.");
+            resolve(true)
+          }, error => {
+            this.createAlert("Não foi possível enviar o email.");
+            resolve(false)
+          })
+      });
+    }
+    else {
+      this.createAlert("Favor informar o e-mail.");
+    }
   }
 }
 

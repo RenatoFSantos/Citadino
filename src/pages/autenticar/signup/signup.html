@@ -11,39 +11,65 @@
         </ion-buttons>
     </ion-navbar>
 </ion-header>
-<ion-content padding>
-    <ion-grid style="margin-top: 0px; margin-bottom: 0px;">
-        <ion-row>
-            <ion-col width-33></ion-col>
-            <ion-col width-33><img src="assets/img/icon.png" alt="CITADINO" /></ion-col>
-            <ion-col width-33></ion-col>
-        </ion-row>
-    </ion-grid>
-    <form [formGroup]="createLoginForm" (ngSubmit)="onSubmit(createLoginForm.value)">
-        <ion-item [class.error]="!usua_nm_usuario.valid && usua_nm_usuario.touched">
-            <ion-label floating>Usuário</ion-label>
-            <ion-input type="text" value="" [formControl]="usua_nm_usuario"></ion-input>
-        </ion-item>
-        <div *ngIf="usua_nm_usuario.hasError('required') && usua_nm_usuario.touched" class="error-box">* Informe o usuário.</div>
-        <div *ngIf="usua_nm_usuario.hasError('maxLength') && usua_nm_usuario.touched" class="error-box">* Máximo de 8 caracteres.</div>
-        <ion-item [class.error]="!usua_ds_email.valid && usua_ds_email.touched">
-            <ion-label floating>Email</ion-label>
-            <ion-input type="text" value="" [formControl]="usua_ds_email"></ion-input>
-        </ion-item>
-        <div *ngIf="usua_ds_email.hasError('required') && usua_ds_email.touched" class="error-box">* Informe o email.</div>
-        <div *ngIf="usua_ds_email.hasError('isValid') && usua_ds_email.touched" class="error-box">* Informe um email válido.</div>
-        <ion-item [class.error]="!usua_tx_senha.valid && usua_tx_senha.touched">
-            <ion-label floating>Senha</ion-label>
-            <ion-input type="password" value="" [formControl]="usua_tx_senha"></ion-input>
-        </ion-item>
-        <div *ngIf="usua_tx_senha.hasError('required') && usua_tx_senha.touched" class="error-box">* Informe a senha.</div>
-        <div *ngIf="usua_tx_senha.hasError('minlength') && usua_tx_senha.touched" class="error-box">* Senha com no mínimo de 6 caracteres.</div>
-        <div padding text-center>
-            <button ion-button type="submit" class="custom-button" [disabled]="!createLoginForm.valid" block>Salvar</button>
-        </div>
+<ion-content id="signup">
 
-        <div padding>
-            <p *ngIf="error" class="error">Error:&nbsp;{{ error.message }}</p>
-        </div>
+    <form [formGroup]="createLoginForm" (ngSubmit)="onSubmit(createLoginForm.value)">
+        <ion-row>
+            <ion-col width-100><br></ion-col>
+        </ion-row>
+
+        <ion-row>
+            <ion-col width-100>
+                <ion-item [class.error]="!usua_nm_usuario.valid && usua_nm_usuario.touched" class="inputEmail">
+                    <ion-label class="labelEmail">
+                        <ion-icon name="md-person"></ion-icon>
+                    </ion-label>
+                    <ion-input type="text" value="" [formControl]="usua_nm_usuario" placeholder="Usuário"></ion-input>
+                </ion-item>
+                <div *ngIf="(usua_nm_usuario.hasError('required') || usua_nm_usuario.hasError('maxLength')) && usua_nm_usuario.touched" class="error-box">* Máximo de 8 caracteres.</div>
+            </ion-col>
+        </ion-row>
+        <ion-row>
+            <ion-col width-100>
+                <ion-item [class.error]="!usua_ds_email.valid && usua_ds_email.touched" class="inputEmail">
+                    <ion-label class="labelEmail">
+                        <ion-icon name="md-mail"></ion-icon>
+                    </ion-label>
+                    <ion-input type="text" value="" [formControl]="usua_ds_email" placeholder="E-mail"></ion-input>
+                </ion-item>
+                <div *ngIf="(usua_ds_email.hasError('required') || usua_ds_email.hasError('isValid')) && usua_ds_email.touched" class="error-box">* Informe um email válido.</div>
+            </ion-col>
+        </ion-row>
+        <ion-row>
+            <ion-col width-100>
+                <ion-item [class.error]="!usua_tx_senha.valid && usua_tx_senha.touched" class="inputSenha">
+                    <ion-label class="labelEmail">
+                        <ion-icon name="md-lock"></ion-icon>
+                    </ion-label>
+                    <ion-input type="password" value="" [formControl]="usua_tx_senha" placeholder="Senha" ></ion-input>
+                </ion-item>
+                <div *ngIf="(usua_tx_senha.hasError('required')|| usua_tx_senha.hasError('minlength')) && usua_tx_senha.touched" class="error-box">* Senha com no mínimo de 6 caracteres.</div>
+            </ion-col>
+        </ion-row>
+
+        <ion-row>
+            <ion-col width-25></ion-col>
+            <ion-col width-50>
+                <button ion-button type="submit" class="custom-button" [disabled]="!createLoginForm.valid" block>Salvar</button>
+            </ion-col>
+            <ion-col width-25></ion-col>
+        </ion-row>
+        <ion-row>
+            <ion-col width-25></ion-col>
+            <ion-col width-50>
+                <div padding>
+                    <p *ngIf="error" class="error">Error:&nbsp;{{ error.message }}</p>
+                </div>
+            </ion-col>
+            <ion-col width-25></ion-col>
+        </ion-row>
+
     </form>
+
+
 </ion-content>

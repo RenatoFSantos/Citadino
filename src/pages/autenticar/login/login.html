@@ -3,41 +3,61 @@
         <img class="icocit" src="assets/img/icon.png" />
         <ion-title class="citadino">
             CITADINO
-        </ion-title>
-        <ion-buttons right>
-            <button ion-button right (click)="close()">
-        <ion-icon name="md-arrow-back" ></ion-icon>
-    </button>
-        </ion-buttons>
+        </ion-title>       
     </ion-navbar>
 </ion-header>
-<ion-content padding>
-    <ion-grid style="margin-top: 0px; margin-bottom: 0px;">
-        <ion-row>
-            <ion-col width-33></ion-col>
-            <ion-col width-33><img src="assets/img/icon.png" alt="CITADINO" /></ion-col>
-            <ion-col width-33></ion-col>
-        </ion-row>
-    </ion-grid>
+<ion-content id="login">
     <form [formGroup]="loginForm" (ngSubmit)="onSubmit(loginForm.value)">
-        <ion-item [class.error]="!email.valid && email.touched">
-            <ion-label floating>Email</ion-label>
-            <ion-input type="text" value="" [formControl]="email"></ion-input>
-        </ion-item>
-        <div *ngIf="email.hasError('required') && email.touched" class="error-box">* Informe o email.</div>
-        <div *ngIf="email.hasError('isValid') && email.touched" class="error-box">* Informe um email válido.</div>
-        <ion-item [class.error]="!password.valid && password.touched">
-            <ion-label floating>Senha</ion-label>
-            <ion-input type="password" value="" [formControl]="password"></ion-input>
-        </ion-item>
-        <div *ngIf="password.hasError('required') && password.touched" class="error-box">* Informe a senha.</div>
-        <div *ngIf="password.hasError('minlength') && password.touched" class="error-box">* Senha com no mínimo de 6 caracteres.</div>
-        <br/><br/>
-        
-        <div padding text-center>
-            <button ion-button type="submit" class="custom-button" [disabled]="!loginForm.valid" block>Fazer Login</button><br/>
-            <!--<button ion-button block (click)="login(loginForm)" type="submit">Fazer Login</button>
-            <a href="#" style="text-decoration: none;">Esqueci minha senha</a>-->
-        </div>
+        <ion-row>
+            <ion-col width-100></ion-col>
+        </ion-row>
+        <ion-row>
+            <ion-col width-100 >
+                <ion-item [class.error]="!email.valid && email.touched"class="inputEmail">
+                    <ion-label class="labelEmail">
+                        <ion-icon name="md-mail"></ion-icon>
+                    </ion-label>
+                    <ion-input type="text" value="" [formControl]="email" placeholder="E-mail"></ion-input>
+                </ion-item>
+                <div *ngIf="(email.hasError('required') || email.hasError('isValid')) && email.touched" class="error-box">* Informe um email válido.</div>
+            </ion-col>
+        </ion-row>
+        <ion-row>
+            <ion-col width-100>
+                <ion-item [class.error]="!password.valid && password.touched" class="inputSenha">
+                    <ion-label class="labelSenha">
+                        <ion-icon name="md-lock"></ion-icon>
+                    </ion-label>
+                    <ion-input type="password" value="" [formControl]="password" placeholder="Senha"></ion-input>
+                </ion-item>
+                <div *ngIf="(password.hasError('required') || password.hasError('minlength')) && password.touched" class="error-box">* Senha com no mínimo de 6 caracteres.</div>
+            </ion-col>
+        </ion-row>
+        <ion-row>
+            <ion-col width-20></ion-col>
+            <ion-col width-30>
+                <div>
+                    <button ion-button type="submit" class="custom-button" [disabled]="!loginForm.valid" block>Entrar</button><br/>
+                </div>
+            </ion-col>
+            <ion-col width-30>
+                <div>
+                    <button ion-button class="custom-button" block (click)="criarConta()">Cadastrar</button><br/>
+                </div>
+            </ion-col>
+            <ion-col width-20></ion-col>
+        </ion-row>
+        <ion-row>
+            <ion-col width-25>
+            </ion-col>
+            <ion-col width-50>
+                <button ion-item clear outline class="btnEnviarSenha" (click)="enviarSenha()">
+                <ion-icon name="md-help-circle" item-start></ion-icon>
+                    Esqueceu sua senha ?
+                </button>
+            </ion-col>
+            <ion-col width-25>
+            </ion-col>
+        </ion-row>
     </form>
 </ion-content>

@@ -7,8 +7,7 @@ export class SqLiteService {
 
   private dataBase: SQLiteObject;
 
-  constructor(private sqlite: SQLite) {
-  }
+  constructor() {}
 
   InitDatabase() {
     var self = this;

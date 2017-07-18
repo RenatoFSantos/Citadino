@@ -1,20 +1,40 @@
 page-ajuda {
 
     .ajuda {
-        background-image: url("../assets/img/tutorial-1.png");
-        background-repeat: no-repeat;
+        background: #1c2627 url("../assets/img/tutorial-11.jpg") no-repeat center center;
+        -webkit-background-size: cover;
+        -moz-background-size: cover;
+        -o-background-size: cover;
         background-size: cover;
+        color: black !important;
     }
+    
     .ajuda.vitrine {
-        background-image: url("../assets/img/tutorial-2.png");
+        background: #1c2627 url("../assets/img/tutorial-21.jpg") no-repeat center center;
+        -webkit-background-size: cover;
+        -moz-background-size: cover;
+        -o-background-size: cover;
+        background-size: cover;
+        
     }
     
     .ajuda.guia {
-        background-image: url("../assets/img/tutorial-3.png");
+          background: #1c2627 url("../assets/img/tutorial-31.jpg") no-repeat center center;
+        -webkit-background-size: cover;
+        -moz-background-size: cover;
+        -o-background-size: cover;
+        background-size: cover;
+      
+        
     }
 
     .ajuda.mensagem {
-        background-image: url("../assets/img/tutorial-4.png");
+        background: #1c2627 url("../assets/img/tutorial-41.jpg") no-repeat center center;
+        -webkit-background-size: cover;
+        -moz-background-size: cover;
+        -o-background-size: cover;
+        background-size: cover;
+    
     }
 
     ion-title.citadino {
@@ -31,5 +51,9 @@ page-ajuda {
     .col {
         padding: 0px !important;
         text-align: center !important;
+    }
+
+    .btnAvanco {
+        color: black !important;
     }
 }

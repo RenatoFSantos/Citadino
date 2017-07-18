@@ -59,7 +59,7 @@ export class UsuarioService {
 
   addUserFB(user: UsuarioVO) {
     let userJson = this.mapSrv.getUserJson(user);
-    this.usersRef.child(user.usua_sq_id).update(userJson);
+    return this.usersRef.child(user.usua_sq_id).update(userJson);
   }
 
   addUserSQ(user: UsuarioVO, uid: string) {

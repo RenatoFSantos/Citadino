@@ -1,11 +1,10 @@
+import { LoginPage } from './../login/login';
 import { UsuarioVO } from './../../../model/usuarioVO';
 import { UsuarioService } from './../../../providers/service/usuario-service';
-import { GlobalVar } from './../../../shared/global-var';
 import { UserCredentials } from './../../../shared/interfaces';
 import { EmailValidator } from './../../../shared/validators/email.validator';
-import { HomeLoginPage } from './../homeLogin';
 import { Component, OnInit } from '@angular/core';
-import { NavController, ViewController, Events, LoadingController, ToastController } from 'ionic-angular';
+import { NavController, Events, LoadingController, ToastController } from 'ionic-angular';
 import { FormGroup, AbstractControl, FormBuilder, Validators } from '@angular/forms';
 
 @Component({
@@ -13,19 +12,20 @@ import { FormGroup, AbstractControl, FormBuilder, Validators } from '@angular/fo
   templateUrl: 'signup.html'
 })
 export class SignUpPage implements OnInit {
+
   createLoginForm: FormGroup;
   usua_nm_usuario: AbstractControl;
   usua_ds_email: AbstractControl;
   usua_tx_senha: AbstractControl;
 
+  newUser: UsuarioVO = null;
+
   constructor(private loginService: UsuarioService,
     private loadingCtrl: LoadingController,
     private toastCtrl: ToastController,
     private navCtrl: NavController,
-    private viewCtrl: ViewController,
     private event: Events,
-    private fb: FormBuilder,
-    private globalVar: GlobalVar) { }
+    private fb: FormBuilder) { }
 
   ngOnInit() {
     this.createLoginForm = this.fb.group({
@@ -54,21 +54,26 @@ export class SignUpPage implements OnInit {
         password: signupForm.usua_tx_senha
       };
 
-      let newUser:UsuarioVO = new UsuarioVO();
-      newUser.usua_nm_usuario = signupForm.usua_nm_usuario;
-      newUser.usua_ds_email = signupForm.usua_ds_email;
-      newUser.usua_tx_senha = signupForm.usua_tx_senha;
-    
+      this.newUser = new UsuarioVO();
+      this.newUser.usua_nm_usuario = signupForm.usua_nm_usuario;
+      this.newUser.usua_ds_email = signupForm.usua_ds_email;
+      this.newUser.usua_tx_senha = signupForm.usua_tx_senha;
+      this.newUser.usua_tx_urlprofile = "https://firebasestorage.googleapis.com/v0/b/citadinodsv.appspot.com/o/images%2Fprofile%2Fprofile.png?alt=media&token=95f982e8-dd2d-4d2d-a4b1-40305495b9d1";
       loader.present();
 
       self.loginService.registerUser(newAuth).then((result) => {
-        newUser.usua_sq_id = self.loginService.getLoggedInUser().uid;
-        self.loginService.addUserFB(newUser);
+        if (result != null) {
+          // newUser.usua_sq_id = self.loginService.getLoggedInUser().uid;
+          this.newUser.usua_sq_id = result.uid;
+          self.loginService.addUserFB(this.newUser).then(() => {
+            // self.loginService.addUserSQ(signupForm,
+            // self.loginService.getLoggedInUser().uid);
+            // self.CreateAndUploadDefaultImage();
 
-        // self.loginService.addUserSQ(signupForm,
-        //   self.loginService.getLoggedInUser().uid);
-
-        self.CreateAndUploadDefaultImage();
+          }).catch((error) => {
+            this.errorNewUser(loader, error);
+          });
+        }
 
         loader.dismiss().then(() => {
           let toast = self.toastCtrl.create({
@@ -78,20 +83,24 @@ export class SignUpPage implements OnInit {
           });
           toast.present();
         });
+
       }).catch(function (error) {
-        console.log("Error ao criar o usuário")
-        var errorMessage = error.message;
-        console.error(error);
-        loader.dismiss().then(() => {
-          let toast = self.toastCtrl.create({
-            message: errorMessage,
-            duration: 3000,
-            position: 'top'
-          });
-          toast.present();
-        });
+        this.errorNewUser(loader, error);
       });
     }
+  }
+
+  private errorNewUser(loader: any, error: any) {
+    //var errorMessage = error.message;
+    loader.dismiss().then(() => {
+      let toast = this.toastCtrl.create({
+        message: "Ops!!! Erro ao criar novo usuário.",
+        duration: 3000,
+        position: 'top'
+      });
+      toast.present();
+    });
+
   }
 
   CreateAndUploadDefaultImage() {
@@ -111,7 +120,9 @@ export class SignUpPage implements OnInit {
 
   startUploading(file) {
     let self = this;
-    let uid = self.loginService.getLoggedInUser().uid;
+    // let uid = self.loginService.getLoggedInUser().uid;
+
+    let uid = this.newUser.usua_sq_id;
     let progress: number = 0;
 
     var metadata = {
@@ -144,7 +155,8 @@ export class SignUpPage implements OnInit {
         self.event.publish('usuario:logado', true);
       });
   }
+
   close() {
-    this.navCtrl.setRoot(HomeLoginPage);
+    this.navCtrl.setRoot(LoginPage);
   }
 }
