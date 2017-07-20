@@ -1,5 +1,6 @@
+import { VitrineVO } from './../../model/vitrineVO';
 import { Component } from '@angular/core';
-import { NavController, NavParams } from 'ionic-angular';
+import { NavParams } from 'ionic-angular';
 
 /*
   Generated class for the NoticiaFull page.
@@ -13,10 +14,15 @@ import { NavController, NavParams } from 'ionic-angular';
 })
 export class NoticiaFullPage {
 
-  constructor(public navCtrl: NavController, public navParams: NavParams) {}
+  public vitrine: VitrineVO;
+
+  constructor(public navParams: NavParams) {
+    this.vitrine = navParams.get("vitrine");
+
+  }
+
 
   ionViewDidLoad() {
-    console.log('ionViewDidLoad NoticiaFullPage');
   }
 
 }

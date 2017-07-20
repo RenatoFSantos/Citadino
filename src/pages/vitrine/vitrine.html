@@ -15,33 +15,34 @@
     </div>
     <ion-card class="ctd-card" *ngFor="let item of vitrines">
         <div *ngIf="item.tian_sq_id == 'TP-1'">
-            <ion-item>
+            <ion-item (click)="openSmartSite(item)">
                 <ion-avatar item-left>
                     <img src="{{item.anun_tx_urlavatar}}">
                 </ion-avatar>
                 <h2>{{item.anun_tx_titulo}}</h2>
                 <p>{{item.anun_tx_subtitulo}}</p>
             </ion-item>
-            <img src="{{item.anun_tx_urlbanner}}"/>
+            <img src="{{item.anun_tx_urlbanner}}" (click)="openSmartSite(item)" />
             <ion-buttons icon-only end>
-                <ctd-buttons [urlSlide]=[(item.anun_tx_urlslide1)] [smartSite]=[(item.anun_in_smartsite)] [empresaKey]=[(item.empr_sq_id)] [vitrine]=[(item)]></ctd-buttons>
+                <ctd-buttons [urlSlide]=[(item.anun_tx_urlslide1)] [smartSite]=[(item.anun_in_smartsite)] [empresaKey]=[(item.empr_sq_id)]
+                    [vitrine]=[(item)]></ctd-buttons>
             </ion-buttons>
         </div>
         <div *ngIf="item.tian_sq_id == 'TP-2'">
-            <ion-item>
+            <ion-item (click)="openSmartSite(item)">
                 <ion-avatar item-left>
                     <img src="{{item.anun_tx_urlavatar}}">
                 </ion-avatar>
                 <h2>{{item.anun_tx_titulo}}</h2>
                 <p>{{item.anun_tx_subtitulo}}</p>
             </ion-item>
-            <img src="{{item.anun_tx_urlbanner}}" />
+            <img src="{{item.anun_tx_urlbanner}}" (click)="openSmartSite(item)" />
             <ion-buttons icon-only end>
                 <ctd-buttons [urlSlide]=[(item.anun_tx_urlslide1)] [smartSite]=[(item.anun_in_smartsite)] [empresaKey]=[(item.empr_sq_id)]></ctd-buttons>
             </ion-buttons>
         </div>
         <div *ngIf="item.tian_sq_id == 'TP-3'">
-            <ion-item >
+            <ion-item (click)="openSmartSite(item)">
                 <ion-thumbnail item-left>
                     <img src="{{item.anun_tx_urlavatar}}">
                 </ion-thumbnail>
@@ -56,14 +57,14 @@
             </ion-buttons>
         </div>
         <div *ngIf="item.tian_sq_id == 'TP-4'">
-            <ion-item >
+            <ion-item (click)="openSmartSite(item)">
                 <ion-avatar item-left>
                     <img src="{{item.anun_tx_urlicone}}">
                 </ion-avatar>
                 <h2>{{item.anun_tx_titulo}}</h2>
                 <p>{{item.anun_tx_subtitulo}}</p>
             </ion-item>
-            <ion-card-content>
+            <ion-card-content (click)="openSmartSite(item)">
                 {{item.anun_tx_texto}}
             </ion-card-content>
             <ion-buttons icon-only end>
@@ -71,7 +72,7 @@
             </ion-buttons>
         </div>
         <div *ngIf="item.tian_sq_id == 'TP-5'">
-            <ion-item>
+            <ion-item (click)="openSmartSite(item)">
                 <ion-avatar item-left>
                     <img src="{{item.anun_tx_urlicone}}">
                 </ion-avatar>
@@ -81,6 +82,18 @@
             <ion-buttons icon-only end>
                 <ctd-buttons [urlSlide]=[(item.anun_tx_urlslide1)] [smartSite]=[(item.anun_in_smartsite)] [empresaKey]=[(item.empr_sq_id)]></ctd-buttons>
             </ion-buttons>
+        </div>
+        <div *ngIf="item.tian_sq_id == 'TP-6'">
+            <ion-item class="ctd-noticia-head" (click)="openNoticia(item)">
+                <ion-avatar item-left>
+                    <img src="{{item.anun_tx_urlavatar}}" />
+                </ion-avatar>
+                <h2>Notícias</h2>
+                <p class="ctd-subtitulo">{{item.anun_tx_titulo}}</p>
+            </ion-item>
+            <ion-card-content class="ctd-noticia" (click)="openNoticia(item)">
+                {{item.anun_tx_texto}}
+            </ion-card-content>
         </div>
     </ion-card>
 

@@ -1,3 +1,8 @@
+import { NoticiaFullPage } from './../noticia-full/noticia-full';
+import { SmartSiteService } from './../../providers/service/smartSite-services';
+import { SmartSitePage } from './../smartSite/smartSite';
+import { SmartsiteVO } from './../../model/smartSiteVO';
+import { EmpresaVO } from './../../model/empresaVO';
 import { EmpresaService } from './../../providers/service/empresa-service';
 import { ItemsService } from './../../providers/service/_items-service';
 import { MappingsService } from './../../providers/service/_mappings-service';
@@ -39,7 +44,8 @@ export class VitrinePage implements OnInit {
     private mappingsService: MappingsService,
     private itemsService: ItemsService,
     private toastCtrl: ToastController,
-    private emprSrv: EmpresaService) {
+    private emprSrv: EmpresaService,
+    private smartSrv: SmartSiteService) {
 
     if (this.globalVar.getIsFirebaseConnected()) {
 
@@ -144,7 +150,7 @@ export class VitrinePage implements OnInit {
               }
             });
 
-            self.rowCurrent = self.vitrines.length;
+          self.rowCurrent = self.vitrines.length;
 
           resolve(true);
         });
@@ -188,6 +194,45 @@ export class VitrinePage implements OnInit {
       self.rowCurrent = self.rowCount;
       infiniteScroll.complete();
     }
+  }
+
+  openSmartSite(vitrine: VitrineVO) {
+    if (vitrine.anun_in_smartsite == true) {
+      let loader = this.loadingCtrl.create({
+        content: 'Aguarde...',
+        dismissOnPageChange: true
+      });
+
+      loader.present();
+      this.emprSrv.getEmpresaPorKey(vitrine.empr_sq_id).then((snapEmpresa) => {
+        if (snapEmpresa != null) {
+          let empresa: EmpresaVO = snapEmpresa.val();
+
+          this.emprSrv.getSmartSitePorEmpresa(empresa.empr_sq_id)
+            .then((snapSamrEmpr) => {
+              if (snapSamrEmpr.exists()) {
+                this.smartSrv.getSmartSiteByKey(Object.keys(snapSamrEmpr.val())[0])
+                  .then((snapSmart) => {
+                    if (snapSmart.val() != null) {
+                      let smartSite: SmartsiteVO;
+                      smartSite = snapSmart.val();
+                      this.navCtrl.push(SmartSitePage, { smartSite: smartSite, empresa: empresa });
+                    }
+                    loader.dismiss();
+                  });
+              }
+              else {
+                loader.dismiss();
+                this.createAlert("Ops!!! Não existe smartSite cadastrado.");
+              }
+            });
+        }
+      });
+    }
+  }
+
+  openNoticia(vitrine: VitrineVO) {
+    this.navCtrl.push(NoticiaFullPage, {vitrine: vitrine});
   }
 
 

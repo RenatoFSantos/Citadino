@@ -6,7 +6,7 @@ import { EmpresaService } from './../../providers/service/empresa-service';
 import { GuiaService } from './../../providers/service/guia-service';
 import { GuiaContatoPage } from './../guia-contato/guia-contato';
 import { Component, OnInit } from '@angular/core';
-import { NavController, NavParams, ToastController } from 'ionic-angular';
+import { NavController, NavParams, ToastController, LoadingController } from 'ionic-angular';
 
 @Component({
   selector: 'page-guia-lista',
@@ -23,7 +23,8 @@ export class GuiaListaPage implements OnInit {
     public guiaSrv: GuiaService,
     public emprSrv: EmpresaService,
     private smartSrv: SmartSiteService,
-    private toastCtrl: ToastController) {
+    private toastCtrl: ToastController,
+    private loadingCtrl: LoadingController) {
 
     this.categoriaNome = navParams.get("categNm");
     this.empresasKey = navParams.get("emprKeys");
@@ -43,12 +44,18 @@ export class GuiaListaPage implements OnInit {
       this.emprSrv.getSmartSitePorEmpresa(empresa.empr_sq_id)
         .then((snapSamrEmpr) => {
           if (snapSamrEmpr.exists()) {
+            let loader = this.loadingCtrl.create({
+              content: 'Aguarde...',
+              dismissOnPageChange: true
+            });
+            loader.present();
             this.smartSrv.getSmartSiteByKey(Object.keys(snapSamrEmpr.val())[0])
               .then((snapSmart) => {
                 if (snapSmart.val() != null) {
                   let smartSite: SmartsiteVO;
                   smartSite = snapSmart.val();
                   this.navCtrl.push(SmartSitePage, { smartSite: smartSite, empresa: empresa });
+                  loader.dismiss();
                 }
               });
           }

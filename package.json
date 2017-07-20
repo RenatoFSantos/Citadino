@@ -46,11 +46,13 @@
         "cordova-sqlite-storage": "~2.0.3",
         "firebase": "^4.1.1",
         "ionic-angular": "^3.5.3",
+        "ionic-plugin-deploy": "^0.6.7",
         "ionic-plugin-keyboard": "~2.2.1",
         "ionicons": "3.0.0",
         "lodash": "^4.17.4",
         "mx.ferreyra.callnumber": "~0.0.2",
         "object-keys": "^1.0.11",
+        "phonegap-plugin-push": "^1.10.5",
         "promise-polyfill": "^6.0.2",
         "rxjs": "5.4.0",
         "sw-toolbox": "3.6.0",
@@ -82,7 +84,11 @@
             "cordova-plugin-splashscreen": {},
             "cordova-sqlite-storage": {},
             "cordova-plugin-network-information": {},
-            "mx.ferreyra.callnumber": {}
+            "mx.ferreyra.callnumber": {},
+            "ionic-plugin-deploy": {},
+            "phonegap-plugin-push": {
+                "SENDER_ID": "180769307423"
+            }
         },
         "platforms": [
             "android",
