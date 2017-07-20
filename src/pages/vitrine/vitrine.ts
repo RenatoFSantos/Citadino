@@ -1,3 +1,4 @@
+import { NoticiaFullPage } from './../noticia-full/noticia-full';
 import { SmartSiteService } from './../../providers/service/smartSite-services';
 import { SmartSitePage } from './../smartSite/smartSite';
 import { SmartsiteVO } from './../../model/smartSiteVO';
@@ -228,6 +229,10 @@ export class VitrinePage implements OnInit {
         }
       });
     }
+  }
+
+  openNoticia(vitrine: VitrineVO) {
+    this.navCtrl.push(NoticiaFullPage, {vitrine: vitrine});
   }
 
 

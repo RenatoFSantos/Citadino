@@ -70,20 +70,21 @@ export class SignUpPage implements OnInit {
             // self.loginService.getLoggedInUser().uid);
             // self.CreateAndUploadDefaultImage();
 
+            self.event.publish('usuario:logado', true);
+
+            loader.dismiss().then(() => {
+              let toast = self.toastCtrl.create({
+                message: 'Usuário criado com sucesso.',
+                duration: 2000,
+                position: 'top'
+              });
+              toast.present();
+            });
+
           }).catch((error) => {
             this.errorNewUser(loader, error);
           });
         }
-
-        loader.dismiss().then(() => {
-          let toast = self.toastCtrl.create({
-            message: 'Usuário criado com sucesso.',
-            duration: 2000,
-            position: 'top'
-          });
-          toast.present();
-        });
-
       }).catch(function (error) {
         this.errorNewUser(loader, error);
       });

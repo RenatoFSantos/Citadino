@@ -48,6 +48,7 @@ export class GuiaListaPage implements OnInit {
               content: 'Aguarde...',
               dismissOnPageChange: true
             });
+            loader.present();
             this.smartSrv.getSmartSiteByKey(Object.keys(snapSamrEmpr.val())[0])
               .then((snapSmart) => {
                 if (snapSmart.val() != null) {

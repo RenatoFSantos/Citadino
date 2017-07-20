@@ -30,5 +30,31 @@ page-vitrine {
     ion-card-content.ctd-texto {
         text-align: justify; 
         padding:8px;
-    }    
+    }  
+
+    .ctd-subtitulo {
+        color: white !important;   
+    } 
+    
+    ion-card-content.ctd-noticia {
+        overflow: hidden;
+        text-overflow: ellipsis;
+        display: -webkit-box;
+        -webkit-box-orient: vertical;
+        -webkit-line-clamp: 4; /* number of lines to show */
+        max-height: 5.5em;
+        line-height: 1.4em;
+    }  
+
+    .ctd-noticia-head {
+        background-color:#e7a904 !important;
+    }
+
+    ion-card ion-buttons{
+        height: 30px;
+        background-color: rgba(204, 204, 204, 0.59);
+        border-radius: 5px;
+        width: 102%;
+        margin-left: -2px;
+    }
 }
