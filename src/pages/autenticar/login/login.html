@@ -17,7 +17,7 @@
                     <ion-label class="labelEmail">
                         <ion-icon name="md-mail"></ion-icon>
                     </ion-label>
-                    <ion-input type="text" value="" [formControl]="email" placeholder="E-mail"></ion-input>
+                    <ion-input text-lowercase type="text" value="" [formControl]="email" placeholder="E-mail"></ion-input>
                 </ion-item>
                 <div *ngIf="(email.hasError('required') || email.hasError('isValid')) && email.touched" class="error-box">* Informe um email válido.</div>
             </ion-col>

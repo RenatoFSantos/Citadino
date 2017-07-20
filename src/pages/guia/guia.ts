@@ -47,7 +47,7 @@ export class GuiaPage implements OnInit {
         self.descritores = []
         this.searching = false;
         if (value != "") {
-          
+
           let loader = this.loadingCtrl.create({
             content: 'Aguarde...',
             dismissOnPageChange: true
@@ -69,7 +69,7 @@ export class GuiaPage implements OnInit {
               this.descritorEnable = true;
             }
 
-             loader.dismiss();
+            loader.dismiss();
           });
         }
         else {
@@ -125,22 +125,36 @@ export class GuiaPage implements OnInit {
 
 
   openGuiaCategoria(categoriaNm: string, categoriaKey: string) {
+    let loader = this.loadingCtrl.create({
+      content: 'Aguarde...',
+      dismissOnPageChange: true
+    });
+
+    loader.present();
     let empresaskey: any = [];
     this.guiaSrv.getEmpresaByCategoria(categoriaKey).then((snapShot) => {
       snapShot.forEach(element => {
         empresaskey.push(element.key);
       });
+      loader.dismiss();
       this.navCtrl.push(GuiaListaPage, { categNm: categoriaNm, emprKeys: empresaskey })
     });
   }
 
   openGuiaDescritor(descritorNm: string, descritorKey: string) {
+    let loader = this.loadingCtrl.create({
+      content: 'Aguarde...',
+      dismissOnPageChange: true
+    });
+
+    loader.present();
     let empresaskey: any = [];
     this.guiaSrv.getEmpresaByDescritor(descritorKey).then((snapShot) => {
       snapShot.forEach(element => {
         empresaskey.push(element.key);
       });
-
+      
+      loader.dismiss();
       if (empresaskey.length > 0) {
         this.navCtrl.push(GuiaListaPage, { categNm: descritorNm, emprKeys: empresaskey })
       }
