@@ -108,27 +108,27 @@ export class MyApp implements OnInit {
             self.userLogged = userRef.val();
             if (self.userLogged.usua_in_ajuda == true) {
               // self.rootPage = TabsPage;
-              // this.app.getRootNav().setRoot(TabsPage);
-              this.app.getActiveNavs()[0].setRoot(TabsPage);
+              this.app.getRootNav().setRoot(TabsPage);
+              // this.app.getActiveNavs()[0].setRoot(TabsPage);
             }
             else {
               // self.rootPage = AjudaPage;
-              // this.app.getRootNav().setRoot(AjudaPage);
-              this.app.getActiveNavs()[0].setRoot(AjudaPage);
+              this.app.getRootNav().setRoot(AjudaPage);
+              // this.app.getActiveNavs()[0].setRoot(AjudaPage);
             }
             self.splashScreen.hide();
           }
           else {
             // self.rootPage = HomeLoginPage;
-            // this.app.getRootNav().setRoot(LoginPage);
-            this.app.getActiveNavs()[0].setRoot(LoginPage);
+            this.app.getRootNav().setRoot(LoginPage);
+            // this.app.getActiveNavs()[0].setRoot(LoginPage);
             self.splashScreen.hide();
           }
         });
       } else {
         // self.rootPage = HomeLoginPage;
-        // this.app.getRootNav().setRoot(LoginPage);
-        this.app.getActiveNavs()[0].setRoot(LoginPage);
+        this.app.getRootNav().setRoot(LoginPage);
+        // this.app.getActiveNavs()[0].setRoot(LoginPage);
         self.splashScreen.hide();
       }
     }
@@ -172,24 +172,24 @@ export class MyApp implements OnInit {
               self.userLogged = userRef.val();
               if (self.userLogged.usua_in_ajuda == true) {
                 // self.rootPage = TabsPage;
-                // this.app.getRootNav().setRoot(TabsPage);
-                this.app.getActiveNavs()[0].setRoot(TabsPage);
+                this.app.getRootNav().setRoot(TabsPage);
+                // this.app.getActiveNavs()[0].setRoot(TabsPage);
               }
               else {
                 // self.rootPage = AjudaPage;
-                // this.app.getRootNav().setRoot(AjudaPage);
-                this.app.getActiveNavs()[0].setRoot(AjudaPage);
+                this.app.getRootNav().setRoot(AjudaPage);
+                // this.app.getActiveNavs()[0].setRoot(AjudaPage);
               }
             } else {
               // self.nav.setRoot(HomeLoginPage);
-              // this.app.getRootNav().setRoot(LoginPage);
-              this.app.getActiveNavs()[0].setRoot(LoginPage);
+              this.app.getRootNav().setRoot(LoginPage);
+              // this.app.getActiveNavs()[0].setRoot(LoginPage);
             }
           });
         } else {
           // self.nav.setRoot(HomeLoginPage);
-          // this.app.getRootNav().setRoot(LoginPage);
-          this.app.getActiveNavs()[0].setRoot(LoginPage);
+          this.app.getRootNav().setRoot(LoginPage);
+          // this.app.getActiveNavs()[0].setRoot(LoginPage);
         }
       } else {
         self.popularMenu(true);
@@ -254,8 +254,8 @@ export class MyApp implements OnInit {
           params = { tabIndex: page.index };
         }
 
-        if (this.nav.getActiveChildNavs() && page.index != undefined) {
-          this.nav.getActiveChildNavs()[0].select(page.index);
+        if (this.nav.getActiveChildNav() && page.index != undefined) {
+          this.nav.getActiveChildNav().select(page.index);
         } else {
           this.nav.push(page.component, params).catch((err: any) => {
             console.log(`Didn't set nav root: ${err}`);
@@ -283,7 +283,7 @@ export class MyApp implements OnInit {
   }
 
   isActive(page: IMenu) {
-    let childNav = this.nav.getActiveChildNavs()[0];
+    let childNav = this.nav.getActiveChildNav();
 
     if (childNav) {
       if (childNav.getSelected() && childNav.getSelected().root === page.tabComponent) {

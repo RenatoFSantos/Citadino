@@ -131,12 +131,13 @@ export class VitrinePage implements OnInit {
     }
 
     return new Promise((resolve) => {
+      let anuncios:any = [];
       self.vitrineSrv.getVitrineMunicipio(self.seqMunicipio, self.limitPage, self.startPk)
-        .then((snapshot) => {
+        .then((snapshot:any) => {
+          
+          anuncios = self.itemsService.getPropertyValues(snapshot.val(), "vitr_sq_ordem");
 
-          // self.rowCurrent = self.rowCurrent + self.itemsService.getObjectKeysSize(snapshot.val());
-
-          self.startPk = self.itemsService.getLastElement(self.itemsService.getKeys(snapshot.val()));
+          self.startPk = String(self.itemsService.getFirstElement(anuncios));
 
           self.itemsService.reversedItems<VitrineVO>(self.mappingsService.getVitrines(snapshot))
 
@@ -232,7 +233,7 @@ export class VitrinePage implements OnInit {
   }
 
   openNoticia(vitrine: VitrineVO) {
-    this.navCtrl.push(NoticiaFullPage, {vitrine: vitrine});
+    this.navCtrl.push(NoticiaFullPage, { vitrine: vitrine });
   }
 
 

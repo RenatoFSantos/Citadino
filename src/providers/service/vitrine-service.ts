@@ -22,7 +22,7 @@ export class VitrineService {
     if (startPk == "") {
       return this.vitrineRef.child(seqMunicipio).orderByChild('vitr_sq_ordem').limitToLast(limitPage).once('value');
     } else {
-      return this.vitrineRef.child(seqMunicipio).orderByChild('vitr_sq_ordem').limitToFirst(limitPage).startAt(startPk).once('value');
+      return this.vitrineRef.child(seqMunicipio).orderByChild('vitr_sq_ordem').endAt(startPk).limitToLast(limitPage).once('value');
     }
   }
 

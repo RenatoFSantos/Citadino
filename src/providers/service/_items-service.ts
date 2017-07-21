@@ -101,4 +101,12 @@ export class ItemsService {
         var result = lodash.last(array);
         return <T><any>result;
     }
+
+       /*
+        retorna o primeiro elemento
+    */
+    getFirstElement<T>(array: Array<T>): T {
+        var result = lodash.first(array);
+        return <T><any>result;
+    }
 }
