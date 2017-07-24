@@ -22,8 +22,8 @@ import {
 import { SplashScreen, } from '@ionic-native/splash-screen';
 import { StatusBar } from '@ionic-native/status-bar';
 import * as enums from './../model/dominio/ctdEnum';
-import { Deploy } from '@ionic/cloud-angular';
-import { Push, PushToken } from '@ionic/cloud-angular';
+// import { Deploy } from '@ionic/cloud-angular';
+// import { Push, PushToken } from '@ionic/cloud-angular';
 
 declare var window: any;
 
@@ -54,22 +54,21 @@ export class MyApp implements OnInit {
     private toastCtrl: ToastController,
     private globalVar: GlobalVar,
     private app: App,
-    private deploy: Deploy,
+    // private deploy: Deploy,
     private loadingCtrl: LoadingController,
-    private push: Push) {
+    // private push: Push
+  ) {
 
     this.platform.ready().then(() => {
       this.checkFirebase();
       this.statusBar.styleDefault();
-      this.userLoggedEvent();
-      this.mensagemNovaEvent();
 
       if (window.cordova) {
         this.netService.initializeNetworkEvents();
         this.networkDisconnectEvent();
         this.networkConnectionEvent();
-        this.checkForUpdate();
-
+        this.appStateEvent();
+        // this.checkForUpdate();
         //Inicializa o servico do sqlLite
         // this.sqService.InitDatabase();
       }
@@ -77,7 +76,10 @@ export class MyApp implements OnInit {
   }
 
   ngOnInit() {
-   }
+    this.userLoggedEvent();
+    this.mensagemNovaEvent();
+  }
+   
 
   checkFirebase() {
     let self = this;
@@ -93,6 +95,7 @@ export class MyApp implements OnInit {
           self.splashScreen.hide();
           self.rootPage = LoginPage;
           self.fbService.goOffline();
+          this.createAlert('Desculpe, no momento estamos fazendo a manutenção em nosso servidor. Tente mais tarde!');
         }
       }, 1000);
     }
@@ -335,39 +338,59 @@ export class MyApp implements OnInit {
     }
   }
 
-  checkForUpdate() {
-    const checking = this.loadingCtrl.create({
-      content: 'Verificando atualizações...'
+  // checkForUpdate() {
+  //   const checking = this.loadingCtrl.create({
+  //     content: 'Verificando atualizações...'
+  //   });
+  //   checking.present();
+
+  //   this.deploy.check().then((snapshotAvailable: boolean) => {
+  //     checking.dismiss();
+  //     if (snapshotAvailable) {
+
+  //       this.deploy.getSnapshots().then((snapshots) => {
+  //         console.log('Snapshots', snapshots);
+  //         this.deploy.info().then((x) => {
+  //           console.log('Current snapshot infos', x);
+  //           for (let suuid of snapshots) {
+  //             if (suuid !== x.deploy_uuid) {
+  //               this.deploy.deleteSnapshot(suuid);
+  //             }
+  //           }
+  //         })
+  //       });
+
+  //       this.downloadAndInstall();
+  //     }
+  //   });
+  // }
+
+  // private downloadAndInstall() {
+  //   const updating = this.loadingCtrl.create({
+  //     content: 'Atualizando a aplicação.'
+  //   });
+  //   updating.present();
+  //   this.deploy.download().then(() => this.deploy.extract()).then(() => this.deploy.load());
+  // }
+
+  createAlert(errorMessage: string) {
+    let toast = this.toastCtrl.create({
+      message: errorMessage,
+      duration: 4000,
+      position: 'top'
     });
-    checking.present();
 
-    this.deploy.check().then((snapshotAvailable: boolean) => {
-      checking.dismiss();
-      if (snapshotAvailable) {
-
-        this.deploy.getSnapshots().then((snapshots) => {
-          console.log('Snapshots', snapshots);
-          this.deploy.info().then((x) => {
-            console.log('Current snapshot infos', x);
-            for (let suuid of snapshots) {
-              if (suuid !== x.deploy_uuid) {
-                this.deploy.deleteSnapshot(suuid);
-              }
-            }
-          })
-        });
-
-        this.downloadAndInstall();
-      }
-    });
+    toast.present();
   }
 
-  private downloadAndInstall() {
-    const updating = this.loadingCtrl.create({
-      content: 'Atualizando a aplicação.'
-    });
-    updating.present();
-    this.deploy.download().then(() => this.deploy.extract()).then(() => this.deploy.load());
-  }
+  appStateEvent() {
+    document.addEventListener("pause", () => {
+      this.fbService.goOffline();
+    }, false);
 
+    document.addEventListener("resume", () => {
+      this.fbService.goOnline(); 
+    }, false);
+
+  }
 }

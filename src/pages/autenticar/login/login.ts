@@ -4,7 +4,6 @@ import { UsuarioService } from './../../../providers/service/usuario-service';
 import { NetworkService } from './../../../providers/service/network-service';
 import { GlobalVar } from './../../../shared/global-var';
 import { UserCredentials } from './../../../shared/interfaces';
-import { HomeLoginPage } from './../homeLogin';
 import { NavController, Events, LoadingController, ToastController } from 'ionic-angular';
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators, AbstractControl } from '@angular/forms';

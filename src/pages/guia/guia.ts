@@ -5,7 +5,6 @@ import { GuiaListaPage } from './../guia-lista/guia-lista';
 import { Component, OnInit } from '@angular/core';
 import { NavController, LoadingController } from 'ionic-angular';
 
-
 @Component({
   selector: 'page-guia',
   templateUrl: 'guia.html'
