@@ -46,18 +46,6 @@ export const firebaseConfig = {
 const cloudSettings: CloudSettings = {
   'core': {
     'app_id': 'cf159870'
-  },
-  'push': {
-    'sender_id': '180769307423',
-    'pluginConfig': {
-      'ios': {
-        'badge': true,
-        'sound': true
-      },
-      'android': {
-        'iconColor': '#343434'
-      }
-    }
   }
 };
 
