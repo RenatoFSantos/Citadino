@@ -60,7 +60,6 @@ export class MyApp implements OnInit {
   ) {
 
     this.platform.ready().then(() => {
-      this.checkFirebase();
       this.statusBar.styleDefault();
 
       if (window.cordova) {
@@ -72,14 +71,18 @@ export class MyApp implements OnInit {
         //Inicializa o servico do sqlLite
         // this.sqService.InitDatabase();
       }
+
+
     });
   }
 
   ngOnInit() {
+    this.checkFirebase();
+    
     this.userLoggedEvent();
     this.mensagemNovaEvent();
   }
-   
+
 
   checkFirebase() {
     let self = this;
@@ -109,28 +112,29 @@ export class MyApp implements OnInit {
           if (userRef != null) {
             self.popularMenu(true);
             self.userLogged = userRef.val();
+            self.splashScreen.hide();
+            
             if (self.userLogged.usua_in_ajuda == true) {
-              // self.rootPage = TabsPage;
-              this.app.getRootNav().setRoot(TabsPage);
+              self.rootPage = TabsPage;
+              // this.app.getRootNav().setRoot(TabsPage);
               // this.app.getActiveNavs()[0].setRoot(TabsPage);
             }
             else {
-              // self.rootPage = AjudaPage;
-              this.app.getRootNav().setRoot(AjudaPage);
+              self.rootPage = AjudaPage;
+              // this.app.getRootNav().setRoot(AjudaPage);
               // this.app.getActiveNavs()[0].setRoot(AjudaPage);
             }
-            self.splashScreen.hide();
           }
           else {
-            // self.rootPage = HomeLoginPage;
-            this.app.getRootNav().setRoot(LoginPage);
+            self.rootPage = LoginPage;
+            // this.app.getRootNav().setRoot(LoginPage);
             // this.app.getActiveNavs()[0].setRoot(LoginPage);
             self.splashScreen.hide();
           }
         });
       } else {
-        // self.rootPage = HomeLoginPage;
-        this.app.getRootNav().setRoot(LoginPage);
+        self.rootPage = LoginPage;
+        // this.app.getRootNav().setRoot(LoginPage);
         // this.app.getActiveNavs()[0].setRoot(LoginPage);
         self.splashScreen.hide();
       }
@@ -145,7 +149,7 @@ export class MyApp implements OnInit {
         self.netService.closeStatusConnection();
         self.fbService.goOnline();
         self.firebaseConnectionAttempts = 0;
-        this.checkFirebase();
+        // this.checkFirebase();
       }, 4000);
     });
   }
@@ -174,24 +178,24 @@ export class MyApp implements OnInit {
               self.popularMenu(true);
               self.userLogged = userRef.val();
               if (self.userLogged.usua_in_ajuda == true) {
-                // self.rootPage = TabsPage;
-                this.app.getRootNav().setRoot(TabsPage);
+                self.rootPage = TabsPage;
+                // this.app.getRootNav().setRoot(TabsPage);
                 // this.app.getActiveNavs()[0].setRoot(TabsPage);
               }
               else {
-                // self.rootPage = AjudaPage;
-                this.app.getRootNav().setRoot(AjudaPage);
+                self.rootPage = AjudaPage;
+                // this.app.getRootNav().setRoot(AjudaPage);
                 // this.app.getActiveNavs()[0].setRoot(AjudaPage);
               }
             } else {
-              // self.nav.setRoot(HomeLoginPage);
-              this.app.getRootNav().setRoot(LoginPage);
+              self.nav.setRoot(LoginPage);
+              // this.app.getRootNav().setRoot(LoginPage);
               // this.app.getActiveNavs()[0].setRoot(LoginPage);
             }
           });
         } else {
-          // self.nav.setRoot(HomeLoginPage);
-          this.app.getRootNav().setRoot(LoginPage);
+          // self.nav.setRoot(LoginPage);
+          // this.app.getRootNav().setRoot(LoginPage);
           // this.app.getActiveNavs()[0].setRoot(LoginPage);
         }
       } else {
@@ -389,7 +393,7 @@ export class MyApp implements OnInit {
     }, false);
 
     document.addEventListener("resume", () => {
-      this.fbService.goOnline(); 
+      this.fbService.goOnline();
     }, false);
 
   }
