@@ -1,3 +1,4 @@
+import { Events } from 'ionic-angular';
 import { GlobalVar } from './../../shared/global-var';
 import { Injectable } from '@angular/core';
 
@@ -9,7 +10,8 @@ export class FirebaseService {
   private storageRef: any;
   private connectionRef: any;
 
-  constructor(public globalVar: GlobalVar) {
+  constructor(private globalVar: GlobalVar,
+              private eventCtrl: Events) {
     var self = this;
     try 
     {
@@ -29,9 +31,11 @@ export class FirebaseService {
       var connectedRef = self.getConnectionRef();
       connectedRef.on('value', (snap) => {
         if (snap.val() === true) {
+            this.eventCtrl.publish('firebase:connected');
             self.globalVar.setIsFirebaseConnected(true); 
             console.log("conectado");      
         } else {
+          this.eventCtrl.publish('firebase:desconectado');
           self.globalVar.setIsFirebaseConnected(false);          
           console.log("desconectado");
         }
