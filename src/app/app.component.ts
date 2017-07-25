@@ -9,7 +9,6 @@ import { NetworkService } from './../providers/service/network-service';
 import { UsuarioVO } from './../model/usuarioVO';
 import { IMenu } from './../shared/interfaces';
 import { FirebaseService } from './../providers/database/firebase-service';
-// import { HomeLoginPage } from './../pages/autenticar/homeLogin';
 import { MensagemListaPage } from './../pages/mensagem-lista/mensagem-lista';
 import { GuiaPage } from './../pages/guia/guia';
 import { VitrinePage } from './../pages/vitrine/vitrine';
@@ -22,8 +21,6 @@ import {
 import { SplashScreen, } from '@ionic-native/splash-screen';
 import { StatusBar } from '@ionic-native/status-bar';
 import * as enums from './../model/dominio/ctdEnum';
-// import { Deploy } from '@ionic/cloud-angular';
-// import { Push, PushToken } from '@ionic/cloud-angular';
 
 declare var window: any;
 
@@ -39,6 +36,7 @@ export class MyApp implements OnInit {
   public rootPage: any;
   public firebaseConnectionAttempts: number = 0;
   public timeOutSession: any;
+  private toastAlert: any;
 
   constructor(private platform: Platform,
     private menuCtrl: MenuController,
@@ -54,9 +52,7 @@ export class MyApp implements OnInit {
     private toastCtrl: ToastController,
     private globalVar: GlobalVar,
     private app: App,
-    // private deploy: Deploy,
-    private loadingCtrl: LoadingController,
-    // private push: Push
+    private loadingCtrl: LoadingController
   ) {
 
     this.platform.ready().then(() => {
@@ -78,7 +74,6 @@ export class MyApp implements OnInit {
 
   ngOnInit() {
     this.checkFirebase();
-    
     this.userLoggedEvent();
     this.mensagemNovaEvent();
   }
@@ -86,10 +81,9 @@ export class MyApp implements OnInit {
 
   checkFirebase() {
     let self = this;
-    console.log(`firebase status ${self.globalVar.getIsFirebaseConnected()}`);
+
     if (!self.globalVar.getIsFirebaseConnected()) {
       setTimeout(function () {
-        console.log(`firebase status ${self.firebaseConnectionAttempts}`)
         self.firebaseConnectionAttempts++;
         if (self.firebaseConnectionAttempts < 10) {
           console.log(self.firebaseConnectionAttempts);
@@ -104,16 +98,13 @@ export class MyApp implements OnInit {
     }
     else {
       let userCurrent = self.usuaSrv.getLoggedInUser();
-      console.log(`Usercurrent ${userCurrent}`);
       if (userCurrent != null) {
-        this.msgSrv.addMensagemEvent();
         self.usuaSrv.getUserDetail(userCurrent.uid).then((userRef) => {
-          console.log(`userRef  ${userCurrent}`);
           if (userRef != null) {
             self.popularMenu(true);
             self.userLogged = userRef.val();
             self.splashScreen.hide();
-            
+
             if (self.userLogged.usua_in_ajuda == true) {
               self.rootPage = TabsPage;
               // this.app.getRootNav().setRoot(TabsPage);
@@ -124,6 +115,8 @@ export class MyApp implements OnInit {
               // this.app.getRootNav().setRoot(AjudaPage);
               // this.app.getActiveNavs()[0].setRoot(AjudaPage);
             }
+
+            this.msgSrv.addMensagemEvent();
           }
           else {
             self.rootPage = LoginPage;
@@ -167,41 +160,40 @@ export class MyApp implements OnInit {
   userLoggedEvent() {
     var self = this;
     self.events.subscribe('usuario:logado', (isFirebase, data) => {
-      console.log("Usuario Criado");
-      console.log(`status firebase ${isFirebase}`);
-      if (isFirebase) {
+      if (isFirebase == true) {
         let userCurrent = self.usuaSrv.getLoggedInUser();
-        console.log(`Usuario Corrente ${userCurrent}`);
         if (userCurrent != null) {
           self.usuaSrv.getUserDetail(userCurrent.uid).then((userRef) => {
             if (userRef != null) {
               self.popularMenu(true);
               self.userLogged = userRef.val();
               if (self.userLogged.usua_in_ajuda == true) {
-                self.rootPage = TabsPage;
-                // this.app.getRootNav().setRoot(TabsPage);
+                // self.rootPage = TabsPage;
+                this.app.getRootNav().setRoot(TabsPage);
                 // this.app.getActiveNavs()[0].setRoot(TabsPage);
               }
               else {
-                self.rootPage = AjudaPage;
-                // this.app.getRootNav().setRoot(AjudaPage);
+                // self.rootPage = AjudaPage;
+                this.app.getRootNav().setRoot(AjudaPage);
                 // this.app.getActiveNavs()[0].setRoot(AjudaPage);
               }
             } else {
-              self.nav.setRoot(LoginPage);
-              // this.app.getRootNav().setRoot(LoginPage);
+              // self.nav.setRoot(LoginPage);
+              this.app.getRootNav().setRoot(LoginPage);
               // this.app.getActiveNavs()[0].setRoot(LoginPage);
             }
           });
         } else {
-          // self.nav.setRoot(LoginPage);
-          // this.app.getRootNav().setRoot(LoginPage);
+          self.nav.setRoot(LoginPage);
+          this.app.getRootNav().setRoot(LoginPage);
           // this.app.getActiveNavs()[0].setRoot(LoginPage);
         }
       } else {
-        self.popularMenu(true);
-        self.userLogged = this.preencherObjetoUsuario(data);
-        self.nav.setRoot(TabsPage);
+        // self.popularMenu(true);
+        // self.userLogged = this.preencherObjetoUsuario(data);
+        // self.nav.setRoot(TabsPage);
+        self.nav.setRoot(LoginPage);
+        this.app.getRootNav().setRoot(LoginPage);
       }
     });
   }
@@ -378,13 +370,18 @@ export class MyApp implements OnInit {
   // }
 
   createAlert(errorMessage: string) {
-    let toast = this.toastCtrl.create({
+
+    if (this.toastAlert != null) {
+      this.toastAlert.dismiss();
+    }
+
+    this.toastAlert = this.toastCtrl.create({
       message: errorMessage,
-      duration: 4000,
+      duration: 3000,
       position: 'top'
     });
 
-    toast.present();
+    this.toastAlert.present();
   }
 
   appStateEvent() {

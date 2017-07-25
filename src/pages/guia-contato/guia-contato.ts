@@ -15,6 +15,7 @@ export class GuiaContatoPage {
 
   public empresa: EmpresaVO = null;
   public exibirBtnEnviarMensagem:boolean = false;
+  public toastAlert:any;
 
   constructor(private navParams: NavParams,
     private viewCtrl: ViewController,
@@ -105,13 +106,18 @@ public verificarStatusBtnMensagem() {
   }
 
   createAlert(errorMessage: string) {
-    let toast = this.toastCtrl.create({
+
+    if (this.toastAlert != null) {
+      this.toastAlert.dismiss();
+    }
+
+    this.toastAlert = this.toastCtrl.create({
       message: errorMessage,
-      duration: 4000,
+      duration: 3000,
       position: 'top'
     });
 
-    toast.present();
+    this.toastAlert.present();
   }
 
   dismiss() {

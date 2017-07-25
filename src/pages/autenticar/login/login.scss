@@ -16,7 +16,7 @@ page-login {
                 vertical-align: middle;
 
                 .header {
-                    padding-bottom: 20px;
+                    padding-bottom: 10px;
 
                     img {
                     display: block;
@@ -49,10 +49,14 @@ page-login {
                     margin: 5px !important;
                 }
 
-                .btnEnviarSenha {                   
+                .btnEnviarSenha {
+                    width: 250px !important;                   
                     color: #387ef5 !important;
                     background: transparent !important;
                     border-color: transparent !important;
+                    .item-inner {
+                        border: 0px  solid #1c2627 !important;
+                    }
                 }
 
             }
@@ -61,8 +65,8 @@ page-login {
 
     .item-inner {
         margin-left: 2px !important;
-    }
-
+    }    
+  
     .button-md {
         width: 120px !important;
     }

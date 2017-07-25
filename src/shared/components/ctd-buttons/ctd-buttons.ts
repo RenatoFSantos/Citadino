@@ -27,6 +27,7 @@ export class CtdButtonsComponent {
   @Input()
   public vitrine: VitrineVO = null;
 
+  private toastAlert:any;
   constructor(private emprSrv: EmpresaService,
     private smartSrv: SmartSiteService,
     private navCtrl: NavController,
@@ -81,12 +82,17 @@ export class CtdButtonsComponent {
   }
 
   createAlert(errorMessage: string) {
-    let toast = this.toastCtrl.create({
+
+    if (this.toastAlert != null) {
+      this.toastAlert.dismiss();
+    }
+
+    this.toastAlert = this.toastCtrl.create({
       message: errorMessage,
-      duration: 4000,
+      duration: 3000,
       position: 'top'
     });
 
-    toast.present();
+    this.toastAlert.present();
   }
 }
