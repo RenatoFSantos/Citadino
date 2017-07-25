@@ -27,6 +27,7 @@ export class EmpresaVO {
     public empr_nr_reputacao: number;
     public empr_in_mensagem: boolean;
     public empr_in_parceiro:boolean;
+    public empr_tx_subcategoria:string;
     public categoria: CategoriaVO;
     public plano: PlanoVO;
     public isIndexNome:boolean; 
@@ -57,6 +58,7 @@ export class EmpresaVO {
         this.empr_nr_reputacao= 0;
         this.empr_in_mensagem = true;
         this.empr_in_parceiro = false;
+        this.empr_tx_subcategoria = '';
         this.categoria = new CategoriaVO();
         this.plano = new PlanoVO();
         this.isIndexNome = false; 
