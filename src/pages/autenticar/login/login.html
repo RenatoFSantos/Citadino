@@ -3,7 +3,7 @@
         <img class="icocit" src="assets/img/icon.png" />
         <ion-title class="citadino">
             CITADINO
-        </ion-title>       
+        </ion-title>
     </ion-navbar>
 </ion-header>
 <ion-content id="login">
@@ -12,8 +12,8 @@
             <ion-col width-100></ion-col>
         </ion-row>
         <ion-row>
-            <ion-col width-100 >
-                <ion-item [class.error]="!email.valid && email.touched"class="inputEmail">
+            <ion-col width-100>
+                <ion-item [class.error]="!email.valid && email.touched" class="inputEmail">
                     <ion-label class="labelEmail">
                         <ion-icon name="md-mail"></ion-icon>
                     </ion-label>
@@ -35,28 +35,35 @@
         </ion-row>
         <ion-row>
             <ion-col width-20></ion-col>
-            <ion-col width-30>
+            <ion-col width-60 no-padding>
                 <div>
-                    <button ion-button type="submit" class="custom-button" [disabled]="!loginForm.valid" block>Entrar</button><br/>
+                    <button no-padding ion-button type="submit" class="custom-button" [disabled]="!loginForm.valid" block>Acessar</button><br/>
                 </div>
-            </ion-col>
-            <ion-col width-30>
-                <div>
-                    <button ion-button class="custom-button" block (click)="criarConta()">Cadastrar</button><br/>
-                </div>
-            </ion-col>
+            </ion-col>           
             <ion-col width-20></ion-col>
         </ion-row>
-        <ion-row>
-            <ion-col width-25>
+        <ion-row style="height: 35px;">
+            <ion-col width-10 no-padding>
             </ion-col>
-            <ion-col width-50>
-                <button ion-item clear outline class="btnEnviarSenha" (click)="enviarSenha()">
-                <ion-icon name="md-help-circle" item-start></ion-icon>
+            <ion-col width-80 no-padding>
+                <button ion-item clear no-padding margin-left class="btnEnviarSenha" (click)="criarConta()">
+                <ion-icon name="ios-contact" item-start no-padding no-margin></ion-icon>
+                    Criar uma conta Citadino
+                </button>
+            </ion-col>
+            <ion-col width-10 no-padding>
+            </ion-col>
+        </ion-row>
+        <ion-row style="height: 35px;">
+            <ion-col width-10 no-padding>
+            </ion-col>
+            <ion-col width-80 no-padding>
+                <button ion-item clear no-padding margin-left class="btnEnviarSenha" (click)="enviarSenha()">
+                <ion-icon name="md-help-circle" item-start no-padding no-margin></ion-icon>
                     Esqueceu sua senha ?
                 </button>
             </ion-col>
-            <ion-col width-25>
+            <ion-col width-10 no-padding>
             </ion-col>
         </ion-row>
     </form>

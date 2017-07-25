@@ -28,6 +28,7 @@ export class VitrinePage implements OnInit {
   private rowCurrent: number = 0;
   private loading: boolean = false;
   private loadCtrl: any;
+  private toastAlert:any;
 
   private vitrines: Array<VitrineVO> = [];
   private newVitrines: Array<VitrineVO> = [];
@@ -255,13 +256,17 @@ export class VitrinePage implements OnInit {
 
 
   createAlert(errorMessage: string) {
-    let toast = this.toastCtrl.create({
+    if (this.toastAlert != null) {
+      this.toastAlert.dismiss();
+    }
+
+    this.toastAlert = this.toastCtrl.create({
       message: errorMessage,
       duration: 4000,
       position: 'top'
     });
 
-    toast.present();
+    this.toastAlert.present();
   }
 
 

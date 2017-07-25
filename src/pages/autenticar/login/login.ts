@@ -20,6 +20,7 @@ export class LoginPage implements OnInit {
   password: AbstractControl;
 
   private loading: any;
+  private toastAlert: any;
 
   constructor(private nav: NavController,
     private loadingCtrl: LoadingController,
@@ -56,7 +57,6 @@ export class LoginPage implements OnInit {
 
   onSubmit(signInForm: any): any {
     var self = this;
-    console.log("status + " + self.globalVar.getIsFirebaseConnected());
     if (self.loginForm.valid) {
 
       this.loading = self.loadingCtrl.create({
@@ -81,10 +81,9 @@ export class LoginPage implements OnInit {
       if (resultFindUser != null) {
         resultFindUser.then(
           (data: any) => {
-            console.log("obj data " + data);
             if (data != null) {
-              self.event.publish('usuario:logado', self.globalVar.getIsFirebaseConnected(), data);
               this.loading.dismiss();
+              self.event.publish('usuario:logado', self.globalVar.getIsFirebaseConnected(), data);
             } else {
               this.createAlert("Usuário não encontrado");
             }
@@ -110,13 +109,19 @@ export class LoginPage implements OnInit {
   }
 
   createAlert(errorMessage: string) {
-    let toast = this.toastCtrl.create({
+
+    if (this.toastAlert != null) {
+      this.toastAlert.dismiss();
+    }
+
+    this.toastAlert = this.toastCtrl.create({
       message: errorMessage,
-      duration: 4000,
-      position: 'top'
+      duration: 3000,
+      position: 'top',
+      dismissOnPageChange: true
     });
 
-    toast.present();
+    this.toastAlert.present();
   }
 
   enviarSenha(): Promise<boolean> {

@@ -14,6 +14,9 @@
                     <img src="{{item.empr_tx_logomarca}}">
                 </ion-avatar>
                 <h2>{{item.empr_nm_razaosocial}}</h2>
+                <div *ngIf="item.empr_tx_subcategoria != '' && item.empr_tx_subcategoria != null">
+                <h3>({{item.empr_tx_subcategoria}})</h3>
+                </div>
                 <p>{{item.empr_tx_endereco}}<br>{{item.empr_tx_telefone_1}}</p>
             </div>
         </ion-item>
