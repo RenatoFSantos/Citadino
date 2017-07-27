@@ -106,29 +106,29 @@ export class MyApp implements OnInit {
             self.splashScreen.hide();
 
             if (self.userLogged.usua_in_ajuda == true) {
-              self.rootPage = TabsPage;
+              // self.rootPage = TabsPage;
               // this.app.getRootNav().setRoot(TabsPage);
-              // this.app.getActiveNavs()[0].setRoot(TabsPage);
+              this.app.getActiveNavs()[0].setRoot(TabsPage);
             }
             else {
-              self.rootPage = AjudaPage;
+              // self.rootPage = AjudaPage;
               // this.app.getRootNav().setRoot(AjudaPage);
-              // this.app.getActiveNavs()[0].setRoot(AjudaPage);
+              this.app.getActiveNavs()[0].setRoot(AjudaPage);
             }
 
             this.msgSrv.addMensagemEvent();
           }
           else {
-            self.rootPage = LoginPage;
+            // self.rootPage = LoginPage;
             // this.app.getRootNav().setRoot(LoginPage);
-            // this.app.getActiveNavs()[0].setRoot(LoginPage);
+            this.app.getActiveNavs()[0].setRoot(LoginPage);
             self.splashScreen.hide();
           }
         });
       } else {
-        self.rootPage = LoginPage;
+        // self.rootPage = LoginPage;
         // this.app.getRootNav().setRoot(LoginPage);
-        // this.app.getActiveNavs()[0].setRoot(LoginPage);
+        this.app.getActiveNavs()[0].setRoot(LoginPage);
         self.splashScreen.hide();
       }
     }
@@ -169,31 +169,32 @@ export class MyApp implements OnInit {
               self.userLogged = userRef.val();
               if (self.userLogged.usua_in_ajuda == true) {
                 // self.rootPage = TabsPage;
-                this.app.getRootNav().setRoot(TabsPage);
-                // this.app.getActiveNavs()[0].setRoot(TabsPage);
+                // this.app.getRootNav().setRoot(TabsPage);
+                this.app.getActiveNavs()[0].setRoot(TabsPage);
               }
               else {
                 // self.rootPage = AjudaPage;
-                this.app.getRootNav().setRoot(AjudaPage);
-                // this.app.getActiveNavs()[0].setRoot(AjudaPage);
+                // this.app.getRootNav().setRoot(AjudaPage);
+                this.app.getActiveNavs()[0].setRoot(AjudaPage);
               }
             } else {
               // self.nav.setRoot(LoginPage);
-              this.app.getRootNav().setRoot(LoginPage);
-              // this.app.getActiveNavs()[0].setRoot(LoginPage);
+              // this.app.getRootNav().setRoot(LoginPage);
+              this.app.getActiveNavs()[0].setRoot(LoginPage);
             }
           });
         } else {
-          self.nav.setRoot(LoginPage);
-          this.app.getRootNav().setRoot(LoginPage);
-          // this.app.getActiveNavs()[0].setRoot(LoginPage);
+          // self.nav.setRoot(LoginPage);
+          // this.app.getRootNav().setRoot(LoginPage);
+          this.app.getActiveNavs()[0].setRoot(LoginPage);
         }
       } else {
         // self.popularMenu(true);
         // self.userLogged = this.preencherObjetoUsuario(data);
         // self.nav.setRoot(TabsPage);
-        self.nav.setRoot(LoginPage);
-        this.app.getRootNav().setRoot(LoginPage);
+        // self.nav.setRoot(LoginPage);
+        // this.app.getRootNav().setRoot(LoginPage);
+        this.app.getActiveNavs()[0].setRoot(LoginPage);
       }
     });
   }

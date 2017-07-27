@@ -109,4 +109,13 @@ export class ItemsService {
         var result = lodash.first(array);
         return <T><any>result;
     }
+
+
+     /*
+        Ordena a colleçao
+    */
+    orderBy<T>(array: Array<T>,field:string[],orders:string[]): T {
+        var result = lodash.orderBy(array, field, orders);
+        return <T><any>result;
+    }
 }

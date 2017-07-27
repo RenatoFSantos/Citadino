@@ -96,9 +96,9 @@ export class VitrinePage implements OnInit {
     this.netService.getStatusConnection();
   }
 
-  ionViewDidLeave() {
-    this.netService.closeStatusConnection();
-  }
+  // ionViewDidLeave() {
+  //   this.netService.closeStatusConnection();
+  // }
 
   ngOnInit() {
   }

@@ -44,6 +44,14 @@ ion-toolbar {
     background-color: #3F5765;
 }
 
+.menu-inner {
+    width: 268px!important;
+    
+}
+ion-backdrop {
+    height: 0px !important;
+}
+
 .midilabs {
     color: #fff;
     font-variant: small-caps; 

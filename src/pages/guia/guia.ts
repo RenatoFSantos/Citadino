@@ -1,3 +1,7 @@
+import { GlobalVar } from './../../shared/global-var';
+import { NetworkService } from './../../providers/service/network-service';
+import { ItemsService } from './../../providers/service/_items-service';
+import { EmpresaVO } from './../../model/empresaVO';
 import { FormControl } from '@angular/forms';
 import { CategoriaVO } from './../../model/categoriaVO';
 import { GuiaService } from './../../providers/service/guia-service';
@@ -12,7 +16,7 @@ import { NavController, LoadingController } from 'ionic-angular';
 export class GuiaPage implements OnInit {
 
   public categorias: any = [];
-  private descritores: any = [];
+  public empresas: any = [];
   public searchDescritor: string = '';
   public searchControl: FormControl;
   public searching: any = false;
@@ -21,20 +25,34 @@ export class GuiaPage implements OnInit {
 
   constructor(public navCtrl: NavController,
     public guiaSrv: GuiaService,
-    public loadingCtrl: LoadingController) {
+    public loadingCtrl: LoadingController,
+    private itemSrv: ItemsService,
+    private netService: NetworkService,
+    private globalVar: GlobalVar) {
     this.searchControl = new FormControl();
+
   }
 
   ngOnInit() {
-
-    this.loadCtrl = this.loadingCtrl.create({
-      spinner: 'circles'
-    });
-
-    this.loadCtrl.present();
-
+    console.log('ngOnInit');
     this.getLoadCategorias();
+
   }
+
+  ionViewWillEnter() {
+    console.log('ionViewWillEnter');
+    this.netService.getStatusConnection();
+
+    if (this.categorias != null && this.categorias.length == 0) {
+      this.getLoadCategorias();
+    }
+
+  }
+
+  // ionViewDidLeave() {
+  //   console.log('ionViewDidLeave');
+  //   this.netService.closeStatusConnection();
+  // }
 
   ionViewDidLoad() {
     let self = this;
@@ -43,7 +61,7 @@ export class GuiaPage implements OnInit {
       .distinctUntilChanged()
       .map(v => v.toLowerCase().trim())
       .subscribe(value => {
-        self.descritores = []
+        self.empresas = []
         this.searching = false;
         if (value != "") {
 
@@ -57,12 +75,30 @@ export class GuiaPage implements OnInit {
           this.guiaSrv.getDescritorPorNome(value).then(snapShot => {
             if (snapShot != null && snapShot.numChildren() > 0) {
               snapShot.forEach(element => {
-                self.descritores.push(element.val())
+                if (element.val() != null && element.val().empresa != null) {
+                  let itensEmpresas: any = Object.keys(element.val().empresa);
+
+                  itensEmpresas.forEach(item => {
+                    let pkVitrine: string = item;
+
+                    if (self.empresas != null && self.empresas.length > 0) {
+                      let exist: boolean = self.empresas.some(campo =>
+                        campo.empr_sq_id == pkVitrine);
+
+                      if (!exist) {
+                        self.empresas.push(element.val().empresa[item]);
+                      }
+                    } else {
+                      self.empresas.push(element.val().empresa[item]);
+                    }
+                    self.empresas = this.itemSrv.orderBy(self.empresas, ['empr_nm_razaosocial'], ['asc'])
+                  });
+                }
               });
             }
-            if (self.descritores.length == 0) {
+            if (self.empresas.length == 0) {
               this.descritorEnable = false;
-              self.descritores = [];
+              self.empresas = [];
             }
             else {
               this.descritorEnable = true;
@@ -72,7 +108,7 @@ export class GuiaPage implements OnInit {
           });
         }
         else {
-          self.descritores = [];
+          self.empresas = [];
           this.descritorEnable = false;
         }
       });
@@ -84,42 +120,54 @@ export class GuiaPage implements OnInit {
 
   public onCleanInput() {
     this.searching = true;
-    this.descritores = [];
+    this.empresas = [];
   }
 
   private getLoadCategorias() {
-    let listaCategorias: Array<CategoriaVO> = [];
 
-    this.guiaSrv.getCategorias().then((snapShot) => {
-      snapShot.forEach(element => {
-        listaCategorias.push(element.val());
+    if (this.loadCtrl != null) {
+      this.loadCtrl.dismiss();
+    }
+    
+    if (this.globalVar.getIsFirebaseConnected()) {
+      this.loadCtrl = this.loadingCtrl.create({
+        spinner: 'circles'
       });
 
-      let length = listaCategorias.length;
+      this.loadCtrl.present();
 
-      for (let i = 0; i < length; i += 3) {
-        let item: Array<CategoriaVO> = [];
-        item.push(listaCategorias[i]);
+      let listaCategorias: Array<CategoriaVO> = [];
 
-        if (i + 1 < length) {
-          item.push(listaCategorias[i + 1]);
+      this.guiaSrv.getCategorias().then((snapShot) => {
+        snapShot.forEach(element => {
+          listaCategorias.push(element.val());
+        });
+
+        let length = listaCategorias.length;
+
+        for (let i = 0; i < length; i += 3) {
+          let item: Array<CategoriaVO> = [];
+          item.push(listaCategorias[i]);
+
+          if (i + 1 < length) {
+            item.push(listaCategorias[i + 1]);
+          }
+
+          if (i + 2 < length) {
+            item.push(listaCategorias[i + 2]);
+          }
+
+          for (let i = 0; i <= (3 - item.length); i++) {
+            let categoria: Array<CategoriaVO> = [];
+            let item = new CategoriaVO();
+            categoria.push(item);
+          }
+
+          this.categorias.push(item);
         }
-
-        if (i + 2 < length) {
-          item.push(listaCategorias[i + 2]);
-        }
-
-        for (let i = 0; i <= (3 - item.length); i++) {
-          let categoria: Array<CategoriaVO> = [];
-          let item = new CategoriaVO();
-          categoria.push(item);
-        }
-
-        this.categorias.push(item);
-      }
-
+      });
       this.loadCtrl.dismiss();
-    });
+    }
   }
 
 
@@ -148,16 +196,18 @@ export class GuiaPage implements OnInit {
 
     loader.present();
     let empresaskey: any = [];
-    this.guiaSrv.getEmpresaByDescritor(descritorKey).then((snapShot) => {
-      snapShot.forEach(element => {
-        empresaskey.push(element.key);
-      });
-      
-      loader.dismiss();
-      if (empresaskey.length > 0) {
-        this.navCtrl.push(GuiaListaPage, { categNm: descritorNm, emprKeys: empresaskey })
-      }
-    });
+    empresaskey.push(descritorKey)
+    this.navCtrl.push(GuiaListaPage, { categNm: descritorNm, emprKeys: empresaskey })
+    // this.guiaSrv.getEmpresaByDescritor(descritorKey).then((snapShot) => {
+    //   snapShot.forEach(element => {
+    //     empresaskey.push(element.key);
+    //   });
+
+    //   loader.dismiss();
+    //   if (empresaskey.length > 0) {
+    // this.navCtrl.push(GuiaListaPage, { categNm: descritorNm, emprKeys: empresaskey })
+    // }
+    // });
   }
 
 }

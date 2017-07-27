@@ -8,7 +8,7 @@
     <!--<ion-item-group>-->
     <ion-list>
         <ion-item-sliding *ngFor="let item of mensagens">
-            <ion-item (click)="openMensagemPage(item)">
+            <ion-item (click)="openMensagemPage(item)" *ngIf="item.usua_sq_id_from != '999999999999'">
                 <ion-avatar item-left *ngIf="item.mens_tx_logo_enviado != ''">
                     <img src="{{item.mens_tx_logo_enviado}}">
                 </ion-avatar>
@@ -17,8 +17,11 @@
                      <ion-icon md="md-mail"></ion-icon>
                 </button>
             </ion-item>
+            <ion-item *ngIf="item.usua_sq_id_from == '999999999999'">
+                <h2>{{item.mens_nm_enviado}}</h2>
+            </ion-item>
 
-            <ion-item-options side="right">
+            <ion-item-options side="right" *ngIf="item.usua_sq_id_from != '999999999999'">
                 <button ion-button (click)="removeMensagem(item.usua_sq_id_to)">
                     <ion-icon md="md-remove-circle"></ion-icon>
                 </button>
