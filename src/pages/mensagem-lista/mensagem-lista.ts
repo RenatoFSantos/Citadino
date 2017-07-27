@@ -1,3 +1,4 @@
+import { NetworkService } from './../../providers/service/network-service';
 import { MensagemPage } from './../mensagem/mensagem';
 import { MensagemService } from './../../providers/service/mensagem-service';
 import { UsuarioVO } from './../../model/usuarioVO';
@@ -19,14 +20,20 @@ export class MensagemListaPage implements OnInit {
     private mdlCtrl: ModalController,
     private loadingCtrl: LoadingController,
     private events: Events,
-    private mensSrv: MensagemService) {
+    private mensSrv: MensagemService,
+    private netService: NetworkService) {
   }
 
   ionViewWillEnter() {
     this.loadMensagens();
+    this.netService.getStatusConnection();
   }
 
   ngOnInit() { }
+
+  // ionViewDidLeave() {
+  //   this.netService.closeStatusConnection();
+  // }
 
   public removeMensagem(usua_sq_id_to: string) {
     let userCurrent = this.usuaSrv.getLoggedInUser();
@@ -44,38 +51,48 @@ export class MensagemListaPage implements OnInit {
     });
 
     loader.present();
+    this.mensagens = [];
     if (this.mensagens != null && this.mensagens.length > 0) {
-      this.mensagens = [];
-    }
 
-    this.usuaSrv.getMensagens()
-      .then((users) => {
-        users.forEach(user => {
-          let mensagem: MensagemVO = new MensagemVO();
-          this.usuaSrv.getUserDetail(user.key).then((usuario) => {
-            mensagem.usua_sq_id_from = this.usuaSrv.getLoggedInUser().uid;
-            mensagem.usua_sq_id_to = usuario.val().usua_sq_id;
-            mensagem.usua_nm_usuario_to = usuario.val().usua_nm_usuario
-            mensagem.mens_nova = user.val();
+      this.usuaSrv.getMensagens()
+        .then((users) => {
+          users.forEach(user => {
+            let mensagem: MensagemVO = new MensagemVO();
+            this.usuaSrv.getUserDetail(user.key).then((usuario) => {
+              mensagem.usua_sq_id_from = this.usuaSrv.getLoggedInUser().uid;
+              mensagem.usua_sq_id_to = usuario.val().usua_sq_id;
+              mensagem.usua_nm_usuario_to = usuario.val().usua_nm_usuario
+              mensagem.mens_nova = user.val();
 
-            if (usuario.child('empresa').exists()) {
-              usuario.child('empresa').forEach(itemEmpresa => {
-                this.emprSrv.getEmpresaPorKey(
-                  itemEmpresa.key).then((empresa) => {
-                    mensagem.mens_nm_enviado = empresa.val().empr_nm_razaosocial;
-                    mensagem.mens_tx_logo_enviado = empresa.val().empr_tx_logomarca;
-                  });
-              });
-            }
-            else {
-              mensagem.mens_nm_enviado = usuario.val().usua_nm_usuario;
-              mensagem.mens_tx_logo_enviado = usuario.val().usua_tx_urlprofile;
-            }
-            this.mensagens.push(mensagem);
+              if (usuario.child('empresa').exists()) {
+                usuario.child('empresa').forEach(itemEmpresa => {
+                  this.emprSrv.getEmpresaPorKey(
+                    itemEmpresa.key).then((empresa) => {
+                      mensagem.mens_nm_enviado = empresa.val().empr_nm_razaosocial;
+                      mensagem.mens_tx_logo_enviado = empresa.val().empr_tx_logomarca;
+                    });
+                });
+              }
+              else {
+                mensagem.mens_nm_enviado = usuario.val().usua_nm_usuario;
+                mensagem.mens_tx_logo_enviado = usuario.val().usua_tx_urlprofile;
+              }
+              this.mensagens.push(mensagem);
+            });
           });
+          loader.dismiss();
         });
-        loader.dismiss();
-      });
+    } else {
+      let mensagem: MensagemVO = new MensagemVO();
+      mensagem.usua_sq_id_from = '999999999999';
+      mensagem.usua_sq_id_to = '';
+      mensagem.usua_nm_usuario_to = '';
+      mensagem.mens_nova = false;
+      mensagem.mens_nm_enviado = 'Nenhuma conversa registrada'
+      mensagem.mens_tx_logo_enviado = '';
+      this.mensagens.push(mensagem);
+      loader.dismiss();
+    }
   }
 
   openMensagemPage(mensagem: MensagemVO) {

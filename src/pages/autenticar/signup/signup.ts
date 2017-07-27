@@ -58,7 +58,7 @@ export class SignUpPage implements OnInit {
       this.newUser.usua_nm_usuario = signupForm.usua_nm_usuario;
       this.newUser.usua_ds_email = signupForm.usua_ds_email;
       this.newUser.usua_tx_senha = signupForm.usua_tx_senha;
-      this.newUser.usua_tx_urlprofile = "https://firebasestorage.googleapis.com/v0/b/citadinodsv.appspot.com/o/images%2Fprofile%2Fprofile.png?alt=media&token=95f982e8-dd2d-4d2d-a4b1-40305495b9d1";
+      this.newUser.usua_tx_urlprofile = "https://firebasestorage.googleapis.com/v0/b/citadinoprd-13651.appspot.com/o/images%2Fprofile%2Fprofile.png?alt=media&token=5aa52b8b-fbd3-41b5-978c-6fc5bccfe4a6";
       loader.present();
 
       self.loginService.registerUser(newAuth).then((result) => {

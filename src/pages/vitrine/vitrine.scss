@@ -50,11 +50,13 @@ page-vitrine {
         background-color:#e7a904 !important;
     }
 
-    ion-card ion-buttons{
+    .ctd-btn-vitrine{
         height: 30px;
         background-color: rgba(204, 204, 204, 0.59);
-        border-radius: 5px;
-        width: 102%;
-        margin-left: -2px;
+        text-align: right !important;
+        padding: 1px !important;
+        // border-radius: 5px;
+        // width: 102%;
+        // margin-left: -2px;
     }
 }

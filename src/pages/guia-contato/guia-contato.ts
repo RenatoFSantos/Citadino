@@ -102,6 +102,9 @@ public verificarStatusBtnMensagem() {
             this.exibirBtnEnviarMensagem = true;
           }         
         }
+        else {
+          this.exibirBtnEnviarMensagem = true;
+        }
       });
   }
 

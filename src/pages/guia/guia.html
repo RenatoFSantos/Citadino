@@ -23,9 +23,12 @@
 
     <div *ngIf="descritorEnable == true">
         <ion-item-group>
-            <ion-item *ngFor="let item of descritores">
-                <button ion-item (click)="openGuiaDescritor(item.desc_nm_descritor, item.desc_sq_id)">
-                {{item.desc_nm_descritor}}
+            <ion-item *ngFor="let item of empresas" class="listaDescritores">
+                <button ion-item (click)="openGuiaDescritor(item.empr_nm_razaosocial, item.empr_sq_id)">
+                    <ion-avatar item-left style="float:left" *ngIf="item.empr_tx_logomarca != null && item.empr_tx_logomarca != ''">
+                        <img class="avatar" src="{{item.empr_tx_logomarca}}" />
+                    </ion-avatar>
+                    {{item.empr_nm_razaosocial}}
                 </button>
             </ion-item>
         </ion-item-group>
