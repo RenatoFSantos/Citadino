@@ -92,7 +92,7 @@ export class MyApp implements OnInit {
           self.splashScreen.hide();
           self.rootPage = LoginPage;
           self.fbService.goOffline();
-          this.createAlert('Desculpe, no momento estamos fazendo a manutenção em nosso servidor. Tente mais tarde!');
+          self.createAlert('Desculpe, no momento estamos fazendo a manutenção em nosso servidor. Tente mais tarde!');
         }
       }, 1000);
     }
@@ -254,8 +254,8 @@ export class MyApp implements OnInit {
           params = { tabIndex: page.index };
         }
 
-        if (this.nav.getActiveChildNav() && page.index != undefined) {
-          this.nav.getActiveChildNav().select(page.index);
+        if (this.nav.getActiveChildNavs()[0] && page.index != undefined) {
+          this.nav.getActiveChildNavs()[0].select(page.index);
         } else {
           this.nav.push(page.component, params).catch((err: any) => {
             console.log(`Didn't set nav root: ${err}`);
@@ -283,7 +283,7 @@ export class MyApp implements OnInit {
   }
 
   isActive(page: IMenu) {
-    let childNav = this.nav.getActiveChildNav();
+    let childNav = this.nav.getActiveChildNavs()[0];
 
     if (childNav) {
       if (childNav.getSelected() && childNav.getSelected().root === page.tabComponent) {
