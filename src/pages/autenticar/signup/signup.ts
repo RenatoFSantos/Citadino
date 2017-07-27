@@ -20,6 +20,10 @@ export class SignUpPage implements OnInit {
 
   newUser: UsuarioVO = null;
 
+  private urlImage:string = "https://firebasestorage.googleapis.com/v0/b/citadinoprd-13651.appspot.com/o/images%2Fprofile%2Fprofile.png?alt=media&token=5aa52b8b-fbd3-41b5-978c-6fc5bccfe4a6";
+
+  private loaderPerfil:any;
+
   constructor(private loginService: UsuarioService,
     private loadingCtrl: LoadingController,
     private toastCtrl: ToastController,
@@ -44,7 +48,7 @@ export class SignUpPage implements OnInit {
 
     if (self.createLoginForm.valid) {
 
-      let loader = self.loadingCtrl.create({
+      this.loaderPerfil = self.loadingCtrl.create({
         content: 'Aguarde... configurando o perfil',
         dismissOnPageChange: true
       });
@@ -58,8 +62,9 @@ export class SignUpPage implements OnInit {
       this.newUser.usua_nm_usuario = signupForm.usua_nm_usuario;
       this.newUser.usua_ds_email = signupForm.usua_ds_email;
       this.newUser.usua_tx_senha = signupForm.usua_tx_senha;
-      this.newUser.usua_tx_urlprofile = "https://firebasestorage.googleapis.com/v0/b/citadinoprd-13651.appspot.com/o/images%2Fprofile%2Fprofile.png?alt=media&token=5aa52b8b-fbd3-41b5-978c-6fc5bccfe4a6";
-      loader.present();
+      this.newUser.usua_tx_urlprofile = this.urlImage;
+
+      this.loaderPerfil.present();
 
       self.loginService.registerUser(newAuth).then((result) => {
         if (result != null) {
@@ -72,7 +77,7 @@ export class SignUpPage implements OnInit {
 
             self.event.publish('usuario:logado', true);
 
-            loader.dismiss().then(() => {
+            this.loaderPerfil.dismiss().then(() => {
               let toast = self.toastCtrl.create({
                 message: 'Usuário criado com sucesso.',
                 duration: 2000,
@@ -82,20 +87,27 @@ export class SignUpPage implements OnInit {
             });
 
           }).catch((error) => {
-            this.errorNewUser(loader, error);
+            self.errorNewUser(error);
           });
         }
       }).catch(function (error) {
-        this.errorNewUser(loader, error);
+        self.errorNewUser(error);
       });
     }
   }
 
-  private errorNewUser(loader: any, error: any) {
-    //var errorMessage = error.message;
-    loader.dismiss().then(() => {
+  errorNewUser(error: any): void {
+    let errorMessage: string;
+
+    if (error.code == "auth/email-already-in-use") {
+      errorMessage = "Ops!!! Usuário já cadastrado"
+    } else {
+      errorMessage = "Ops!!! Erro ao criar novo usuário."
+    }
+
+    this.loaderPerfil.dismiss().then(() => {
       let toast = this.toastCtrl.create({
-        message: "Ops!!! Erro ao criar novo usuário.",
+        message: errorMessage,
         duration: 3000,
         position: 'top'
       });

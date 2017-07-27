@@ -89,11 +89,11 @@ export class LoginPage implements OnInit {
             }
           },
           (error) => {
-            this.errorConnection();
+            this.errorConnection(error);
           });
       }
       else {
-        this.errorConnection();
+        this.errorConnection(null);
       }
     }
   }
@@ -102,9 +102,18 @@ export class LoginPage implements OnInit {
     this.navCtrl.setRoot(SignUpPage);
   }
 
-  private errorConnection(): void {
+  private errorConnection(error:any): void {
+    let mensagemError:string = "";
+
+    if (error != null && error.code == "auth/wrong-password") {
+        mensagemError = "Ops!!! Dados inválidos"; 
+    }
+    else {
+        mensagemError = "Ops!!! Não estou conseguindo validar o seu login. Tente mais tarde!";
+    }
+
     this.loading.dismiss().then(() => {
-      this.createAlert("Ops!!! Não estou conseguindo validar o seu login. Tente mais tarde!");
+      this.createAlert(mensagemError);
     });
   }
 
