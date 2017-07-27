@@ -51,11 +51,14 @@ export class MensagemListaPage implements OnInit {
     });
 
     loader.present();
-    this.mensagens = [];
-    if (this.mensagens != null && this.mensagens.length > 0) {
 
-      this.usuaSrv.getMensagens()
-        .then((users) => {
+    if (this.mensagens != null && this.mensagens.length > 0) {
+      this.mensagens = [];
+    }
+
+    this.usuaSrv.getMensagens()
+      .then((users) => {
+        if (users != null && users.length > 0) {
           users.forEach(user => {
             let mensagem: MensagemVO = new MensagemVO();
             this.usuaSrv.getUserDetail(user.key).then((usuario) => {
@@ -80,19 +83,19 @@ export class MensagemListaPage implements OnInit {
               this.mensagens.push(mensagem);
             });
           });
+        }
+        else {
+          let mensagem: MensagemVO = new MensagemVO();
+          mensagem.usua_sq_id_from = '999999999999';
+          mensagem.usua_sq_id_to = '';
+          mensagem.usua_nm_usuario_to = '';
+          mensagem.mens_nova = false;
+          mensagem.mens_nm_enviado = 'Nenhuma conversa registrada'
+          mensagem.mens_tx_logo_enviado = '';
+          this.mensagens.push(mensagem);
           loader.dismiss();
-        });
-    } else {
-      let mensagem: MensagemVO = new MensagemVO();
-      mensagem.usua_sq_id_from = '999999999999';
-      mensagem.usua_sq_id_to = '';
-      mensagem.usua_nm_usuario_to = '';
-      mensagem.mens_nova = false;
-      mensagem.mens_nm_enviado = 'Nenhuma conversa registrada'
-      mensagem.mens_tx_logo_enviado = '';
-      this.mensagens.push(mensagem);
-      loader.dismiss();
-    }
+        }
+      });
   }
 
   openMensagemPage(mensagem: MensagemVO) {

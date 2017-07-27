@@ -30,17 +30,19 @@ export class NetworkService {
 
   public getStatusConnection() {
     if (this.network.type == enums.Connection.NONE.toString()) {
-      if (this.toast == null) {
-        this.toast = this.toastCtrl.create({
-          message: 'SEM CONEXÃO COM A INTERNET',
-          position: 'top',
-          showCloseButton: true,
-          closeButtonText: "OK"
-        });
-        
-        this.globalVar.setIsNetworkConnected(false);
-        this.toast.present();
+      if (this.toast != null) {
+        this.toast.dismiss();
       }
+      this.toast = this.toastCtrl.create({
+        message: 'SEM CONEXÃO COM A INTERNET',
+        position: 'top',
+        showCloseButton: true,
+        closeButtonText: "OK"
+      });
+
+      this.globalVar.setIsNetworkConnected(false);
+      this.toast.present();
+
     };
   }
 
