@@ -58,7 +58,7 @@ export class MensagemListaPage implements OnInit {
 
     this.usuaSrv.getMensagens()
       .then((users) => {
-        if (users != null && users.length > 0) {
+        if (users != null && Object.keys(users.val()).length > 0) {
           users.forEach(user => {
             let mensagem: MensagemVO = new MensagemVO();
             this.usuaSrv.getUserDetail(user.key).then((usuario) => {
@@ -92,9 +92,9 @@ export class MensagemListaPage implements OnInit {
           mensagem.mens_nova = false;
           mensagem.mens_nm_enviado = 'Nenhuma conversa registrada'
           mensagem.mens_tx_logo_enviado = '';
-          this.mensagens.push(mensagem);
-          loader.dismiss();
+          this.mensagens.push(mensagem);          
         }
+          loader.dismiss();
       });
   }
 
