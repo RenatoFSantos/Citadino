@@ -14,19 +14,21 @@ import { ModalController, LoadingController, Events } from 'ionic-angular';
 })
 export class MensagemListaPage implements OnInit {
   private mensagens: Array<MensagemVO> = [];
+  public usuaSrvTest: any;
 
-  constructor(private usuaSrv: UsuarioService,
+  constructor(public usuaSrv: UsuarioService,
     private emprSrv: EmpresaService,
     private mdlCtrl: ModalController,
     private loadingCtrl: LoadingController,
     private events: Events,
     private mensSrv: MensagemService,
     private netService: NetworkService) {
+    this.usuaSrvTest = usuaSrv;
   }
 
   ionViewWillEnter() {
     this.loadMensagens();
-    this.netService.getStatusConnection();
+    // this.netService.getStatusConnection();
   }
 
   ngOnInit() { }
@@ -56,35 +58,12 @@ export class MensagemListaPage implements OnInit {
       this.mensagens = [];
     }
 
-    this.usuaSrv.getMensagens()
-      .then((users) => {
-        if (users != null && Object.keys(users.val()).length > 0) {
-          users.forEach(user => {
-            let mensagem: MensagemVO = new MensagemVO();
-            this.usuaSrv.getUserDetail(user.key).then((usuario) => {
-              mensagem.usua_sq_id_from = this.usuaSrv.getLoggedInUser().uid;
-              mensagem.usua_sq_id_to = usuario.val().usua_sq_id;
-              mensagem.usua_nm_usuario_to = usuario.val().usua_nm_usuario
-              mensagem.mens_nova = user.val();
-
-              if (usuario.child('empresa').exists()) {
-                usuario.child('empresa').forEach(itemEmpresa => {
-                  this.emprSrv.getEmpresaPorKey(
-                    itemEmpresa.key).then((empresa) => {
-                      mensagem.mens_nm_enviado = empresa.val().empr_nm_razaosocial;
-                      mensagem.mens_tx_logo_enviado = empresa.val().empr_tx_logomarca;
-                    });
-                });
-              }
-              else {
-                mensagem.mens_nm_enviado = usuario.val().usua_nm_usuario;
-                mensagem.mens_tx_logo_enviado = usuario.val().usua_tx_urlprofile;
-              }
-              this.mensagens.push(mensagem);
-            });
-          });
-        }
-        else {
+    let self = this;
+    this.firstMethod()
+      .then(this.secondMethod)
+      .then(this.thirdMethod)
+      .then(() => {
+        if (self.mensagens.length == 0) {
           let mensagem: MensagemVO = new MensagemVO();
           mensagem.usua_sq_id_from = '999999999999';
           mensagem.usua_sq_id_to = '';
@@ -92,11 +71,82 @@ export class MensagemListaPage implements OnInit {
           mensagem.mens_nova = false;
           mensagem.mens_nm_enviado = 'Nenhuma conversa registrada'
           mensagem.mens_tx_logo_enviado = '';
-          this.mensagens.push(mensagem);          
+          self.mensagens.push(mensagem);
         }
-          loader.dismiss();
+        loader.dismiss();
       });
   }
+
+  firstMethod = function () {
+    let self = this;
+    var promise = new Promise(function (resolve, reject) {
+      self.usuaSrv.getMensagens()
+        .then(users => {
+          resolve({ users, self });
+        })
+        .catch((error) => {
+          reject(error)
+        });
+    });
+    return promise;
+  };
+
+  secondMethod = function (firstPromise) {
+    let self = firstPromise.self;
+    let promises: any = [];
+    let statusMensagem: any = [];
+    self.mensagens = [];
+
+    var promise = new Promise(function (resolve, reject) {
+      firstPromise.users.forEach(user => {
+        var promise = self.usuaSrvTest.getUserDetail(user.key);
+        statusMensagem.push(user.val());
+        promises.push(promise);
+      });
+      resolve({ promises, statusMensagem, self });
+    });
+
+    return promise;
+  };
+
+  thirdMethod = function (secondPromise) {
+    let promises = secondPromise.promises;
+    let statusMensagem = secondPromise.statusMensagem;
+    let self = secondPromise.self;
+
+    var promAll = Promise.all(promises).then(values => {
+      let count: number = 0;
+      values.forEach((element: any) => {
+
+        let mensagem: MensagemVO = new MensagemVO();
+
+        mensagem.usua_sq_id_from = self.usuaSrv.getLoggedInUser().uid;
+        mensagem.usua_sq_id_to = element.val().usua_sq_id;
+        mensagem.usua_nm_usuario_to = element.val().usua_nm_usuario
+        mensagem.mens_nova = statusMensagem[count];
+
+        if (element.child('empresa').exists()) {
+          element.child('empresa').forEach(itemEmpresa => {
+            self.emprSrv.getEmpresaPorKey(
+              itemEmpresa.key).then((empresa) => {
+                mensagem.mens_nm_enviado = empresa.val().empr_nm_razaosocial;
+                mensagem.mens_tx_logo_enviado = empresa.val().empr_tx_logomarca;
+              });
+          });
+        }
+        else {
+          mensagem.mens_nm_enviado = element.val().usua_nm_usuario;
+          mensagem.mens_tx_logo_enviado = element.val().usua_tx_urlprofile;
+        }
+
+        count++;
+        self.mensagens.push(mensagem);
+
+      });
+    });
+
+    return promAll;
+  };
 
   openMensagemPage(mensagem: MensagemVO) {
     let loader = this.loadingCtrl.create({
@@ -139,5 +189,4 @@ export class MensagemListaPage implements OnInit {
 
     })
   }
-
 }

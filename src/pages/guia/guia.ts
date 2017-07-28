@@ -40,9 +40,6 @@ export class GuiaPage implements OnInit {
   }
 
   ionViewWillEnter() {
-    console.log('ionViewWillEnter');
-    this.netService.getStatusConnection();
-
     if (this.categorias != null && this.categorias.length == 0) {
       this.getLoadCategorias();
     }
@@ -63,8 +60,8 @@ export class GuiaPage implements OnInit {
       .subscribe(value => {
         self.empresas = []
         this.searching = false;
-        if (value != "") {
 
+        if (value != "") {
           let loader = this.loadingCtrl.create({
             content: 'Aguarde...',
             dismissOnPageChange: true
@@ -95,6 +92,7 @@ export class GuiaPage implements OnInit {
                   });
                 }
               });
+              loader.dismiss();
             }
             if (self.empresas.length == 0) {
               this.descritorEnable = false;
@@ -103,9 +101,8 @@ export class GuiaPage implements OnInit {
             else {
               this.descritorEnable = true;
             }
-
-            loader.dismiss();
           });
+          loader.dismiss();
         }
         else {
           self.empresas = [];
@@ -128,7 +125,7 @@ export class GuiaPage implements OnInit {
     if (this.loadCtrl != null) {
       this.loadCtrl.dismiss();
     }
-    
+
     if (this.globalVar.getIsFirebaseConnected()) {
       this.loadCtrl = this.loadingCtrl.create({
         spinner: 'circles'
@@ -186,6 +183,7 @@ export class GuiaPage implements OnInit {
       loader.dismiss();
       this.navCtrl.push(GuiaListaPage, { categNm: categoriaNm, emprKeys: empresaskey })
     });
+    loader.dismiss();
   }
 
   openGuiaDescritor(descritorNm: string, descritorKey: string) {
@@ -197,6 +195,7 @@ export class GuiaPage implements OnInit {
     loader.present();
     let empresaskey: any = [];
     empresaskey.push(descritorKey)
+    loader.dismiss();
     this.navCtrl.push(GuiaListaPage, { categNm: descritorNm, emprKeys: empresaskey })
     // this.guiaSrv.getEmpresaByDescritor(descritorKey).then((snapShot) => {
     //   snapShot.forEach(element => {
