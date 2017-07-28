@@ -88,7 +88,8 @@ export class GuiaContatoPage {
       });
   }
 
-public verificarStatusBtnMensagem() {   
+public verificarStatusBtnMensagem() {
+    this.exibirBtnEnviarMensagem = false;
     let usuaEmprKey: string;
     let userCurrent = this.usuaSrv.getLoggedInUser();
 
@@ -103,7 +104,7 @@ public verificarStatusBtnMensagem() {
           }         
         }
         else {
-          this.exibirBtnEnviarMensagem = true;
+          this.exibirBtnEnviarMensagem = false;
         }
       });
   }
