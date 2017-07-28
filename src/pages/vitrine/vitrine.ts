@@ -93,7 +93,7 @@ export class VitrinePage implements OnInit {
   }
 
   ionViewWillEnter() {
-    this.netService.getStatusConnection();
+    // this.netService.getStatusConnection();
   }
 
   // ionViewDidLeave() {
