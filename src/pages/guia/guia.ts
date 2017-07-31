@@ -31,25 +31,18 @@ export class GuiaPage implements OnInit {
     private globalVar: GlobalVar) {
     this.searchControl = new FormControl();
 
+    this.getLoadCategorias();
   }
 
   ngOnInit() {
     console.log('ngOnInit');
-    this.getLoadCategorias();
-
   }
 
-  ionViewWillEnter() {
+  ionViewDidLeave() {
     if (this.categorias != null && this.categorias.length == 0) {
       this.getLoadCategorias();
     }
-
   }
-
-  // ionViewDidLeave() {
-  //   console.log('ionViewDidLeave');
-  //   this.netService.closeStatusConnection();
-  // }
 
   ionViewDidLoad() {
     let self = this;
@@ -120,6 +113,7 @@ export class GuiaPage implements OnInit {
     this.empresas = [];
   }
 
+
   private getLoadCategorias() {
 
     if (this.loadCtrl != null) {
@@ -130,41 +124,65 @@ export class GuiaPage implements OnInit {
       this.loadCtrl = this.loadingCtrl.create({
         spinner: 'circles'
       });
-
       this.loadCtrl.present();
 
-      let listaCategorias: Array<CategoriaVO> = [];
-
-      this.guiaSrv.getCategorias().then((snapShot) => {
-        snapShot.forEach(element => {
-          listaCategorias.push(element.val());
+      this.firstLoadCategorias()
+        .then(this.secoundLoadCategorias)
+        .then(() => {
+          this.loadCtrl.dismiss();
         });
-
-        let length = listaCategorias.length;
-
-        for (let i = 0; i < length; i += 3) {
-          let item: Array<CategoriaVO> = [];
-          item.push(listaCategorias[i]);
-
-          if (i + 1 < length) {
-            item.push(listaCategorias[i + 1]);
-          }
-
-          if (i + 2 < length) {
-            item.push(listaCategorias[i + 2]);
-          }
-
-          for (let i = 0; i <= (3 - item.length); i++) {
-            let categoria: Array<CategoriaVO> = [];
-            let item = new CategoriaVO();
-            categoria.push(item);
-          }
-
-          this.categorias.push(item);
-        }
-      });
-      this.loadCtrl.dismiss();
     }
+  }
+
+  firstLoadCategorias = function () {
+    let self = this;
+    let listaCategorias: Array<CategoriaVO> = [];
+    var promise = new Promise(function (resolve, reject) {
+      self.guiaSrv.getCategorias()
+        .then((snapShot) => {
+          snapShot.forEach(element => {
+            listaCategorias.push(element.val());
+          });
+          resolve({ listaCategorias, self });
+        })
+        .catch((error) => {
+          reject(error);
+        });
+    });
+    return promise;
+  }
+
+  secoundLoadCategorias = function (firstLoadCategorias) {
+    let self = firstLoadCategorias.self;
+    let listaCategorias: Array<CategoriaVO> = firstLoadCategorias.listaCategorias;
+
+    var promise = new Promise(function (resolve, reject) {
+      let length = listaCategorias.length;
+
+      for (let i = 0; i < length; i += 3) {
+        let item: Array<CategoriaVO> = [];
+        item.push(listaCategorias[i]);
+
+        if (i + 1 < length) {
+          item.push(listaCategorias[i + 1]);
+        }
+
+        if (i + 2 < length) {
+          item.push(listaCategorias[i + 2]);
+        }
+
+        for (let i = 0; i <= (3 - item.length); i++) {
+          let categoria: Array<CategoriaVO> = [];
+          let item = new CategoriaVO();
+          categoria.push(item);
+        }
+
+        self.categorias.push(item);
+      }
+      resolve(self.categorias);
+    });
+
+    return promise;
   }
 
 
