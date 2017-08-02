@@ -22,12 +22,12 @@ page-smartSite {
         background-color: #ccc !important;
     }   
     .loading-ios,
-.loading-md,
-.loading-wp {
-  .my-loading-class {
-    background-color: transparent;
-    box-shadow: none;
-  }
+    .loading-md,
+    .loading-wp {
+    .my-loading-class {
+        background-color: transparent;
+        box-shadow: none;
+    }
 }
 .loading-md, .loading-wrapper {
     .myload {
@@ -40,13 +40,16 @@ page-smartSite {
     box-shadow: none;
   }
 
- .loading-wrapper{
+ .loading-wrapper {
         background:none;
         // box-shadow: none;
-      }
-      .img-align{
-        height:80px;
-      }
+ }
+
+ .img-align {
+    height:80px;
+ }
+
+
 }
 
 

@@ -97,8 +97,8 @@
                 <ion-avatar item-left>
                     <img src="{{item.anun_tx_urlavatar}}" />
                 </ion-avatar>
-                <h2>Notícias</h2>
-                <p class="ctd-subtitulo">{{item.anun_tx_titulo}}</p>
+                <h2 class="ctd-noticia_titulo">{{item.anun_tx_titulo}}</h2>
+                <p class="ctd-subtitulo">{{item.anun_tx_subtitulo}}</p>
             </ion-item>
             <ion-card-content class="ctd-noticia" (click)="openNoticia(item)">
                 {{item.anun_tx_texto}}

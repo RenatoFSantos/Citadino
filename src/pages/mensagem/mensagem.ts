@@ -47,13 +47,15 @@ export class MensagemPage {
       .then((snapShot: any) => {
 
         this.usuaSrv.getUsersRef().child(this.usua_sq_id_from)
-          .child('mensagem').child(this.usua_sq_id_to).once('value').then((snapNode) => {
+          .child('mensagem').child(this.usua_sq_id_to).once('value')
+          .then((snapNode) => {
             if (snapNode.exists()) {
               this.usuaSrv.getUsersRef().child(this.usua_sq_id_from)
                 .child('mensagem')
                 .child(this.usua_sq_id_to).set(false);
             }
           });
+
         this.mensagens = this.mensSrv.listMensagens(snapShot);
       });
   }
@@ -63,6 +65,7 @@ export class MensagemPage {
   }
 
   enviarMensagem() {
+    let self = this;
     if (this.mens_txt_mensagem) {
 
       this.mens_dt_data = CtdFuncoes.convertDateToStr(new Date(), enums.DateFormat.ptBR) + " - " + CtdFuncoes.convertTimeToStr(new Date());
@@ -70,40 +73,39 @@ export class MensagemPage {
       this.fbSrv.getDataBase().ref(`/usuario/${this.usua_sq_id_from}`)
         .once('value').then(snapShot => {
 
-          if (!snapShot.child(`/mensagem/${this.usua_sq_id_to}`).exists()) {
-            this.mensSrv.addMensagems(this.usua_sq_id_from, this.usua_sq_id_to);
+          if (!snapShot.child(`/mensagem/${self.usua_sq_id_to}`).exists()) {
+            self.mensSrv.addMensagems(self.usua_sq_id_from, self.usua_sq_id_to);
           }
           else {
-            this.fbSrv.getDataBase().ref(`/usuario/${this.usua_sq_id_to}/mensagem/${this.usua_sq_id_from}`).set(true);
+            self.fbSrv.getDataBase().ref(`/usuario/${self.usua_sq_id_to}/mensagem/${self.usua_sq_id_from}`).set(true);
           }
 
           let chat = {
-            usua_sq_id_to: this.usua_sq_id_to,
-            usua_nm_usuario_to: this.usua_nm_usuario_to,
-            usua_sq_id_from: this.usua_sq_id_from,
-            usua_nm_usuario_from: this.usua_nm_usuario_from,
-            mens_nm_enviado: this.mens_nm_enviado,
-            mens_txt_mensagem: this.mens_txt_mensagem,
-            mens_tx_logo_enviado: this.mens_tx_logo_enviado,
-            mens_dt_data: this.mens_dt_data,
+            usua_sq_id_to: self.usua_sq_id_to,
+            usua_nm_usuario_to: self.usua_nm_usuario_to,
+            usua_sq_id_from: self.usua_sq_id_from,
+            usua_nm_usuario_from: self.usua_nm_usuario_from,
+            mens_nm_enviado: self.mens_nm_enviado,
+            mens_txt_mensagem: self.mens_txt_mensagem,
+            mens_tx_logo_enviado: self.mens_tx_logo_enviado,
+            mens_dt_data: self.mens_dt_data,
             mens_in_mensagem: 'Mensagem'
           };
 
-          this.mensagens.push(chat).then(() => {
+          self.mensagens.push(chat).then(() => {
             let update = {};
 
-            update[`/usuario/${this.usua_sq_id_to}/mensagem/${this.usua_sq_id_from}`] = true;
+            update[`/usuario/${self.usua_sq_id_to}/mensagem/${self.usua_sq_id_from}`] = true;
 
-            this.fbSrv.getDataBase().ref().update(update);
+            self.fbSrv.getDataBase().ref().update(update);
 
-            this.mens_txt_mensagem = "";
-            this.content.scrollToBottom();
+            self.mens_txt_mensagem = "";
+            self.content.scrollToBottom();
           })
             .catch((error) => {
               console.log(error);
             });
         });
-
     }
   };
 

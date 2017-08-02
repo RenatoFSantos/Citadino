@@ -1,3 +1,4 @@
+import { InAppBrowser } from '@ionic-native/in-app-browser';
 import { SmartSiteService } from './service/smartSite-services';
 import { CallNumber } from '@ionic-native/call-number';
 import { MensagemService } from './service/mensagem-service';
@@ -35,5 +36,6 @@ export const APP_PROVIDERS = [
     MensagemService,
     SmartSiteService,
     ElasticModule,
-    CallNumber
+    CallNumber,
+    InAppBrowser
 ];

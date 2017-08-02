@@ -16,9 +16,9 @@
                 <img src="{{empresa.empr_tx_logomarca}}">
             </ion-avatar>
             <h2>{{smartSite.smar_tx_titulo}}</h2>
-                <p class="ctd-70">                 
-                    {{smartSite.smar_tx_subtitulo}}
-                </p>
+            <p class="ctd-70">
+                {{smartSite.smar_tx_subtitulo}}
+            </p>
         </ion-item>
     </ion-card>
     <p class="titulo">SOBRE</p>
@@ -38,16 +38,14 @@
         <ion-item *ngIf="exibirBtnEnviarMensagem == true">
             <ion-icon name="chatbubbles"></ion-icon>
             Envie-nos uma mensagem
-            <button ion-button item-right icon-center color="light" 
-            (click)="openMensagem()">
+            <button ion-button item-right icon-center color="light" (click)="openMensagem()">
                 <ion-icon name="chatbubbles"></ion-icon>
             </button>
         </ion-item>
         <ion-item>
             <ion-icon name="call"></ion-icon>
             {{empresa.empr_tx_telefone_1}}
-            <button ion-button item-right icon-center color="light"
-             (click)="discar(empresa.empr_tx_telefone_1)">
+            <button ion-button item-right icon-center color="light" (click)="discar(empresa.empr_tx_telefone_1)">
                 <ion-icon name="call"></ion-icon>
             </button>
         </ion-item>
@@ -57,11 +55,11 @@
         </ion-item>
         <ion-item>
             <ion-icon name="pin"></ion-icon>
-            {{enderecoCompleto}} 
+            {{enderecoCompleto}}
         </ion-item>
         <ion-item>
             <ion-icon name="globe"></ion-icon>
-            {{empresa.empr_ds_site}}
+            <a detail-none (click)="launch()">{{empresa.empr_ds_site}}</a>
         </ion-item>
     </ion-item-group>
 </ion-content>
