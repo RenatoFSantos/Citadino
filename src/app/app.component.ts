@@ -21,6 +21,7 @@ import {
 import { SplashScreen, } from '@ionic-native/splash-screen';
 import { StatusBar } from '@ionic-native/status-bar';
 import * as enums from './../model/dominio/ctdEnum';
+import { FCM } from '@ionic-native/fcm';
 
 declare var window: any;
 
@@ -52,8 +53,8 @@ export class MyApp implements OnInit {
     private toastCtrl: ToastController,
     private globalVar: GlobalVar,
     private app: App,
-    private loadingCtrl: LoadingController
-  ) {
+    private loadingCtrl: LoadingController,
+    private fcm: FCM) {
 
     this.platform.ready().then(() => {
       this.statusBar.styleDefault();
@@ -67,7 +68,28 @@ export class MyApp implements OnInit {
         //Inicializa o servico do sqlLite
         // this.sqService.InitDatabase();
       }
+      
+      fcm.subscribeToTopic('marketing');
 
+      fcm.getToken().then(token => {
+        // backend.registerToken(token);
+        console.log(token);
+      })
+
+      fcm.onNotification().subscribe(data => {
+        if (data.wasTapped) {
+          console.log("Received in background");
+        } else {
+          console.log("Received in foreground");
+        };
+      })
+
+      fcm.onTokenRefresh().subscribe(token => {
+        // backend.registerToken(token);
+        console.log(token);
+      })
+
+      fcm.unsubscribeFromTopic('marketing');
 
     });
   }
@@ -221,8 +243,9 @@ export class MyApp implements OnInit {
     this.events.subscribe('mensagem:alterada', (childSnapshot) => {
       let userCurrent = this.usuaSrv.getLoggedInUser();
 
-      if (this.app.getActiveNav() != null && this.app.getActiveNav().getActive()) {
-        if (this.app.getActiveNav().getActive().instance instanceof MensagemPage) {
+      if (this.app.getActiveNavs()[0] != null
+        && this.app.getActiveNavs()[0].getActive() != null) {
+        if (this.app.getActiveNavs()[0].getActive().instance instanceof MensagemPage) {
           this.usuaSrv.getUsersRef().child(userCurrent.uid)
             .child("mensagem")
             .child(childSnapshot.key).set(false);

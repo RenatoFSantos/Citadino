@@ -60,6 +60,7 @@ export class SmartSitePage {
   }
 
   public openMensagem() {
+    let self = this;
     let loader = this.loadingCtrl.create({
       dismissOnPageChange: true,
       content: 'Aguarde...'
@@ -71,10 +72,10 @@ export class SmartSitePage {
     let userCurrent = this.usuaSrv.getLoggedInUser();
     this.usuaSrv.getUserDetail(userCurrent.uid)
       .then((snapUserFrom) => {
-        this.emprSrv.getUsuarioPorEmpresa(this.empresa.empr_sq_id)
+        this.emprSrv.getUsuarioPorEmpresa(self.empresa.empr_sq_id)
           .then((snapKeyUserTo) => {
             let chaveKey: string = Object.keys(snapKeyUserTo.val())[0];
-            this.usuaSrv.getUserDetail(chaveKey)
+            self.usuaSrv.getUserDetail(chaveKey)
               .then((snapUserTo) => {
 
                 let mensParam = {
@@ -83,24 +84,24 @@ export class SmartSitePage {
                   usua_nm_usuario_to: snapUserTo.val().usua_nm_usuario,
                   usua_sq_id_from: snapUserFrom.key,
                   usua_nm_usuario_from: snapUserFrom.val().usua_nm_usuario,
-                  mens_nm_enviado: this.empresa.empr_nm_razaosocial,
-                  mens_tx_logo_enviado: this.empresa.empr_tx_logomarca != '' ? this.empresa.empr_tx_logomarca : ''
+                  mens_nm_enviado: self.empresa.empr_nm_razaosocial,
+                  mens_tx_logo_enviado: self.empresa.empr_tx_logomarca != '' ? self.empresa.empr_tx_logomarca : ''
                 };
 
                 let totalMensage: number = 0;
-                this.usuaSrv.getMensagens().then((snapMsg) => {
+                self.usuaSrv.getMensagens().then((snapMsg) => {
                   snapMsg.forEach(element => {
 
                     if (element.val() == true) {
                       totalMensage++;
                     }
 
-                    this.events.publish('mensagem:nova', totalMensage - 1);
+                    self.events.publish('mensagem:nova', totalMensage - 1);
                   });
                 });
 
                 loader.dismiss();
-                let loginModal = this.mdlCtrl.create(MensagemPage, mensParam);
+                let loginModal = self.mdlCtrl.create(MensagemPage, mensParam);
                 loginModal.present();
 
               });

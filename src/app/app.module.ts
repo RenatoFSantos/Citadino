@@ -30,22 +30,21 @@ import { CloudSettings, CloudModule } from '@ionic/cloud-angular';
 import { AngularFireModule } from 'angularfire2';
 import { AngularFireDatabaseModule } from 'angularfire2/database';
 
-
 // providers
 import { APP_PROVIDERS } from '../providers/app.providers';
 
 export const firebaseConfig = {
-    apiKey: "AIzaSyCuOY5Kt7_Zo08khwYFiLsIQC4kFe5LWwE",
-    authDomain: "citadinoprd-13651.firebaseapp.com",
-    databaseURL: "https://citadinoprd-13651.firebaseio.com",
-    projectId: "citadinoprd-13651",
-    storageBucket: "citadinoprd-13651.appspot.com",
-    messagingSenderId: "960817085241"
+  apiKey: "AIzaSyC0maPdTdMQ7ccxuiXHLcZ1IsgeX7qVD6I",
+  authDomain: "citadinodsv.firebaseapp.com",
+  databaseURL: "https://citadinodsv.firebaseio.com",
+  projectId: "citadinodsv",
+  storageBucket: "citadinodsv.appspot.com",
+  messagingSenderId: "180769307423"
 };
 
 const cloudSettings: CloudSettings = {
   'core': {
-    'app_id': 'cf159870'
+    'app_id': '3d750d37'
   }
 };
 

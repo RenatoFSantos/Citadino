@@ -1,0 +1,42 @@
+{
+  "project_info": {
+    "project_number": "180769307423",
+    "firebase_url": "https://citadinodsv.firebaseio.com",
+    "project_id": "citadinodsv",
+    "storage_bucket": "citadinodsv.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:180769307423:android:dc6fbeb17630ec14",
+        "android_client_info": {
+          "package_name": "com.br.midilabs.citadino"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "180769307423-cko1dbkcv2mbmcnfqbga45le61dh8d5j.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDZXrK7rIJtOJsGmFJOMQoVHatE3DIt0LQ"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 1,
+          "other_platform_oauth_client": []
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

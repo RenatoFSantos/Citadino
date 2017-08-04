@@ -7,11 +7,9 @@
 <ion-content padding>
   <ion-slides pager zoom="true" zoomToggle="true">
     <ion-slide *ngFor="let slide of slides">
-      <!--<h2 class="slide-title" [innerHTML]="slide.title"></h2>-->
-      <div class="swiper-zoom-container">      
-        <img [src]="slide.imageUrl" class="slide-image"/>
+      <div class="swiper-zoom-container">
+        <img [src]="slide.imageUrl" class="slide-image" />
       </div>
-      <!--<p [innerHTML]="slide.description"></p>-->
     </ion-slide>
   </ion-slides>
 </ion-content>
