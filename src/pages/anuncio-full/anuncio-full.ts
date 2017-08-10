@@ -1,7 +1,6 @@
 import { SlideVO } from './../../model/slideVO';
 import { Component } from '@angular/core';
 import { NavController, NavParams } from 'ionic-angular';
-
 /*
   Generated class for the AnuncioFull page.
 
@@ -14,11 +13,11 @@ import { NavController, NavParams } from 'ionic-angular';
 })
 export class AnuncioFullPage {
 
- public slides: Array<SlideVO> = [];
-
-  constructor(public navCtrl: NavController, public params: NavParams) {
+  public slides: Array<SlideVO> = [];
+  constructor(public navCtrl: NavController, 
+    public params: NavParams) {
     if (params != null && params.get("anuncio") != null) {
-        this.createObjSlide(params.get("anuncio"));
+      this.createObjSlide(params.get("anuncio"));
     }
   }
 
@@ -30,6 +29,7 @@ export class AnuncioFullPage {
       slide.description = "";
       slide.imageUrl = anuncio.anun_tx_urlslide1;
       this.slides.push(slide);
+
     }
 
     if (anuncio.anun_tx_urlslide2 != null && anuncio.anun_tx_urlslide2 != "") {
@@ -45,13 +45,7 @@ export class AnuncioFullPage {
       slide.title = "";
       slide.description = "";
       slide.imageUrl = anuncio.anun_tx_urlslide3;
-      this.slides.push(slide);
+      this.slides.push(slide);    
     }
-   
   }
-
-  ionViewDidLoad() {
-    console.log('ionViewDidLoad AnuncioFullPage');
-  }
-
 }

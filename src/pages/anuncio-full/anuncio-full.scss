@@ -14,9 +14,9 @@ page-anuncio-full {
   }
 
   .slide-image {
-    max-height: 80%;
-    max-width: 100%;
-    margin: 0 0 40px 0;
+    // max-height: 80%;
+    // max-width: 100%;
+    margin: 0 0 25px 0;
   }
 
   b {
@@ -32,5 +32,16 @@ page-anuncio-full {
     b {
       color: #000000;
     }
-  }  
+  }
+
+  ion-content {
+    .scroll-content {
+      margin-top: 65px !important;
+      padding: 13px!important;
+      // margin-bottom:10px!important
+    }
+    .swiper-pagination {
+      bottom: 0px !important;
+    }
+  }
 }

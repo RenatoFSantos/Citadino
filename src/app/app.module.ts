@@ -35,17 +35,29 @@ import { AngularFireDatabaseModule } from 'angularfire2/database';
 import { APP_PROVIDERS } from '../providers/app.providers';
 
 export const firebaseConfig = {
-    apiKey: "AIzaSyCuOY5Kt7_Zo08khwYFiLsIQC4kFe5LWwE",
-    authDomain: "citadinoprd-13651.firebaseapp.com",
-    databaseURL: "https://citadinoprd-13651.firebaseio.com",
-    projectId: "citadinoprd-13651",
-    storageBucket: "citadinoprd-13651.appspot.com",
-    messagingSenderId: "960817085241"
+  apiKey: "AIzaSyCuOY5Kt7_Zo08khwYFiLsIQC4kFe5LWwE",
+  authDomain: "citadinoprd-13651.firebaseapp.com",
+  databaseURL: "https://citadinoprd-13651.firebaseio.com",
+  projectId: "citadinoprd-13651",
+  storageBucket: "citadinoprd-13651.appspot.com",
+  messagingSenderId: "960817085241"
 };
 
 const cloudSettings: CloudSettings = {
   'core': {
-    'app_id': 'cf159870'
+    'app_id': '3d750d37'
+  }, 
+  'push': {
+    'sender_id': '180769307423',
+    'pluginConfig': {
+      'ios': {
+        'badge': true,
+        'sound': true
+      },
+      'android': {
+        'iconColor': '#343434'
+      }
+    }
   }
 };
 

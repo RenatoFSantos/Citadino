@@ -16,11 +16,12 @@ import { TabsPage } from '../pages/tabs/tabs';
 import { Component, ViewChild, OnInit } from '@angular/core';
 import {
   Platform, MenuController, Nav, ModalController, Events,
-  ToastController, App, LoadingController
+  ToastController, App, LoadingController, AlertController
 } from 'ionic-angular';
 import { SplashScreen, } from '@ionic-native/splash-screen';
 import { StatusBar } from '@ionic-native/status-bar';
 import * as enums from './../model/dominio/ctdEnum';
+
 
 declare var window: any;
 
@@ -52,12 +53,10 @@ export class MyApp implements OnInit {
     private toastCtrl: ToastController,
     private globalVar: GlobalVar,
     private app: App,
-    private loadingCtrl: LoadingController
-  ) {
+    private loadingCtrl: LoadingController) {
 
     this.platform.ready().then(() => {
       this.statusBar.styleDefault();
-
       if (window.cordova) {
         this.netService.initializeNetworkEvents();
         this.networkDisconnectEvent();
@@ -67,10 +66,8 @@ export class MyApp implements OnInit {
         //Inicializa o servico do sqlLite
         // this.sqService.InitDatabase();
       }
-
-
     });
-  }
+  }  
 
   ngOnInit() {
     this.checkFirebase();
@@ -221,8 +218,9 @@ export class MyApp implements OnInit {
     this.events.subscribe('mensagem:alterada', (childSnapshot) => {
       let userCurrent = this.usuaSrv.getLoggedInUser();
 
-      if (this.app.getActiveNav() != null && this.app.getActiveNav().getActive()) {
-        if (this.app.getActiveNav().getActive().instance instanceof MensagemPage) {
+      if (this.app.getActiveNavs()[0] != null
+        && this.app.getActiveNavs()[0].getActive() != null) {
+        if (this.app.getActiveNavs()[0].getActive().instance instanceof MensagemPage) {
           this.usuaSrv.getUsersRef().child(userCurrent.uid)
             .child("mensagem")
             .child(childSnapshot.key).set(false);
