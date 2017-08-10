@@ -1,3 +1,4 @@
+import { AnuncioFullPage } from './../anuncio-full/anuncio-full';
 import { NoticiaFullPage } from './../noticia-full/noticia-full';
 import { SmartSiteService } from './../../providers/service/smartSite-services';
 import { SmartSitePage } from './../smartSite/smartSite';
@@ -28,7 +29,7 @@ export class VitrinePage implements OnInit {
   private rowCurrent: number = 0;
   private loading: boolean = false;
   private loadCtrl: any;
-  private toastAlert:any;
+  private toastAlert: any;
 
   private vitrines: Array<VitrineVO> = [];
   private newVitrines: Array<VitrineVO> = [];
@@ -132,10 +133,10 @@ export class VitrinePage implements OnInit {
     }
 
     return new Promise((resolve) => {
-      let anuncios:any = [];
+      let anuncios: any = [];
       self.vitrineSrv.getVitrineMunicipio(self.seqMunicipio, self.limitPage, self.startPk)
-        .then((snapshot:any) => {
-          
+        .then((snapshot: any) => {
+
           anuncios = self.itemsService.getPropertyValues(snapshot.val(), "vitr_sq_ordem");
 
           self.startPk = String(self.itemsService.getFirstElement(anuncios));
@@ -198,7 +199,17 @@ export class VitrinePage implements OnInit {
     }
   }
 
-  openSmartSite(vitrine: VitrineVO) {
+
+  openPage(vitrine: VitrineVO) {
+    if (vitrine.anun_tx_urlslide1 != null && vitrine.anun_tx_urlslide1 != "") {
+      this.openSlideNoticia(vitrine);
+    }
+    else {
+      this.openSmartSite(vitrine);
+    }
+  }
+
+  private openSmartSite(vitrine: VitrineVO) {
     if (vitrine.anun_in_smartsite == true) {
       let loader = this.loadingCtrl.create({
         content: 'Aguarde...',
@@ -231,6 +242,10 @@ export class VitrinePage implements OnInit {
         }
       });
     }
+  }
+
+  private openSlideNoticia(vitrine: VitrineVO): void {
+    this.navCtrl.push(AnuncioFullPage, { anuncio: vitrine });
   }
 
   openNoticia(vitrine: VitrineVO) {

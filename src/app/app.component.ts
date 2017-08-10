@@ -16,12 +16,13 @@ import { TabsPage } from '../pages/tabs/tabs';
 import { Component, ViewChild, OnInit } from '@angular/core';
 import {
   Platform, MenuController, Nav, ModalController, Events,
-  ToastController, App, LoadingController
+  ToastController, App, LoadingController, AlertController
 } from 'ionic-angular';
 import { SplashScreen, } from '@ionic-native/splash-screen';
 import { StatusBar } from '@ionic-native/status-bar';
 import * as enums from './../model/dominio/ctdEnum';
-import { FCM } from '@ionic-native/fcm';
+import { Autostart } from '@ionic-native/autostart';
+
 
 declare var window: any;
 
@@ -53,12 +54,10 @@ export class MyApp implements OnInit {
     private toastCtrl: ToastController,
     private globalVar: GlobalVar,
     private app: App,
-    private loadingCtrl: LoadingController,
-    private fcm: FCM) {
+    private loadingCtrl: LoadingController) {
 
     this.platform.ready().then(() => {
       this.statusBar.styleDefault();
-
       if (window.cordova) {
         this.netService.initializeNetworkEvents();
         this.networkDisconnectEvent();
@@ -68,31 +67,8 @@ export class MyApp implements OnInit {
         //Inicializa o servico do sqlLite
         // this.sqService.InitDatabase();
       }
-      
-      fcm.subscribeToTopic('marketing');
-
-      fcm.getToken().then(token => {
-        // backend.registerToken(token);
-        console.log(token);
-      })
-
-      fcm.onNotification().subscribe(data => {
-        if (data.wasTapped) {
-          console.log("Received in background");
-        } else {
-          console.log("Received in foreground");
-        };
-      })
-
-      fcm.onTokenRefresh().subscribe(token => {
-        // backend.registerToken(token);
-        console.log(token);
-      })
-
-      fcm.unsubscribeFromTopic('marketing');
-
     });
-  }
+  }  
 
   ngOnInit() {
     this.checkFirebase();
