@@ -77,6 +77,7 @@ export class MensagemListaPage implements OnInit {
       });
   }
 
+  //Retorna usuários que foram enviados mensagens
   firstMethod = function () {
     let self = this;
     var promise = new Promise(function (resolve, reject) {
@@ -91,6 +92,7 @@ export class MensagemListaPage implements OnInit {
     return promise;
   };
 
+  //Retorna uma coleção de promisses com os dados completos dos usuarios
   secondMethod = function (firstPromise) {
     let self = firstPromise.self;
     let promises: any = [];
@@ -109,6 +111,7 @@ export class MensagemListaPage implements OnInit {
     return promise;
   };
 
+  //Preenche a coleção de mensagens
   thirdMethod = function (secondPromise) {
     let promises = secondPromise.promises;
     let statusMensagem = secondPromise.statusMensagem;
@@ -118,29 +121,32 @@ export class MensagemListaPage implements OnInit {
       let count: number = 0;
       values.forEach((element: any) => {
 
-        let mensagem: MensagemVO = new MensagemVO();
+        if (element != null && element.val() != null) {
+          
+          let mensagem: MensagemVO = new MensagemVO();
 
-        mensagem.usua_sq_id_from = self.usuaSrv.getLoggedInUser().uid;
-        mensagem.usua_sq_id_to = element.val().usua_sq_id;
-        mensagem.usua_nm_usuario_to = element.val().usua_nm_usuario
-        mensagem.mens_nova = statusMensagem[count];
+          mensagem.usua_sq_id_from = self.usuaSrv.getLoggedInUser().uid;
+          mensagem.usua_sq_id_to = element.val().usua_sq_id;
+          mensagem.usua_nm_usuario_to = element.val().usua_nm_usuario
+          mensagem.mens_nova = statusMensagem[count];
 
-        if (element.child('empresa').exists()) {
-          element.child('empresa').forEach(itemEmpresa => {
-            self.emprSrv.getEmpresaPorKey(
-              itemEmpresa.key).then((empresa) => {
-                mensagem.mens_nm_enviado = empresa.val().empr_nm_razaosocial;
-                mensagem.mens_tx_logo_enviado = empresa.val().empr_tx_logomarca;
-              });
-          });
+          if (element.child('empresa').exists()) {
+            element.child('empresa').forEach(itemEmpresa => {
+              self.emprSrv.getEmpresaPorKey(
+                itemEmpresa.key).then((empresa) => {
+                  mensagem.mens_nm_enviado = empresa.val().empr_nm_razaosocial;
+                  mensagem.mens_tx_logo_enviado = empresa.val().empr_tx_logomarca;
+                });
+            });
+          }
+          else {
+            mensagem.mens_nm_enviado = element.val().usua_nm_usuario;
+            mensagem.mens_tx_logo_enviado = element.val().usua_tx_urlprofile;
+          }
+
+          count++;
+          self.mensagens.push(mensagem);
         }
-        else {
-          mensagem.mens_nm_enviado = element.val().usua_nm_usuario;
-          mensagem.mens_tx_logo_enviado = element.val().usua_tx_urlprofile;
-        }
-
-        count++;
-        self.mensagens.push(mensagem);
 
       });
     });

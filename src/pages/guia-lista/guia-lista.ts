@@ -17,7 +17,7 @@ export class GuiaListaPage implements OnInit {
   public categoriaNome: string = "";
   public empresas: any = [];
   public empresasKey: any = [];
-  private toastAlert:any; 
+  private toastAlert: any;
 
 
   constructor(public navCtrl: NavController,
@@ -72,9 +72,33 @@ export class GuiaListaPage implements OnInit {
   }
 
   private loadEmpresas() {
-    let indexEmpresa = "";
-    this.empresasKey.forEach(element => {
-      this.emprSrv.getEmpresaPorKey(element).then((snapEmpresa) => {
+    let self = this;
+    this.carregaPromiseEmpresas()
+      .then(this.preencherListaEmpresas);
+  }
+
+
+  //Retorna a lista de promisse das empresas;
+  carregaPromiseEmpresas = function () {
+    let self = this;
+    let promises: any = [];
+    var promise = new Promise(function (resolve, reject) {
+      self.empresasKey.forEach(element => {
+        promises.push(self.emprSrv.getEmpresaPorKey(element));
+      });
+      resolve({ promises, self });
+    });
+    return promise;
+  };
+
+  //Carrega a lista de empresas para exibir na guia
+  preencherListaEmpresas = function (prEmpresas) {
+    let promises = prEmpresas.promises;
+    let self = prEmpresas.self;
+
+    var promAll = Promise.all(promises).then(values => {
+      let indexEmpresa = "";
+      values.forEach((snapEmpresa: any) => {
 
         //Essa Rotina tem como finalidade de fazer a quebra pela primeira letra do nome do
         //parceiro
@@ -84,7 +108,7 @@ export class GuiaListaPage implements OnInit {
           let empresaIndex: EmpresaVO = new EmpresaVO();
           empresaIndex.empr_nm_razaosocial = indexEmpresa;
           empresaIndex.isIndexNome = true;
-          this.empresas.push(empresaIndex);
+          self.empresas.push(empresaIndex);
         }
 
         let empresa: EmpresaVO = snapEmpresa.val();
@@ -102,11 +126,14 @@ export class GuiaListaPage implements OnInit {
         }
 
         empresa.isIndexNome = false;
-        this.empresas.push(empresa);
-
+        self.empresas.push(empresa);
       });
     });
+
+    return promAll;
   }
+
+
 
   createAlert(errorMessage: string) {
 

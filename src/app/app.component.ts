@@ -21,7 +21,6 @@ import {
 import { SplashScreen, } from '@ionic-native/splash-screen';
 import { StatusBar } from '@ionic-native/status-bar';
 import * as enums from './../model/dominio/ctdEnum';
-import { Autostart } from '@ionic-native/autostart';
 
 
 declare var window: any;
