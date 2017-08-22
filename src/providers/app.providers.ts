@@ -17,6 +17,7 @@ import { FirebaseService } from './database/firebase-service';
 import { StatusBar } from '@ionic-native/status-bar';
 import { SplashScreen } from '@ionic-native/splash-screen';
 import { ElasticModule } from 'angular2-elastic';
+import { Push } from '@ionic-native/push';
 
 export const APP_PROVIDERS = [
     SplashScreen,
@@ -37,5 +38,6 @@ export const APP_PROVIDERS = [
     SmartSiteService,
     ElasticModule,
     CallNumber,
-    InAppBrowser
+    InAppBrowser,
+    Push
 ];

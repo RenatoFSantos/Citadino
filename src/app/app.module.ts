@@ -1,3 +1,4 @@
+import { NotificacaoPage } from './../pages/notificacao/notificacao';
 import { AjudaPage } from './../pages/ajuda/ajuda';
 import { SmartSitePage } from './../pages/smartSite/smartSite';
 import { CtdHeaderModalComponent } from './../shared/components/ctd-header-modal/ctd-header-modal';
@@ -44,8 +45,8 @@ export const firebaseConfig = {
 };
 
 const cloudSettings: CloudSettings = {
-  'core': {
-    'app_id': '3d750d37'
+  core: {
+    app_id: '3d750d37'
   }
 };
 
@@ -75,7 +76,8 @@ const cloudSettings: CloudSettings = {
     TestePage,
     CtdHeaderModalComponent,
     HomeLoginPage,
-    AjudaPage
+    AjudaPage,
+    NotificacaoPage
   ],
   imports: [
     BrowserModule,
@@ -113,7 +115,8 @@ const cloudSettings: CloudSettings = {
     TestePage,
     CtdHeaderModalComponent,
     HomeLoginPage,
-    AjudaPage
+    AjudaPage,
+      
   ],
   providers: [APP_PROVIDERS]
 })

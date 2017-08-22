@@ -1,3 +1,4 @@
+import { NotificacaoPage } from './../pages/notificacao/notificacao';
 import { LoginPage } from './../pages/autenticar/login/login';
 import { AjudaPage } from './../pages/ajuda/ajuda';
 import { MensagemPage } from './../pages/mensagem/mensagem';
@@ -21,7 +22,7 @@ import {
 import { SplashScreen, } from '@ionic-native/splash-screen';
 import { StatusBar } from '@ionic-native/status-bar';
 import * as enums from './../model/dominio/ctdEnum';
-
+import { Push, PushObject, PushOptions } from '@ionic-native/push';
 
 declare var window: any;
 
@@ -53,10 +54,13 @@ export class MyApp implements OnInit {
     private toastCtrl: ToastController,
     private globalVar: GlobalVar,
     private app: App,
-    private loadingCtrl: LoadingController) {
+    private loadingCtrl: LoadingController,
+    public push: Push,
+    public alertCtrl: AlertController) {
 
     this.platform.ready().then(() => {
       this.statusBar.styleDefault();
+
       if (window.cordova) {
         this.netService.initializeNetworkEvents();
         this.networkDisconnectEvent();
@@ -64,10 +68,13 @@ export class MyApp implements OnInit {
         this.appStateEvent();
         // this.checkForUpdate();
         //Inicializa o servico do sqlLite
-        // this.sqService.InitDatabase();
+        // this.sqService.InitDatabase();    
+        
+        this.initPushNotification();
       }
+      
     });
-  }  
+  }
 
   ngOnInit() {
     this.checkFirebase();
@@ -391,6 +398,63 @@ export class MyApp implements OnInit {
     document.addEventListener("resume", () => {
       this.fbService.goOnline();
     }, false);
+  }
 
+  
+  initPushNotification() {
+    if (!this.platform.is('cordova')) {
+      console.warn('Push notifications not initialized. Cordova is not available - Run in physical device');
+      return;
+    }
+    const options: PushOptions = {
+      android: {
+        'senderID': '180769307423',
+        'clearBadge' : 'false',
+        'clearNotifications' : 'false' 
+      },
+      ios: {
+        "alert": 'true',
+        "badge": 'false',
+        "sound": 'true'
+      },
+      windows: {}
+    };
+    const pushObject: PushObject = this.push.init(options);
+
+    pushObject.on('registration').subscribe((data: any) => {
+      console.log('device token -> ' + data.registrationId);
+      //TODO - send device token to server
+    });
+
+    pushObject.on('notification').subscribe((data: any) => {
+      console.log('message -> ' + data.message);
+      console.log('Data Count -> ' + data.count);
+      //if user using app and push notification comes
+      if (data.additionalData.foreground) {
+        // if application open, show popup
+        let confirmAlert = this.alertCtrl.create({
+          title: 'New Notification',
+          message: data.message,
+          buttons: [{
+            text: 'Ignore',
+            role: 'cancel'
+          }, {
+            text: 'View',
+            handler: () => {
+              //TODO: Your logic here
+              this.nav.push(NotificacaoPage, { message: data.message });
+            }
+          }]
+        });
+        confirmAlert.present();
+      } else {
+        //if user NOT using app and push notification comes
+        //TODO: Your logic on click of push notification directly
+        this.nav.push(NotificacaoPage, { message: data.message });
+        console.log('Push notification clicked');
+      }
+    });
+
+    pushObject.on('error').subscribe(error => console.error('Error with Push plugin' + error));
   }
 }
