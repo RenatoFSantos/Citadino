@@ -69,10 +69,12 @@ export class MyApp implements OnInit {
         // this.checkForUpdate();
         //Inicializa o servico do sqlLite
         // this.sqService.InitDatabase();    
-        
-        this.initPushNotification();
+
+        var self = this;
+        setTimeout(function () {
+          self.initPushNotification();
+        }, 1000);
       }
-      
     });
   }
 
@@ -400,7 +402,7 @@ export class MyApp implements OnInit {
     }, false);
   }
 
-  
+
   initPushNotification() {
     if (!this.platform.is('cordova')) {
       console.warn('Push notifications not initialized. Cordova is not available - Run in physical device');
@@ -409,13 +411,14 @@ export class MyApp implements OnInit {
     const options: PushOptions = {
       android: {
         'senderID': '180769307423',
-        'clearBadge' : 'false',
-        'clearNotifications' : 'false' 
+        'clearBadge': false,
+        'clearNotifications': false
       },
       ios: {
-        "alert": 'true',
-        "badge": 'false',
-        "sound": 'true'
+        'senderID': '180769307423',
+        "alert": true,
+        "badge": true,
+        "sound": true
       },
       windows: {}
     };

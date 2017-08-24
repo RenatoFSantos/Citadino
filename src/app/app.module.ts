@@ -34,6 +34,7 @@ import { AngularFireDatabaseModule } from 'angularfire2/database';
 
 // providers
 import { APP_PROVIDERS } from '../providers/app.providers';
+import { UndefinedProvider } from '../providers/undefined/undefined';
 
 export const firebaseConfig = {
   apiKey: "AIzaSyC0maPdTdMQ7ccxuiXHLcZ1IsgeX7qVD6I",
@@ -118,6 +119,7 @@ const cloudSettings: CloudSettings = {
     AjudaPage,
       
   ],
-  providers: [APP_PROVIDERS]
+  providers: [APP_PROVIDERS,
+    UndefinedProvider]
 })
 export class AppModule { }
