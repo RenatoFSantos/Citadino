@@ -1,3 +1,4 @@
+import { TokenDeviceService } from './../providers/service/token-device';
 import { NotificacaoPage } from './../pages/notificacao/notificacao';
 import { LoginPage } from './../pages/autenticar/login/login';
 import { AjudaPage } from './../pages/ajuda/ajuda';
@@ -39,6 +40,7 @@ export class MyApp implements OnInit {
   public firebaseConnectionAttempts: number = 0;
   public timeOutSession: any;
   private toastAlert: any;
+  private tokenPushAtual: string = "";
 
   constructor(private platform: Platform,
     private menuCtrl: MenuController,
@@ -55,25 +57,29 @@ export class MyApp implements OnInit {
     private globalVar: GlobalVar,
     private app: App,
     private loadingCtrl: LoadingController,
-    public push: Push,
-    public alertCtrl: AlertController) {
+    private push: Push,
+    private alertCtrl: AlertController,
+    private tokenSrv: TokenDeviceService) {
 
     this.platform.ready().then(() => {
+      var self = this;
       this.statusBar.styleDefault();
 
       if (window.cordova) {
-        this.netService.initializeNetworkEvents();
-        this.networkDisconnectEvent();
-        this.networkConnectionEvent();
-        this.appStateEvent();
-        // this.checkForUpdate();
-        //Inicializa o servico do sqlLite
-        // this.sqService.InitDatabase();    
 
-        var self = this;
         setTimeout(function () {
-          self.initPushNotification();
+          self.initPushConfigurate();
         }, 1000);
+
+        self.netService.initializeNetworkEvents();
+        self.networkDisconnectEvent();
+        self.networkConnectionEvent();
+        self.appStateEvent();
+
+        //this.checkForUpdate();
+        //Inicializa o servico do sqlLite
+        //this.sqService.InitDatabase();    
+
       }
     });
   }
@@ -83,7 +89,6 @@ export class MyApp implements OnInit {
     this.userLoggedEvent();
     this.mensagemNovaEvent();
   }
-
 
   checkFirebase() {
     let self = this;
@@ -110,6 +115,10 @@ export class MyApp implements OnInit {
             self.popularMenu(true);
             self.userLogged = userRef.val();
             self.splashScreen.hide();
+
+            console.log('Uid ' + userCurrent.uid);
+            self.saveTokenDevice(userCurrent.uid);
+            // self.tokenSrv.saveToken(self.tokenPush, userCurrent.uid);
 
             if (self.userLogged.usua_in_ajuda == true) {
               // self.rootPage = TabsPage;
@@ -173,6 +182,11 @@ export class MyApp implements OnInit {
             if (userRef != null) {
               self.popularMenu(true);
               self.userLogged = userRef.val();
+
+              console.log('Uid ' + userCurrent.uid);
+              self.saveTokenDevice(userCurrent.uid);
+              // self.tokenSrv.saveToken(self.tokenPush, userCurrent.uid);
+
               if (self.userLogged.usua_in_ajuda == true) {
                 // self.rootPage = TabsPage;
                 // this.app.getRootNav().setRoot(TabsPage);
@@ -402,62 +416,175 @@ export class MyApp implements OnInit {
     }, false);
   }
 
+  private initPushConfigurate() {
+    this.pushRegistration()
+      .then(this.pushNotification)
+  }
 
-  initPushNotification() {
-    if (!this.platform.is('cordova')) {
-      console.warn('Push notifications not initialized. Cordova is not available - Run in physical device');
-      return;
-    }
-    const options: PushOptions = {
-      android: {
-        'senderID': '180769307423',
-        'clearBadge': false,
-        'clearNotifications': false
-      },
-      ios: {
-        'senderID': '180769307423',
-        "alert": true,
-        "badge": true,
-        "sound": true
-      },
-      windows: {}
-    };
-    const pushObject: PushObject = this.push.init(options);
+  private pushRegistration = function () {
 
-    pushObject.on('registration').subscribe((data: any) => {
-      console.log('device token -> ' + data.registrationId);
-      //TODO - send device token to server
+    var self = this;
+
+    var promise = new Promise(function (resolve, reject) {
+      const options: PushOptions = {
+        android: {
+          'senderID': '180769307423',
+          'clearBadge': false,
+          'clearNotifications': false
+        },
+        ios: {
+          'senderID': '180769307423',
+          "alert": true,
+          "badge": true,
+          "sound": true
+        },
+        windows: {}
+      };
+
+      const pushObject: PushObject = self.push.init(options);
+
+      pushObject.on('registration').subscribe((data: any) => {
+        console.log('device token -> ' + data.registrationId);
+
+        self.tokenPushAtual = data.registrationId;
+      });
+
+      resolve({ pushObject, self });
     });
 
-    pushObject.on('notification').subscribe((data: any) => {
-      console.log('message -> ' + data.message);
-      console.log('Data Count -> ' + data.count);
-      //if user using app and push notification comes
-      if (data.additionalData.foreground) {
-        // if application open, show popup
-        let confirmAlert = this.alertCtrl.create({
-          title: 'New Notification',
-          message: data.message,
-          buttons: [{
-            text: 'Ignore',
-            role: 'cancel'
-          }, {
-            text: 'View',
-            handler: () => {
-              //TODO: Your logic here
-              this.nav.push(NotificacaoPage, { message: data.message });
-            }
-          }]
+    return promise;
+  }
+
+  private pushNotification = function (pushRegistration) {
+    var self = pushRegistration.self;
+    var pushObject = pushRegistration.pushObject;
+
+    var promise = new Promise(function (resolve, reject) {
+      pushObject.on('notification').subscribe((data: any) => {
+        console.log('message -> ' + data.message);
+
+        //App Aberto exibir alerta
+        if (data.additionalData.foreground) {
+          let confirmAlert = self.alertCtrl.create({
+            title: 'Citadino informa !!!',
+            message: data.message,
+            buttons: [{
+              text: 'Fechar',
+              role: 'cancel'
+            }]
+          });
+          confirmAlert.present();
+        }
+        else {
+          let confirmAlert = self.alertCtrl.create({
+            title: 'Citadino informa !!!',
+            message: data.message,
+            buttons: [{
+              text: 'Fechar',
+              role: 'cancel'
+            }]
+          });
+          confirmAlert.present();
+        }
+      });
+
+      pushObject.on('error').subscribe(error => console.error('Error with Push plugin' + error));
+    });
+    return promise;
+  }
+
+  saveTokenDevice(userUid: string) {
+    let self = this;
+
+    self.usuaSrv.getUserDetail(userUid).then((snapUsuario) => {
+      var usuario: UsuarioVO = snapUsuario.val();
+
+      this.pesquisaToken(usuario)
+        .then(this.pesquisaTokenUsuario)
+        .then(this.salvarTokenUsuario);
+    });
+
+  }
+
+  private pesquisaToken = function (usuario: UsuarioVO) {
+    let self = this;
+
+    var promise = new Promise(function (resolve, reject) {
+      self.tokenSrv.findTokenById(self.tokenPushAtual)
+        .then((snapToken) => {
+          resolve({ self, snapToken, usuario });
+        })
+        .catch((error) => {
+          reject(error);
         });
-        confirmAlert.present();
-      } else {
-        //if user NOT using app and push notification comes
-        //TODO: Your logic on click of push notification directly
-        this.nav.push(NotificacaoPage, { message: data.message });
-        console.log('Push notification clicked');
+    });
+
+    return promise;
+  }
+
+  private pesquisaTokenUsuario = function (verificarToken) {
+    let self = verificarToken.self;
+
+    //Usuario Vinculado ao Token
+    let snapToken = verificarToken.snapToken;
+
+    //Usuario Logado
+    let usuarioLogado: UsuarioVO = verificarToken.usuario;
+
+    //Token vinculado ao usuario
+    let tokenVinculadoUsuario: string = usuarioLogado.usua_tx_tokendevice;
+
+    let eventoToken: number;
+
+    var promise = new Promise(function (resolve, reject) {
+      var usuarioVinculadoToken: string = "";
+
+      if (snapToken.val() != null) {
+        usuarioVinculadoToken = Object.keys(snapToken.val())[0];
+        eventoToken = enums.eventoTokenPush.usuarioAlterar;
+      }
+      else {
+        eventoToken = enums.eventoTokenPush.usuarioSalvar;
+      }
+
+      resolve({ self, eventoToken, usuarioLogado, usuarioVinculadoToken, tokenVinculadoUsuario });
+
+    });
+
+    return promise;
+  }
+
+  private salvarTokenUsuario = function (pesquisaTokenUsuario) {
+    let self = pesquisaTokenUsuario.self;
+    let eventoToken = pesquisaTokenUsuario.eventoToken;
+    let usuarioLogado:UsuarioVO = pesquisaTokenUsuario.usuarioLogado;
+    let usuarioVinculadoToken:string = pesquisaTokenUsuario.usuarioVinculadoToken;
+    let tokenVinculadoUsuario:string = pesquisaTokenUsuario.tokenVinculadoUsuario;
+
+    var promise = new Promise(function (resolve, reject) {
+
+      if (eventoToken == enums.eventoTokenPush.usuarioAlterar) {
+
+        self.tokenSrv.saveToken(self.tokenPushAtual, usuarioLogado.usua_sq_id);
+
+        if (tokenVinculadoUsuario != "") {
+          self.tokenSrv.getTokenDeviceRef().child(tokenVinculadoUsuario).set(null);
+        }
+
+        self.usuaSrv.usersRef.child(usuarioVinculadoToken).child("usua_tx_tokendevice").set(null);
+
+        self.usuaSrv.usersRef.child(usuarioLogado.usua_sq_id).child("usua_tx_tokendevice").set(self.tokenPushAtual);
+
+      }
+      else if (eventoToken == enums.eventoTokenPush.usuarioSalvar) {
+        self.tokenSrv.saveToken(self.tokenPushAtual, usuarioLogado.usua_sq_id);
+
+        self.usuaSrv.usersRef
+          .child(usuarioLogado.usua_sq_id)
+          .child("usua_tx_tokendevice").set(self.tokenPushAtual);
       }
     });
 
-    pushObject.on('error').subscribe(error => console.error('Error with Push plugin' + error));
+    return promise;
   }
 }

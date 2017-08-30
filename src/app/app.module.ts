@@ -1,4 +1,3 @@
-import { NotificacaoPage } from './../pages/notificacao/notificacao';
 import { AjudaPage } from './../pages/ajuda/ajuda';
 import { SmartSitePage } from './../pages/smartSite/smartSite';
 import { CtdHeaderModalComponent } from './../shared/components/ctd-header-modal/ctd-header-modal';
@@ -31,10 +30,8 @@ import { CloudSettings, CloudModule } from '@ionic/cloud-angular';
 import { AngularFireModule } from 'angularfire2';
 import { AngularFireDatabaseModule } from 'angularfire2/database';
 
-
 // providers
 import { APP_PROVIDERS } from '../providers/app.providers';
-import { UndefinedProvider } from '../providers/undefined/undefined';
 
 export const firebaseConfig = {
   apiKey: "AIzaSyC0maPdTdMQ7ccxuiXHLcZ1IsgeX7qVD6I",
@@ -46,8 +43,8 @@ export const firebaseConfig = {
 };
 
 const cloudSettings: CloudSettings = {
-  core: {
-    app_id: '3d750d37'
+  'core': {
+    'app_id': '3d750d37'
   }
 };
 
@@ -77,8 +74,7 @@ const cloudSettings: CloudSettings = {
     TestePage,
     CtdHeaderModalComponent,
     HomeLoginPage,
-    AjudaPage,
-    NotificacaoPage
+    AjudaPage
   ],
   imports: [
     BrowserModule,
@@ -116,10 +112,8 @@ const cloudSettings: CloudSettings = {
     TestePage,
     CtdHeaderModalComponent,
     HomeLoginPage,
-    AjudaPage,
-      
+    AjudaPage
   ],
-  providers: [APP_PROVIDERS,
-    UndefinedProvider]
+  providers: [APP_PROVIDERS]
 })
 export class AppModule { }

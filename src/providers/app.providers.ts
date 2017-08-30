@@ -1,3 +1,4 @@
+import { TokenDeviceService } from './service/token-device';
 import { InAppBrowser } from '@ionic-native/in-app-browser';
 import { SmartSiteService } from './service/smartSite-services';
 import { CallNumber } from '@ionic-native/call-number';
@@ -39,5 +40,6 @@ export const APP_PROVIDERS = [
     ElasticModule,
     CallNumber,
     InAppBrowser,
-    Push
+    Push,
+    TokenDeviceService
 ];
