@@ -1,3 +1,4 @@
+import { NotificacaoService } from './service/notificacao-service';
 import { TokenDeviceService } from './service/token-device';
 import { InAppBrowser } from '@ionic-native/in-app-browser';
 import { SmartSiteService } from './service/smartSite-services';
@@ -18,7 +19,7 @@ import { FirebaseService } from './database/firebase-service';
 import { StatusBar } from '@ionic-native/status-bar';
 import { SplashScreen } from '@ionic-native/splash-screen';
 import { ElasticModule } from 'angular2-elastic';
-import { Push } from '@ionic-native/push';
+import { OneSignal } from '@ionic-native/onesignal';
 
 export const APP_PROVIDERS = [
     SplashScreen,
@@ -40,6 +41,7 @@ export const APP_PROVIDERS = [
     ElasticModule,
     CallNumber,
     InAppBrowser,
-    Push,
-    TokenDeviceService
+    TokenDeviceService,
+    NotificacaoService,
+    OneSignal
 ];

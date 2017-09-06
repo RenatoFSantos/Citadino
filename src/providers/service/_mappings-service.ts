@@ -93,8 +93,7 @@ export class MappingsService {
                 usua_tx_observacao: '',
                 usua_in_empresa: false,
                 usua_in_ajuda: false,
-                usua_tx_urlprofile: user.usua_tx_urlprofile,
-                usua_tx_tokendevice: ''
+                usua_tx_urlprofile: user.usua_tx_urlprofile             
             }
 
         return json;

@@ -23,7 +23,9 @@ import {
 import { SplashScreen, } from '@ionic-native/splash-screen';
 import { StatusBar } from '@ionic-native/status-bar';
 import * as enums from './../model/dominio/ctdEnum';
-import { Push, PushObject, PushOptions } from '@ionic-native/push';
+import { OneSignal } from '@ionic-native/onesignal';
+
+
 
 declare var window: any;
 
@@ -57,9 +59,9 @@ export class MyApp implements OnInit {
     private globalVar: GlobalVar,
     private app: App,
     private loadingCtrl: LoadingController,
-    private push: Push,
     private alertCtrl: AlertController,
-    private tokenSrv: TokenDeviceService) {
+    private tokenSrv: TokenDeviceService,
+    private oneSignal: OneSignal) {
 
     this.platform.ready().then(() => {
       var self = this;
@@ -114,6 +116,7 @@ export class MyApp implements OnInit {
           if (userRef != null) {
             self.popularMenu(true);
             self.userLogged = userRef.val();
+            self.globalVar.usuarioLogado = self.userLogged;
             self.splashScreen.hide();
 
             console.log('Uid ' + userCurrent.uid);
@@ -182,7 +185,8 @@ export class MyApp implements OnInit {
             if (userRef != null) {
               self.popularMenu(true);
               self.userLogged = userRef.val();
-
+              self.globalVar.usuarioLogado = self.userLogged;
+              
               console.log('Uid ' + userCurrent.uid);
               self.saveTokenDevice(userCurrent.uid);
               // self.tokenSrv.saveToken(self.tokenPush, userCurrent.uid);
@@ -292,6 +296,8 @@ export class MyApp implements OnInit {
       case enums.ETypeMenu.logout:
         this.timeOutSession = setTimeout(() => {
           this.usuaSrv.signOut();
+          this.tokenSrv.removeToken(this.tokenPushAtual, this.userLogged.usua_sq_id);
+          this.usuaSrv.removeToken(this.userLogged.usua_sq_id, this.tokenPushAtual);
           this.closeSession();
         }, 1000);
         break;
@@ -417,93 +423,67 @@ export class MyApp implements OnInit {
   }
 
   private initPushConfigurate() {
-    this.pushRegistration()
-      .then(this.pushNotification)
-  }
-
-  private pushRegistration = function () {
-
     var self = this;
 
-    var promise = new Promise(function (resolve, reject) {
-      const options: PushOptions = {
-        android: {
-          'senderID': '180769307423',
-          'clearBadge': false,
-          'clearNotifications': false
-        },
-        ios: {
-          'senderID': '180769307423',
-          "alert": true,
-          "badge": true,
-          "sound": true
-        },
-        windows: {}
-      };
+    //Chamado quando recebe uma notificacao com o app aberto
+    let notificationReceivedCallback = function (jsonData) {
+      console.log('notificationReceivedCallback: ' + JSON.stringify(jsonData));
+    };
 
-      const pushObject: PushObject = self.push.init(options);
+    //Chamado quando abre um notificacao com a app em background
+    let notificationOpenedCallback = function (data: any) {
+      self.redirectToPage(data);
+    };
 
-      pushObject.on('registration').subscribe((data: any) => {
-        console.log('device token -> ' + data.registrationId);
+    window.plugins.OneSignal
+      .startInit("075d2576-04aa-4cae-bd52-ae2e9e690abe", "180769307423")
+      .handleNotificationOpened(notificationOpenedCallback)
+      .handleNotificationReceived(notificationReceivedCallback)
+      .inFocusDisplaying(self.oneSignal.OSInFocusDisplayOption.None)
+      .endInit();
 
-        self.tokenPushAtual = data.registrationId;
-      });
-
-      resolve({ pushObject, self });
-    });
-
-    return promise;
   }
 
-  private pushNotification = function (pushRegistration) {
-    var self = pushRegistration.self;
-    var pushObject = pushRegistration.pushObject;
+  private redirectToPage(data: any) {
+    var self = this;
+    // alert( JSON.stringify(jsonData));
+    let eventType = data.notification.payload.additionalData.eventType
 
-    var promise = new Promise(function (resolve, reject) {
-      pushObject.on('notification').subscribe((data: any) => {
-        console.log('message -> ' + data.message);
-
-        //App Aberto exibir alerta
-        if (data.additionalData.foreground) {
-          let confirmAlert = self.alertCtrl.create({
-            title: 'Citadino informa !!!',
-            message: data.message,
-            buttons: [{
-              text: 'Fechar',
-              role: 'cancel'
-            }]
-          });
-          confirmAlert.present();
-        }
-        else {
-          let confirmAlert = self.alertCtrl.create({
-            title: 'Citadino informa !!!',
-            message: data.message,
-            buttons: [{
-              text: 'Fechar',
-              role: 'cancel'
-            }]
-          });
-          confirmAlert.present();
-        }
-      });
-
-      pushObject.on('error').subscribe(error => console.error('Error with Push plugin' + error));
-    });
-    return promise;
+    switch (eventType) {
+      case enums.eventTypePush.vitrine: {
+        // self.navController.push(VitrinePage);
+        self.nav.getActiveChildNavs()[0].select(enums.eventTypePush.vitrine)
+        break;
+      } case enums.eventTypePush.guia: {
+        // self.navController.push(GuiaPage)
+        self.nav.getActiveChildNavs()[0].select(enums.eventTypePush.guia)
+        break;
+      } case enums.eventTypePush.mensagem: {
+        // self.navController.push(MensagemListaPage);
+        self.nav.getActiveChildNavs()[0].select(enums.eventTypePush.mensagem)
+        break;
+      }
+    }
   }
 
   saveTokenDevice(userUid: string) {
     let self = this;
 
-    self.usuaSrv.getUserDetail(userUid).then((snapUsuario) => {
-      var usuario: UsuarioVO = snapUsuario.val();
+    window.plugins.OneSignal.getPermissionSubscriptionState(function (status) {
+      self.tokenPushAtual = status.subscriptionStatus.userId;
 
-      this.pesquisaToken(usuario)
-        .then(this.pesquisaTokenUsuario)
-        .then(this.salvarTokenUsuario);
+      console.log("user id token " + self.tokenPushAtual);
+
+      if (self.tokenPushAtual != "") {
+        self.usuaSrv.getUserDetail(userUid).then((snapUsuario) => {
+          var usuario: UsuarioVO = snapUsuario.val();
+
+          self.pesquisaToken(usuario)
+            .then(self.pesquisaTokenUsuario)
+            .then(self.salvarTokenUsuario);
+        });
+      }
     });
-
   }
 
   private pesquisaToken = function (usuario: UsuarioVO) {
@@ -532,7 +512,7 @@ export class MyApp implements OnInit {
     let usuarioLogado: UsuarioVO = verificarToken.usuario;
 
     //Token vinculado ao usuario
-    let tokenVinculadoUsuario: string = usuarioLogado.usua_tx_tokendevice;
+    let tokenVinculadoUsuario: string = "";
 
     let eventoToken: number;
 
@@ -541,7 +521,14 @@ export class MyApp implements OnInit {
 
       if (snapToken.val() != null) {
         usuarioVinculadoToken = Object.keys(snapToken.val())[0];
-        eventoToken = enums.eventoTokenPush.usuarioAlterar;
+
+        if (usuarioVinculadoToken != usuarioLogado.usua_sq_id) {
+          eventoToken = enums.eventoTokenPush.usuarioAlterar;
+        }
+        else {
+          eventoToken = enums.eventoTokenPush.usuarioCorreto;
+        }
+
       }
       else {
         eventoToken = enums.eventoTokenPush.usuarioSalvar;
@@ -557,9 +544,9 @@ export class MyApp implements OnInit {
   private salvarTokenUsuario = function (pesquisaTokenUsuario) {
     let self = pesquisaTokenUsuario.self;
     let eventoToken = pesquisaTokenUsuario.eventoToken;
-    let usuarioLogado:UsuarioVO = pesquisaTokenUsuario.usuarioLogado;
-    let usuarioVinculadoToken:string = pesquisaTokenUsuario.usuarioVinculadoToken;
-    let tokenVinculadoUsuario:string = pesquisaTokenUsuario.tokenVinculadoUsuario;
+    let usuarioLogado: UsuarioVO = pesquisaTokenUsuario.usuarioLogado;
+    let usuarioVinculadoToken: string = pesquisaTokenUsuario.usuarioVinculadoToken;
+    let tokenVinculadoUsuario: string = pesquisaTokenUsuario.tokenVinculadoUsuario;
 
     var promise = new Promise(function (resolve, reject) {
 
@@ -567,21 +554,18 @@ export class MyApp implements OnInit {
 
         self.tokenSrv.saveToken(self.tokenPushAtual, usuarioLogado.usua_sq_id);
 
-        if (tokenVinculadoUsuario != "") {
-          self.tokenSrv.getTokenDeviceRef().child(tokenVinculadoUsuario).set(null);
-        }
+        self.usuaSrv.usersRef.child(usuarioVinculadoToken)
+          .child("tokendevice").child(tokenVinculadoUsuario).set(null);
 
-        self.usuaSrv.usersRef.child(usuarioVinculadoToken).child("usua_tx_tokendevice").set(null);
-
-        self.usuaSrv.usersRef.child(usuarioLogado.usua_sq_id).child("usua_tx_tokendevice").set(self.tokenPushAtual);
+        self.usuaSrv.usersRef.child(usuarioLogado.usua_sq_id)
+          .child("tokendevice").set(self.tokenPushAtual);
 
       }
       else if (eventoToken == enums.eventoTokenPush.usuarioSalvar) {
+
         self.tokenSrv.saveToken(self.tokenPushAtual, usuarioLogado.usua_sq_id);
 
-        self.usuaSrv.usersRef
-          .child(usuarioLogado.usua_sq_id)
-          .child("usua_tx_tokendevice").set(self.tokenPushAtual);
+        self.usuaSrv.saveToken(usuarioLogado.usua_sq_id, self.tokenPushAtual);
       }
     });
 

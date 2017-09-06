@@ -1,3 +1,4 @@
+import { GlobalVar } from './../../shared/global-var';
 import { NetworkService } from './../../providers/service/network-service';
 import { MensagemPage } from './../mensagem/mensagem';
 import { MensagemService } from './../../providers/service/mensagem-service';
@@ -22,7 +23,8 @@ export class MensagemListaPage implements OnInit {
     private loadingCtrl: LoadingController,
     private events: Events,
     private mensSrv: MensagemService,
-    private netService: NetworkService) {
+    private netService: NetworkService,
+    private globalVar: GlobalVar) {
     this.usuaSrvTest = usuaSrv;
   }
 
@@ -33,9 +35,10 @@ export class MensagemListaPage implements OnInit {
 
   ngOnInit() { }
 
-  // ionViewDidLeave() {
-  //   this.netService.closeStatusConnection();
-  // }
+  ionViewDidLeave() {
+    console.log("Mensagem ok")
+    // this.netService.closeStatusConnection();
+  }
 
   public removeMensagem(usua_sq_id_to: string) {
     let userCurrent = this.usuaSrv.getLoggedInUser();
@@ -102,7 +105,6 @@ export class MensagemListaPage implements OnInit {
     var promise = new Promise(function (resolve, reject) {
       firstPromise.users.forEach(user => {
         var promise = self.usuaSrvTest.getUserDetail(user.key);
-        statusMensagem.push(user.val());
         promises.push(promise);
       });
       resolve({ promises, statusMensagem, self });
@@ -118,17 +120,27 @@ export class MensagemListaPage implements OnInit {
     let self = secondPromise.self;
 
     var promAll = Promise.all(promises).then(values => {
-      let count: number = 0;
+      let mensagemNova: boolean = false;
       values.forEach((element: any) => {
 
         if (element != null && element.val() != null) {
-          
+
           let mensagem: MensagemVO = new MensagemVO();
+
+          if (self.globalVar.usuarioLogado.mensagem != null) {
+            var keys = Object.keys(self.globalVar.usuarioLogado.mensagem);
+            keys.forEach(itemKey => {
+              if (itemKey == element.val().usua_sq_id) {
+                mensagemNova = self.globalVar.usuarioLogado.mensagem[itemKey];
+                return;
+              }
+            });
+          }
 
           mensagem.usua_sq_id_from = self.usuaSrv.getLoggedInUser().uid;
           mensagem.usua_sq_id_to = element.val().usua_sq_id;
           mensagem.usua_nm_usuario_to = element.val().usua_nm_usuario
-          mensagem.mens_nova = statusMensagem[count];
+          mensagem.mens_nova = mensagemNova;
 
           if (element.child('empresa').exists()) {
             element.child('empresa').forEach(itemEmpresa => {
@@ -143,8 +155,7 @@ export class MensagemListaPage implements OnInit {
             mensagem.mens_nm_enviado = element.val().usua_nm_usuario;
             mensagem.mens_tx_logo_enviado = element.val().usua_tx_urlprofile;
           }
-
-          count++;
+      
           self.mensagens.push(mensagem);
         }
 
@@ -155,6 +166,8 @@ export class MensagemListaPage implements OnInit {
   };
 
   openMensagemPage(mensagem: MensagemVO) {
+    let self = this;
+
     let loader = this.loadingCtrl.create({
       content: 'Aguarde...',
       dismissOnPageChange: true
@@ -165,6 +178,17 @@ export class MensagemListaPage implements OnInit {
     let userCurrent = this.usuaSrv.getLoggedInUser();
     this.usuaSrv.getUserDetail(userCurrent.uid).then((snapUsuario) => {
       let usuario: UsuarioVO = snapUsuario.val();
+      let tokensUsuario: Array<string> = [];
+
+      self.usuaSrv.getTokens(mensagem.usua_sq_id_to).then((snapToken) => {
+        if (snapToken.val() != null) {
+          snapToken.forEach((token: any) => {
+            tokensUsuario.push(token.key);
+          });
+        }
+      });
+
+
       let mensParam = {
         usua_sq_logado: usuario.usua_sq_id,
         usua_sq_id_from: usuario.usua_sq_id,
@@ -172,7 +196,8 @@ export class MensagemListaPage implements OnInit {
         usua_sq_id_to: mensagem.usua_sq_id_to,
         usua_nm_usuario_to: mensagem.usua_nm_usuario_to,
         mens_nm_enviado: mensagem.mens_nm_enviado,
-        mens_tx_logo_enviado: usuario.usua_tx_urlprofile != '' ? usuario.usua_tx_urlprofile : ''
+        mens_tx_logo_enviado: usuario.usua_tx_urlprofile != '' ? usuario.usua_tx_urlprofile : '',
+        usua_tokens: tokensUsuario
       };
 
       mensagem.mens_nova = false;

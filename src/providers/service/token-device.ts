@@ -26,4 +26,10 @@ export class TokenDeviceService {
 
   }
 
+  removeToken(token: string, uid: string) {
+
+    this.tokenDeviceRef.child(token).child(uid).set(null);
+
+  }
+
 }
