@@ -1,3 +1,5 @@
+import { MappingsService } from './../providers/service/_mappings-service';
+import { EnviarNotificacaoPage } from './../pages/enviar-notificacao/enviar-notificacao';
 import { TokenDeviceService } from './../providers/service/token-device';
 import { NotificacaoPage } from './../pages/notificacao/notificacao';
 import { LoginPage } from './../pages/autenticar/login/login';
@@ -61,7 +63,8 @@ export class MyApp implements OnInit {
     private loadingCtrl: LoadingController,
     private alertCtrl: AlertController,
     private tokenSrv: TokenDeviceService,
-    private oneSignal: OneSignal) {
+    private oneSignal: OneSignal,
+    private mapSrv: MappingsService) {
 
     this.platform.ready().then(() => {
       var self = this;
@@ -114,7 +117,7 @@ export class MyApp implements OnInit {
       if (userCurrent != null) {
         self.usuaSrv.getUserDetail(userCurrent.uid).then((userRef) => {
           if (userRef != null) {
-            self.popularMenu(true);
+            self.popularMenu(true, userRef.val());
             self.userLogged = userRef.val();
             self.globalVar.usuarioLogado = self.userLogged;
             self.splashScreen.hide();
@@ -183,10 +186,10 @@ export class MyApp implements OnInit {
         if (userCurrent != null) {
           self.usuaSrv.getUserDetail(userCurrent.uid).then((userRef) => {
             if (userRef != null) {
-              self.popularMenu(true);
+              self.popularMenu(true, userRef.val());
               self.userLogged = userRef.val();
               self.globalVar.usuarioLogado = self.userLogged;
-              
+
               console.log('Uid ' + userCurrent.uid);
               self.saveTokenDevice(userCurrent.uid);
               // self.tokenSrv.saveToken(self.tokenPush, userCurrent.uid);
@@ -325,7 +328,9 @@ export class MyApp implements OnInit {
     return;
   }
 
-  public popularMenu(value: boolean) {
+  public popularMenu(value: boolean, usuarioParam: any) {
+    
+    var userJson:any = this.mapSrv.getUserJson(usuarioParam);
 
     try {
       this.pages = [
@@ -354,8 +359,12 @@ export class MyApp implements OnInit {
       // { title: 'Contato', component: TestePage, icon: 'contact', typeMenu: enums.ETypeMenu.default },
       { title: 'Ajuda', component: AjudaPage, icon: 'md-help', typeMenu: enums.ETypeMenu.default }
       // { title: 'Sobre', component: TestePage, icon: 'information-circle', typeMenu: enums.ETypeMenu.default }
-
     ];
+
+    if (userJson.usua_in_adm == false) {
+      console.log(userJson.usua_in_adm);
+      this.subpages.push({ title: 'Enviar Notificação', component: EnviarNotificacaoPage, icon: 'exit', typeMenu: enums.ETypeMenu.default });
+    }
 
     if (value == true) {
       this.subpages.push({ title: 'Sair', component: TabsPage, icon: 'exit', typeMenu: enums.ETypeMenu.logout });

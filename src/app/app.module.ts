@@ -1,3 +1,4 @@
+import { EnviarNotificacaoPage } from './../pages/enviar-notificacao/enviar-notificacao';
 import { AjudaPage } from './../pages/ajuda/ajuda';
 import { SmartSitePage } from './../pages/smartSite/smartSite';
 import { CtdHeaderModalComponent } from './../shared/components/ctd-header-modal/ctd-header-modal';
@@ -74,7 +75,8 @@ const cloudSettings: CloudSettings = {
     TestePage,
     CtdHeaderModalComponent,
     HomeLoginPage,
-    AjudaPage
+    AjudaPage,
+    EnviarNotificacaoPage
   ],
   imports: [
     BrowserModule,
@@ -112,7 +114,8 @@ const cloudSettings: CloudSettings = {
     TestePage,
     CtdHeaderModalComponent,
     HomeLoginPage,
-    AjudaPage
+    AjudaPage,
+    EnviarNotificacaoPage
   ],
   providers: [APP_PROVIDERS]
 })

@@ -19,6 +19,7 @@ export class UsuarioVO {
     public usua_tx_urlprofile: string;
     public usua_in_ajuda:boolean;
     public empresa: EmpresaVO;
+    public usua_in_adm:boolean;
 
  
     constructor() {
@@ -36,6 +37,7 @@ export class UsuarioVO {
         this.usua_in_empresa = false;
         this.usua_in_ajuda = false;
         this.empresa = new EmpresaVO();
+        this.usua_in_adm = false;
       
     }
 }
