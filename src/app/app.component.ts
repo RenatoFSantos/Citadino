@@ -363,7 +363,7 @@ export class MyApp implements OnInit {
 
     if (userJson.usua_in_adm == false) {
       console.log(userJson.usua_in_adm);
-      this.subpages.push({ title: 'Enviar Notificação', component: EnviarNotificacaoPage, icon: 'exit', typeMenu: enums.ETypeMenu.default });
+      this.subpages.push({ title: 'Enviar Notificação', component: EnviarNotificacaoPage, icon: 'md-notifications', typeMenu: enums.ETypeMenu.default });
     }
 
     if (value == true) {
@@ -434,6 +434,10 @@ export class MyApp implements OnInit {
   private initPushConfigurate() {
     var self = this;
 
+    let headers = {
+      "Content-Type": "application/json; charset=utf-8",
+      "Authorization": "Basic 075d2576-04aa-4cae-bd52-ae2e9e690abe"
+    };
     //Chamado quando recebe uma notificacao com o app aberto
     let notificationReceivedCallback = function (jsonData) {
       console.log('notificationReceivedCallback: ' + JSON.stringify(jsonData));

@@ -111,9 +111,8 @@ export class MensagemPage {
             self.content.scrollToBottom();
             self.mens_txt_mensagem = "";
 
-
             if (self.usua_tokens != null && self.usua_tokens.length > 0) {
-              self.notifSrv.sendMensagem(self.usua_tokens, CtdFuncoes.ellipsis(chat.usua_nm_usuario_from, 20), CtdFuncoes.ellipsis(chat.mens_txt_mensagem, 50), enums.eventTypePush.mensagem);
+              self.notifSrv.sendUidMensagem(self.usua_tokens, CtdFuncoes.ellipsis(chat.usua_nm_usuario_from, 20), CtdFuncoes.ellipsis(chat.mens_txt_mensagem, 50), enums.eventTypePush.mensagem);
             }
 
           })

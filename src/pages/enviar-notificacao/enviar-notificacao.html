@@ -5,27 +5,38 @@
 </ion-header>
 
 <ion-content padding>
-  <form>
+  <form [formGroup]="formNotif" (ngSubmit)="onSubmit(formNotif.value)">
     <ion-row>
       <ion-col>
-        <ion-item>
+        <ion-item [class.error]="!notif_tx_titulo.valid && notif_tx_titulo.touched">
           <ion-label stacked>Título</ion-label>
-          <ion-input type="text" maxlength="20"></ion-input>
+          <ion-input type="text" maxlength="20" [formControl]="notif_tx_titulo"></ion-input>
         </ion-item>
+        <div *ngIf="(notif_tx_titulo.hasError('required')|| notif_tx_titulo.hasError('minlength')) && notif_tx_titulo.touched" class="error-box">* Título com no máximo de 20 caracteres.</div>
       </ion-col>
     </ion-row>
     <ion-row>
       <ion-col>
-        <ion-item>
+        <ion-item [class.error]="!notif_tx_mensagem.valid && notif_tx_mensagem.touched">
           <ion-label stacked>Mensagem</ion-label>
-          <ion-textarea></ion-textarea>
+          <ion-textarea type="text" maxlength="50" [formControl]="notif_tx_mensagem"></ion-textarea>
         </ion-item>
       </ion-col>
+      <div *ngIf="(notif_tx_mensagem.hasError('required')|| notif_tx_mensagem.hasError('minlength')) && notif_tx_mensagem.touched" class="error-box">* Mensagem com no máximo de 50 caracteres.</div>
     </ion-row>
     <ion-row>
       <ion-col>
-        <button ion-button>Enviar</button>
+        <button ion-button type="submit" class="custom-button" [disabled]="!formNotif.valid" block>Enviar</button>
       </ion-col>
+    </ion-row>
+    <ion-row>
+      <ion-col width-25></ion-col>
+      <ion-col width-50>
+        <div padding>
+          <p *ngIf="error" class="error">Error:&nbsp;{{ error.message }}</p>
+        </div>
+      </ion-col>
+      <ion-col width-25></ion-col>
     </ion-row>
   </form>
 </ion-content>
