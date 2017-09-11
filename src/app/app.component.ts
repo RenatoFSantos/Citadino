@@ -361,7 +361,7 @@ export class MyApp implements OnInit {
       // { title: 'Sobre', component: TestePage, icon: 'information-circle', typeMenu: enums.ETypeMenu.default }
     ];
 
-    if (userJson.usua_in_adm == false) {
+    if (userJson.usua_in_adm == true) {
       console.log(userJson.usua_in_adm);
       this.subpages.push({ title: 'Enviar Notificação', component: EnviarNotificacaoPage, icon: 'md-notifications', typeMenu: enums.ETypeMenu.default });
     }
