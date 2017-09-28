@@ -1,3 +1,4 @@
+import { EmpresaVO } from './../../model/empresaVO';
 import { CtdFuncoes } from './../../shared/ctdFuncoes';
 import { UsuarioVO } from './../../model/usuarioVO';
 import { VitrineVO } from './../../model/vitrineVO';
@@ -94,11 +95,82 @@ export class MappingsService {
                 usua_in_empresa: false,
                 usua_in_ajuda: false,
                 usua_tx_urlprofile: user.usua_tx_urlprofile,
-                usua_in_adm: false
+                usua_sg_perfil: user.usua_sg_perfil
             }
 
         return json;
     }
 
 
+    getUsuario(snapshot: any): UsuarioVO {
+
+        let usuario: UsuarioVO = {
+            usua_id: 0,
+            usua_sq_id: snapshot.val().usua_sq_id,
+            usua_nm_usuario: snapshot.val().usua_nm_usuario,
+            usua_tx_login: snapshot.val().usua_tx_login,
+            usua_tx_senha: snapshot.val().usua_tx_senha,
+            usua_ds_sexo: snapshot.val().usua_ds_sexo,
+            usua_dt_inclusao: snapshot.val().usua_dt_inclusao,
+            usua_ds_telefone: snapshot.val().usua_ds_telefone,
+            usua_ds_email: snapshot.val().usua_ds_email,
+            usua_nr_reputacao: snapshot.val().usua_nr_reputacao,
+            usua_tx_observacao: snapshot.val().usua_tx_observacao,
+            usua_in_empresa: snapshot.val().usua_in_empresa,
+            usua_in_ajuda: snapshot.val().usua_in_ajuda,
+            usua_tx_urlprofile: snapshot.val().usua_tx_urlprofile,
+            usua_sg_perfil: snapshot.val().usua_sg_perfil,
+            empresa: this.getUsuarioEmpresa(snapshot)           
+            
+        };
+
+        return usuario;
+    }
+
+
+    getUsuarioEmpresa(snapUsuaEmpr: any ): EmpresaVO {
+
+        if (snapUsuaEmpr.child('empresa').exists()) {
+
+            var objEmpresaVal:any = Object.keys(snapUsuaEmpr.child('empresa').val())
+            var empr:any = snapUsuaEmpr.child('empresa').val()[objEmpresaVal];
+
+            let empresa: EmpresaVO = {
+                empr_sq_id : empr.empr_sq_id,
+                empr_nm_razaosocial: empr.empr_nm_razaosocial,
+                empr_nm_fantasia: '',
+                empr_tx_endereco: '',
+                empr_tx_bairro: '',
+                empr_tx_cidade: '',
+                empr_sg_uf: '',
+                empr_nr_cep: '',
+                empr_nr_credito : 0,
+                empr_tx_logomarca: '',
+                empr_tx_telefone_1: '',
+                empr_tx_telefone_2: '',
+                empr_nm_contato: '',
+                empr_ds_email:'',
+                empr_ds_site:'',
+                empr_sg_pessoa:'',
+                empr_nr_documento: '',
+                empr_nr_inscestadual: '',
+                empr_nr_inscmunicipal: '',
+                empr_tx_googlemaps: '',
+                empr_tx_sobre: '',
+                empr_tx_observacao: '',
+                empr_nr_reputacao: 0,
+                empr_in_mensagem : true,
+                empr_in_parceiro : false,
+                empr_tx_subcategoria : '',
+                categoria : null,
+                plano : null,
+                isIndexNome : false 
+            }
+
+            return empresa;
+        }
+        else {
+            return null;
+        }
+    }
 }

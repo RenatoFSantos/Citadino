@@ -33,7 +33,7 @@ export class SignUpPage implements OnInit {
 
   ngOnInit() {
     this.createLoginForm = this.fb.group({
-      'usua_nm_usuario': ['', Validators.compose([Validators.required, Validators.maxLength(50)])],
+      'usua_nm_usuario': ['', Validators.compose([Validators.required, Validators.maxLength(60)])],
       'usua_ds_email': ['', Validators.compose([Validators.required, EmailValidator.isValid])],
       'usua_tx_senha': ['', Validators.compose([Validators.required, Validators.minLength(6)])]
     });
@@ -63,7 +63,7 @@ export class SignUpPage implements OnInit {
       this.newUser.usua_ds_email = signupForm.usua_ds_email;
       this.newUser.usua_tx_senha = signupForm.usua_tx_senha;
       this.newUser.usua_tx_urlprofile = this.urlImage;
-
+      this.newUser.usua_sg_perfil = "USU";
       this.loaderPerfil.present();
 
       self.loginService.registerUser(newAuth).then((result) => {

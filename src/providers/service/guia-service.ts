@@ -8,6 +8,7 @@ export class GuiaService {
   private categoriaRef: any;
   private descritorRef: any;
 
+
   constructor(public fbService: FirebaseService) {
     this.categoriaRef = this.fbService.getDataBase().ref('categoria');
     this.descritorRef = this.fbService.getDataBase().ref('descritorempresa');
@@ -33,6 +34,50 @@ export class GuiaService {
 
   public getEmpresaByDescritor(descritor: string) {
     return this.descritorRef.child(descritor).child('empresa').orderByChild('empr_nm_razaosocial').once('value');
+  }
+
+  public getPathPlantaoFarmacia() {
+    let self = this;
+    var promise = new Promise(function (resolve, reject) {
+      self.fbService.getStorageRef().child('images/infoutil/slide-plantao.jpg')
+        .getDownloadURL().then((url) => {
+
+          resolve(url);
+
+        }).catch(() => {
+          reject("Não foi possível localizar a imagem.");
+        });
+    });
+
+    return promise;
+
+  }
+
+  public getPathHorarioOnibus() {
+    let self = this;
+    var paths: string[] = [];
+
+    var promise = new Promise(function (resolve, reject) {
+      self.fbService.getStorageRef().child('images/infoutil/slide-bus-1.jpg')
+        .getDownloadURL().then((url) => {
+          paths.push(url);
+
+          self.fbService.getStorageRef().child('images/infoutil/slide-bus-2.jpg')
+            .getDownloadURL().then((url) => {
+              paths.push(url);
+            }).catch(() => {
+              reject("Não foi possível localizar a imagem.");
+            });
+
+          paths.push(url);
+          resolve(paths);
+
+        }).catch(() => {
+          reject("Não foi possível localizar a imagem.");
+        });
+    });
+
+    return promise;
   }
 
 }

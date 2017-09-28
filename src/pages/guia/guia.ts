@@ -1,3 +1,5 @@
+import { AnuncioFullPage } from './../anuncio-full/anuncio-full';
+import { VitrineVO } from './../../model/vitrineVO';
 import { GlobalVar } from './../../shared/global-var';
 import { NetworkService } from './../../providers/service/network-service';
 import { ItemsService } from './../../providers/service/_items-service';
@@ -188,21 +190,49 @@ export class GuiaPage implements OnInit {
   }
 
 
-  openGuiaCategoria(categoriaNm: string, categoriaKey: string) {
+  openGuiaCategoria(categoriaNm: string, categoriaKey: string, cate_in_tipo: string) {
     let loader = this.loadingCtrl.create({
       content: 'Aguarde...',
       dismissOnPageChange: true
     });
 
     loader.present();
-    let empresaskey: any = [];
-    this.guiaSrv.getEmpresaByCategoria(categoriaKey).then((snapShot) => {
-      snapShot.forEach(element => {
-        empresaskey.push(element.key);
+
+
+    if (cate_in_tipo == 'CT' || cate_in_tipo == '' || typeof cate_in_tipo === 'undefined') {
+      let empresaskey: any = [];
+      this.guiaSrv.getEmpresaByCategoria(categoriaKey).then((snapShot) => {
+        snapShot.forEach(element => {
+          empresaskey.push(element.key);
+        });
+        loader.dismiss();
+        this.navCtrl.push(GuiaListaPage, { categNm: categoriaNm, emprKeys: empresaskey })
       });
-      loader.dismiss();
-      this.navCtrl.push(GuiaListaPage, { categNm: categoriaNm, emprKeys: empresaskey })
-    });
+    } else if (cate_in_tipo == 'PF') {
+      let vitrine: VitrineVO = new VitrineVO();
+
+      this.guiaSrv.getPathPlantaoFarmacia().then((url: any) => {
+        vitrine.anun_tx_urlslide1 = url;
+        this.navCtrl.push(AnuncioFullPage, { anuncio: vitrine });
+      })
+        .catch((error) => {
+
+        });
+
+    }
+    else if (cate_in_tipo == 'HO') {
+      let vitrine: VitrineVO = new VitrineVO();
+
+      this.guiaSrv.getPathHorarioOnibus().then((paths: any) => {
+        vitrine.anun_tx_urlslide1 = paths[0];
+        vitrine.anun_tx_urlslide2 = paths[1];
+        this.navCtrl.push(AnuncioFullPage, { anuncio: vitrine });
+      })
+        .catch((error) => {
+
+        });
+    }
+
     loader.dismiss();
   }
 

@@ -15,7 +15,7 @@
         <ion-grid>
             <ion-row *ngFor="let itemRow of categorias">
                 <ion-col width-33 *ngFor="let itemCol of itemRow">
-                    <img src="{{itemCol.cate_tx_imagem}}" (click)="openGuiaCategoria(itemCol.cate_nm_categoria, itemCol.cate_sq_id)">
+                    <img src="{{itemCol.cate_tx_imagem}}" (click)="openGuiaCategoria(itemCol.cate_nm_categoria, itemCol.cate_sq_id, itemCol.cate_in_tipo)">
                 </ion-col>
             </ion-row>
         </ion-grid>

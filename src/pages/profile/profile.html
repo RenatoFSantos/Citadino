@@ -1,0 +1,83 @@
+<ion-header>
+  <ion-navbar color="ctd-navbar">
+    <ion-title>Minha Conta</ion-title>
+  </ion-navbar>
+</ion-header>
+
+<ion-content id="profileForm">
+  <form [formGroup]="frmProfile" (ngSubmit)="onSubmit(frmProfile.value)">
+    <ion-row>
+      <ion-col>
+        <ion-item>
+          <!-- <div id="imgwrap"> -->
+            <ion-avatar class="avatar_profile">
+              <img src="{{myPhoto}}" (click)="selecionarTipoUpload()">
+            </ion-avatar>
+          <!-- </div> -->
+        </ion-item>
+      </ion-col>
+    </ion-row>
+    <ion-row>
+      <ion-col>
+        <ion-item [class.error]="!frmProfile.controls.usua_nm_usuario.valid && frmProfile.controls.usua_nm_usuario.touched">
+          <ion-label stacked class="labelProfile">*Nome</ion-label>
+          <ion-input class="inputProfile" type="text" [(ngModel)]="usuario.usua_nm_usuario" formControlName="usua_nm_usuario"></ion-input>
+        </ion-item>
+        <div *ngIf="!frmProfile.controls.usua_nm_usuario.valid &&   frmProfile.controls.usua_nm_usuario.touched" class="error-box">* Máximo de 60 caracteres.</div>
+      </ion-col>
+    </ion-row>
+    <ion-row>
+      <ion-col>
+        <ion-item [class.error]="!frmProfile.controls.usua_ds_email.valid && frmProfile.controls.usua_ds_email.touched" class="inputEmail">
+          <ion-label stacked class="labelProfile">*E-mail</ion-label>
+          <ion-input class="inputProfile" readonly="true" type="text" [(ngModel)]="usuario.usua_ds_email" formControlName="usua_ds_email"></ion-input>
+        </ion-item>
+        <div *ngIf="!frmProfile.controls.usua_ds_email.valid && frmProfile.controls.usua_ds_email.touched" class="error-box">* Informe um email válido.</div>
+      </ion-col>
+    </ion-row>
+    <ion-row>
+      <ion-col>
+        <ion-item>
+          <ion-label stacked class="labelProfile">Telefone</ion-label>
+          <ion-input type="tel" class="inputProfile" [(ngModel)]="usuario.usua_ds_telefone" formControlName="usua_ds_telefone"></ion-input>
+        </ion-item>
+      </ion-col>
+    </ion-row>
+    <ion-row>
+      <ion-col>
+        <ion-item [class.error]="!frmProfile.controls.usua_tx_senha_atual.valid && frmProfile.controls.usua_tx_senha_atual.touched"
+          class="inputEmail">
+          <ion-label stacked class="labelProfile">Senha atual</ion-label>
+          <ion-input class="inputProfile" type="password" value="" formControlName="usua_tx_senha_atual"></ion-input>
+        </ion-item>
+        <div *ngIf="!frmProfile.controls.usua_tx_senha_atual.valid && frmProfile.controls.usua_tx_senha_atual.touched" class="error-box">* Senha com no mínimo de 6 caracteres.</div>
+      </ion-col>
+    </ion-row>
+    <ion-row>
+      <ion-col>
+        <ion-item [class.error]="!frmProfile.controls.usua_tx_senha.valid && frmProfile.controls.usua_tx_senha.touched" class="inputEmail">
+          <ion-label stacked class="labelProfile">Nova senha</ion-label>
+          <ion-input class="inputProfile" type="password" value="" formControlName="usua_tx_senha"></ion-input>
+        </ion-item>
+        <div *ngIf="!frmProfile.controls.usua_tx_senha.valid && frmProfile.controls.usua_tx_senha.touched" class="error-box">* Senha com no mínimo de 6 caracteres.</div>
+      </ion-col>
+    </ion-row>
+    <ion-row>
+      <ion-col>
+        <ion-item [class.error]="!frmProfile.controls.usua_tx_nova_senha.valid && frmProfile.controls.usua_tx_nova_senha.touched"
+          class="inputEmail">
+          <ion-label stacked class="labelProfile">Repetir nova senha</ion-label>
+          <ion-input class="inputProfile" type="password" value="" formControlName="usua_tx_nova_senha"></ion-input>
+        </ion-item>
+        <div *ngIf="frmProfile.hasError('senhaDiferente')" class="error-box">* As senhas estão diferentes.</div>
+      </ion-col>
+    </ion-row>
+    <ion-row>
+      <ion-col>
+        <div id="btnSalvar">
+          <button class="btnSalvar" ion-button type="submit" [disabled]="!frmProfile.valid" block>Salvar</button>
+        </div>
+      </ion-col>
+    </ion-row>
+  </form>
+</ion-content>
