@@ -20,6 +20,8 @@ export class NotificacaoService {
           include_player_ids: uid,
           small_icon: "ic_stat_icon",
           large_icon: "icon",
+          ios_badgeType:"Increase",
+          ios_badgeCount: 1,
           android_group: subtitle,
           android_accent_color: "008641",
           android_group_message: { "en": "Você tem  $[notif_count] novas mensagens" }
