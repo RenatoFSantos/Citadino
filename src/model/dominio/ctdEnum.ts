@@ -20,4 +20,15 @@ export enum Connection {
     NONE = <any>"none"
 }
 
+export enum eventoTokenPush {
+    usuarioSalvar = <number> 0,
+    usuarioAlterar = <number> 1,
+    usuarioCorreto = <number> 2
+}
+
+export enum eventTypePush {
+    vitrine = <number> 0,
+    guia = <number> 1,
+    mensagem = <number> 2
+}
 

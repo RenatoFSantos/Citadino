@@ -6,7 +6,7 @@
 
 <ion-content>
     <ion-list no-lines>
-        <ion-item *ngFor="let msg of mensagens | async" style="background-color:#c2b49a !important">
+        <ion-item *ngFor="let msg of getMensagens() | async" style="background-color:#c2b49a !important">
             <div class="chatBubble">
                 <!--<img class="profile-pic {{msg.position}}" src="{{msg.img}}">-->
                 <div class="chat-bubble" [ngClass]="{'right': usua_sq_logado === msg.usua_sq_id_from, 'left': usua_sq_logado != msg.usua_sq_id_from}">

@@ -1,0 +1,37 @@
+page-profile {
+
+    #imgwrap {
+        min-width:200px;
+        min-height:30px;
+        text-align: center!important;
+          img {
+          border:0;
+          max-width:140px;
+          border-radius:50%;
+          height: 82px;
+          }  
+        }
+    
+    #btnSalvar {
+        text-align: center!important;
+        margin-bottom: 5px !important;
+    }
+
+    .labelProfile {
+        margin: 0px 8px 0px 0 !important;
+    }
+
+    .item-label-stacked .text-input-md {
+        margin-top: 4px !important;
+    }
+    
+    .avatar_profile {
+        margin-left: 35%;
+    }
+
+    .item-md ion-avatar ion-img,
+    .item-md ion-avatar img {
+        height: 80px !important;
+        width: 80px !important
+    }
+}

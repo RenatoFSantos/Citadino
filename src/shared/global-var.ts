@@ -1,8 +1,10 @@
+import { UsuarioVO } from './../model/usuarioVO';
 import { Injectable } from '@angular/core';
 
 @Injectable()
 export class GlobalVar {
 
+  public usuarioLogado:UsuarioVO;
   private isNetworkConnected:boolean;
   private isFirebaseConnected:boolean;
 

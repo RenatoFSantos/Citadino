@@ -1,3 +1,4 @@
+import { NotificacaoService } from './../../providers/service/notificacao-service';
 import { UsuarioService } from './../../providers/service/usuario-service';
 import { FirebaseService } from './../../providers/database/firebase-service';
 import { CtdFuncoes } from './../../shared/ctdFuncoes';
@@ -24,14 +25,16 @@ export class MensagemPage {
   mens_tx_logo_enviado: string;
   mens_txt_mensagem: string;
   mens_dt_data: string;
+  usua_tokens: Array<string> = [];
 
-  mensagens: FirebaseListObservable<any>;
+  private mensagens: FirebaseListObservable<any>;
 
   @ViewChild(Content) content: Content;
   constructor(private params: NavParams,
     private mensSrv: MensagemService,
     private fbSrv: FirebaseService,
-    private usuaSrv: UsuarioService) {
+    private usuaSrv: UsuarioService,
+    private notifSrv: NotificacaoService) {
 
     this.usua_sq_logado = params.data.usua_sq_logado;
     this.usua_sq_id_to = params.data.usua_sq_id_to;
@@ -40,6 +43,7 @@ export class MensagemPage {
     this.usua_nm_usuario_from = params.data.usua_nm_usuario_from;
     this.mens_nm_enviado = params.data.mens_nm_enviado;
     this.mens_tx_logo_enviado = params.data.mens_tx_logo_enviado;
+    this.usua_tokens = params.data.usua_tokens;
   }
 
   ionViewDidLoad() {
@@ -57,7 +61,13 @@ export class MensagemPage {
           });
 
         this.mensagens = this.mensSrv.listMensagens(snapShot);
+        this.content.scrollToBottom();
       });
+  }
+
+  public getMensagens() {    
+    this.content.scrollToBottom();
+    return this.mensagens;  
   }
 
   ionViewDidEnter() {
@@ -98,9 +108,13 @@ export class MensagemPage {
             update[`/usuario/${self.usua_sq_id_to}/mensagem/${self.usua_sq_id_from}`] = true;
 
             self.fbSrv.getDataBase().ref().update(update);
-
-            self.mens_txt_mensagem = "";
             self.content.scrollToBottom();
+            self.mens_txt_mensagem = "";
+
+            if (self.usua_tokens != null && self.usua_tokens.length > 0) {
+              self.notifSrv.sendUidMensagem(self.usua_tokens, CtdFuncoes.ellipsis(chat.usua_nm_usuario_from, 20), CtdFuncoes.ellipsis(chat.mens_txt_mensagem, 50), enums.eventTypePush.mensagem);
+            }
+
           })
             .catch((error) => {
               console.log(error);

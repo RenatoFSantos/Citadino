@@ -11,8 +11,8 @@ export class UsuarioService {
   private usersRef: any;
 
   constructor(private fbService: FirebaseService,
-              private sqService: SqLiteService,
-              private mapSrv:MappingsService) {
+    private sqService: SqLiteService,
+    private mapSrv: MappingsService) {
     this.usersRef = fbService.getDataBase().ref('/usuario');
   }
 
@@ -95,14 +95,30 @@ export class UsuarioService {
     return this.usersRef.child(uid).once('value');
   }
 
-  public getEmpresaPorUsuario(usuarioKey:string) {
-      return this.usersRef.child(usuarioKey).child("empresa")
+  public getEmpresaPorUsuario(usuarioKey: string) {
+    return this.usersRef.child(usuarioKey).child("empresa")
       .orderByChild("empr_nm_razaosocial").once("value");
   }
 
- public getMensagens() {
+  public getMensagens() {
     let userCurrent = this.getLoggedInUser();
     return this.usersRef.child(userCurrent.uid).child("mensagem").once("value");
+  }
+
+  public saveToken(uid: string, token: string) {
+
+    this.usersRef.child(uid).child('tokendevice').child(token).set(true);
+
+  }
+
+  public removeToken(uid: string, token: string) {
+
+    this.usersRef.child(uid).child('tokendevice').child(token).set(null);
+
+  }
+
+  public getTokens(uid:string) {
+    return this.usersRef.child(uid).child('tokendevice').once('value');
   }
 
 }

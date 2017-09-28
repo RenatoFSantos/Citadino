@@ -1,3 +1,8 @@
+import { ProfilePage } from './../pages/profile/profile';
+import { MappingsService } from './../providers/service/_mappings-service';
+import { EnviarNotificacaoPage } from './../pages/enviar-notificacao/enviar-notificacao';
+import { TokenDeviceService } from './../providers/service/token-device';
+import { NotificacaoPage } from './../pages/notificacao/notificacao';
 import { LoginPage } from './../pages/autenticar/login/login';
 import { AjudaPage } from './../pages/ajuda/ajuda';
 import { MensagemPage } from './../pages/mensagem/mensagem';
@@ -21,6 +26,8 @@ import {
 import { SplashScreen, } from '@ionic-native/splash-screen';
 import { StatusBar } from '@ionic-native/status-bar';
 import * as enums from './../model/dominio/ctdEnum';
+import { OneSignal } from '@ionic-native/onesignal';
+
 
 
 declare var window: any;
@@ -38,6 +45,14 @@ export class MyApp implements OnInit {
   public firebaseConnectionAttempts: number = 0;
   public timeOutSession: any;
   private toastAlert: any;
+  private tokenPushAtual: string = "";
+
+  appState = {
+    takingPicture: true,
+    imageUri: ""
+  };
+
+  APP_STORAGE_KEY = "";
 
   constructor(private platform: Platform,
     private menuCtrl: MenuController,
@@ -53,28 +68,42 @@ export class MyApp implements OnInit {
     private toastCtrl: ToastController,
     private globalVar: GlobalVar,
     private app: App,
-    private loadingCtrl: LoadingController) {
+    private loadingCtrl: LoadingController,
+    private alertCtrl: AlertController,
+    private tokenSrv: TokenDeviceService,
+    private oneSignal: OneSignal,
+    private mapSrv: MappingsService) {
 
     this.platform.ready().then(() => {
+      var self = this;
       this.statusBar.styleDefault();
+
       if (window.cordova) {
-        this.netService.initializeNetworkEvents();
-        this.networkDisconnectEvent();
-        this.networkConnectionEvent();
-        this.appStateEvent();
-        // this.checkForUpdate();
+
+        setTimeout(function () {
+          self.initPushConfigurate();
+        }, 1000);
+
+        self.netService.initializeNetworkEvents();
+        self.networkDisconnectEvent();
+        self.networkConnectionEvent();
+        self.appStateEvent();
+
+
+        //this.checkForUpdate();
         //Inicializa o servico do sqlLite
-        // this.sqService.InitDatabase();
+        //this.sqService.InitDatabase();    
+
       }
     });
-  }  
+  }
 
   ngOnInit() {
     this.checkFirebase();
     this.userLoggedEvent();
     this.mensagemNovaEvent();
+    this.dadosUsuarioAlteradoEvent();
   }
-
 
   checkFirebase() {
     let self = this;
@@ -98,34 +127,39 @@ export class MyApp implements OnInit {
       if (userCurrent != null) {
         self.usuaSrv.getUserDetail(userCurrent.uid).then((userRef) => {
           if (userRef != null) {
-            self.popularMenu(true);
+            self.popularMenu(true, userRef.val());
             self.userLogged = userRef.val();
+            self.globalVar.usuarioLogado = self.userLogged;
             self.splashScreen.hide();
+
+            console.log('Uid ' + userCurrent.uid);
+            self.saveTokenDevice(userCurrent.uid);
+            // self.tokenSrv.saveToken(self.tokenPush, userCurrent.uid);
 
             if (self.userLogged.usua_in_ajuda == true) {
               // self.rootPage = TabsPage;
-              // this.app.getRootNav().setRoot(TabsPage);
-              this.app.getActiveNavs()[0].setRoot(TabsPage);
+              this.app.getRootNav().setRoot(TabsPage);
+              // this.app.getActiveNavs()[0].setRoot(TabsPage);
             }
             else {
               // self.rootPage = AjudaPage;
-              // this.app.getRootNav().setRoot(AjudaPage);
-              this.app.getActiveNavs()[0].setRoot(AjudaPage);
+              this.app.getRootNav().setRoot(AjudaPage);
+              // this.app.getActiveNavs()[0].setRoot(AjudaPage);
             }
 
             this.msgSrv.addMensagemEvent();
           }
           else {
             // self.rootPage = LoginPage;
-            // this.app.getRootNav().setRoot(LoginPage);
-            this.app.getActiveNavs()[0].setRoot(LoginPage);
+            this.app.getRootNav().setRoot(LoginPage);
+            // this.app.getActiveNavs()[0].setRoot(LoginPage);
             self.splashScreen.hide();
           }
         });
       } else {
         // self.rootPage = LoginPage;
-        // this.app.getRootNav().setRoot(LoginPage);
-        this.app.getActiveNavs()[0].setRoot(LoginPage);
+        this.app.getRootNav().setRoot(LoginPage);
+        // this.app.getActiveNavs()[0].setRoot(LoginPage);
         self.splashScreen.hide();
       }
     }
@@ -162,37 +196,51 @@ export class MyApp implements OnInit {
         if (userCurrent != null) {
           self.usuaSrv.getUserDetail(userCurrent.uid).then((userRef) => {
             if (userRef != null) {
-              self.popularMenu(true);
+              self.popularMenu(true, userRef.val());
               self.userLogged = userRef.val();
+              self.globalVar.usuarioLogado = self.userLogged;
+
+              console.log('Uid ' + userCurrent.uid);
+              self.saveTokenDevice(userCurrent.uid);
+              // self.tokenSrv.saveToken(self.tokenPush, userCurrent.uid);
+
               if (self.userLogged.usua_in_ajuda == true) {
                 // self.rootPage = TabsPage;
-                // this.app.getRootNav().setRoot(TabsPage);
-                this.app.getActiveNavs()[0].setRoot(TabsPage);
+                this.app.getRootNav().setRoot(TabsPage);
+                // this.app.getActiveNavs()[0].setRoot(TabsPage);
               }
               else {
                 // self.rootPage = AjudaPage;
-                // this.app.getRootNav().setRoot(AjudaPage);
-                this.app.getActiveNavs()[0].setRoot(AjudaPage);
+                this.app.getRootNav().setRoot(AjudaPage);
+                // this.app.getActiveNavs()[0].setRoot(AjudaPage);
               }
             } else {
               // self.nav.setRoot(LoginPage);
-              // this.app.getRootNav().setRoot(LoginPage);
-              this.app.getActiveNavs()[0].setRoot(LoginPage);
+              this.app.getRootNav().setRoot(LoginPage);
+              // this.app.getActiveNavs()[0].setRoot(LoginPage);
             }
           });
         } else {
           // self.nav.setRoot(LoginPage);
-          // this.app.getRootNav().setRoot(LoginPage);
-          this.app.getActiveNavs()[0].setRoot(LoginPage);
+          this.app.getRootNav().setRoot(LoginPage);
+          // this.app.getActiveNavs()[0].setRoot(LoginPage);
         }
       } else {
         // self.popularMenu(true);
         // self.userLogged = this.preencherObjetoUsuario(data);
         // self.nav.setRoot(TabsPage);
         // self.nav.setRoot(LoginPage);
-        // this.app.getRootNav().setRoot(LoginPage);
-        this.app.getActiveNavs()[0].setRoot(LoginPage);
+        this.app.getRootNav().setRoot(LoginPage);
+        // this.app.getActiveNavs()[0].setRoot(LoginPage);
       }
+    });    
+  }
+
+  dadosUsuarioAlteradoEvent() {
+    var self = this;
+    self.events.subscribe('dadosUsuario:alterado', (usuario) => {
+      self.userLogged.usua_nm_usuario =  usuario.usua_nm_usuario;
+      self.userLogged.usua_tx_urlprofile = usuario.usua_tx_urlprofile;
     });
   }
 
@@ -218,9 +266,13 @@ export class MyApp implements OnInit {
     this.events.subscribe('mensagem:alterada', (childSnapshot) => {
       let userCurrent = this.usuaSrv.getLoggedInUser();
 
-      if (this.app.getActiveNavs()[0] != null
-        && this.app.getActiveNavs()[0].getActive() != null) {
-        if (this.app.getActiveNavs()[0].getActive().instance instanceof MensagemPage) {
+      // if (this.app.getActiveNavs()[0] != null
+      // && this.app.getActiveNavs()[0].getActive() != null) {
+      // if (this.app.getActiveNavs()[0].getActive().instance instanceof MensagemPage) {
+
+      if (this.app.getActiveNav() != null
+        && this.app.getActiveNav().getActive() != null) {
+        if (this.app.getActiveNav().getActive().instance instanceof MensagemPage) {
           this.usuaSrv.getUsersRef().child(userCurrent.uid)
             .child("mensagem")
             .child(childSnapshot.key).set(false);
@@ -269,6 +321,12 @@ export class MyApp implements OnInit {
       case enums.ETypeMenu.logout:
         this.timeOutSession = setTimeout(() => {
           this.usuaSrv.signOut();
+
+          if (window.cordova) {
+            this.tokenSrv.removeToken(this.tokenPushAtual, this.userLogged.usua_sq_id);
+            this.usuaSrv.removeToken(this.userLogged.usua_sq_id, this.tokenPushAtual);
+          }
+
           this.closeSession();
         }, 1000);
         break;
@@ -296,7 +354,9 @@ export class MyApp implements OnInit {
     return;
   }
 
-  public popularMenu(value: boolean) {
+  public popularMenu(value: boolean, usuarioParam: any) {
+
+    var userJson: any = this.mapSrv.getUserJson(usuarioParam);
 
     try {
       this.pages = [
@@ -322,11 +382,14 @@ export class MyApp implements OnInit {
       // { title: 'Configurações', component: TestePage, icon: 'options', typeMenu: enums.ETypeMenu.default },
       // { title: 'Estatísticas', component: RelatoriosListaPage, icon: 'pie', typeMenu: enums.ETypeMenu.default },
       // { title: 'Favoritos', component: TestePage, icon: 'star', typeMenu: enums.ETypeMenu.default },
-      // { title: 'Contato', component: TestePage, icon: 'contact', typeMenu: enums.ETypeMenu.default },
+      { title: 'Minha Conta', component: ProfilePage, icon: 'contact', typeMenu: enums.ETypeMenu.default },
       { title: 'Ajuda', component: AjudaPage, icon: 'md-help', typeMenu: enums.ETypeMenu.default }
       // { title: 'Sobre', component: TestePage, icon: 'information-circle', typeMenu: enums.ETypeMenu.default }
-
     ];
+
+    if (userJson.usua_sg_perfil == "ADM") {
+      this.subpages.push({ title: 'Enviar Notificação', component: EnviarNotificacaoPage, icon: 'md-notifications', typeMenu: enums.ETypeMenu.default });
+    }
 
     if (value == true) {
       this.subpages.push({ title: 'Sair', component: TabsPage, icon: 'exit', typeMenu: enums.ETypeMenu.logout });
@@ -391,6 +454,161 @@ export class MyApp implements OnInit {
     document.addEventListener("resume", () => {
       this.fbService.goOnline();
     }, false);
+  }
+
+  private initPushConfigurate() {
+    var self = this;
+
+    let headers = {
+      "Content-Type": "application/json; charset=utf-8",
+      "Authorization": "Basic dde460af-2898-4f1a-88b8-ff9fd97be308"
+    };
+    //Chamado quando recebe uma notificacao com o app aberto
+    let notificationReceivedCallback = function (jsonData) {
+      console.log('notificationReceivedCallback: ' + JSON.stringify(jsonData));
+    };
+
+    //Chamado quando abre um notificacao com a app em background
+    let notificationOpenedCallback = function (data: any) {
+      self.redirectToPage(data);
+    };
+
+    window.plugins.OneSignal
+      .startInit("dde460af-2898-4f1a-88b8-ff9fd97be308", "180769307423")
+      .handleNotificationOpened(notificationOpenedCallback)
+      .handleNotificationReceived(notificationReceivedCallback)
+      .inFocusDisplaying(self.oneSignal.OSInFocusDisplayOption.None)
+      .endInit();
 
   }
+
+  private redirectToPage(data: any) {
+    var self = this;
+    // alert( JSON.stringify(jsonData));
+    let eventType = data.notification.payload.additionalData.eventType
+
+    switch (eventType) {
+      case enums.eventTypePush.vitrine: {
+        // self.navController.push(VitrinePage);
+        self.nav.getActiveChildNavs()[0].select(enums.eventTypePush.vitrine)
+        break;
+      } case enums.eventTypePush.guia: {
+        // self.navController.push(GuiaPage)
+        self.nav.getActiveChildNavs()[0].select(enums.eventTypePush.guia)
+        break;
+      } case enums.eventTypePush.mensagem: {
+        // self.navController.push(MensagemListaPage);
+        self.nav.getActiveChildNavs()[0].select(enums.eventTypePush.mensagem)
+        break;
+      }
+    }
+  }
+
+  saveTokenDevice(userUid: string) {
+    let self = this;
+    if (window.cordova) {
+      window.plugins.OneSignal.getPermissionSubscriptionState(function (status) {
+        self.tokenPushAtual = status.subscriptionStatus.userId;
+
+        console.log("user id token " + self.tokenPushAtual);
+
+        if (self.tokenPushAtual != "") {
+          self.usuaSrv.getUserDetail(userUid).then((snapUsuario) => {
+            var usuario: UsuarioVO = snapUsuario.val();
+
+            self.pesquisaToken(usuario)
+              .then(self.pesquisaTokenUsuario)
+              .then(self.salvarTokenUsuario);
+          });
+        }
+      });
+    }
+  }
+
+  private pesquisaToken = function (usuario: UsuarioVO) {
+    let self = this;
+
+    var promise = new Promise(function (resolve, reject) {
+      self.tokenSrv.findTokenById(self.tokenPushAtual)
+        .then((snapToken) => {
+          resolve({ self, snapToken, usuario });
+        })
+        .catch((error) => {
+          reject(error);
+        });
+    });
+
+    return promise;
+  }
+
+  private pesquisaTokenUsuario = function (verificarToken) {
+    let self = verificarToken.self;
+
+    //Usuario Vinculado ao Token
+    let snapToken = verificarToken.snapToken;
+
+    //Usuario Logado
+    let usuarioLogado: UsuarioVO = verificarToken.usuario;
+
+    //Token vinculado ao usuario
+    let tokenVinculadoUsuario: string = "";
+
+    let eventoToken: number;
+
+    var promise = new Promise(function (resolve, reject) {
+      var usuarioVinculadoToken: string = "";
+
+      if (snapToken.val() != null) {
+        usuarioVinculadoToken = Object.keys(snapToken.val())[0];
+
+        if (usuarioVinculadoToken != usuarioLogado.usua_sq_id) {
+          eventoToken = enums.eventoTokenPush.usuarioAlterar;
+        }
+        else {
+          eventoToken = enums.eventoTokenPush.usuarioCorreto;
+        }
+
+      }
+      else {
+        eventoToken = enums.eventoTokenPush.usuarioSalvar;
+      }
+
+      resolve({ self, eventoToken, usuarioLogado, usuarioVinculadoToken, tokenVinculadoUsuario });
+
+    });
+
+    return promise;
+  }
+
+  private salvarTokenUsuario = function (pesquisaTokenUsuario) {
+    let self = pesquisaTokenUsuario.self;
+    let eventoToken = pesquisaTokenUsuario.eventoToken;
+    let usuarioLogado: UsuarioVO = pesquisaTokenUsuario.usuarioLogado;
+    let usuarioVinculadoToken: string = pesquisaTokenUsuario.usuarioVinculadoToken;
+    let tokenVinculadoUsuario: string = pesquisaTokenUsuario.tokenVinculadoUsuario;
+
+    var promise = new Promise(function (resolve, reject) {
+
+      if (eventoToken == enums.eventoTokenPush.usuarioAlterar) {
+
+        self.tokenSrv.saveToken(self.tokenPushAtual, usuarioLogado.usua_sq_id);
+
+        self.usuaSrv.usersRef.child(usuarioVinculadoToken)
+          .child("tokendevice").child(tokenVinculadoUsuario).set(null);
+
+        self.usuaSrv.usersRef.child(usuarioLogado.usua_sq_id)
+          .child("tokendevice").set(self.tokenPushAtual);
+
+      }
+      else if (eventoToken == enums.eventoTokenPush.usuarioSalvar) {
+
+        self.tokenSrv.saveToken(self.tokenPushAtual, usuarioLogado.usua_sq_id);
+
+        self.usuaSrv.saveToken(usuarioLogado.usua_sq_id, self.tokenPushAtual);
+      }
+    });
+
+    return promise;
+  }
+
 }

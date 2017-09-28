@@ -56,5 +56,15 @@ export class CtdFuncoes {
             .catch(() => console.log('Error launching dialer'));
     }
 
+    public static ellipsis(strTexto: string, length: number): string {
+
+        if (strTexto != null && strTexto.trim() != "") {   
+            if (strTexto.length > length) {
+                strTexto = strTexto.substr(0, length) + "...";
+            }         
+        }
+
+        return strTexto;
+    }
 
 }

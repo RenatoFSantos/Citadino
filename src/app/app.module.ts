@@ -1,3 +1,5 @@
+import { ProfilePage } from './../pages/profile/profile';
+import { EnviarNotificacaoPage } from './../pages/enviar-notificacao/enviar-notificacao';
 import { AjudaPage } from './../pages/ajuda/ajuda';
 import { SmartSitePage } from './../pages/smartSite/smartSite';
 import { CtdHeaderModalComponent } from './../shared/components/ctd-header-modal/ctd-header-modal';
@@ -30,7 +32,6 @@ import { CloudSettings, CloudModule } from '@ionic/cloud-angular';
 import { AngularFireModule } from 'angularfire2';
 import { AngularFireDatabaseModule } from 'angularfire2/database';
 
-
 // providers
 import { APP_PROVIDERS } from '../providers/app.providers';
 
@@ -42,6 +43,16 @@ export const firebaseConfig = {
   storageBucket: "citadinodsv.appspot.com",
   messagingSenderId: "180769307423"
 };
+
+
+// export const firebaseConfig = {
+//   apiKey: "AIzaSyCuOY5Kt7_Zo08khwYFiLsIQC4kFe5LWwE",
+//   authDomain: "citadinoprd-13651.firebaseapp.com",
+//   databaseURL: "https://citadinoprd-13651.firebaseio.com",
+//   projectId: "citadinoprd-13651",
+//   storageBucket: "citadinoprd-13651.appspot.com",
+//   messagingSenderId: "960817085241"
+// };
 
 const cloudSettings: CloudSettings = {
   'core': {
@@ -75,7 +86,9 @@ const cloudSettings: CloudSettings = {
     TestePage,
     CtdHeaderModalComponent,
     HomeLoginPage,
-    AjudaPage
+    AjudaPage,
+    EnviarNotificacaoPage,
+    ProfilePage
   ],
   imports: [
     BrowserModule,
@@ -113,7 +126,9 @@ const cloudSettings: CloudSettings = {
     TestePage,
     CtdHeaderModalComponent,
     HomeLoginPage,
-    AjudaPage
+    AjudaPage,
+    EnviarNotificacaoPage,
+    ProfilePage
   ],
   providers: [APP_PROVIDERS]
 })

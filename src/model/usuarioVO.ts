@@ -19,6 +19,8 @@ export class UsuarioVO {
     public usua_tx_urlprofile: string;
     public usua_in_ajuda:boolean;
     public empresa: EmpresaVO;
+    public usua_sg_perfil:string; //USU USUARIO  ADM ADMINISTRADOR //PAR PARCEIRO /COL COLUNISTA
+
  
     constructor() {
         this.usua_sq_id = '';
@@ -35,5 +37,6 @@ export class UsuarioVO {
         this.usua_in_empresa = false;
         this.usua_in_ajuda = false;
         this.empresa = new EmpresaVO();
+        this.usua_sg_perfil = '';      
     }
 }

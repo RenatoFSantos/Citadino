@@ -9,16 +9,17 @@ export class FirebaseService {
   private dataBase: any;
   private storageRef: any;
   private connectionRef: any;
+  private authRef: any;
 
   constructor(private globalVar: GlobalVar,
-              private eventCtrl: Events) {
+    private eventCtrl: Events) {
     var self = this;
-    try 
-    {
+    try {
       self.dataBase = firebase.database();
       self.connectionRef = self.dataBase.ref('.info/connected');
       self.storageRef = firebase.storage().ref();
       self.checkFirebaseConnection();
+      self.authRef = firebase.auth;
     }
     catch (error) {
       console.log('Erro ao iniciar o firebase: ' + error);
@@ -31,12 +32,12 @@ export class FirebaseService {
       var connectedRef = self.getConnectionRef();
       connectedRef.on('value', (snap) => {
         if (snap.val() === true) {
-            this.eventCtrl.publish('firebase:connected');
-            self.globalVar.setIsFirebaseConnected(true); 
-            console.log("conectado");      
+          this.eventCtrl.publish('firebase:connected');
+          self.globalVar.setIsFirebaseConnected(true);
+          console.log("conectado");
         } else {
           this.eventCtrl.publish('firebase:desconectado');
-          self.globalVar.setIsFirebaseConnected(false);          
+          self.globalVar.setIsFirebaseConnected(false);
           console.log("desconectado");
         }
       });
@@ -74,4 +75,6 @@ export class FirebaseService {
     return firebase.database.ServerValue.TIMESTAMP;
   }
 
-}
+  public getAuthRef() {
+    return this.authRef;
+  }}
