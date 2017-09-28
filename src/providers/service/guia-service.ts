@@ -55,22 +55,21 @@ export class GuiaService {
 
   public getPathHorarioOnibus() {
     let self = this;
-    var paths: string[] = [];
+    let paths: string[] = [];
 
     var promise = new Promise(function (resolve, reject) {
       self.fbService.getStorageRef().child('images/infoutil/slide-bus-1.jpg')
-        .getDownloadURL().then((url) => {
-          paths.push(url);
+        .getDownloadURL().then((url1) => {
+          paths.push(url1);
 
           self.fbService.getStorageRef().child('images/infoutil/slide-bus-2.jpg')
-            .getDownloadURL().then((url) => {
-              paths.push(url);
+            .getDownloadURL().then((url2) => {
+              paths.push(url2);
+
+              resolve(paths);
             }).catch(() => {
               reject("Não foi possível localizar a imagem.");
             });
-
-          paths.push(url);
-          resolve(paths);
 
         }).catch(() => {
           reject("Não foi possível localizar a imagem.");
