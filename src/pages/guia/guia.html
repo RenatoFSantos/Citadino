@@ -5,7 +5,7 @@
 </ion-header>
 
 <ion-content>
-    <ion-searchbar [(ngModel)]="searchDescritor" [formControl]="searchControl" (ionInput)="onSearchInput()" placeholder="" (ionClear)="onCleanInput()"></ion-searchbar>
+    <ion-searchbar [(ngModel)]="searchDescritor" [formControl]="searchControl" (ionInput)="onSearchInput()" placeholder="Digite aqui o que procura!" (ionClear)="onCleanInput()"></ion-searchbar>
 
     <!--<div *ngIf="searching" class="spinner-container">
         <ion-spinner></ion-spinner>
