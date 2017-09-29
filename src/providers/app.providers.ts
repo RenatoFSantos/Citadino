@@ -1,3 +1,4 @@
+import { PhotoViewer } from '@ionic-native/photo-viewer';
 import { BackgroundService } from './service/background-service';
 import { NotificacaoService } from './service/notificacao-service';
 import { TokenDeviceService } from './service/token-device';
@@ -49,5 +50,6 @@ export const APP_PROVIDERS = [
     OneSignal,
     Camera,
     BackgroundMode,
-    BackgroundService
+    BackgroundService,
+    PhotoViewer
 ];

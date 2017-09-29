@@ -1,12 +1,8 @@
 import { SlideVO } from './../../model/slideVO';
 import { Component } from '@angular/core';
 import { NavController, NavParams } from 'ionic-angular';
-/*
-  Generated class for the AnuncioFull page.
+import { PhotoViewer } from '@ionic-native/photo-viewer';
 
-  See http://ionicframework.com/docs/v2/components/#navigation for more info on
-  Ionic pages and navigation.
-*/
 @Component({
   selector: 'page-anuncio-full',
   templateUrl: 'anuncio-full.html'
@@ -14,8 +10,12 @@ import { NavController, NavParams } from 'ionic-angular';
 export class AnuncioFullPage {
 
   public slides: Array<SlideVO> = [];
+  public grid = true;
+
+
   constructor(public navCtrl: NavController, 
-    public params: NavParams) {
+    public params: NavParams,
+    private photoViewer: PhotoViewer) {    
     if (params != null && params.get("anuncio") != null) {
       this.createObjSlide(params.get("anuncio"));
     }
@@ -48,4 +48,10 @@ export class AnuncioFullPage {
       this.slides.push(slide);    
     }
   }
+
+  openImage(url:string) {
+    this.photoViewer.show(url);    
+  }
+
+ 
 }
