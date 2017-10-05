@@ -1,3 +1,4 @@
+import { MinhaVitrinePage } from './../pages/minha-vitrine/minha-vitrine';
 import { ProfilePage } from './../pages/profile/profile';
 import { MappingsService } from './../providers/service/_mappings-service';
 import { EnviarNotificacaoPage } from './../pages/enviar-notificacao/enviar-notificacao';
@@ -125,6 +126,9 @@ export class MyApp implements OnInit {
     else {
       let userCurrent = self.usuaSrv.getLoggedInUser();
       if (userCurrent != null) {
+
+        this.msgSrv.addMensagemEvent();
+
         self.usuaSrv.getUserDetail(userCurrent.uid).then((userRef) => {
           if (userRef != null) {
             self.popularMenu(true, userRef.val());
@@ -147,7 +151,6 @@ export class MyApp implements OnInit {
               // this.app.getActiveNavs()[0].setRoot(AjudaPage);
             }
 
-            this.msgSrv.addMensagemEvent();
           }
           else {
             // self.rootPage = LoginPage;
@@ -233,13 +236,13 @@ export class MyApp implements OnInit {
         this.app.getRootNav().setRoot(LoginPage);
         // this.app.getActiveNavs()[0].setRoot(LoginPage);
       }
-    });    
+    });
   }
 
   dadosUsuarioAlteradoEvent() {
     var self = this;
     self.events.subscribe('dadosUsuario:alterado', (usuario) => {
-      self.userLogged.usua_nm_usuario =  usuario.usua_nm_usuario;
+      self.userLogged.usua_nm_usuario = usuario.usua_nm_usuario;
       self.userLogged.usua_tx_urlprofile = usuario.usua_tx_urlprofile;
     });
   }
@@ -263,30 +266,32 @@ export class MyApp implements OnInit {
 
   //Evento de nova mensagem enviada
   mensagemNovaEvent() {
+
+    let self = this;
     this.events.subscribe('mensagem:alterada', (childSnapshot) => {
-      let userCurrent = this.usuaSrv.getLoggedInUser();
+      let userCurrent = self.usuaSrv.getLoggedInUser();
 
       // if (this.app.getActiveNavs()[0] != null
       // && this.app.getActiveNavs()[0].getActive() != null) {
       // if (this.app.getActiveNavs()[0].getActive().instance instanceof MensagemPage) {
 
-      if (this.app.getActiveNav() != null
-        && this.app.getActiveNav().getActive() != null) {
-        if (this.app.getActiveNav().getActive().instance instanceof MensagemPage) {
-          this.usuaSrv.getUsersRef().child(userCurrent.uid)
+      if (self.app.getActiveNav() != null
+        && self.app.getActiveNav().getActive() != null) {
+        if (self.app.getActiveNav().getActive().instance instanceof MensagemPage) {
+          self.usuaSrv.getUsersRef().child(userCurrent.uid)
             .child("mensagem")
             .child(childSnapshot.key).set(false);
         }
         else {
-          this.usuaSrv.getMensagens().then((snapMsg) => {
+          self.usuaSrv.getMensagens().then((snapMsg) => {
             let totalMensage: number = 0;
             snapMsg.forEach(element => {
 
               if (element.val() == true) {
                 totalMensage = totalMensage + 1;
               }
-
-              this.events.publish('mensagem:nova', totalMensage);
+              self.events.publish('mensagemLista:nova', childSnapshot.key);
+              self.events.publish('mensagem:nova', totalMensage);
             });
           });
         }
@@ -383,6 +388,8 @@ export class MyApp implements OnInit {
       // { title: 'Estatísticas', component: RelatoriosListaPage, icon: 'pie', typeMenu: enums.ETypeMenu.default },
       // { title: 'Favoritos', component: TestePage, icon: 'star', typeMenu: enums.ETypeMenu.default },
       { title: 'Minha Conta', component: ProfilePage, icon: 'contact', typeMenu: enums.ETypeMenu.default },
+      { title: 'Marcados', component: MinhaVitrinePage, icon: 'md-bookmark', typeMenu: enums.ETypeMenu.default },
+
       { title: 'Ajuda', component: AjudaPage, icon: 'md-help', typeMenu: enums.ETypeMenu.default }
       // { title: 'Sobre', component: TestePage, icon: 'information-circle', typeMenu: enums.ETypeMenu.default }
     ];
@@ -395,41 +402,6 @@ export class MyApp implements OnInit {
       this.subpages.push({ title: 'Sair', component: TabsPage, icon: 'exit', typeMenu: enums.ETypeMenu.logout });
     }
   }
-
-  // checkForUpdate() {
-  //   const checking = this.loadingCtrl.create({
-  //     content: 'Verificando atualizações...'
-  //   });
-  //   checking.present();
-
-  //   this.deploy.check().then((snapshotAvailable: boolean) => {
-  //     checking.dismiss();
-  //     if (snapshotAvailable) {
-
-  //       this.deploy.getSnapshots().then((snapshots) => {
-  //         console.log('Snapshots', snapshots);
-  //         this.deploy.info().then((x) => {
-  //           console.log('Current snapshot infos', x);
-  //           for (let suuid of snapshots) {
-  //             if (suuid !== x.deploy_uuid) {
-  //               this.deploy.deleteSnapshot(suuid);
-  //             }
-  //           }
-  //         })
-  //       });
-
-  //       this.downloadAndInstall();
-  //     }
-  //   });
-  // }
-
-  // private downloadAndInstall() {
-  //   const updating = this.loadingCtrl.create({
-  //     content: 'Atualizando a aplicação.'
-  //   });
-  //   updating.present();
-  //   this.deploy.download().then(() => this.deploy.extract()).then(() => this.deploy.load());
-  // }
 
   createAlert(errorMessage: string) {
 
@@ -611,4 +583,39 @@ export class MyApp implements OnInit {
     return promise;
   }
 
+
+    // checkForUpdate() {
+  //   const checking = this.loadingCtrl.create({
+  //     content: 'Verificando atualizações...'
+  //   });
+  //   checking.present();
+
+  //   this.deploy.check().then((snapshotAvailable: boolean) => {
+  //     checking.dismiss();
+  //     if (snapshotAvailable) {
+
+  //       this.deploy.getSnapshots().then((snapshots) => {
+  //         console.log('Snapshots', snapshots);
+  //         this.deploy.info().then((x) => {
+  //           console.log('Current snapshot infos', x);
+  //           for (let suuid of snapshots) {
+  //             if (suuid !== x.deploy_uuid) {
+  //               this.deploy.deleteSnapshot(suuid);
+  //             }
+  //           }
+  //         })
+  //       });
+
+  //       this.downloadAndInstall();
+  //     }
+  //   });
+  // }
+
+  // private downloadAndInstall() {
+  //   const updating = this.loadingCtrl.create({
+  //     content: 'Atualizando a aplicação.'
+  //   });
+  //   updating.present();
+  //   this.deploy.download().then(() => this.deploy.extract()).then(() => this.deploy.load());
+  // }
 }

@@ -102,20 +102,24 @@ export class ItemsService {
         return <T><any>result;
     }
 
-       /*
-        retorna o primeiro elemento
-    */
+    /*
+     retorna o primeiro elemento
+ */
     getFirstElement<T>(array: Array<T>): T {
         var result = lodash.first(array);
         return <T><any>result;
     }
 
-
-     /*
-        Ordena a colleçao
-    */
-    orderBy<T>(array: Array<T>,field:string[],orders:string[]): T {
+    /*
+       Ordena a colleçao
+   */
+    orderBy<T>(array: Array<T>, field: string[], orders: string[]): T {
         var result = lodash.orderBy(array, field, orders);
         return <T><any>result;
+    }
+
+    findElement<T, R>(array: Array<T>, predicate: Predicate<T>): R {
+        var item = lodash.find(array, predicate);
+        return <R><any>item;
     }
 }

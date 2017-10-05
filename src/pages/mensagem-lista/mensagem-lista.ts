@@ -26,6 +26,8 @@ export class MensagemListaPage implements OnInit {
     private netService: NetworkService,
     private globalVar: GlobalVar) {
     this.usuaSrvTest = usuaSrv;
+    
+    this.eventoNovaMensagem();
   }
 
   ionViewWillEnter() {
@@ -35,10 +37,7 @@ export class MensagemListaPage implements OnInit {
 
   ngOnInit() { }
 
-  ionViewDidLeave() {
-    console.log("Mensagem ok")
-    // this.netService.closeStatusConnection();
-  }
+  ionViewDidLeave() {}
 
   public removeMensagem(usua_sq_id_to: string) {
     let userCurrent = this.usuaSrv.getLoggedInUser();
@@ -155,7 +154,7 @@ export class MensagemListaPage implements OnInit {
             mensagem.mens_nm_enviado = element.val().usua_nm_usuario;
             mensagem.mens_tx_logo_enviado = element.val().usua_tx_urlprofile;
           }
-      
+
           self.mensagens.push(mensagem);
         }
 
@@ -196,7 +195,7 @@ export class MensagemListaPage implements OnInit {
         usua_sq_id_to: mensagem.usua_sq_id_to,
         usua_nm_usuario_to: mensagem.usua_nm_usuario_to,
         mens_nm_enviado: mensagem.mens_nm_enviado,
-        mens_tx_logo_enviado: usuario.usua_tx_urlprofile != '' ? usuario.usua_tx_urlprofile : '',
+        mens_tx_logo_enviado: mensagem.mens_tx_logo_enviado,
         usua_tokens: tokensUsuario
       };
 
@@ -209,7 +208,6 @@ export class MensagemListaPage implements OnInit {
           if (element.val() == true) {
             totalMensage++;
           }
-
           this.events.publish('mensagem:nova', totalMensage - 1);
         });
       });
@@ -217,7 +215,24 @@ export class MensagemListaPage implements OnInit {
       loader.dismiss();
       let loginModal = this.mdlCtrl.create(MensagemPage, mensParam);
       loginModal.present();
-
     })
   }
+
+  private eventoNovaMensagem() {
+    var self = this;
+
+    self.events.subscribe('mensagemLista:nova', (keyUsuario:any) => {
+      if (self.mensagens != null && self.mensagens.length > 0) {
+        self.mensagens.forEach(item => {
+
+          if (item.usua_sq_id_to == keyUsuario) {
+            item.mens_nova = true;
+
+            return;
+          }
+        });
+      }
+    });
+  }
+
 }

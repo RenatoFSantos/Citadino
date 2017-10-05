@@ -47,27 +47,28 @@ export class MensagemPage {
   }
 
   ionViewDidLoad() {
-    this.mensSrv.getMensagens(this.usua_sq_id_from, this.usua_sq_id_to)
+    let self = this;
+    this.mensSrv.getMensagens(self.usua_sq_id_from, self.usua_sq_id_to)
       .then((snapShot: any) => {
 
-        this.usuaSrv.getUsersRef().child(this.usua_sq_id_from)
-          .child('mensagem').child(this.usua_sq_id_to).once('value')
+        self.usuaSrv.getUsersRef().child(self.usua_sq_id_from)
+          .child('mensagem').child(self.usua_sq_id_to).once('value')
           .then((snapNode) => {
             if (snapNode.exists()) {
-              this.usuaSrv.getUsersRef().child(this.usua_sq_id_from)
+              self.usuaSrv.getUsersRef().child(self.usua_sq_id_from)
                 .child('mensagem')
-                .child(this.usua_sq_id_to).set(false);
+                .child(self.usua_sq_id_to).set(false);
             }
           });
 
-        this.mensagens = this.mensSrv.listMensagens(snapShot);
-        this.content.scrollToBottom();
+        self.mensagens = self.mensSrv.listMensagens(snapShot);
+        self.content.scrollToBottom();
       });
   }
 
-  public getMensagens() {    
+  public getMensagens() {
     this.content.scrollToBottom();
-    return this.mensagens;  
+    return this.mensagens;
   }
 
   ionViewDidEnter() {
@@ -114,7 +115,6 @@ export class MensagemPage {
             if (self.usua_tokens != null && self.usua_tokens.length > 0) {
               self.notifSrv.sendUidMensagem(self.usua_tokens, CtdFuncoes.ellipsis(chat.usua_nm_usuario_from, 20), CtdFuncoes.ellipsis(chat.mens_txt_mensagem, 50), enums.eventTypePush.mensagem);
             }
-
           })
             .catch((error) => {
               console.log(error);

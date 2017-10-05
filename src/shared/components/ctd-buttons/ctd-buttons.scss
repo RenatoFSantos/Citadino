@@ -6,7 +6,12 @@ ctd-buttons {
     }
     
     .btnBotaoAvancar {
-        color:dimgrey;
+        color:#696969;
         margin-top: -2px;
+    }
+
+    .btnBotaoAvancar.salvar {
+        color:#3111E9 !important;  
+        margin-top: -2px;    
     }
 }

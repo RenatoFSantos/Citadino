@@ -23,6 +23,7 @@ export class NotificacaoService {
           ios_badgeType:"Increase",
           ios_badgeCount: 1,
           android_group: subtitle,
+          priority:10,
           android_accent_color: "008641",
           android_group_message: { "en": "Você tem  $[notif_count] novas mensagens" }
         };

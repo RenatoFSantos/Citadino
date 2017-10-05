@@ -1,3 +1,4 @@
+import { MinhaVitrinePage } from './../pages/minha-vitrine/minha-vitrine';
 import { ProfilePage } from './../pages/profile/profile';
 import { EnviarNotificacaoPage } from './../pages/enviar-notificacao/enviar-notificacao';
 import { AjudaPage } from './../pages/ajuda/ajuda';
@@ -87,7 +88,8 @@ const cloudSettings: CloudSettings = {
     HomeLoginPage,
     AjudaPage,
     EnviarNotificacaoPage,
-    ProfilePage
+    ProfilePage,
+    MinhaVitrinePage
   ],
   imports: [
     BrowserModule,
@@ -127,7 +129,8 @@ const cloudSettings: CloudSettings = {
     HomeLoginPage,
     AjudaPage,
     EnviarNotificacaoPage,
-    ProfilePage
+    ProfilePage,
+    MinhaVitrinePage
   ],
   providers: [APP_PROVIDERS]
 })
