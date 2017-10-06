@@ -89,12 +89,9 @@ export class MyApp implements OnInit {
         self.networkDisconnectEvent();
         self.networkConnectionEvent();
         self.appStateEvent();
-
-
         //this.checkForUpdate();
         //Inicializa o servico do sqlLite
         //this.sqService.InitDatabase();    
-
       }
     });
   }

@@ -50,7 +50,7 @@ export class AnuncioFullPage {
   }
 
   openImage(url:string) {
-    this.photoViewer.show(url);    
+    this.photoViewer.show(url, '', {share:false});    
   }
 
  
