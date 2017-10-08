@@ -32,6 +32,7 @@ import { BrowserModule } from '@angular/platform-browser';
 import { CloudSettings, CloudModule } from '@ionic/cloud-angular';
 import { AngularFireModule } from 'angularfire2';
 import { AngularFireDatabaseModule } from 'angularfire2/database';
+import { IonicImageViewerModule } from 'ionic-img-viewer';
 
 // providers
 import { APP_PROVIDERS } from '../providers/app.providers';
@@ -99,7 +100,8 @@ const cloudSettings: CloudSettings = {
       }),
     AngularFireModule.initializeApp(firebaseConfig),
     AngularFireDatabaseModule,
-    CloudModule.forRoot(cloudSettings)
+    CloudModule.forRoot(cloudSettings),
+    IonicImageViewerModule
   ],
   bootstrap: [IonicApp],
   entryComponents: [

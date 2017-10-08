@@ -8,8 +8,18 @@
   <ion-slides pager effect="flip">
     <ion-slide *ngFor="let slide of slides">
       <div class="swiper-zoom-container">
-        <img [src]="slide.imageUrl" class="slide-image" (click)="openImage(slide.imageUrl)" />
+        <img [src]="slide.imageUrl" #myImage (click)="presentImage(myImage)" />
       </div>
     </ion-slide>
   </ion-slides>
 </ion-content>
+
+<!-- 
+<ion-content>
+  <ion-slides class="image-slider"  slidesPerView="2">
+    <ion-slide *ngFor="let img of slides"> -->
+      <!-- <img [src]="img.imageUrl" class="thumb-img" imageViewer/> -->
+      <!-- <img [src]="img.imageUrl" #myImage (click)="presentImage(myImage)" /> -->
+    <!-- </ion-slide>
+  </ion-slides>
+</ion-content> -->

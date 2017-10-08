@@ -1,7 +1,8 @@
 import { SlideVO } from './../../model/slideVO';
 import { Component } from '@angular/core';
-import { NavController, NavParams } from 'ionic-angular';
+import { NavController, NavParams, ModalController } from 'ionic-angular';
 import { PhotoViewer } from '@ionic-native/photo-viewer';
+import { ImageViewerController } from 'ionic-img-viewer';
 
 @Component({
   selector: 'page-anuncio-full',
@@ -11,11 +12,17 @@ export class AnuncioFullPage {
 
   public slides: Array<SlideVO> = [];
   public grid = true;
+  public imgView:ImageViewerController;
 
 
   constructor(public navCtrl: NavController, 
     public params: NavParams,
-    private photoViewer: PhotoViewer) {    
+    private photoViewer: PhotoViewer,
+    private imageViewerCtrl: ImageViewerController,
+    private modalCtrl: ModalController) {    
+
+    this.imgView = imageViewerCtrl;
+
     if (params != null && params.get("anuncio") != null) {
       this.createObjSlide(params.get("anuncio"));
     }
@@ -29,7 +36,6 @@ export class AnuncioFullPage {
       slide.description = "";
       slide.imageUrl = anuncio.anun_tx_urlslide1;
       this.slides.push(slide);
-
     }
 
     if (anuncio.anun_tx_urlslide2 != null && anuncio.anun_tx_urlslide2 != "") {
@@ -49,9 +55,12 @@ export class AnuncioFullPage {
     }
   }
 
-  openImage(url:string) {
-    this.photoViewer.show(url, '', {share:false});    
-  }
+  presentImage(myImage) {
+    const imageViewer = this.imgView.create(myImage);
+    imageViewer.present();
 
+    // setTimeout(() => imageViewer.dismiss(), 1000);
+    // imageViewer.onDidDismiss(() => alert('Viewer dismissed'));
+  }
  
 }
