@@ -1,5 +1,4 @@
 import { MinhaVitrineService } from './service/minha-vitrine-service';
-import { PhotoViewer } from '@ionic-native/photo-viewer';
 import { BackgroundService } from './service/background-service';
 import { NotificacaoService } from './service/notificacao-service';
 import { TokenDeviceService } from './service/token-device';
@@ -52,6 +51,5 @@ export const APP_PROVIDERS = [
     Camera,
     BackgroundMode,
     BackgroundService,
-    PhotoViewer,
     MinhaVitrineService
 ];

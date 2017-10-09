@@ -1,7 +1,6 @@
 import { SlideVO } from './../../model/slideVO';
 import { Component } from '@angular/core';
 import { NavController, NavParams, ModalController } from 'ionic-angular';
-import { PhotoViewer } from '@ionic-native/photo-viewer';
 import { ImageViewerController } from 'ionic-img-viewer';
 
 @Component({
@@ -17,7 +16,6 @@ export class AnuncioFullPage {
 
   constructor(public navCtrl: NavController, 
     public params: NavParams,
-    private photoViewer: PhotoViewer,
     private imageViewerCtrl: ImageViewerController,
     private modalCtrl: ModalController) {    
 
@@ -55,12 +53,9 @@ export class AnuncioFullPage {
     }
   }
 
-  presentImage(myImage) {
+  openImage(myImage) {
     const imageViewer = this.imgView.create(myImage);
     imageViewer.present();
-
-    // setTimeout(() => imageViewer.dismiss(), 1000);
-    // imageViewer.onDidDismiss(() => alert('Viewer dismissed'));
   }
  
 }
