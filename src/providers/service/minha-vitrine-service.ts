@@ -41,6 +41,10 @@ export class MinhaVitrineService {
     return promise;
   }
 
+  // public pesquisaPorUidVitrine(uidUsuario: string, uidVitrine: string) {
+  //     return this.minhaVitrineRef.child(uidUsuario).child(uidVitrine).once('value');
+  //   }
+
   public pesquisaPorUidVitrine(uidUsuario: string, uidVitrine: string) {
     return this.minhaVitrineRef.child(uidUsuario).orderByChild('vitr_sq_id').equalTo(uidVitrine).once('value');
   }

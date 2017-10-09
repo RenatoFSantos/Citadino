@@ -92,7 +92,7 @@ export class CtdButtonsComponent {
 
   public salvarVitrine() {
 
-    if (this.vitrineSalva == 0) {
+    if (this.vitrineSalva[0] == 0) {
       var uidUsuario: string = this.usuaSrv.getLoggedInUser().uid;
       this.minhaVitrineSrv.salvar(uidUsuario, this.vitrine);
       this.events.publish("salvarVitrine:true", (this.vitrine[0]));
