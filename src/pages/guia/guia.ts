@@ -1,3 +1,4 @@
+import { SlideVO } from './../../model/slideVO';
 import { AnuncioFullPage } from './../anuncio-full/anuncio-full';
 import { VitrineVO } from './../../model/vitrineVO';
 import { GlobalVar } from './../../shared/global-var';
@@ -10,6 +11,8 @@ import { GuiaService } from './../../providers/service/guia-service';
 import { GuiaListaPage } from './../guia-lista/guia-lista';
 import { Component, OnInit } from '@angular/core';
 import { NavController, LoadingController } from 'ionic-angular';
+import { debounceTime } from 'rxjs/operators/debounceTime';
+import { distinctUntilChanged } from 'rxjs/operators/distinctUntilChanged';
 
 // Guia
 
@@ -51,10 +54,12 @@ export class GuiaPage implements OnInit {
   ionViewDidLoad() {
     let self = this;
     this.searchControl.valueChanges
-      .debounceTime(700)
-      .distinctUntilChanged()
+      .pipe(
+      debounceTime(700),
+      distinctUntilChanged()
+      )
       .map(v => v.toLowerCase().trim())
-      .subscribe(value => {
+      .subscribe((value: any) => {
         self.empresas = []
         this.searching = false;
 
@@ -212,8 +217,14 @@ export class GuiaPage implements OnInit {
       let vitrine: VitrineVO = new VitrineVO();
 
       this.guiaSrv.getPathPlantaoFarmacia().then((url: any) => {
-        vitrine.anun_tx_urlslide1 = url;
-        this.navCtrl.push(AnuncioFullPage, { anuncio: vitrine });
+        let slides: SlideVO[] = [];
+
+        let slide: SlideVO = new SlideVO();
+        slide.imageUrl = url;
+
+        slides.push(slide);
+
+        this.navCtrl.push(AnuncioFullPage, { slideParam: slides, isExcluirImagem: false });
       })
         .catch((error) => {
 
@@ -224,9 +235,24 @@ export class GuiaPage implements OnInit {
       let vitrine: VitrineVO = new VitrineVO();
 
       this.guiaSrv.getPathHorarioOnibus().then((paths: any) => {
-        vitrine.anun_tx_urlslide1 = paths[0];
-        vitrine.anun_tx_urlslide2 = paths[1];
-        this.navCtrl.push(AnuncioFullPage, { anuncio: vitrine });
+
+        let slides: SlideVO[] = [];
+        let slide: SlideVO = new SlideVO();
+
+        if (paths.length > 0 && paths.length == 1) {
+          slide.imageUrl = paths[0];
+          slides.push(slide);
+
+        } else if (paths.length > 0 && paths.length > 1) {
+          slide.imageUrl = paths[0];
+          slides.push(slide);
+
+          slide = new SlideVO();
+          slide.imageUrl = paths[1];
+          slides.push(slide);
+        }
+
+        this.navCtrl.push(AnuncioFullPage, { slideParam: slides, isExcluirImagem: false });
       })
         .catch((error) => {
 

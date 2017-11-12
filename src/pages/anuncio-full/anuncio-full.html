@@ -3,7 +3,6 @@
     <ion-title>CLIQUE NA IMAGEM PARA AMPLIAR</ion-title>
   </ion-navbar>
 </ion-header>
-
 <ion-content padding>
   <ion-slides pager effect="flip">
     <ion-slide *ngFor="let slide of slides">
@@ -12,4 +11,9 @@
       </div>
     </ion-slide>
   </ion-slides>
+  <ion-fab right bottom *ngIf="isBtnExcluirImg == true">
+      <button ion-fab (click)="removeImage()">
+          <ion-icon name="md-trash"></ion-icon>
+      </button>        
+  </ion-fab>
 </ion-content>

@@ -28,12 +28,11 @@
                 <ion-spinner *ngIf="!(mensagens)"></ion-spinner>
             </ion-col>-->
             <ion-col col-10 [hidden]="!mensagens">
-                <ion-textarea fz-elastic placeholder="Entre com a mensagem" [(ngModel)]="mens_txt_mensagem"></ion-textarea>
+                <ion-textarea maxlength="1500" autoresize="100" placeholder="Entre com a mensagem" [(ngModel)]="mens_txt_mensagem" autocomplete="true" spellcheck="true"></ion-textarea>
             </ion-col>
-            <ion-col col-2 [hidden]="!mensagens">
+            <ion-col class="colSend" col-2 [hidden]="!mensagens" >
                 <button ion-button (click)="enviarMensagem()"><ion-icon name="send"></ion-icon></button>
             </ion-col>
         </ion-row>
-
     </ion-toolbar>
 </ion-footer>

@@ -7,7 +7,6 @@ import { Injectable } from '@angular/core';
 
 @Injectable()
 export class UsuarioService {
-
   private usersRef: any;
 
   constructor(private fbService: FirebaseService,
@@ -19,6 +18,11 @@ export class UsuarioService {
   //Retorna Ref de storage
   getStorageRef() {
     return this.fbService.getStorageRef();
+  }
+
+  //Retorna storage
+  getStorage() {
+    return this.fbService.getStorage();
   }
 
   onAuthStateChanged(callback) {
@@ -117,7 +121,7 @@ export class UsuarioService {
 
   }
 
-  public getTokens(uid:string) {
+  public getTokens(uid: string) {
     return this.usersRef.child(uid).child('tokendevice').once('value');
   }
 

@@ -1,0 +1,42 @@
+<ion-header>
+  <ion-navbar color="ctd-navbar">
+    <ion-title>Publicações</ion-title>
+  </ion-navbar>
+</ion-header>
+<ion-content>
+  <ion-card class="ctd-card" *ngFor="let item of vitrines">
+    <!-- <div *ngIf="item.tian_sq_id == 'TP-1'"> -->
+    <ion-item (click)="openPage(item)">
+      <ion-avatar item-left>
+        <img src="{{item.anun_tx_urlavatar}}">
+      </ion-avatar>
+      <h2>{{item.anun_tx_titulo}}</h2>
+      <p>{{item.anun_tx_subtitulo}}</p>
+      <p>{{item.vitr_dt_agendada | date: 'shortDate'}}</p>
+    </ion-item>
+    <ion-card-content>
+      <div *ngIf="item.vitr_in_buttonmore == true" class="ctd-noticia" [innerHTML]="item.anun_tx_texto"></div>
+
+      <div *ngIf="item.vitr_in_buttonmore == false" class="ctd_noticia_exibir" [innerHTML]="item.anun_tx_texto"></div>
+
+      <p *ngIf="item.vitr_in_buttonmore == true" text-right>
+        <a detail-none (click)="exibirTextoVitrine(item)">Continuar lendo</a>
+      </p>
+    </ion-card-content>
+    <img style="max-height:480px" src="{{item.anun_tx_urlbanner}}" (click)="openPage(item)" />
+
+    <ion-row>
+      <ion-col width-100 class="ctd-btn-vitrine">
+        <ctd-buttons [urlSlide]=(item.anun_tx_urlslide1) [empresaKey]=(item.empr_sq_id) [vitrine]=(item) [vitrineSalva]=item.anun_nr_salvos
+          [usuarioVitrine]=item.usua_sq_id [isBtnRepublicar]="true"></ctd-buttons>
+      </ion-col>
+    </ion-row>
+  </ion-card>
+
+  <ion-fab right bottom *ngIf="globalVar.isBtnAdicionarVitrine()">
+    <button ion-fab (click)="adicionarVitrine()">
+      <ion-icon name="add"></ion-icon>
+    </button>
+  </ion-fab>
+
+</ion-content>

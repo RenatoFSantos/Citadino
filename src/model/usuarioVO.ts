@@ -38,5 +38,6 @@ export class UsuarioVO {
         this.usua_in_ajuda = false;
         this.empresa = new EmpresaVO();
         this.usua_sg_perfil = '';      
+        this.usua_tx_urlprofile = "";
     }
 }

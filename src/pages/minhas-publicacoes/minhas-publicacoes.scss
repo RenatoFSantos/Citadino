@@ -1,4 +1,4 @@
-page-minha-vitrine {
+page-minhas-publicacoes {
     ion-card.ctd-card {
         padding: 0px;
         border-radius: 10px;
@@ -45,15 +45,24 @@ page-minha-vitrine {
         line-height: 1.4em;
     }  
     
-    ion-card-content.ctd-noticia {
+    .ctd-noticia {
         overflow: hidden;
         text-overflow: ellipsis;
         display: -webkit-box;
         -webkit-box-orient: vertical;
         -webkit-line-clamp: 4; /* number of lines to show */
         max-height: 5.5em;
-        line-height: 1.4em;
-    }  
+        line-height: 1.4
+    }
+
+    .ctd_noticia_exibir {
+        max-height: 800px;
+        overflow: hidden;
+        -moz-transition: height 1s ease;
+        -webkit-transition: height 1s ease;
+        -o-transition: height 1s ease;
+        transition: max-height 0.25s ease-in;
+    }
 
     .ctd-noticia-head {
         background-color:#e7a904 !important;
@@ -68,4 +77,26 @@ page-minha-vitrine {
         // width: 102%;
         // margin-left: -2px;
     }
+
+    .ctd-ver-mais {
+        text-align: right;
+        padding: 2px 8px 0px 0px;
+    }
+
+    ion-fab[bottom] {
+        bottom: 2px !important;
+    }
+    ion-fab[right] {
+        right: 10px !important;
+    }
+
+    .fixed-content {
+        margin-bottom: 56px !important;
+        margin-top: 63px !important;
+    }
+
+    .scroll-content {
+        margin-top: 63px !important;
+    }
+
 }

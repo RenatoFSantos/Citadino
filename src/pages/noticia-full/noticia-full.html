@@ -13,15 +13,19 @@
   </ion-row>
   <ion-row style="align-content: center">
     <ion-col width-100>
-      <hr>
-      <img src="{{vitrine.anun_tx_urlbanner}}" />
-      <hr>
+      <ion-slides pager paginationType="fraction" effect="cube">
+        <ion-slide *ngFor="let slide of slides">
+          <div class="swiper-zoom-container">
+            <img [src]="slide.imageUrl"/>
+          </div>
+        </ion-slide>
+      </ion-slides>
     </ion-col>
   </ion-row>
   <ion-row>
     <ion-col width-100>
       <p>
-      {{vitrine.anun_tx_texto}}
+        {{vitrine.anun_tx_texto}}
       </p>
     </ion-col>
   </ion-row>

@@ -1,0 +1,46 @@
+<ion-header>
+    <ion-navbar color="ctd-navbar">
+      <ion-title>Criar Vitrine</ion-title>
+    </ion-navbar>
+  </ion-header>
+  <ion-content>
+    <form [formGroup]="frmVitrineCrud">
+      <ion-grid>
+        <ion-row>
+          <ion-col col-12>
+            <ion-item>
+              <ion-label stacked class="labelProfile">Título</ion-label>
+              <ion-input type="text" maxlength="40" [(ngModel)]="vitrine.anun_tx_titulo" formControlName="anun_tx_titulo" autocomplete="true"
+              spellcheck="true"></ion-input>
+            </ion-item>
+          </ion-col>
+        </ion-row>
+        <ion-row>
+          <ion-col col-12>
+            <ion-item>
+              <ion-label stacked class="labelProfile">Conteúdo</ion-label>
+              <!-- <ion-textarea rows="1" fz-elastic [(ngModel)]="vitrine.anun_tx_texto" formControlName="anun_tx_texto"></ion-textarea> -->
+              <ion-textarea maxlength="3000" autoresize="150" [(ngModel)]="vitrine.anun_tx_texto" formControlName="anun_tx_texto" autocomplete="true"
+                spellcheck="true"></ion-textarea>
+            </ion-item>
+          </ion-col>
+        </ion-row>
+        <ion-row style="margin:5px;">
+          <ion-item no-lines>
+            <ion-scroll scrollX="true" scroll-avatar>
+              <ion-avatar>
+                <img src="{{avatar.path}}" *ngFor="let avatar of imagens" class="scroll-item" (click)="selecionarTipoImagem(avatar, imagens)"
+                />
+              </ion-avatar>
+            </ion-scroll>
+          </ion-item>
+        </ion-row>
+        <ion-row></ion-row>
+        <ion-row>
+          <ion-col>
+            <button ion-button full large (click)="publicarVitrine()">Publicar</button>
+          </ion-col>
+        </ion-row>
+      </ion-grid>
+    </form>
+  </ion-content>

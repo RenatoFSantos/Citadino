@@ -7,14 +7,23 @@
 </button> -->
 
 
-<button ion-button icon-only clear class="btnBotaoAvancar"  
-[ngClass]="{'salvar': vitrineSalva == 1}" (click)="salvarVitrine()">
-    <ion-icon name="md-bookmark"></ion-icon>  
+
+<button ion-button icon-only clear class="btnBotaoAvancar" *ngIf="exibirBtnRepublicar() == true" (click)="showPublicar()">
+    <ion-icon name="ios-redo"></ion-icon>
 </button>
 
-<button ion-button icon-only clear class="btnBotaoAvancar" *ngIf="urlSlide[0] != ''" (click)="openSlideNoticia(1,vitrine[0])">
+<button ion-button icon-only clear class="btnBotaoAvancar" *ngIf="exibirBtnCrudVitrine() == true" (click)="showExclusao()">
+    <ion-icon name="md-trash"></ion-icon>
+</button>
+
+<button ion-button icon-only clear class="btnBotaoAvancar" 
+*ngIf="exibirBtnCrudVitrine() == false" [ngClass]="{'salvar': vitrineSalva == 1}" (click)="marcarVitrine()">
+    <ion-icon name="md-bookmark"></ion-icon>
+</button>
+
+<button ion-button icon-only clear class="btnBotaoAvancar" *ngIf="urlSlide != ''" (click)="openSlideNoticia(1,vitrine)">
     <ion-icon name="md-images"></ion-icon>
 </button>
-<button ion-button icon-only clear class="btnBotaoAvancar" *ngIf="smartSite[0] == true" (click)="openSmartSite()">
+<button  ion-button icon-only clear class="btnBotaoAvancar" *ngIf="smartSite == true" (click)="openSmartSite()" >
     <ion-icon name="globe"></ion-icon>
 </button>

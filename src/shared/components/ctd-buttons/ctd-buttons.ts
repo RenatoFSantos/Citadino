@@ -1,4 +1,6 @@
-import { MinhaVitrineService } from './../../../providers/service/minha-vitrine-service';
+import { MinhasPublicacoesPage } from './../../../pages/minhas-publicacoes/minhas-publicacoes';
+import { MeusMarcadosService } from './../../../providers/service/meus_marcados-service';
+import { SlideVO } from './../../../model/slideVO';
 import { UsuarioService } from './../../../providers/service/usuario-service';
 import { NoticiaFullPage } from './../../../pages/noticia-full/noticia-full';
 import { AnuncioFullPage } from './../../../pages/anuncio-full/anuncio-full';
@@ -30,24 +32,37 @@ export class CtdButtonsComponent {
   public vitrine: VitrineVO = null;
 
   @Input()
-  public vitrineSalva:number = 0;
+  public vitrineSalva: number = 0;
 
+  @Input()
+  public usuarioVitrine: string = '';
+
+  @Input()
+  public isBtnRepublicar: Boolean = false;
+
+
+  private usuarioLogado: string;
   private toastAlert: any;
+  private confirmPublic:any;
+
   constructor(private emprSrv: EmpresaService,
     private smartSrv: SmartSiteService,
     private navCtrl: NavController,
     private toastCtrl: ToastController,
     private loadingCtrl: LoadingController,
     private usuaSrv: UsuarioService,
-    private minhaVitrineSrv: MinhaVitrineService,
+    private meusMarcadosSrv: MeusMarcadosService,
     private events: Events,
     private alertCtrl: AlertController) {
+
+    this.vitrine = null;  
+    this.usuarioLogado = this.usuaSrv.getLoggedInUser().uid;
   }
 
   openSlideNoticia(opcao: number, param: any): void {
     switch (opcao) {
       case 1:
-        this.navCtrl.push(AnuncioFullPage, { anuncio: param });
+        this.navCtrl.push(AnuncioFullPage, { slideParam: this.retornaLisSlide(param), isExcluirImagem: false });
         break;
       case 2:
         this.navCtrl.push(NoticiaFullPage);
@@ -64,7 +79,7 @@ export class CtdButtonsComponent {
     });
 
     loader.present();
-    this.emprSrv.getEmpresaPorKey(this.empresaKey[0]).then((snapEmpresa) => {
+    this.emprSrv.getEmpresaPorKey(this.empresaKey).then((snapEmpresa) => {
       if (snapEmpresa != null) {
         let empresa: EmpresaVO = snapEmpresa.val();
 
@@ -90,30 +105,30 @@ export class CtdButtonsComponent {
     });
   }
 
-  public salvarVitrine() {
+  public marcarVitrine() {
 
     if (this.vitrineSalva == 0) {
       var uidUsuario: string = this.usuaSrv.getLoggedInUser().uid;
-      this.minhaVitrineSrv.salvar(uidUsuario, this.vitrine);
-      this.events.publish("salvarVitrine:true", (this.vitrine[0]));
+      this.meusMarcadosSrv.salvar(uidUsuario, this.vitrine);
+      this.events.publish("marcarVitrine:true", (this.vitrine));
       this.createToast("Marcado com sucesso!");
     }
     else {
-      this.excluirVitrine();
+      this.desmarcarVitrine();
     }
   }
 
-  public excluirVitrine() {
+  public desmarcarVitrine() {
     let self = this;
     var uidUsuario: string = this.usuaSrv.getLoggedInUser().uid;
-    var uidVitrine: string = this.vitrine[0].vitr_sq_id;
+    var uidVitrine: string = this.vitrine.vitr_sq_id;
 
-    this.minhaVitrineSrv.pesquisaPorUidVitrine(uidUsuario, uidVitrine).then((snapVitrine) => {
+    this.meusMarcadosSrv.pesquisaPorUidVitrine(uidUsuario, uidVitrine).then((snapVitrine) => {
       if (snapVitrine != null && snapVitrine.numChildren() > 0) {
         var uid: string = Object.keys(snapVitrine.val()).toString();
-        self.minhaVitrineSrv.excluir(uidUsuario, uid).then((excluido) => {
+        self.meusMarcadosSrv.excluir(uidUsuario, uid).then((excluido) => {
           if (excluido == true) {
-            self.events.publish("excluirVitrine:true", (self.vitrine[0]));
+            self.events.publish("desmarcarVitrine:true", (self.vitrine));
             self.createToast("Desmarcado com sucesso!");
           }
         }).catch(() => {
@@ -122,6 +137,68 @@ export class CtdButtonsComponent {
       }
     })
   }
+
+  public showExclusao() {
+
+    let confirm = this.alertCtrl.create({
+      title: "Publicação",
+      message: "Confirma a exclusão ?",
+      buttons: [{
+        text: "Sim",
+        handler: () => {
+          this.excluirPublicacao();
+        }
+      },
+      {
+        text: "Nao",
+        handler: () => {
+          // confirm.dismiss();
+        }
+      }
+      ]
+    })
+    confirm.present();
+  }
+
+
+  public showPublicar() {
+    
+      this.confirmPublic = this.alertCtrl.create({
+          title: "Publicação",
+          message: "Confirma a publicação ?",
+          buttons: [{
+            text: "Sim",
+            handler: () => {
+              this.publicarVitrine();
+            }
+          },
+          {
+            text: "Nao",
+            handler: () => {
+              // confirm.dismiss();
+            }
+          }
+          ]
+        })
+
+        this.confirmPublic.present();
+      }
+
+  private excluirPublicacao() {
+    if (this.navCtrl.getActive().instance instanceof MinhasPublicacoesPage) {
+      this.events.publish("excluirPublicacao:true", (this.vitrine));
+    }
+    else {
+      this.events.publish("excluirVitrine:true", (this.vitrine));
+    }
+  }
+
+
+  public publicarVitrine() {
+    this.events.publish("publicarVitrine:true", (this.vitrine));
+    this.vitrine = null;
+  }
+
 
   createToast(errorMessage: string) {
     if (this.toastAlert != null) {
@@ -147,6 +224,47 @@ export class CtdButtonsComponent {
     setTimeout(() => {
       alert.dismiss();
     }, 1000);
+  }
+
+  private retornaLisSlide(vitrine: VitrineVO): SlideVO[] {
+
+    let slides: SlideVO[] = [];
+
+    if (vitrine.anun_tx_urlslide1 != null && vitrine.anun_tx_urlslide1 != "") {
+      let slide: SlideVO = new SlideVO();
+      slide.title = "";
+      slide.description = "";
+      slide.imageUrl = vitrine.anun_tx_urlslide1;
+      slides.push(slide);
+    }
+
+    if (vitrine.anun_tx_urlslide2 != null && vitrine.anun_tx_urlslide2 != "") {
+      let slide: SlideVO = new SlideVO();
+      slide.title = "";
+      slide.description = "";
+      slide.imageUrl = vitrine.anun_tx_urlslide2;
+      slides.push(slide);
+    }
+
+    if (vitrine.anun_tx_urlslide3 != null && vitrine.anun_tx_urlslide3 != "") {
+      let slide: SlideVO = new SlideVO();
+      slide.title = "";
+      slide.description = "";
+      slide.imageUrl = vitrine.anun_tx_urlslide3;
+      slides.push(slide);
+    }
+
+    return slides;
+  }
+
+  public exibirBtnCrudVitrine(): Boolean {
+
+    return this.usuarioVitrine == this.usuarioLogado;
+  }
+
+  public exibirBtnRepublicar(): Boolean {
+
+    return this.isBtnRepublicar == true;
   }
 
 }

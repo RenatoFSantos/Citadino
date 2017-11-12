@@ -24,7 +24,7 @@ export class TabsPage implements OnInit {
     public navParams: NavParams,
     public events: Events,
     private usuaSrv:UsuarioService) {
-    this.selectedIndex = navParams.data.tabIndex || 0;
+    this.selectedIndex = navParams.data.tabIndex || 1;
   }
 
   ngOnInit() {
@@ -37,7 +37,7 @@ export class TabsPage implements OnInit {
     var self = this;
 
     self.events.subscribe('thread:created', (newVitrines: Array<any>) => {
-      if (newVitrines != null) {
+      if (newVitrines != null && newVitrines.length > 0) {
         self.newThreads = newVitrines.length.toString();
       }
       else {

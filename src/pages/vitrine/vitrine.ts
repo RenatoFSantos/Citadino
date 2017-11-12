@@ -1,5 +1,6 @@
+import { MeusMarcadosService } from './../../providers/service/meus_marcados-service';
+import { SlideVO } from './../../model/slideVO';
 import { UsuarioService } from './../../providers/service/usuario-service';
-import { MinhaVitrineService } from './../../providers/service/minha-vitrine-service';
 import { AnuncioFullPage } from './../anuncio-full/anuncio-full';
 import { NoticiaFullPage } from './../noticia-full/noticia-full';
 import { SmartSiteService } from './../../providers/service/smartSite-services';
@@ -40,7 +41,7 @@ export class VitrinePage implements OnInit {
     public navCtrl: NavController,
     public navParams: NavParams,
     public events: Events,
-    private globalVar: GlobalVar,
+    public globalVar: GlobalVar,
     public loadingCtrl: LoadingController,
     private alertCtrl: AlertController,
     private vitrineSrv: VitrineService,
@@ -50,7 +51,7 @@ export class VitrinePage implements OnInit {
     private toastCtrl: ToastController,
     private emprSrv: EmpresaService,
     private smartSrv: SmartSiteService,
-    private minhaVitrineSrv: MinhaVitrineService,
+    private meusMarcadosSrv: MeusMarcadosService,
     private usuaSrv: UsuarioService) {
 
     if (this.globalVar.getIsFirebaseConnected()) {
@@ -63,6 +64,12 @@ export class VitrinePage implements OnInit {
       this.vitrineSrv.getVitrineRef().once("value").then((snapShot) => {
         if (snapShot.exists()) {
           this.vitrineSrv.getVitrineRef().child(this.seqMunicipio).on('child_added', this.onVitrineAdded);
+
+          this.vitrineSrv.getVitrineRef().child(this.seqMunicipio).on('child_removed', this.onVitrineRemove);
+
+          this.vitrineSrv.getVitrineRef().child(this.seqMunicipio).on('child_changed', this.onVitrineChange);
+
+
           this.loadVitrines();
           return true;
         }
@@ -94,25 +101,67 @@ export class VitrinePage implements OnInit {
     }
   }
 
+  public onVitrineRemove = (childSnapshot) => {
+    var self = this;
+
+    if (childSnapshot.val() != null) {
+      var pkVitrine = childSnapshot.val().vitr_sq_id;
+      let removeVitrine: VitrineVO = self.mappingsService.getVitrine(childSnapshot.val(), pkVitrine);
+
+      var objResult: any = self.itemsService.findElement(self.newVitrines, (v: any) => v.vitr_sq_id == pkVitrine);
+
+      if (objResult != null) {
+        self.itemsService.removeItemFromArray(self.newVitrines, removeVitrine);
+        this.events.publish('thread:created', this.newVitrines);
+      } else {
+        self.itemsService.removeItemFromArray(self.vitrines, removeVitrine);
+      }
+
+    }
+  }
+
+  public onVitrineChange = (childSnapshot, prevChildKey) => {
+
+    var self = this;
+    var pkVitrine = childSnapshot.val().vitr_sq_id;
+
+    let exist: boolean = this.newVitrines.some(campo =>
+      campo.vitr_sq_id == pkVitrine
+    );
+
+    if (!exist) {
+      let newVitrine: VitrineVO = self.mappingsService.getVitrine(childSnapshot.val(), pkVitrine);
+      this.newVitrines.push(newVitrine);
+      this.events.publish('thread:created', this.newVitrines);
+
+      if (self.vitrines != null && self.vitrines.length > 0) {
+        self.itemsService.removeItems(self.vitrines, (v: any) => v.vitr_sq_id == pkVitrine);
+      }
+    }
+  }
+
   ionViewDidLoad() {
-    this.excluirVitrineEvent();
-    this.salvarVitrineEvent();
+    this.marcarVitrineEvent();
+    this.desmarcarVitrineEvent();
+    // this.excluirVitrineEvent();
   }
 
-  ionViewWillEnter() {
-    // this.netService.getStatusConnection();
+  ionViewWillUnload() {
+    // this.events.subscribe('excluirVitrine:true', null);
+    this.events.subscribe('marcarVitrine:true', null);
+    this.events.subscribe('desmarcarVitrine:true', null);
   }
-
-  // ionViewDidLeave() {
-  //   this.netService.closeStatusConnection();
-  // }
 
   ngOnInit() {
   }
 
   loadVitrines() {
     var self = this;
+    self.startPk = "";
+    self.rowCount = 0;
+    self.rowCurrent = 0;
     self.vitrines = [];
+
     self.vitrineSrv.getVitrineRefTotal(this.seqMunicipio).then((snapShot) => {
       self.rowCount = snapShot.numChildren();
       this.getVitrines().then(() => {
@@ -148,15 +197,15 @@ export class VitrinePage implements OnInit {
           anuncios = self.itemsService.getPropertyValues(snapshot.val(), "vitr_sq_ordem");
 
           self.startPk = String(self.itemsService.getFirstElement(anuncios));
-          var lstVitrine: any = [];
-          lstVitrine = self.itemsService.reversedItems<VitrineVO>(self.mappingsService.getVitrines(snapshot));
+
+          var lstVitrineOld: VitrineVO[] = self.mappingsService.getVitrines(snapshot);
+
+          var lstVitrine: VitrineVO[] = [];
+          lstVitrine = self.itemsService.reversedItems<VitrineVO>(lstVitrineOld);
 
           lstVitrine.forEach(vitrine => {
 
-            // });
-            // .forEach(function (vitrine) {
-
-            self.minhaVitrineSrv.pesquisaPorUidVitrine(uidUsuario, vitrine.vitr_sq_id)
+            self.meusMarcadosSrv.pesquisaPorUidVitrine(uidUsuario, vitrine.vitr_sq_id)
               .then((vitrineSalva) => {
 
                 if (vitrineSalva.val() != null) {
@@ -270,11 +319,11 @@ export class VitrinePage implements OnInit {
   }
 
   private openSlideNoticia(vitrine: VitrineVO): void {
-    this.navCtrl.push(AnuncioFullPage, { anuncio: vitrine });
+    this.navCtrl.push(AnuncioFullPage, { slideParam: this.retornaLisSlide(vitrine), isExcluirImagem: false });
   }
 
-  openNoticia(vitrine: VitrineVO) {
-    this.navCtrl.push(NoticiaFullPage, { vitrine: vitrine });
+  public openNoticia(vitrine: VitrineVO) {
+    this.navCtrl.push(NoticiaFullPage, { vitrine: vitrine, slideParam: this.retornaLisSlide(vitrine) });
   }
 
 
@@ -346,9 +395,9 @@ export class VitrinePage implements OnInit {
     return promise;
   };
 
-  public salvarVitrineEvent() {
+  public marcarVitrineEvent() {
     let self = this;
-    this.events.subscribe('salvarVitrine:true', (result: any) => {
+    this.events.subscribe('marcarVitrine:true', (result: any) => {
       if (result != null) {
         var objResult: any = self.itemsService.findElement(self.vitrines, (v: any) => v.vitr_sq_id == result.vitr_sq_id);
         if (objResult != null) {
@@ -358,9 +407,9 @@ export class VitrinePage implements OnInit {
     });
   }
 
-  public excluirVitrineEvent() {
+  public desmarcarVitrineEvent() {
     let self = this;
-    this.events.subscribe('excluirVitrine:true', (result: any) => {
+    this.events.subscribe('desmarcarVitrine:true', (result: any) => {
       if (result != null) {
         var objResult: any = self.itemsService.findElement(self.vitrines, (v: any) => v.vitr_sq_id == result.vitr_sq_id);
         if (objResult != null) {
@@ -368,6 +417,108 @@ export class VitrinePage implements OnInit {
         }
       }
     });
+  }
+
+  public excluirVitrineEvent() {
+    let self = this;
+
+    console.log("Excluir vitrine evento");
+    this.events.subscribe('excluirVitrine:true', (vitrine: VitrineVO) => {
+
+      if (vitrine != null) {
+
+        let loader = this.loadingCtrl.create({
+          content: 'Aguarde...',
+          dismissOnPageChange: true
+        });
+
+        loader.present();
+
+        this.vitrineSrv.excluir(vitrine).then(() => {
+          this.carregaListaImagens(self, vitrine)
+            .then(this.excluirImages)
+            .then(() => {
+              this.createAlert("Publicação excluída com sucesso.");
+              this.loadVitrines();
+              loader.dismiss();
+            });
+        });
+      }
+    });
+  }
+
+  // public adicionarVitrine() {
+  //   this.navCtrl.push(VitrineCrudPage);
+  // }
+
+  private retornaLisSlide(vitrine: VitrineVO): SlideVO[] {
+
+    let slides: SlideVO[] = [];
+
+    if (vitrine.anun_tx_urlslide1 != null && vitrine.anun_tx_urlslide1 != "") {
+      let slide: SlideVO = new SlideVO();
+      slide.title = "";
+      slide.description = "";
+      slide.imageUrl = vitrine.anun_tx_urlslide1;
+      slides.push(slide);
+    }
+
+    if (vitrine.anun_tx_urlslide2 != null && vitrine.anun_tx_urlslide2 != "") {
+      let slide: SlideVO = new SlideVO();
+      slide.title = "";
+      slide.description = "";
+      slide.imageUrl = vitrine.anun_tx_urlslide2;
+      slides.push(slide);
+    }
+
+    if (vitrine.anun_tx_urlslide3 != null && vitrine.anun_tx_urlslide3 != "") {
+      let slide: SlideVO = new SlideVO();
+      slide.title = "";
+      slide.description = "";
+      slide.imageUrl = vitrine.anun_tx_urlslide3;
+      slides.push(slide);
+    }
+
+    return slides;
+  }
+
+  public exibirTextoVitrine(vitrine: VitrineVO) {
+    vitrine.vitr_in_buttonmore = false;
+  }
+
+  private carregaListaImagens = function (self: any, vitrine: VitrineVO) {
+    let promises: any = [];
+
+    let slides: SlideVO[] = self.retornaLisSlide(vitrine);
+
+    var promise = new Promise(function (resolve, reject) {
+
+      if (slides != null && slides.length > 0) {
+
+        slides.forEach(item => {
+          var httpsReference = self.usuaSrv.getStorage().refFromURL(item.imageUrl);
+          promises.push(self.vitrineSrv.getStorageRef().child(httpsReference.fullPath).delete());
+        });
+      }
+      resolve({ promises, self });
+    });
+
+    return promise;
+  }
+
+  private excluirImages = function (listaImagens) {
+    let self = listaImagens.self;
+    let vitrineId = self.vitrineId
+    let promises = listaImagens.promises;
+
+    self.pathImagens = [];
+
+    var promAll = Promise.all(promises).then((values) => { })
+      .catch(err => {
+        throw new Error(err);
+      });
+
+    return promAll;
   }
 
 }

@@ -1,4 +1,5 @@
-import { MinhaVitrineService } from './service/minha-vitrine-service';
+import { MinhasPublicacoesService } from './service/minhas-publicacoes';
+import { MeusMarcadosService } from './service/meus_marcados-service';
 import { BackgroundService } from './service/background-service';
 import { NotificacaoService } from './service/notificacao-service';
 import { TokenDeviceService } from './service/token-device';
@@ -20,7 +21,6 @@ import { Network } from '@ionic-native/Network';
 import { FirebaseService } from './database/firebase-service';
 import { StatusBar } from '@ionic-native/status-bar';
 import { SplashScreen } from '@ionic-native/splash-screen';
-import { ElasticModule } from 'angular2-elastic';
 import { OneSignal } from '@ionic-native/onesignal';
 import { Camera } from '@ionic-native/camera';
 import { BackgroundMode } from '@ionic-native/background-mode';
@@ -42,7 +42,6 @@ export const APP_PROVIDERS = [
     NetworkService,
     MensagemService,
     SmartSiteService,
-    ElasticModule,
     CallNumber,
     InAppBrowser,
     TokenDeviceService,
@@ -51,5 +50,6 @@ export const APP_PROVIDERS = [
     Camera,
     BackgroundMode,
     BackgroundService,
-    MinhaVitrineService
+    MeusMarcadosService,
+    MinhasPublicacoesService
 ];

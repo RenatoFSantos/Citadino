@@ -1,5 +1,8 @@
 {
-  "name": "CitadinoDesenv",
-  "app_id": "3d750d37",
-  "type": "ionic-angular"
+  "name": "CitadinoDesenvol",
+  "app_id": "",
+  "type": "ionic-angular",
+  "integrations": {
+    "cordova": {}
+  }
 }

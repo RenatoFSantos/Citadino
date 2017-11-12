@@ -1,9 +1,9 @@
-import { MinhaVitrinePage } from './../pages/minha-vitrine/minha-vitrine';
+import { MinhasPublicacoesPage } from './../pages/minhas-publicacoes/minhas-publicacoes';
+import { MeusMarcadosPage } from './../pages/meus_marcados/meus-marcados';
 import { ProfilePage } from './../pages/profile/profile';
 import { MappingsService } from './../providers/service/_mappings-service';
 import { EnviarNotificacaoPage } from './../pages/enviar-notificacao/enviar-notificacao';
 import { TokenDeviceService } from './../providers/service/token-device';
-import { NotificacaoPage } from './../pages/notificacao/notificacao';
 import { LoginPage } from './../pages/autenticar/login/login';
 import { AjudaPage } from './../pages/ajuda/ajuda';
 import { MensagemPage } from './../pages/mensagem/mensagem';
@@ -128,9 +128,9 @@ export class MyApp implements OnInit {
 
         self.usuaSrv.getUserDetail(userCurrent.uid).then((userRef) => {
           if (userRef != null) {
-            self.popularMenu(true, userRef.val());
             self.userLogged = userRef.val();
             self.globalVar.usuarioLogado = self.userLogged;
+            self.popularMenu(true, userRef.val());
             self.splashScreen.hide();
 
             console.log('Uid ' + userCurrent.uid);
@@ -196,9 +196,9 @@ export class MyApp implements OnInit {
         if (userCurrent != null) {
           self.usuaSrv.getUserDetail(userCurrent.uid).then((userRef) => {
             if (userRef != null) {
-              self.popularMenu(true, userRef.val());
               self.userLogged = userRef.val();
               self.globalVar.usuarioLogado = self.userLogged;
+              self.popularMenu(true, userRef.val());
 
               console.log('Uid ' + userCurrent.uid);
               self.saveTokenDevice(userCurrent.uid);
@@ -356,47 +356,50 @@ export class MyApp implements OnInit {
     return;
   }
 
-  public popularMenu(value: boolean, usuarioParam: any) {
+  public popularMenu(value: boolean, usuario:UsuarioVO) {
 
-    var userJson: any = this.mapSrv.getUserJson(usuarioParam);
+    // var userJson: any = this.mapSrv.getUserJson(usuarioParam);
 
-    try {
-      this.pages = [
-        {
-          title: 'Vitrine', component: TabsPage, tabComponent: VitrinePage, index: 0, icon: 'logo-windows'
-          , typeMenu: enums.ETypeMenu.default
-        },
-        {
-          title: 'Guia', component: TabsPage, tabComponent: GuiaPage, index: 1, icon: 'compass'
-          , typeMenu: enums.ETypeMenu.default
-        },
-        {
-          title: 'Mensagem', component: TabsPage, tabComponent: MensagemListaPage, index: 2, icon: 'chatbubbles'
-          , typeMenu: enums.ETypeMenu.default
-        }
-      ];
-    }
-    catch (e) {
-      console.log.apply(e);
-    }
+    // try {
+    //   this.pages = [
+    //     {
+    //       title: 'Vitrine', component: TabsPage, tabComponent: VitrinePage, index: 0, icon: 'logo-windows'
+    //       , typeMenu: enums.ETypeMenu.default
+    //     },
+    //     {
+    //       title: 'Guia', component: TabsPage, tabComponent: GuiaPage, index: 1, icon: 'compass'
+    //       , typeMenu: enums.ETypeMenu.default
+    //     },
+    //     {
+    //       title: 'Mensagem', component: TabsPage, tabComponent: MensagemListaPage, index: 2, icon: 'chatbubbles'
+    //       , typeMenu: enums.ETypeMenu.default
+    //     }
+    //   ];
+    // }
+    // catch (e) {
+    //   console.log.apply(e);
+    // }
 
-    this.subpages = [
+    this.pages = [
       // { title: 'Configurações', component: TestePage, icon: 'options', typeMenu: enums.ETypeMenu.default },
       // { title: 'Estatísticas', component: RelatoriosListaPage, icon: 'pie', typeMenu: enums.ETypeMenu.default },
       // { title: 'Favoritos', component: TestePage, icon: 'star', typeMenu: enums.ETypeMenu.default },
       { title: 'Minha Conta', component: ProfilePage, icon: 'contact', typeMenu: enums.ETypeMenu.default },
-      { title: 'Marcados', component: MinhaVitrinePage, icon: 'md-bookmark', typeMenu: enums.ETypeMenu.default },
+      
+      { title: 'Minhas Publicações', component: MinhasPublicacoesPage, icon: 'md-create', typeMenu: enums.ETypeMenu.default },
+
+      { title: 'Meus Marcados', component: MeusMarcadosPage, icon: 'md-bookmark', typeMenu: enums.ETypeMenu.default },
 
       { title: 'Ajuda', component: AjudaPage, icon: 'md-help', typeMenu: enums.ETypeMenu.default }
       // { title: 'Sobre', component: TestePage, icon: 'information-circle', typeMenu: enums.ETypeMenu.default }
     ];
 
-    if (userJson.usua_sg_perfil == "ADM") {
-      this.subpages.push({ title: 'Enviar Notificação', component: EnviarNotificacaoPage, icon: 'md-notifications', typeMenu: enums.ETypeMenu.default });
+    if (usuario.usua_sg_perfil == "ADM") {
+      this.pages.push({ title: 'Enviar Notificação', component: EnviarNotificacaoPage, icon: 'md-notifications', typeMenu: enums.ETypeMenu.default });
     }
 
     if (value == true) {
-      this.subpages.push({ title: 'Sair', component: TabsPage, icon: 'exit', typeMenu: enums.ETypeMenu.logout });
+      this.pages.push({ title: 'Sair', component: TabsPage, icon: 'exit', typeMenu: enums.ETypeMenu.logout });
     }
   }
 

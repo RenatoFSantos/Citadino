@@ -1,3 +1,5 @@
+import { MeusMarcadosService } from './../../providers/service/meus_marcados-service';
+import { SlideVO } from './../../model/slideVO';
 import { NoticiaFullPage } from './../noticia-full/noticia-full';
 import { AnuncioFullPage } from './../anuncio-full/anuncio-full';
 import { SmartSitePage } from './../smartSite/smartSite';
@@ -8,22 +10,21 @@ import { EmpresaVO } from './../../model/empresaVO';
 import { MappingsService } from './../../providers/service/_mappings-service';
 import { ItemsService } from './../../providers/service/_items-service';
 import { UsuarioService } from './../../providers/service/usuario-service';
-import { MinhaVitrineService } from './../../providers/service/minha-vitrine-service';
 import { VitrineVO } from './../../model/vitrineVO';
 import { Component } from '@angular/core';
 import { IonicPage, NavController, NavParams, Events, LoadingController, ToastController } from 'ionic-angular';
 
 @Component({
-  selector: 'page-minha-vitrine',
-  templateUrl: 'minha-vitrine.html',
+  selector: 'page-meus-marcados',
+  templateUrl: 'meus-marcados.html',
 })
-export class MinhaVitrinePage {
+export class MeusMarcadosPage {
 
   private vitrines: Array<VitrineVO> = [];
   private usuario: any;
   private toastAlert: any;
 
-  constructor(private minhaVitrineSrv: MinhaVitrineService,
+  constructor(private meusMarcadosSrv: MeusMarcadosService,
     private usuaSrv: UsuarioService,
     private events: Events,
     private itemsService: ItemsService,
@@ -39,14 +40,14 @@ export class MinhaVitrinePage {
   }
 
   ionViewDidLoad() {
-    this.excluirVitrineEvent();
+    this.desmarcarVitrineEvent();
     this.carregaMinhaVitrine();
 
   }
 
   private carregaMinhaVitrine() {
     let self = this;
-    this.minhaVitrineSrv.getMinhaVitrinePorUsuario(this.usuario.uid).then((snapVitrines) => {
+    this.meusMarcadosSrv.getMeusMarcadosPorUsuario(this.usuario.uid).then((snapVitrines) => {
       if (snapVitrines != null) {
         snapVitrines.forEach(item => {
           var pkVitrine = item.val().vitr_sq_id;
@@ -55,13 +56,15 @@ export class MinhaVitrinePage {
           newVitrine.anun_nr_salvos = 1;
           this.vitrines.push(newVitrine);
         });
+
+        self.vitrines = self.itemsService.reversedItems<VitrineVO>(self.vitrines);
       }
     });
   }
 
-  public excluirVitrineEvent() {
+  public desmarcarVitrineEvent() {
     let self = this;
-    this.events.subscribe('excluirVitrine:true', (result) => {
+    this.events.subscribe('desmarcarVitrine:true', (result) => {
       if (result != null) {
         self.itemsService.removeItemFromArray(self.vitrines, result);
       }
@@ -113,7 +116,7 @@ export class MinhaVitrinePage {
   }
 
   private openSlideNoticia(vitrine: VitrineVO): void {
-    this.navCtrl.push(AnuncioFullPage, { anuncio: vitrine });
+    this.navCtrl.push(AnuncioFullPage, { slideParam: this.retornaLisSlide(vitrine), isExcluirImagem:false });
   }
 
   openNoticia(vitrine: VitrineVO) {
@@ -132,6 +135,38 @@ export class MinhaVitrinePage {
     });
 
     this.toastAlert.present();
+  }
+
+
+  private retornaLisSlide(vitrine: VitrineVO): SlideVO[] {
+
+    let slides: SlideVO[] = [];
+
+    if (vitrine.anun_tx_urlslide1 != null && vitrine.anun_tx_urlslide1 != "") {
+      let slide: SlideVO = new SlideVO();
+      slide.title = "";
+      slide.description = "";
+      slide.imageUrl = vitrine.anun_tx_urlslide1;
+      slides.push(slide);
+    }
+
+    if (vitrine.anun_tx_urlslide2 != null && vitrine.anun_tx_urlslide2 != "") {
+      let slide: SlideVO = new SlideVO();
+      slide.title = "";
+      slide.description = "";
+      slide.imageUrl = vitrine.anun_tx_urlslide2;
+      slides.push(slide);
+    }
+
+    if (vitrine.anun_tx_urlslide3 != null && vitrine.anun_tx_urlslide3 != "") {
+      let slide: SlideVO = new SlideVO();
+      slide.title = "";
+      slide.description = "";
+      slide.imageUrl = vitrine.anun_tx_urlslide3;
+      slides.push(slide);
+    }
+
+    return slides;
   }
 
 }

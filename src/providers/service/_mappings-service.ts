@@ -11,53 +11,59 @@ export class MappingsService {
     constructor() { }
 
     getVitrines(snapshot: any): Array<VitrineVO> {
-        let vitrines: Array<VitrineVO> = [];
-        if (snapshot.val() == null)
-            return vitrines;
+        let vitrines: Array<VitrineVO> = [];        
 
-        let list = snapshot.val();
+        if (snapshot.val() != null) {            
 
-        Object.keys(snapshot.val()).map((key: any) => {
-            let vitrine: any = list[key];
-            vitrines.push({
-                vitr_sq_id: key,
-                vitr_dt_agendada: vitrine.vitr_dt_agendada,
-                anun_sq_id: vitrine.anun_sq_id,
-                anun_ds_anuncio: vitrine.anun_ds_anuncio,
-                anun_tx_titulo: vitrine.anun_tx_titulo,
-                anun_tx_subtitulo: vitrine.anun_tx_subtitulo,
-                anun_tx_texto: vitrine.anun_tx_texto,
-                anun_tx_urlavatar: vitrine.anun_tx_urlavatar,
-                anun_tx_urlthumbnail: vitrine.anun_tx_urlthumbnail,
-                anun_tx_urlbanner: vitrine.anun_tx_urlbanner,
-                anun_tx_urlicone: vitrine.anun_tx_urlicone,
-                anun_tx_urlslide1: vitrine.anun_tx_urlslide1,
-                anun_tx_urlslide2: vitrine.anun_tx_urlslide2,
-                anun_tx_urlslide3: vitrine.anun_tx_urlslide3,
-                anun_nr_curtidas: vitrine.anun_nr_curtidas,
-                anun_nr_salvos: vitrine.anun_nr_salvos,
-                anun_nr_visitas: vitrine.anun_nr_visitas,
-                anun_in_status: vitrine.anun_in_status,
-                empr_sq_id: vitrine.empr_sq_id,
-                muni_sq_id: vitrine.muni_sq_id,
-                tian_sq_id: vitrine.tian_sq_id,
-                agen_sq_id: vitrine.agen_sq_id,
-                anun_in_smartsite: vitrine.anun_in_smartsite
+            snapshot.forEach(element => {
+
+                var vitrine: VitrineVO = new VitrineVO();
+                vitrine.vitr_sq_id = element.val().vitr_sq_id;
+                vitrine.vitr_dt_agendada = element.val().vitr_dt_agendada;
+                vitrine.vitr_sq_ordem = element.val().vitr_sq_ordem != undefined ? element.val().vitr_sq_ordem : "";
+                vitrine.anun_sq_id = element.val().anun_sq_id;
+                vitrine.anun_ds_anuncio = element.val().anun_ds_anuncio;
+                vitrine.anun_tx_titulo = element.val().anun_tx_titulo;
+                vitrine.anun_tx_subtitulo = element.val().anun_tx_subtitulo;
+                vitrine.vitr_in_buttonmore = this.enableShowMore(element.val().anun_tx_texto != "" ? element.val().anun_tx_texto : ""); vitrine.anun_tx_texto = element.val().anun_tx_texto != "" && element.val().anun_tx_texto != null ? this.replaceLineBreakVitrine(element.val().anun_tx_texto) : "";
+                vitrine.anun_tx_urlavatar = element.val().anun_tx_urlavatar;
+                vitrine.anun_tx_urlthumbnail = element.val().anun_tx_urlthumbnail;
+                vitrine.anun_tx_urlbanner = element.val().anun_tx_urlbanner;
+                vitrine.anun_tx_urlicone = element.val().anun_tx_urlicone;
+                vitrine.anun_tx_urlslide1 = element.val().anun_tx_urlslide1;
+                vitrine.anun_tx_urlslide2 = element.val().anun_tx_urlslide2;
+                vitrine.anun_tx_urlslide3 = element.val().anun_tx_urlslide3;
+                vitrine.anun_nr_curtidas = element.val().anun_nr_curtidas;
+                vitrine.anun_nr_salvos = element.val().anun_nr_salvos;
+                vitrine.anun_nr_visitas = element.val().anun_nr_visitas,
+                    vitrine.anun_in_status = element.val().anun_in_status;
+                vitrine.empr_sq_id = element.val().empr_sq_id;
+                vitrine.empr_nm_fantasia = element.val().empr_nm_fantasia != undefined ? element.val().empr_nm_fantasia : "";
+                vitrine.muni_sq_id = element.val().muni_sq_id;
+                vitrine.tian_sq_id = element.val().tian_sq_id;
+                vitrine.agen_sq_id = element.val().agen_sq_id;
+                vitrine.anun_in_smartsite = element.val().anun_in_smartsite;
+                vitrine.usua_sq_id = element.val().usua_sq_id != undefined ? element.val().usua_sq_id : "";
+
+                vitrines.push(vitrine);
             });
-        });
+        }
 
         return vitrines;
-    }
+    };
+
 
     getVitrine(snapshot: any, key: string): VitrineVO {
         let vitrine: VitrineVO = {
             vitr_sq_id: key,
             vitr_dt_agendada: snapshot.vitr_dt_agendada,
+            vitr_sq_ordem: snapshot.vitr_sq_ordem != undefined ? snapshot.vitr_sq_ordem : "",
             anun_sq_id: snapshot.anun_sq_id,
             anun_ds_anuncio: snapshot.anun_ds_anuncio,
             anun_tx_titulo: snapshot.anun_tx_titulo,
             anun_tx_subtitulo: snapshot.anun_tx_subtitulo,
-            anun_tx_texto: snapshot.anun_tx_texto,
+            vitr_in_buttonmore: this.enableShowMore(snapshot.anun_tx_texto != "" ? snapshot.anun_tx_texto : ""),
+            anun_tx_texto: snapshot.anun_tx_texto != "" && snapshot.anun_tx_texto != null ? this.replaceLineBreakVitrine(snapshot.anun_tx_texto) : "",
             anun_tx_urlavatar: snapshot.anun_tx_urlavatar,
             anun_tx_urlthumbnail: snapshot.anun_tx_urlthumbnail,
             anun_tx_urlbanner: snapshot.anun_tx_urlbanner,
@@ -70,10 +76,12 @@ export class MappingsService {
             anun_nr_visitas: snapshot.anun_nr_visitas,
             anun_in_status: snapshot.anun_in_status,
             empr_sq_id: snapshot.empr_sq_id,
+            empr_nm_fantasia: snapshot.empr_nm_fantasia != undefined ? snapshot.empr_nm_fantasia : "",
             muni_sq_id: snapshot.muni_sq_id,
             tian_sq_id: snapshot.tian_sq_id,
             agen_sq_id: snapshot.agen_sq_id,
-            anun_in_smartsite: snapshot.anun_in_smartsite
+            anun_in_smartsite: snapshot.anun_in_smartsite,
+            usua_sq_id: snapshot.usua_sq_id != undefined ? snapshot.usua_sq_id : ""
         };
 
         return vitrine;
@@ -84,11 +92,13 @@ export class MappingsService {
             {
                 vitr_sq_id: vitrine.vitr_sq_id,
                 vitr_dt_agendada: vitrine.vitr_dt_agendada,
+                vitr_sq_ordem: vitrine.vitr_sq_ordem,
                 anun_sq_id: vitrine.anun_sq_id,
                 anun_ds_anuncio: vitrine.anun_ds_anuncio,
                 anun_tx_titulo: vitrine.anun_tx_titulo,
                 anun_tx_subtitulo: vitrine.anun_tx_subtitulo,
-                anun_tx_texto: vitrine.anun_tx_texto,
+                vitr_in_buttonmore: this.enableShowMore(vitrine.anun_tx_texto != "" ? vitrine.anun_tx_texto : ""),
+                anun_tx_texto: vitrine.anun_tx_texto != "" && vitrine.anun_tx_texto != null ? this.replaceLineBreakVitrine(vitrine.anun_tx_texto) : "",
                 anun_tx_urlavatar: vitrine.anun_tx_urlavatar,
                 anun_tx_urlthumbnail: vitrine.anun_tx_urlthumbnail,
                 anun_tx_urlbanner: vitrine.anun_tx_urlbanner,
@@ -101,10 +111,12 @@ export class MappingsService {
                 anun_nr_visitas: vitrine.anun_nr_visitas,
                 anun_in_status: vitrine.anun_in_status,
                 empr_sq_id: vitrine.empr_sq_id,
+                empr_nm_fantasia: vitrine.empr_nm_fantasia,
                 muni_sq_id: vitrine.muni_sq_id,
                 tian_sq_id: vitrine.tian_sq_id,
                 agen_sq_id: vitrine.agen_sq_id,
-                anun_in_smartsite: vitrine.anun_in_smartsite
+                anun_in_smartsite: vitrine.anun_in_smartsite,
+                usua_sq_id: vitrine.usua_sq_id != undefined ? vitrine.usua_sq_id : ""
             };
 
         return json;
@@ -125,7 +137,7 @@ export class MappingsService {
                 usua_tx_observacao: '',
                 usua_in_empresa: false,
                 usua_in_ajuda: false,
-                usua_tx_urlprofile: user.usua_tx_urlprofile,
+                usua_tx_urlprofile: user.usua_tx_urlprofile != undefined ? user.usua_tx_urlprofile : "",
                 usua_sg_perfil: user.usua_sg_perfil
             }
 
@@ -149,7 +161,7 @@ export class MappingsService {
             usua_tx_observacao: snapshot.val().usua_tx_observacao,
             usua_in_empresa: snapshot.val().usua_in_empresa,
             usua_in_ajuda: snapshot.val().usua_in_ajuda,
-            usua_tx_urlprofile: snapshot.val().usua_tx_urlprofile,
+            usua_tx_urlprofile: snapshot.val().usua_tx_urlprofile != undefined ? snapshot.val().usua_tx_urlprofile : "",
             usua_sg_perfil: snapshot.val().usua_sg_perfil,
             empresa: this.getUsuarioEmpresa(snapshot)
 
@@ -204,4 +216,64 @@ export class MappingsService {
             return null;
         }
     }
+
+    getEmpresa(snapEmpr: any): EmpresaVO {
+
+        let empresa: EmpresaVO = {
+            empr_sq_id: snapEmpr.empr_sq_id,
+            empr_nm_razaosocial: snapEmpr.empr_nm_razaosocial,
+            empr_nm_fantasia: snapEmpr.empr_nm_fantasia,
+            empr_tx_endereco: snapEmpr.empr_tx_endereco,
+            empr_tx_bairro: snapEmpr.empr_tx_bairro,
+            empr_tx_cidade: snapEmpr.empr_tx_cidade,
+            empr_sg_uf: snapEmpr.empr_sg_uf,
+            empr_nr_cep: snapEmpr.empr_nr_cep,
+            empr_nr_credito: 0,
+            empr_tx_logomarca: snapEmpr.empr_tx_logomarca,
+            empr_tx_telefone_1: snapEmpr.empr_tx_telefone_1,
+            empr_tx_telefone_2: snapEmpr.empr_tx_telefone_2,
+            empr_nm_contato: snapEmpr.empr_nm_contato,
+            empr_ds_email: snapEmpr.empr_ds_email,
+            empr_ds_site: snapEmpr.empr_ds_site,
+            empr_sg_pessoa: snapEmpr.empr_sg_pessoa,
+            empr_nr_documento: snapEmpr.empr_nr_documento,
+            empr_nr_inscestadual: snapEmpr.empr_nr_inscestadual,
+            empr_nr_inscmunicipal: snapEmpr.empr_nr_inscmunicipal,
+            empr_tx_googlemaps: snapEmpr.empr_tx_googlemaps,
+            empr_tx_sobre: snapEmpr.empr_tx_sobre,
+            empr_tx_observacao: snapEmpr.empr_tx_observacao,
+            empr_nr_reputacao: 0,
+            empr_in_mensagem: snapEmpr.empr_in_mensagem,
+            empr_in_parceiro: snapEmpr.empr_in_parceiro,
+            empr_tx_subcategoria: snapEmpr.empr_tx_subcategoria,
+            categoria: null,
+            plano: null,
+            isIndexNome: false
+        }
+
+        return empresa;
+
+    }
+
+    private replaceLineBreakVitrine(texto: string) {
+        // var newText = "<p class='ctd-noticia'>";
+        // newText = newText + texto.replace(/\n/gi,'<br/>');
+        // newText = newText + "</p>";
+
+        var newText = texto.replace(/\n/gi, '<br/>');
+        return newText;
+    }
+
+    private enableShowMore(texto: string) {
+        var result = false;
+        if (texto != null) {
+            var lines: any = texto.split("\n");
+
+            if (texto.length > 160 || lines.length > 4) {
+                result = true;
+            }
+        }
+        return result;
+    }
+
 }
