@@ -314,7 +314,6 @@ export class MinhasPublicacoesPage {
     return promise;
   }
 
-
   private excluirPublicacao = function (self: any, publicacao: VitrineVO) {
     var result: boolean = true;
 
