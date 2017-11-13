@@ -90,7 +90,6 @@ export class UsuarioService {
     });
   }
 
-
   public getUsersRef() {
     return this.usersRef;
   }

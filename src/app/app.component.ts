@@ -356,7 +356,7 @@ export class MyApp implements OnInit {
     return;
   }
 
-  public popularMenu(value: boolean, usuario:UsuarioVO) {
+  public popularMenu(value: boolean, usuario: UsuarioVO) {
 
     // var userJson: any = this.mapSrv.getUserJson(usuarioParam);
 
@@ -380,19 +380,30 @@ export class MyApp implements OnInit {
     //   console.log.apply(e);
     // }
 
-    this.pages = [
-      // { title: 'Configurações', component: TestePage, icon: 'options', typeMenu: enums.ETypeMenu.default },
-      // { title: 'Estatísticas', component: RelatoriosListaPage, icon: 'pie', typeMenu: enums.ETypeMenu.default },
-      // { title: 'Favoritos', component: TestePage, icon: 'star', typeMenu: enums.ETypeMenu.default },
-      { title: 'Minha Conta', component: ProfilePage, icon: 'contact', typeMenu: enums.ETypeMenu.default },
-      
-      { title: 'Minhas Publicações', component: MinhasPublicacoesPage, icon: 'md-create', typeMenu: enums.ETypeMenu.default },
+    // this.pages = [
+    //   // { title: 'Configurações', component: TestePage, icon: 'options', typeMenu: enums.ETypeMenu.default },
+    //   // { title: 'Estatísticas', component: RelatoriosListaPage, icon: 'pie', typeMenu: enums.ETypeMenu.default },
+    //   // { title: 'Favoritos', component: TestePage, icon: 'star', typeMenu: enums.ETypeMenu.default },
+    //   { title: 'Minha Conta', component: ProfilePage, icon: 'contact', typeMenu: enums.ETypeMenu.default },
 
-      { title: 'Meus Marcados', component: MeusMarcadosPage, icon: 'md-bookmark', typeMenu: enums.ETypeMenu.default },
+    //   { title: 'Minhas Publicações', component: MinhasPublicacoesPage, icon: 'md-create', typeMenu: enums.ETypeMenu.default },
 
-      { title: 'Ajuda', component: AjudaPage, icon: 'md-help', typeMenu: enums.ETypeMenu.default }
-      // { title: 'Sobre', component: TestePage, icon: 'information-circle', typeMenu: enums.ETypeMenu.default }
-    ];
+    //   { title: 'Meus Marcados', component: MeusMarcadosPage, icon: 'md-bookmark', typeMenu: enums.ETypeMenu.default },
+
+    //   { title: 'Ajuda', component: AjudaPage, icon: 'md-help', typeMenu: enums.ETypeMenu.default }
+    //   // { title: 'Sobre', component: TestePage, icon: 'information-circle', typeMenu: enums.ETypeMenu.default }
+    // ];
+    this.pages = [];
+
+    this.pages.push({ title: 'Minha Conta', component: ProfilePage, icon: 'contact', typeMenu: enums.ETypeMenu.default });
+
+    if (usuario.usua_sg_perfil == "ADM" || this.globalVar.isBtnAdicionarVitrine() == true) {
+      this.pages.push({ title: 'Minhas Publicações', component: MinhasPublicacoesPage, icon: 'md-create', typeMenu: enums.ETypeMenu.default });
+    }
+
+    this.pages.push({ title: 'Meus Marcados', component: MeusMarcadosPage, icon: 'md-bookmark', typeMenu: enums.ETypeMenu.default });
+
+    this.pages.push({ title: 'Ajuda', component: AjudaPage, icon: 'md-help', typeMenu: enums.ETypeMenu.default });
 
     if (usuario.usua_sg_perfil == "ADM") {
       this.pages.push({ title: 'Enviar Notificação', component: EnviarNotificacaoPage, icon: 'md-notifications', typeMenu: enums.ETypeMenu.default });
@@ -431,10 +442,18 @@ export class MyApp implements OnInit {
   private initPushConfigurate() {
     var self = this;
 
+    //Producao
+    // let headers = {
+    //   "Content-Type": "application/json; charset=utf-8",
+    //   "Authorization": "Basic 02655c01-f40d-4b22-ac0d-07358b012b57"
+    // };
+
+    //Desenvolvimento
     let headers = {
       "Content-Type": "application/json; charset=utf-8",
-      "Authorization": "Basic 02655c01-f40d-4b22-ac0d-07358b012b57"
+      "Authorization": "Basic dde460af-2898-4f1a-88b8-ff9fd97be308"
     };
+
     //Chamado quando recebe uma notificacao com o app aberto
     let notificationReceivedCallback = function (jsonData) {
       console.log('notificationReceivedCallback: ' + JSON.stringify(jsonData));
@@ -445,8 +464,18 @@ export class MyApp implements OnInit {
       self.redirectToPage(data);
     };
 
+
+    //Producao
+    // window.plugins.OneSignal
+    //   .startInit("02655c01-f40d-4b22-ac0d-07358b012b57", "960817085241")
+    //   .handleNotificationOpened(notificationOpenedCallback)
+    //   .handleNotificationReceived(notificationReceivedCallback)
+    //   .inFocusDisplaying(self.oneSignal.OSInFocusDisplayOption.None)
+    //   .endInit();
+
+    //Desenvolvimento
     window.plugins.OneSignal
-      .startInit("02655c01-f40d-4b22-ac0d-07358b012b57", "960817085241")
+      .startInit("dde460af-2898-4f1a-88b8-ff9fd97be308", "180769307423")
       .handleNotificationOpened(notificationOpenedCallback)
       .handleNotificationReceived(notificationReceivedCallback)
       .inFocusDisplaying(self.oneSignal.OSInFocusDisplayOption.None)
@@ -584,7 +613,7 @@ export class MyApp implements OnInit {
   }
 
 
-    // checkForUpdate() {
+  // checkForUpdate() {
   //   const checking = this.loadingCtrl.create({
   //     content: 'Verificando atualizações...'
   //   });

@@ -12,7 +12,10 @@
       </ion-avatar>
       <h2>{{item.anun_tx_titulo}}</h2>
       <p>{{item.anun_tx_subtitulo}}</p>
-      <p>{{item.vitr_dt_agendada | date: 'shortDate'}}</p>
+      <p *ngIf="item.vitr_dt_agendada != ''">
+          {{item.vitr_dt_agendada | date: 'shortDate'}}
+      </p>
+      <p *ngIf="item.vitr_dt_agendada == ''">Não publicado</p>
     </ion-item>
     <ion-card-content>
       <div *ngIf="item.vitr_in_buttonmore == true" class="ctd-noticia" [innerHTML]="item.anun_tx_texto"></div>

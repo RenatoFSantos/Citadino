@@ -4,7 +4,7 @@ import { Injectable } from '@angular/core';
 @Injectable()
 export class GlobalVar {
 
-  public usuarioLogado: UsuarioVO;
+  public usuarioLogado:any;
   private isNetworkConnected: boolean;
   private isFirebaseConnected: boolean;
 

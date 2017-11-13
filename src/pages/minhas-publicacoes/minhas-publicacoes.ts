@@ -440,6 +440,7 @@ export class MinhasPublicacoesPage {
   public carregaPublicacaoEvent() {
     let self = this;
     this.events.subscribe('carregaPublicacao:true', () => {
+      this.vitrines = [];
       this.carregaMinhaVitrine();
     });
   }
