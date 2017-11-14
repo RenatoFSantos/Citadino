@@ -66,7 +66,16 @@ export class GuiaService {
             .getDownloadURL().then((url2) => {
               paths.push(url2);
 
-              resolve(paths);
+              self.fbService.getStorageRef().child('images/infoutil/slide-bus-3.jpg')
+                .getDownloadURL().then((url3) => {
+                  paths.push(url3);
+
+                  resolve(paths);
+
+                }).catch(() => {
+                  reject("Não foi possível localizar a imagem.");
+                });
+
             }).catch(() => {
               reject("Não foi possível localizar a imagem.");
             });
