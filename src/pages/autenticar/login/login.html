@@ -1,5 +1,5 @@
 <ion-header>
-    <ion-navbar color="ctd-navbar">
+    <ion-navbar color="ctd-navbar" style="padding-bottom: 10px">
         <img class="icocit" src="assets/img/icon.png" />
         <ion-title class="citadino">
             CITADINO
@@ -8,9 +8,9 @@
 </ion-header>
 <ion-content id="login">
     <form [formGroup]="loginForm" (ngSubmit)="onSubmit(loginForm.value)">
-        <ion-row>
+        <!-- <ion-row>
             <ion-col width-100></ion-col>
-        </ion-row>
+        </ion-row> -->
         <ion-row>
             <ion-col width-100>
                 <ion-item [class.error]="!email.valid && email.touched" class="inputEmail">
