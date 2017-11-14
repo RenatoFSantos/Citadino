@@ -250,6 +250,10 @@ export class GuiaPage implements OnInit {
           slide = new SlideVO();
           slide.imageUrl = paths[1];
           slides.push(slide);
+
+          slide = new SlideVO();
+          slide.imageUrl = paths[2];
+          slides.push(slide);
         }
 
         this.navCtrl.push(AnuncioFullPage, { slideParam: slides, isExcluirImagem: false });

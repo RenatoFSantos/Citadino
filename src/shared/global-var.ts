@@ -33,7 +33,7 @@ export class GlobalVar {
   public isBtnAdicionarVitrine(): boolean {
     var result: boolean = false;
 
-    if (this.usuarioLogado.empresa != null) {
+    if (this.usuarioLogado.empresa != null || this.usuarioLogado.usua_sg_perfil == "ADM" ) {
       result = true;
     }
 
