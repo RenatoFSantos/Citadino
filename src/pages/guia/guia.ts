@@ -224,7 +224,9 @@ export class GuiaPage implements OnInit {
 
         slides.push(slide);
 
+        loader.dismiss();
         this.navCtrl.push(AnuncioFullPage, { slideParam: slides, isExcluirImagem: false });
+
       })
         .catch((error) => {
 
@@ -255,15 +257,17 @@ export class GuiaPage implements OnInit {
           slide.imageUrl = paths[2];
           slides.push(slide);
         }
-
+        
+        loader.dismiss();
         this.navCtrl.push(AnuncioFullPage, { slideParam: slides, isExcluirImagem: false });
+
       })
         .catch((error) => {
 
         });
     }
 
-    loader.dismiss();
+
   }
 
   openGuiaDescritor(descritorNm: string, descritorKey: string) {
