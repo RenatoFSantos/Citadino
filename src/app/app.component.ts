@@ -194,6 +194,9 @@ export class MyApp implements OnInit {
       if (isFirebase == true) {
         let userCurrent = self.usuaSrv.getLoggedInUser();
         if (userCurrent != null) {
+
+          this.msgSrv.addMensagemEvent();
+
           self.usuaSrv.getUserDetail(userCurrent.uid).then((userRef) => {
             if (userRef != null) {
               self.userLogged = userRef.val();
