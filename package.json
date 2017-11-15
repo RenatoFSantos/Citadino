@@ -1,8 +1,8 @@
 {
-  "name": "CitadinoDesenv",
-  "version": "0.0.1",
-  "author": "Ionic Framework",
-  "homepage": "http://ionicframework.com/",
+  "name": "Citadino",
+  "version": "1.5.5",
+  "author": "Midilabs",
+  "homepage": "http://citadino.com.br",
   "private": true,
   "scripts": {
     "clean": "ionic-app-scripts clean",
@@ -58,7 +58,8 @@
     "rxjs": "5.5.2",
     "sw-toolbox": "3.6.0",
     "zone.js": "0.8.18",
-    "mx.ferreyra.callnumber": "~0.0.2"
+    "mx.ferreyra.callnumber": "~0.0.2",
+    "cordova-ios": "^4.3.1"
   },
   "devDependencies": {
     "@ionic/app-scripts": "3.1.0",
@@ -82,7 +83,8 @@
       "mx.ferreyra.callnumber": {}
     },
     "platforms": [
-      "android"
+      "android",
+      "ios"
     ]
   }
 }
