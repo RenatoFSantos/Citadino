@@ -8,6 +8,15 @@
     top: 0px;
 }
 
+.platform-ios toolbar-content-md {
+    margin-top: 8px;
+}
+
+.platform-android toolbar-content-md {
+    margin-top: 0px;
+}
+
+
 img.icocit {
     width:35px; 
     height:35px; 
@@ -27,7 +36,7 @@ ion-title.citadino {
 
 ion-toolbar {
     padding: 0px !important;
-    border: 0px solid #fff !important;
+    border: 0px solid #fff !important;    
 }
 
 .menu {
