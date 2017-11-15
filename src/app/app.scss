@@ -1,7 +1,7 @@
 .platform-ios ion-navbar {
     margin-top: 0px;
     height: 0px;
-    padding-top: 5px;
+    padding-top: 10px !important;
 }
 
 .platform-android ion-navbar {
@@ -9,7 +9,7 @@
 }
 
 .platform-ios toolbar-content-md {
-    margin-top: 8px;
+    margin-top: 0px;
 }
 
 .platform-android toolbar-content-md {
