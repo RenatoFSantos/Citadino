@@ -401,7 +401,7 @@ export class MyApp implements OnInit {
     this.pages.push({ title: 'Minha Conta', component: ProfilePage, icon: 'contact', typeMenu: enums.ETypeMenu.default });
 
     if (usuario.usua_sg_perfil == "ADM" || this.globalVar.isBtnAdicionarVitrine() == true) {
-      this.pages.push({ title: 'Minhas Publicações', component: MinhasPublicacoesPage, icon: 'md-create', typeMenu: enums.ETypeMenu.default });
+      this.pages.push({ title: 'Meus Anúncios', component: MinhasPublicacoesPage, icon: 'md-create', typeMenu: enums.ETypeMenu.default });
     }
 
     this.pages.push({ title: 'Meus Marcados', component: MeusMarcadosPage, icon: 'md-bookmark', typeMenu: enums.ETypeMenu.default });

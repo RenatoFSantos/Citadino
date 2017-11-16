@@ -149,3 +149,18 @@ image-viewer.ion-page {
     max-height: 100%;
     margin: 0 auto;
   }
+
+  ion-footer {      
+    .toolbar-md {
+        min-height: 30px !important;
+        background-color: #2B3A42;
+    }
+    .toolbar-background-md {
+        background-color: #2B3A42 !important;
+    }
+    .toolbar-title-md {
+        color: #ffffff !important;
+        font-size: 1.2rem !important;
+    }
+  }
+
