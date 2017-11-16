@@ -401,7 +401,7 @@ export class MyApp implements OnInit {
     this.pages.push({ title: 'Minha Conta', component: ProfilePage, icon: 'contact', typeMenu: enums.ETypeMenu.default });
 
     if (usuario.usua_sg_perfil == "ADM" || this.globalVar.isBtnAdicionarVitrine() == true) {
-      this.pages.push({ title: 'Minhas Publicações', component: MinhasPublicacoesPage, icon: 'md-create', typeMenu: enums.ETypeMenu.default });
+      this.pages.push({ title: 'Meus Anúncios', component: MinhasPublicacoesPage, icon: 'md-create', typeMenu: enums.ETypeMenu.default });
     }
 
     this.pages.push({ title: 'Meus Marcados', component: MeusMarcadosPage, icon: 'md-bookmark', typeMenu: enums.ETypeMenu.default });
@@ -446,16 +446,16 @@ export class MyApp implements OnInit {
     var self = this;
 
     //Producao
-    // let headers = {
-    //   "Content-Type": "application/json; charset=utf-8",
-    //   "Authorization": "Basic 02655c01-f40d-4b22-ac0d-07358b012b57"
-    // };
-
-    //Desenvolvimento
     let headers = {
       "Content-Type": "application/json; charset=utf-8",
-      "Authorization": "Basic dde460af-2898-4f1a-88b8-ff9fd97be308"
+      "Authorization": "Basic 02655c01-f40d-4b22-ac0d-07358b012b57"
     };
+
+    //Desenvolvimento
+    // let headers = {
+    //   "Content-Type": "application/json; charset=utf-8",
+    //   "Authorization": "Basic dde460af-2898-4f1a-88b8-ff9fd97be308"
+    // };
 
     //Chamado quando recebe uma notificacao com o app aberto
     let notificationReceivedCallback = function (jsonData) {
@@ -469,20 +469,20 @@ export class MyApp implements OnInit {
 
 
     //Producao
-    // window.plugins.OneSignal
-    //   .startInit("02655c01-f40d-4b22-ac0d-07358b012b57", "960817085241")
-    //   .handleNotificationOpened(notificationOpenedCallback)
-    //   .handleNotificationReceived(notificationReceivedCallback)
-    //   .inFocusDisplaying(self.oneSignal.OSInFocusDisplayOption.None)
-    //   .endInit();
-
-    //Desenvolvimento
     window.plugins.OneSignal
-      .startInit("dde460af-2898-4f1a-88b8-ff9fd97be308", "180769307423")
+      .startInit("02655c01-f40d-4b22-ac0d-07358b012b57", "960817085241")
       .handleNotificationOpened(notificationOpenedCallback)
       .handleNotificationReceived(notificationReceivedCallback)
       .inFocusDisplaying(self.oneSignal.OSInFocusDisplayOption.None)
       .endInit();
+
+    //Desenvolvimento
+    // window.plugins.OneSignal
+    //   .startInit("dde460af-2898-4f1a-88b8-ff9fd97be308", "180769307423")
+    //   .handleNotificationOpened(notificationOpenedCallback)
+    //   .handleNotificationReceived(notificationReceivedCallback)
+    //   .inFocusDisplaying(self.oneSignal.OSInFocusDisplayOption.None)
+    //   .endInit();
 
   }
 
