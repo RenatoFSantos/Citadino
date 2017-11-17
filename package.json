@@ -28,7 +28,7 @@
     "@ionic-native/in-app-browser": "^4.4.0",
     "@ionic-native/network": "^4.4.0",
     "@ionic-native/onesignal": "^4.4.0",
-    "@ionic-native/splash-screen": "4.3.3",
+    "@ionic-native/splash-screen": "^4.4.2",
     "@ionic-native/sqlite": "^4.4.0",
     "@ionic-native/status-bar": "4.3.3",
     "@ionic/storage": "2.1.3",
