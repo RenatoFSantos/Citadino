@@ -5,109 +5,54 @@
 </ion-header>
 
 <ion-content>
-
     <ion-refresher (ionRefresh)="reloadVitrines($event)">
-        <ion-refresher-content></ion-refresher-content>
+        <ion-refresher-content pullingIcon="md-arrow-dropdown-circle" pullingText="Puxe para atualizar" refreshingSpinner="circles"
+            refreshingText="Atualizando..." pullMin="80" pullMax="100"></ion-refresher-content>
     </ion-refresher>
 
     <div *ngIf="loading">
         <img src="assets/img/ring.gif" style="display:block; margin:auto" />
     </div>
     <ion-card class="ctd-card" *ngFor="let item of vitrines">
-        <div *ngIf="item.tian_sq_id == 'TP-1'">
-            <ion-item (click)="openPage(item)">
-                <ion-avatar item-left>
-                    <img src="{{item.anun_tx_urlavatar}}">
-                </ion-avatar>
-                <h2>{{item.anun_tx_titulo}}</h2>
-                <p>{{item.anun_tx_subtitulo}}</p>
-            </ion-item>
-            <img src="{{item.anun_tx_urlbanner}}" (click)="openPage(item)" />
-            <ion-row>
-                <ion-col width-100 class="ctd-btn-vitrine">
-                    <ctd-buttons [urlSlide]=[(item.anun_tx_urlslide1)] [smartSite]=[(item.anun_in_smartsite)] [empresaKey]=[(item.empr_sq_id)] [vitrine]=[(item)] [vitrineSalva]=[item.anun_nr_salvos]></ctd-buttons>
-                </ion-col>
-            </ion-row>
-        </div>
-        <div *ngIf="item.tian_sq_id == 'TP-2'">
-            <ion-item (click)="openPage(item)">
-                <ion-avatar item-left>
-                    <img src="{{item.anun_tx_urlavatar}}">
-                </ion-avatar>
-                <h2>{{item.anun_tx_titulo}}</h2>
-                <p>{{item.anun_tx_subtitulo}}</p>
-            </ion-item>
-            <img src="{{item.anun_tx_urlbanner}}" (click)="openPage(item)" />
-            <ion-row>
-                <ion-col width-100 class="ctd-btn-vitrine">
-                    <ctd-buttons [urlSlide]=[(item.anun_tx_urlslide1)] [smartSite]=[(item.anun_in_smartsite)] [empresaKey]=[(item.empr_sq_id)] [vitrine]=[(item)] [vitrineSalva]=[item.anun_nr_salvos]></ctd-buttons>
-                </ion-col>
-            </ion-row>
-        </div>
-        <div *ngIf="item.tian_sq_id == 'TP-3'">
-            <ion-item (click)="openPage(item)">
-                <ion-thumbnail item-left>
-                    <img src="{{item.anun_tx_urlavatar}}">
-                </ion-thumbnail>
-                <h2>{{item.anun_tx_titulo}}</h2>
-                <p>{{item.anun_tx_subtitulo}}</p>
-            </ion-item>
-            <ion-card-content class="ctd-faixa">
-                {{item.anun_tx_texto}}
-            </ion-card-content>
-            <ion-row >
-                <ion-col width-100 class="ctd-btn-vitrine">
-                    <ctd-buttons [urlSlide]=[(item.anun_tx_urlslide1)] [smartSite]=[(item.anun_in_smartsite)] [empresaKey]=[(item.empr_sq_id)] [vitrine]=[(item)]></ctd-buttons>
-                </ion-col>
-            </ion-row>
-        </div>
-        <div *ngIf="item.tian_sq_id == 'TP-4'">
-            <ion-item (click)="openPage(item)">
-                <ion-avatar item-left>
-                    <img src="{{item.anun_tx_urlicone}}">
-                </ion-avatar>
-                <h2>{{item.anun_tx_titulo}}</h2>
-                <p>{{item.anun_tx_subtitulo}}</p>
-            </ion-item>
-            <ion-card-content (click)="openPage(item)">
-                {{item.anun_tx_texto}}
-            </ion-card-content>
-            <ion-row>
-                <ion-col width-100 class="ctd-btn-vitrine">
-                    <ctd-buttons [urlSlide]=[(item.anun_tx_urlslide1)] [smartSite]=[(item.anun_in_smartsite)] [empresaKey]=[(item.empr_sq_id)] [vitrine]=[(item)]></ctd-buttons>
-                </ion-col>
-            </ion-row>
-        </div>
-        <div *ngIf="item.tian_sq_id == 'TP-5'">
-            <ion-item (click)="openPage(item)">
-                <ion-avatar item-left>
-                    <img src="{{item.anun_tx_urlicone}}">
-                </ion-avatar>
-                <h2>{{item.anun_tx_titulo}}</h2>
-                <p>{{item.anun_tx_subtitulo}}</p>
-            </ion-item>
-            <ion-row>
-                <ion-col width-100 class="ctd-btn-vitrine">
-                    <ctd-buttons [urlSlide]=[(item.anun_tx_urlslide1)] [smartSite]=[(item.anun_in_smartsite)] [empresaKey]=[(item.empr_sq_id)] [vitrine]=[(item)]></ctd-buttons>
-                </ion-col>
-            </ion-row>
-        </div>
-        <div *ngIf="item.tian_sq_id == 'TP-6'">
-            <ion-item class="ctd-noticia-head" (click)="openNoticia(item)">
-                <ion-avatar item-left>
-                    <img src="{{item.anun_tx_urlavatar}}" />
-                </ion-avatar>
-                <h2 class="ctd-noticia_titulo">{{item.anun_tx_titulo}}</h2>
-                <p class="ctd-subtitulo">{{item.anun_tx_subtitulo}}</p>
-            </ion-item>
-            <ion-card-content class="ctd-noticia" (click)="openNoticia(item)">
-                {{item.anun_tx_texto}}
-            </ion-card-content>
-        </div>
+
+        <ion-item (click)="openPage(item)">
+            <ion-avatar item-left>
+                <img src="{{item.anun_tx_urlavatar}}">
+            </ion-avatar>
+            <h2>{{item.anun_tx_titulo}}</h2>
+            <p>{{item.anun_tx_subtitulo}}</p>
+            <!-- <p>{{item.vitr_dt_agendada}}</p> -->
+            <p>{{item.vitr_dt_agendada | date: 'shortDate'}}</p>
+        </ion-item>
+        <ion-card-content>
+            <div *ngIf="item.vitr_in_buttonmore == true" class="ctd-noticia" [innerHTML]="item.anun_tx_texto"></div>
+
+            <div *ngIf="item.vitr_in_buttonmore == false" class="ctd_noticia_exibir" [innerHTML]="item.anun_tx_texto"></div>
+
+            <p *ngIf="item.vitr_in_buttonmore == true" text-right>
+                <a detail-none (click)="exibirTextoVitrine(item)">Continuar lendo</a>
+            </p>
+        </ion-card-content>
+        <img style="max-height:480px" src="{{item.anun_tx_urlbanner}}" (click)="openPage(item)" />
+
+        <ion-row>
+            <ion-col width-100 class="ctd-btn-vitrine">
+                <ctd-buttons [urlSlide]=(item.anun_tx_urlslide1) [smartSite]=(item.anun_in_smartsite) [empresaKey]=(item.empr_sq_id)
+                    [vitrine]=(item) [vitrineSalva]=(item.anun_nr_salvos)
+                    [usuarioVitrine]=[null]></ctd-buttons>
+            </ion-col>
+        </ion-row>
+
     </ion-card>
 
     <ion-infinite-scroll (ionInfinite)="doInfinite($event)">
         <ion-infinite-scroll-content loadingSpinner="bubbles" loadingText="Aguarde...">
         </ion-infinite-scroll-content>
     </ion-infinite-scroll>
+
+    <!-- <ion-fab right bottom *ngIf="globalVar.isBtnAdicionarVitrine()">
+        <button ion-fab (click)="adicionarVitrine()">
+            <ion-icon name="add"></ion-icon>
+        </button>
+    </ion-fab> -->
 </ion-content>

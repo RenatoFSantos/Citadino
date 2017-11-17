@@ -1,9 +1,9 @@
-import { MinhaVitrinePage } from './../pages/minha-vitrine/minha-vitrine';
+import { MinhasPublicacoesPage } from './../pages/minhas-publicacoes/minhas-publicacoes';
+import { MeusMarcadosPage } from './../pages/meus_marcados/meus-marcados';
 import { ProfilePage } from './../pages/profile/profile';
 import { MappingsService } from './../providers/service/_mappings-service';
 import { EnviarNotificacaoPage } from './../pages/enviar-notificacao/enviar-notificacao';
 import { TokenDeviceService } from './../providers/service/token-device';
-import { NotificacaoPage } from './../pages/notificacao/notificacao';
 import { LoginPage } from './../pages/autenticar/login/login';
 import { AjudaPage } from './../pages/ajuda/ajuda';
 import { MensagemPage } from './../pages/mensagem/mensagem';
@@ -128,9 +128,9 @@ export class MyApp implements OnInit {
 
         self.usuaSrv.getUserDetail(userCurrent.uid).then((userRef) => {
           if (userRef != null) {
-            self.popularMenu(true, userRef.val());
             self.userLogged = userRef.val();
             self.globalVar.usuarioLogado = self.userLogged;
+            self.popularMenu(true, userRef.val());
             self.splashScreen.hide();
 
             console.log('Uid ' + userCurrent.uid);
@@ -194,11 +194,14 @@ export class MyApp implements OnInit {
       if (isFirebase == true) {
         let userCurrent = self.usuaSrv.getLoggedInUser();
         if (userCurrent != null) {
+
+          this.msgSrv.addMensagemEvent();
+
           self.usuaSrv.getUserDetail(userCurrent.uid).then((userRef) => {
             if (userRef != null) {
-              self.popularMenu(true, userRef.val());
               self.userLogged = userRef.val();
               self.globalVar.usuarioLogado = self.userLogged;
+              self.popularMenu(true, userRef.val());
 
               console.log('Uid ' + userCurrent.uid);
               self.saveTokenDevice(userCurrent.uid);
@@ -356,47 +359,61 @@ export class MyApp implements OnInit {
     return;
   }
 
-  public popularMenu(value: boolean, usuarioParam: any) {
+  public popularMenu(value: boolean, usuario: UsuarioVO) {
 
-    var userJson: any = this.mapSrv.getUserJson(usuarioParam);
+    // var userJson: any = this.mapSrv.getUserJson(usuarioParam);
 
-    try {
-      this.pages = [
-        {
-          title: 'Vitrine', component: TabsPage, tabComponent: VitrinePage, index: 0, icon: 'logo-windows'
-          , typeMenu: enums.ETypeMenu.default
-        },
-        {
-          title: 'Guia', component: TabsPage, tabComponent: GuiaPage, index: 1, icon: 'compass'
-          , typeMenu: enums.ETypeMenu.default
-        },
-        {
-          title: 'Mensagem', component: TabsPage, tabComponent: MensagemListaPage, index: 2, icon: 'chatbubbles'
-          , typeMenu: enums.ETypeMenu.default
-        }
-      ];
+    // try {
+    //   this.pages = [
+    //     {
+    //       title: 'Vitrine', component: TabsPage, tabComponent: VitrinePage, index: 0, icon: 'logo-windows'
+    //       , typeMenu: enums.ETypeMenu.default
+    //     },
+    //     {
+    //       title: 'Guia', component: TabsPage, tabComponent: GuiaPage, index: 1, icon: 'compass'
+    //       , typeMenu: enums.ETypeMenu.default
+    //     },
+    //     {
+    //       title: 'Mensagem', component: TabsPage, tabComponent: MensagemListaPage, index: 2, icon: 'chatbubbles'
+    //       , typeMenu: enums.ETypeMenu.default
+    //     }
+    //   ];
+    // }
+    // catch (e) {
+    //   console.log.apply(e);
+    // }
+
+    // this.pages = [
+    //   // { title: 'Configurações', component: TestePage, icon: 'options', typeMenu: enums.ETypeMenu.default },
+    //   // { title: 'Estatísticas', component: RelatoriosListaPage, icon: 'pie', typeMenu: enums.ETypeMenu.default },
+    //   // { title: 'Favoritos', component: TestePage, icon: 'star', typeMenu: enums.ETypeMenu.default },
+    //   { title: 'Minha Conta', component: ProfilePage, icon: 'contact', typeMenu: enums.ETypeMenu.default },
+
+    //   { title: 'Minhas Publicações', component: MinhasPublicacoesPage, icon: 'md-create', typeMenu: enums.ETypeMenu.default },
+
+    //   { title: 'Meus Marcados', component: MeusMarcadosPage, icon: 'md-bookmark', typeMenu: enums.ETypeMenu.default },
+
+    //   { title: 'Ajuda', component: AjudaPage, icon: 'md-help', typeMenu: enums.ETypeMenu.default }
+    //   // { title: 'Sobre', component: TestePage, icon: 'information-circle', typeMenu: enums.ETypeMenu.default }
+    // ];
+    this.pages = [];
+
+    this.pages.push({ title: 'Minha Conta', component: ProfilePage, icon: 'contact', typeMenu: enums.ETypeMenu.default });
+
+    if (usuario.usua_sg_perfil == "ADM" || this.globalVar.isBtnAdicionarVitrine() == true) {
+      this.pages.push({ title: 'Meus Anúncios', component: MinhasPublicacoesPage, icon: 'md-create', typeMenu: enums.ETypeMenu.default });
     }
-    catch (e) {
-      console.log.apply(e);
-    }
 
-    this.subpages = [
-      // { title: 'Configurações', component: TestePage, icon: 'options', typeMenu: enums.ETypeMenu.default },
-      // { title: 'Estatísticas', component: RelatoriosListaPage, icon: 'pie', typeMenu: enums.ETypeMenu.default },
-      // { title: 'Favoritos', component: TestePage, icon: 'star', typeMenu: enums.ETypeMenu.default },
-      { title: 'Minha Conta', component: ProfilePage, icon: 'contact', typeMenu: enums.ETypeMenu.default },
-      { title: 'Marcados', component: MinhaVitrinePage, icon: 'md-bookmark', typeMenu: enums.ETypeMenu.default },
+    this.pages.push({ title: 'Meus Marcados', component: MeusMarcadosPage, icon: 'md-bookmark', typeMenu: enums.ETypeMenu.default });
 
-      { title: 'Ajuda', component: AjudaPage, icon: 'md-help', typeMenu: enums.ETypeMenu.default }
-      // { title: 'Sobre', component: TestePage, icon: 'information-circle', typeMenu: enums.ETypeMenu.default }
-    ];
+    this.pages.push({ title: 'Ajuda', component: AjudaPage, icon: 'md-help', typeMenu: enums.ETypeMenu.default });
 
-    if (userJson.usua_sg_perfil == "ADM") {
-      this.subpages.push({ title: 'Enviar Notificação', component: EnviarNotificacaoPage, icon: 'md-notifications', typeMenu: enums.ETypeMenu.default });
+    if (usuario.usua_sg_perfil == "ADM") {
+      this.pages.push({ title: 'Enviar Notificação', component: EnviarNotificacaoPage, icon: 'md-notifications', typeMenu: enums.ETypeMenu.default });
     }
 
     if (value == true) {
-      this.subpages.push({ title: 'Sair', component: TabsPage, icon: 'exit', typeMenu: enums.ETypeMenu.logout });
+      this.pages.push({ title: 'Sair', component: TabsPage, icon: 'exit', typeMenu: enums.ETypeMenu.logout });
     }
   }
 
@@ -428,10 +445,18 @@ export class MyApp implements OnInit {
   private initPushConfigurate() {
     var self = this;
 
+    //Producao
     let headers = {
       "Content-Type": "application/json; charset=utf-8",
       "Authorization": "Basic 02655c01-f40d-4b22-ac0d-07358b012b57"
     };
+
+    //Desenvolvimento
+    // let headers = {
+    //   "Content-Type": "application/json; charset=utf-8",
+    //   "Authorization": "Basic dde460af-2898-4f1a-88b8-ff9fd97be308"
+    // };
+
     //Chamado quando recebe uma notificacao com o app aberto
     let notificationReceivedCallback = function (jsonData) {
       console.log('notificationReceivedCallback: ' + JSON.stringify(jsonData));
@@ -442,12 +467,22 @@ export class MyApp implements OnInit {
       self.redirectToPage(data);
     };
 
+
+    //Producao
     window.plugins.OneSignal
       .startInit("02655c01-f40d-4b22-ac0d-07358b012b57", "960817085241")
       .handleNotificationOpened(notificationOpenedCallback)
       .handleNotificationReceived(notificationReceivedCallback)
       .inFocusDisplaying(self.oneSignal.OSInFocusDisplayOption.None)
       .endInit();
+
+    //Desenvolvimento
+    // window.plugins.OneSignal
+    //   .startInit("dde460af-2898-4f1a-88b8-ff9fd97be308", "180769307423")
+    //   .handleNotificationOpened(notificationOpenedCallback)
+    //   .handleNotificationReceived(notificationReceivedCallback)
+    //   .inFocusDisplaying(self.oneSignal.OSInFocusDisplayOption.None)
+    //   .endInit();
 
   }
 
@@ -581,7 +616,7 @@ export class MyApp implements OnInit {
   }
 
 
-    // checkForUpdate() {
+  // checkForUpdate() {
   //   const checking = this.loadingCtrl.create({
   //     content: 'Verificando atualizações...'
   //   });

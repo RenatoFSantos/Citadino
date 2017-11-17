@@ -7,6 +7,7 @@ declare var firebase: any;
 @Injectable()
 export class FirebaseService {
   private dataBase: any;
+  private storage:any;
   private storageRef: any;
   private connectionRef: any;
   private authRef: any;
@@ -17,7 +18,8 @@ export class FirebaseService {
     try {
       self.dataBase = firebase.database();
       self.connectionRef = self.dataBase.ref('.info/connected');
-      self.storageRef = firebase.storage().ref();
+      self.storage = firebase.storage();
+      self.storageRef = self.storage.ref();
       self.checkFirebaseConnection();
       self.authRef = firebase.auth;
     }
@@ -53,6 +55,10 @@ export class FirebaseService {
 
   public getStorageRef() {
     return this.storageRef;
+  }
+
+  public getStorage() {
+    return this.storage;
   }
 
   public goOnline() {

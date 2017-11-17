@@ -26,7 +26,7 @@ export class MensagemListaPage implements OnInit {
     private netService: NetworkService,
     private globalVar: GlobalVar) {
     this.usuaSrvTest = usuaSrv;
-    
+
     this.eventoNovaMensagem();
   }
 
@@ -37,7 +37,7 @@ export class MensagemListaPage implements OnInit {
 
   ngOnInit() { }
 
-  ionViewDidLeave() {}
+  ionViewDidLeave() { }
 
   public removeMensagem(usua_sq_id_to: string) {
     let userCurrent = this.usuaSrv.getLoggedInUser();
@@ -126,38 +126,42 @@ export class MensagemListaPage implements OnInit {
 
           let mensagem: MensagemVO = new MensagemVO();
 
-          if (self.globalVar.usuarioLogado.mensagem != null) {
-            var keys = Object.keys(self.globalVar.usuarioLogado.mensagem);
-            keys.forEach(itemKey => {
-              if (itemKey == element.val().usua_sq_id) {
-                mensagemNova = self.globalVar.usuarioLogado.mensagem[itemKey];
-                return;
+          self.usuaSrv.getUsersRef()
+            .child(self.globalVar.usuarioLogado.usua_sq_id)
+            .child('mensagem').once('value').then((snapMsg) => {
+
+              if (snapMsg.exists()) {
+                snapMsg.forEach(itemKey => {
+                  if (itemKey.key == element.val().usua_sq_id) {
+                    mensagemNova = itemKey.val();
+                    return;
+                  }
+                });
+
+                mensagem.usua_sq_id_from = self.usuaSrv.getLoggedInUser().uid;
+                mensagem.usua_sq_id_to = element.val().usua_sq_id;
+                mensagem.usua_nm_usuario_to = element.val().usua_nm_usuario;
+                mensagem.mens_nova = mensagemNova;
+
+                if (element.child('empresa').exists()) {
+                  element.child('empresa').forEach(itemEmpresa => {
+                    self.emprSrv.getEmpresaPorKey(
+                      itemEmpresa.key).then((empresa) => {
+                        mensagem.mens_nm_enviado = empresa.val().empr_nm_razaosocial;
+                        mensagem.mens_tx_logo_enviado = empresa.val().empr_tx_logomarca;
+                      });
+                  });
+                }
+                else {
+                  mensagem.mens_nm_enviado = element.val().usua_nm_usuario;
+                  mensagem.mens_tx_logo_enviado = element.val().usua_tx_urlprofile;
+                }
+
               }
             });
-          }
 
-          mensagem.usua_sq_id_from = self.usuaSrv.getLoggedInUser().uid;
-          mensagem.usua_sq_id_to = element.val().usua_sq_id;
-          mensagem.usua_nm_usuario_to = element.val().usua_nm_usuario
-          mensagem.mens_nova = mensagemNova;
-
-          if (element.child('empresa').exists()) {
-            element.child('empresa').forEach(itemEmpresa => {
-              self.emprSrv.getEmpresaPorKey(
-                itemEmpresa.key).then((empresa) => {
-                  mensagem.mens_nm_enviado = empresa.val().empr_nm_razaosocial;
-                  mensagem.mens_tx_logo_enviado = empresa.val().empr_tx_logomarca;
-                });
-            });
-          }
-          else {
-            mensagem.mens_nm_enviado = element.val().usua_nm_usuario;
-            mensagem.mens_tx_logo_enviado = element.val().usua_tx_urlprofile;
-          }
-
-          self.mensagens.push(mensagem);
-        }
-
+            self.mensagens.push(mensagem);
+          }          
       });
     });
 
@@ -221,7 +225,7 @@ export class MensagemListaPage implements OnInit {
   private eventoNovaMensagem() {
     var self = this;
 
-    self.events.subscribe('mensagemLista:nova', (keyUsuario:any) => {
+    self.events.subscribe('mensagemLista:nova', (keyUsuario: any) => {
       if (self.mensagens != null && self.mensagens.length > 0) {
         self.mensagens.forEach(item => {
 

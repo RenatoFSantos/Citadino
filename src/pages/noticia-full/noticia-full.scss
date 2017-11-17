@@ -22,4 +22,12 @@ page-noticia-full {
     img {
         text-align: center;
     }
+
+    .swiper-zoom-container {
+        height: 250px !important;
+        width: auto;
+    }
+    .swiper-pagination-fraction {
+        bottom: -6px !important;
+    }
 }

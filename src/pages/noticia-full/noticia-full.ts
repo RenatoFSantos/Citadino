@@ -1,3 +1,4 @@
+import { SlideVO } from './../../model/slideVO';
 import { VitrineVO } from './../../model/vitrineVO';
 import { Component } from '@angular/core';
 import { NavParams } from 'ionic-angular';
@@ -14,11 +15,16 @@ import { NavParams } from 'ionic-angular';
 })
 export class NoticiaFullPage {
 
+  public slides: Array<SlideVO> = [];
   public vitrine: VitrineVO;
 
-  constructor(public navParams: NavParams) {
-    this.vitrine = navParams.get("vitrine");
+  constructor(public params: NavParams) {
+    this.vitrine = params.get("vitrine");
 
+    if (params != null && params.get("slideParam") != null) {
+      this.slides = params.get("slideParam")
+    }
+    
   }
 
 

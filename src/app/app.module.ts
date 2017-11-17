@@ -1,4 +1,9 @@
-import { MinhaVitrinePage } from './../pages/minha-vitrine/minha-vitrine';
+import { VitrineCrudPage } from './../pages/vitrine-crud/vitrine-crud';
+import { MinhasPublicacoesPage } from './../pages/minhas-publicacoes/minhas-publicacoes';
+import { MeusMarcadosPage } from './../pages/meus_marcados/meus-marcados';
+import { SettingsService } from './../shared/settingsService';
+import { AutoresizeDirective } from './../shared/components/drt_autoresize/autoresize';
+import { ElasticModule } from 'angular2-elastic';
 import { ProfilePage } from './../pages/profile/profile';
 import { EnviarNotificacaoPage } from './../pages/enviar-notificacao/enviar-notificacao';
 import { AjudaPage } from './../pages/ajuda/ajuda';
@@ -21,7 +26,7 @@ import { TpScrapfashionPage } from './../pages/tp-scrapfashion/tp-scrapfashion';
 import { MensagemListaPage } from './../pages/mensagem-lista/mensagem-lista';
 import { GuiaListaPage } from './../pages/guia-lista/guia-lista';
 import { AnuncioFullPage } from './../pages/anuncio-full/anuncio-full';
-import { NgModule } from '@angular/core';
+import { NgModule,LOCALE_ID } from '@angular/core';
 import { IonicApp, IonicModule } from 'ionic-angular';
 import { MyApp } from './app.component';
 import { TabsPage } from '../pages/tabs/tabs';
@@ -29,10 +34,12 @@ import { VitrinePage } from '../pages/vitrine/vitrine';
 import { GuiaPage } from '../pages/guia/guia';
 import { MensagemPage } from '../pages/mensagem/mensagem';
 import { BrowserModule } from '@angular/platform-browser';
-import { CloudSettings, CloudModule } from '@ionic/cloud-angular';
 import { AngularFireModule } from 'angularfire2';
 import { AngularFireDatabaseModule } from 'angularfire2/database';
 import { IonicImageViewerModule } from 'ionic-img-viewer';
+import { registerLocaleData } from '@angular/common';
+import ptBr from '@angular/common/locales/pt';
+registerLocaleData(ptBr)
 
 // providers
 import { APP_PROVIDERS } from '../providers/app.providers';
@@ -55,11 +62,6 @@ export const firebaseConfig = {
   messagingSenderId: "960817085241"
 };
 
-const cloudSettings: CloudSettings = {
-  'core': {
-    'app_id': '3d750d37'
-  }
-};
 
 @NgModule({
   declarations: [
@@ -90,7 +92,10 @@ const cloudSettings: CloudSettings = {
     AjudaPage,
     EnviarNotificacaoPage,
     ProfilePage,
-    MinhaVitrinePage
+    MeusMarcadosPage,  
+    AutoresizeDirective,
+    MinhasPublicacoesPage,
+    VitrineCrudPage
   ],
   imports: [
     BrowserModule,
@@ -100,7 +105,6 @@ const cloudSettings: CloudSettings = {
       }),
     AngularFireModule.initializeApp(firebaseConfig),
     AngularFireDatabaseModule,
-    CloudModule.forRoot(cloudSettings),
     IonicImageViewerModule
   ],
   bootstrap: [IonicApp],
@@ -132,8 +136,11 @@ const cloudSettings: CloudSettings = {
     AjudaPage,
     EnviarNotificacaoPage,
     ProfilePage,
-    MinhaVitrinePage
+    MeusMarcadosPage,
+    MinhasPublicacoesPage,
+    VitrineCrudPage
   ],
-  providers: [APP_PROVIDERS]
+  providers: [APP_PROVIDERS,
+    {provide: LOCALE_ID, useValue: 'pt-PT'}]
 })
 export class AppModule { }

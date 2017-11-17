@@ -1,4 +1,5 @@
 import { Injectable } from '@angular/core';
+import { OneSignal } from '@ionic-native/onesignal';
 declare var window: any;
 
 @Injectable()
