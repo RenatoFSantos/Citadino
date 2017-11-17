@@ -610,6 +610,9 @@ export class MyApp implements OnInit {
 
         self.usuaSrv.saveToken(usuarioLogado.usua_sq_id, self.tokenPushAtual);
       }
+      else {
+        self.usuaSrv.saveToken(usuarioLogado.usua_sq_id, self.tokenPushAtual);
+      }
     });
 
     return promise;
