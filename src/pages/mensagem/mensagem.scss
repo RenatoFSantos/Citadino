@@ -125,3 +125,23 @@ ion-content {
     margin-bottom:1px;
   }
 }
+
+ion-footer {      
+  .toolbar-md {
+      min-height: 0px !important;
+      background-color: #ffffff !important;
+      padding-top: 0px !important;
+  }
+  .toolbar-background-md {
+      background-color:  #ffffff !important;
+  }
+  .toolbar-title-md {
+      color: #000000 !important;
+      font-size: 1.6rem !important;
+  } 
+}
+
+textarea.text-input {
+  font-size: 1.2em !important;
+}
+
