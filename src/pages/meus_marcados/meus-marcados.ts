@@ -54,7 +54,7 @@ export class MeusMarcadosPage {
           let newVitrine: VitrineVO = self.mappingsService.getVitrine(item.val(), pkVitrine);
 
           newVitrine.anun_nr_salvos = 1;
-          this.vitrines.push(newVitrine);
+          self.vitrines.push(newVitrine);
         });
 
         self.vitrines = self.itemsService.reversedItems<VitrineVO>(self.vitrines);

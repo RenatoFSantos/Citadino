@@ -107,7 +107,7 @@ export class CtdButtonsComponent {
 
   public marcarVitrine() {
 
-    if (this.vitrineSalva == 0) {
+    if (this.vitrineSalva[0] == 0) {
       var uidUsuario: string = this.usuaSrv.getLoggedInUser().uid;
       this.meusMarcadosSrv.salvar(uidUsuario, this.vitrine);
       this.events.publish("marcarVitrine:true", (this.vitrine));
