@@ -1,4 +1,7 @@
 page-vitrine {
+    ion-page {
+        z-index: 70 !important;
+    }
     ion-card.ctd-card {
         padding: 0px;
         border-radius: 10px;
@@ -92,12 +95,17 @@ page-vitrine {
 
     .fixed-content {
         margin-bottom: 56px !important;
-        margin-top: 63px !important;
+        margin-top: 50px !important;
     }
 
     .scroll-content {
-        margin-top: 63px !important;
-        transform:none !important;
+        margin-top: 50px !important;
+        // transform:none !important;
     }
+
+    .has-refresher> 
+      .scroll-content {     
+        border-top: 0px !important;
+      }
 
 }

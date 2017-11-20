@@ -1,13 +1,12 @@
 <ion-header>
-    <ion-navbar color="ctd-navbar">
-        <ctd-header [exibirBotao]=[(true)]></ctd-header>
-    </ion-navbar>
+    <ctd-header [exibirBotao]=[(true)]></ctd-header>
+
 </ion-header>
 
 <ion-content>
     <ion-refresher (ionRefresh)="reloadVitrines($event)">
         <ion-refresher-content pullingIcon="md-arrow-dropdown-circle" pullingText="Puxe para atualizar" refreshingSpinner="circles"
-            refreshingText="Atualizando..." pullMin="80" pullMax="100"></ion-refresher-content>
+            refreshingText="Atualizando..." pullMin="30" pullMax="40"></ion-refresher-content>
     </ion-refresher>
 
     <div *ngIf="loading">
@@ -37,9 +36,8 @@
 
         <ion-row>
             <ion-col width-100 class="ctd-btn-vitrine">
-                <ctd-buttons [urlSlide]=(item.anun_tx_urlslide1) [smartSite]=(item.anun_in_smartsite) [empresaKey]=(item.empr_sq_id)
-                    [vitrine]=(item) [vitrineSalva]=(item.anun_nr_salvos)
-                    [usuarioVitrine]=[null]></ctd-buttons>
+                <ctd-buttons [urlSlide]=(item.anun_tx_urlslide1) [smartSite]=(item.anun_in_smartsite) [empresaKey]=(item.empr_sq_id) [vitrine]=(item)
+                    [vitrineSalva]=(item.anun_nr_salvos) [usuarioVitrine]=[null]></ctd-buttons>
             </ion-col>
         </ion-row>
 
