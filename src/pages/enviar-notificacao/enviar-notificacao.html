@@ -19,7 +19,7 @@
       <ion-col>
         <ion-item [class.error]="!notif_tx_mensagem.valid && notif_tx_mensagem.touched">
           <ion-label stacked>Mensagem</ion-label>
-          <ion-textarea type="text" maxlength="200" [formControl]="notif_tx_mensagem"></ion-textarea>
+          <ion-textarea rows="12" type="text" maxlength="1000" [formControl]="notif_tx_mensagem"></ion-textarea>
         </ion-item>
       </ion-col>
       <div *ngIf="(notif_tx_mensagem.hasError('required')|| notif_tx_mensagem.hasError('minlength')) && notif_tx_mensagem.touched" class="error-box">* Mensagem com no máximo de 50 caracteres.</div>

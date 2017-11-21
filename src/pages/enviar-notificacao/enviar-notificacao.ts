@@ -27,7 +27,7 @@ export class EnviarNotificacaoPage implements OnInit {
   ngOnInit() {
     this.formNotif = this.fb.group({
       'notif_tx_titulo': ['', Validators.compose([Validators.required, Validators.maxLength(20)])],
-      'notif_tx_mensagem': ['', Validators.compose([Validators.required, Validators.maxLength(150)])]
+      'notif_tx_mensagem': ['', Validators.compose([Validators.required, Validators.maxLength(1000)])]
     });
 
     this.notif_tx_titulo = this.formNotif.controls['notif_tx_titulo'];

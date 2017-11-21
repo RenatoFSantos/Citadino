@@ -25,6 +25,7 @@ hooks/
 plugins/
 www/
 $RECYCLE.BIN/
+.sourcemaps/
 
 .DS_Store
 Thumbs.db
