@@ -91,7 +91,7 @@ export class MyApp implements OnInit {
         self.appStateEvent();
         //this.checkForUpdate();
         //Inicializa o servico do sqlLite
-        // this.usuaSqlSrv.InitDatabase();    
+        this.usuaSqlSrv.InitDatabase();    
       }
     });
   }
