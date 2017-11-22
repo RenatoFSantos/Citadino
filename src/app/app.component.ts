@@ -1,3 +1,4 @@
+import { UsuarioSqlService } from './../providers/database/usuario-sql-service';
 import { MinhasPublicacoesPage } from './../pages/minhas-publicacoes/minhas-publicacoes';
 import { MeusMarcadosPage } from './../pages/meus_marcados/meus-marcados';
 import { ProfilePage } from './../pages/profile/profile';
@@ -9,7 +10,6 @@ import { AjudaPage } from './../pages/ajuda/ajuda';
 import { MensagemPage } from './../pages/mensagem/mensagem';
 import { MensagemService } from './../providers/service/mensagem-service';
 import { UsuarioService } from './../providers/service/usuario-service';
-import { SqLiteService } from './../providers/database/sqlite-service';
 import { GlobalVar } from './../shared/global-var';
 import { NetworkService } from './../providers/service/network-service';
 import { UsuarioVO } from './../model/usuarioVO';
@@ -59,7 +59,7 @@ export class MyApp implements OnInit {
     private menuCtrl: MenuController,
     private mdlCtrl: ModalController,
     private fbService: FirebaseService,
-    private sqService: SqLiteService,
+    private usuaSqlSrv: UsuarioSqlService,
     private usuaSrv: UsuarioService,
     private msgSrv: MensagemService,
     private events: Events,
@@ -91,7 +91,7 @@ export class MyApp implements OnInit {
         self.appStateEvent();
         //this.checkForUpdate();
         //Inicializa o servico do sqlLite
-        //this.sqService.InitDatabase();    
+        this.usuaSqlSrv.InitDatabase();    
       }
     });
   }

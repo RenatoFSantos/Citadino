@@ -1,5 +1,5 @@
+import { UsuarioSqlService } from './../database/usuario-sql-service';
 import { MappingsService } from './_mappings-service';
-import { SqLiteService } from './../database/sqlite-service';
 import { UsuarioVO } from './../../model/usuarioVO';
 import { UserCredentials } from './../../shared/interfaces';
 import { FirebaseService } from './../database/firebase-service';
@@ -10,7 +10,7 @@ export class UsuarioService {
   private usersRef: any;
 
   constructor(private fbService: FirebaseService,
-    private sqService: SqLiteService,
+    private usuSqSrv: UsuarioSqlService,
     private mapSrv: MappingsService) {
     this.usersRef = fbService.getDataBase().ref('/usuario');
   }
@@ -48,7 +48,7 @@ export class UsuarioService {
     query = query + "WHERE usua_ds_email = ? ";
     query = query + "and usua_tx_senha = ? ";
 
-    return this.sqService.pesquisar(query, [email, password]);
+    return this.usuSqSrv.pesquisar(query, [email, password]);
   }
 
   //Desconecta usuário Logado
@@ -73,7 +73,7 @@ export class UsuarioService {
     query = query + "usua_ds_email,usua_tx_senha) ";
     query = query + "Values (?,?, ?, ?)";
 
-    self.sqService.inserir(query, [uid, user.usua_nm_usuario, user.usua_ds_email, user.usua_tx_senha]).then(
+    self.usuSqSrv.inserir(query, [uid, user.usua_nm_usuario, user.usua_ds_email, user.usua_tx_senha]).then(
       (data) => {
         console.log("Usuario incluído com sucesso");
         return true;

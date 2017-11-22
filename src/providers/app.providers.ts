@@ -1,3 +1,4 @@
+import { UsuarioSqlService } from './database/usuario-sql-service';
 import { MinhasPublicacoesService } from './service/minhas-publicacoes';
 import { MeusMarcadosService } from './service/meus_marcados-service';
 import { BackgroundService } from './service/background-service';
@@ -13,7 +14,6 @@ import { GuiaService } from './service/guia-service';
 import { MappingsService } from './service/_mappings-service';
 import { ItemsService } from './service/_items-service';
 import { SQLite } from '@ionic-native/sqlite';
-import { SqLiteService } from './database/sqlite-service';
 import { GlobalVar } from './../shared/global-var';
 import { NetworkService } from './service/network-service';
 import { VitrineService } from './service/vitrine-service';
@@ -24,6 +24,8 @@ import { SplashScreen } from '@ionic-native/splash-screen';
 import { OneSignal } from '@ionic-native/onesignal';
 import { Camera } from '@ionic-native/camera';
 import { BackgroundMode } from '@ionic-native/background-mode';
+import { SqlLiteService } from './database/sqlLite-service';
+
 
 export const APP_PROVIDERS = [
     SplashScreen,
@@ -34,7 +36,6 @@ export const APP_PROVIDERS = [
     EmpresaService,
     GuiaService,
     FirebaseService,
-    SqLiteService,
     UsuarioService,
     ItemsService,
     MappingsService,
@@ -51,5 +52,7 @@ export const APP_PROVIDERS = [
     BackgroundMode,
     BackgroundService,
     MeusMarcadosService,
-    MinhasPublicacoesService
+    MinhasPublicacoesService,
+    SqlLiteService,
+    UsuarioSqlService
 ];
