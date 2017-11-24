@@ -115,7 +115,7 @@ export class MyApp implements OnInit {
           self.verificarConexao();
 
         } else {
-          self.usuaSrv.pesquisaUsuarioLogadolSq().then((usuLog: UsuarioVO) => {
+          self.usuaSrv.pesquisaUsuarioLogadoSq().then((usuLog: UsuarioVO) => {
             if (usuLog != null) {
               self.usuaSrv.pesquisarUsarioSqById(usuLog.usua_id)
                 .then((usuario: UsuarioVO) => {
@@ -123,51 +123,70 @@ export class MyApp implements OnInit {
                     self.rotinaConectado(usuario);
                   }
                   else {
-                    self.rotinaNaoConectado();
+                    self.rotinaNaoConectado(false);
                   }
                 }).catch(() => {
-                  self.rotinaNaoConectado();
+                  self.rotinaNaoConectado(true);
                 });
+            } else {
+              self.rotinaNaoConectado(false);
             }
           });
         }
       }, 1000);
     }
     else {
-      let userCurrent = self.usuaSrv.getLoggedInUser();
-      if (userCurrent != null) {
-        self.usuaSrv.getUserDetail(userCurrent.uid).then((userRef) => {
-          if (userRef.val() != null) {
-            var usuario: UsuarioVO = self.mapSrv.getUsuario(userRef);
-
-            self.usuaSrv.pesquisaUsuarioLogadolSq().then((result) => {
-              if (result == null) {
-                self.usuaSrv.addUserSQ(usuario, usuario.usua_sq_id).then((result: number) => {
-                  self.usuaSrv.inseritUsuarioLogadoSq(result);
-                });
-              }
-            }).catch((error) => {
-              console.log(error);
-              this.rotinaNaoConectado();
-            });
-
-            this.rotinaConectado(usuario);
-          }
-          else {
-            this.rotinaNaoConectado();
-          }
-        });
-      }
+      self.rotinaLogandoUsuario();
     }
   }
 
-  private rotinaNaoConectado() {
+  private rotinaLogandoUsuario() {
+    let self = this;
+    let userCurrent = self.usuaSrv.getLoggedInUser();
+
+    if (userCurrent != null) {
+      self.usuaSrv.getUserDetail(userCurrent.uid).then((userRef) => {
+        if (userRef.val() != null) {
+          var usuario: UsuarioVO = self.mapSrv.getUsuario(userRef);
+
+          self.usuaSrv.pesquisarUsarioSqByUid(usuario.usua_sq_id).then((result: UsuarioVO) => {
+            if (result == null) {
+              self.usuaSrv.addUserSQ(usuario, usuario.usua_sq_id).then((result: number) => {
+                self.usuaSrv.inseritUsuarioLogadoSq(result);
+              });
+            } else {
+              self.usuaSrv.pesquisaUsuarioLogadoSq().then((usuaLog: UsuarioVO) => {
+                if (usuaLog == null) {
+                  self.usuaSrv.inseritUsuarioLogadoSq(usuaLog.usua_id);
+                }
+              });
+            }
+          }).catch((error) => {
+            console.log(error);
+            this.rotinaNaoConectado(true);
+          });
+
+          this.rotinaConectado(usuario);
+        }
+        else {
+          this.rotinaNaoConectado(false);
+        }
+      });
+    }
+    else {
+      this.rotinaNaoConectado(false);
+    }
+  }
+
+  private rotinaNaoConectado(error: boolean) {
 
     this.splashScreen.hide();
     this.rootPage = LoginPage;
-    this.fbService.goOffline();
+    // this.fbService.goOffline();
 
-    this.createAlert('Desculpe, no momento estamos fazendo a manutenção em nosso servidor. Tente mais tarde!');
+    if (error == true) {
+      this.createAlert('Desculpe, no momento estamos fazendo a manutenção em nosso servidor. Tente mais tarde!');
+    }
   }
 
   //Parameters
@@ -224,42 +243,7 @@ export class MyApp implements OnInit {
     var self = this;
     self.events.subscribe('usuario:logado', (isFirebase, data) => {
       if (isFirebase == true) {
-        let userCurrent = self.usuaSrv.getLoggedInUser();
-        if (userCurrent != null) {
-
-          this.msgSrv.addMensagemEvent();
-
-          self.usuaSrv.getUserDetail(userCurrent.uid).then((userRef) => {
-            if (userRef != null) {
-              self.userLogged = userRef.val();
-              self.globalVar.usuarioLogado = self.userLogged;
-              self.popularMenu(true, userRef.val());
-
-              console.log('Uid ' + userCurrent.uid);
-              self.saveTokenDevice(userCurrent.uid);
-              // self.tokenSrv.saveToken(self.tokenPush, userCurrent.uid);
-
-              if (self.userLogged.usua_in_ajuda == true) {
-                // self.rootPage = TabsPage;
-                this.app.getRootNav().setRoot(TabsPage);
-                // this.app.getActiveNavs()[0].setRoot(TabsPage);
-              }
-              else {
-                // self.rootPage = AjudaPage;
-                this.app.getRootNav().setRoot(AjudaPage);
-                // this.app.getActiveNavs()[0].setRoot(AjudaPage);
-              }
-            } else {
-              // self.nav.setRoot(LoginPage);
-              this.app.getRootNav().setRoot(LoginPage);
-              // this.app.getActiveNavs()[0].setRoot(LoginPage);
-            }
-          });
-        } else {
-          // self.nav.setRoot(LoginPage);
-          this.app.getRootNav().setRoot(LoginPage);
-          // this.app.getActiveNavs()[0].setRoot(LoginPage);
-        }
+        self.rotinaLogandoUsuario();        
       } else {
         // self.popularMenu(true);
         // self.userLogged = this.preencherObjetoUsuario(data);

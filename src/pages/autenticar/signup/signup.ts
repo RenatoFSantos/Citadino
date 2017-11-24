@@ -1,3 +1,4 @@
+import { GlobalVar } from './../../../shared/global-var';
 import { LoginPage } from './../login/login';
 import { UsuarioVO } from './../../../model/usuarioVO';
 import { UsuarioService } from './../../../providers/service/usuario-service';
@@ -20,16 +21,17 @@ export class SignUpPage implements OnInit {
 
   newUser: UsuarioVO = null;
 
-  private urlImage:string = "https://firebasestorage.googleapis.com/v0/b/citadinoprd-13651.appspot.com/o/images%2Fprofile%2Fprofile.png?alt=media&token=5aa52b8b-fbd3-41b5-978c-6fc5bccfe4a6";
+  private urlImage: string = "https://firebasestorage.googleapis.com/v0/b/citadinoprd-13651.appspot.com/o/images%2Fprofile%2Fprofile.png?alt=media&token=5aa52b8b-fbd3-41b5-978c-6fc5bccfe4a6";
 
-  private loaderPerfil:any;
+  private loaderPerfil: any;
 
   constructor(private loginService: UsuarioService,
     private loadingCtrl: LoadingController,
     private toastCtrl: ToastController,
     private navCtrl: NavController,
     private event: Events,
-    private fb: FormBuilder) { }
+    private fb: FormBuilder,
+    private globalVar:GlobalVar) { }
 
   ngOnInit() {
     this.createLoginForm = this.fb.group({
@@ -64,35 +66,42 @@ export class SignUpPage implements OnInit {
       this.newUser.usua_tx_senha = signupForm.usua_tx_senha;
       this.newUser.usua_tx_urlprofile = this.urlImage;
       this.newUser.usua_sg_perfil = "USU";
+      this.newUser.usua_in_ajuda = false;
       this.loaderPerfil.present();
 
-      self.loginService.registerUser(newAuth).then((result) => {
-        if (result != null) {
-          // newUser.usua_sq_id = self.loginService.getLoggedInUser().uid;
-          this.newUser.usua_sq_id = result.uid;
-          self.loginService.addUserFB(this.newUser).then(() => {
-            // self.loginService.addUserSQ(signupForm,
-            // self.loginService.getLoggedInUser().uid);
-            // self.CreateAndUploadDefaultImage();
+      if (!self.globalVar.getIsFirebaseConnected()) {
+        console.log("Desconectado");
+      }
+      else {
+        console.log("Conectado");
+      }
 
-            self.event.publish('usuario:logado', true);
+      // self.loginService.registerUser(newAuth).then((result) => {
+      //   if (result != null) {
+      //     this.newUser.usua_sq_id = result.uid;
+      //     self.loginService.addUserFB(this.newUser).then(() => {
+      //       // self.loginService.addUserSQ(signupForm,
+      //       // self.loginService.getLoggedInUser().uid);
+      //       // self.CreateAndUploadDefaultImage();
 
-            this.loaderPerfil.dismiss().then(() => {
-              let toast = self.toastCtrl.create({
-                message: 'Usuário criado com sucesso.',
-                duration: 2000,
-                position: 'top'
-              });
-              toast.present();
-            });
+      //       self.event.publish('usuario:logado', true);
 
-          }).catch((error) => {
-            self.errorNewUser(error);
-          });
-        }
-      }).catch(function (error) {
-        self.errorNewUser(error);
-      });
+      //       this.loaderPerfil.dismiss().then(() => {
+      //         let toast = self.toastCtrl.create({
+      //           message: 'Usuário criado com sucesso.',
+      //           duration: 2000,
+      //           position: 'top'
+      //         });
+      //         toast.present();
+      //       });
+
+      //     }).catch((error) => {
+      //       self.errorNewUser(error);
+      //     });
+      //   }
+      // }).catch(function (error) {
+      //   self.errorNewUser(error);
+      // });
     }
   }
 

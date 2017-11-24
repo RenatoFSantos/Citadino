@@ -44,6 +44,7 @@ export class UsuarioService {
 
   //Desconecta usuário Logado
   signOut() {
+    this.deletarUsuarioLogadoSq();
     return this.fbService.getFireBase().auth().signOut();
   }
 
@@ -142,16 +143,35 @@ export class UsuarioService {
   }
 
   public pesquisarUsarioSqById(id: number) {
+    return this.pesquisaUsuarioSQ(id, null);
+  }
+
+  public pesquisarUsarioSqByUid(uid: string) {
+    return this.pesquisaUsuarioSQ(null, uid);
+  }
+
+  private pesquisaUsuarioSQ(idSq: number, idFirebase: string) {
     let self = this;
     let usuario: UsuarioVO = null;
+    let param: any;
+
     var promise = new Promise(function (resolve, reject) {
 
       let query: string = "SELECT usua_id, usua_sq_id, usua_nm_usuario,";
       query = query + "usua_ds_email, usua_tx_senha, usua_in_ajuda, usua_ds_telefone, usua_tx_urlprofile ";
       query = query + "from usuario ";
-      query = query + "WHERE usua_id = ? ";
 
-      self.usuSqSrv.pesquisar(query, [id]).then((result) => {
+      if (idSq != null) {
+        query = query + "WHERE usua_id = ? ";
+        param = idSq;
+      }
+      else if (idFirebase != null) {
+
+        query = query + "WHERE usua_sq_id = ? ";
+        param = idFirebase;
+      }
+
+      self.usuSqSrv.pesquisar(query, [param]).then((result) => {
 
         if (result.rows.length > 0) {
           usuario = new UsuarioVO();
@@ -160,8 +180,8 @@ export class UsuarioService {
           usuario.usua_nm_usuario = result.rows.item(0).usua_nm_usuario;
           usuario.usua_ds_email = result.rows.item(0).usua_ds_email;
           usuario.usua_tx_senha = result.rows.item(0).usua_tx_senha;
-          if (result.rows.item(0).usua_in_ajuda == "true" 
-          || result.rows.item(0).usua_in_ajuda == true) {
+          if (result.rows.item(0).usua_in_ajuda == "true"
+            || result.rows.item(0).usua_in_ajuda == true) {
             usuario.usua_in_ajuda = true;
           }
           else {
@@ -183,7 +203,8 @@ export class UsuarioService {
     return promise;
   }
 
-  public pesquisaUsuarioLogadolSq() {
+
+  public pesquisaUsuarioLogadoSq() {
     let self = this;
     let usua: UsuarioVO = null;
 
@@ -206,11 +227,11 @@ export class UsuarioService {
     return promise;
   }
 
-  public atualizaUsuarioLogadoSq(usua: UsuarioVO) {
+  public atualizaUsuarioLogadoSq(id: number) {
     var query = "UPDATE usuario_logado ";
     query = query + "SET usua_id = ? ";
 
-    this.usuSqSrv.atualizar(query, [usua.usua_id]).then((result) => {
+    this.usuSqSrv.atualizar(query, [id]).then((result) => {
 
       console.log(result);
 
@@ -221,6 +242,13 @@ export class UsuarioService {
       throw new Error(error);
     });
 
+  }
+
+  public deletarUsuarioLogadoSq() {
+    var query = "DELETE FROM usuario_logado";
+    this.usuSqSrv.atualizar(query, []).then((result) => {
+      console.log("Deletado");
+    });
   }
 
   public inseritUsuarioLogadoSq(id: number) {

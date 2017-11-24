@@ -74,42 +74,44 @@ export class LoginPage implements OnInit {
 
       if (self.globalVar.getIsFirebaseConnected()) {
         resultFindUser = this.loginSrv.signInUserFB(user.email, user.password);
-        // } else {
-        // resultFindUser = this.loginSrv.signInUserSQ(user.email, user.password);
-      }
 
-      if (resultFindUser != null) {
-        resultFindUser.then(
-          (data: any) => {
-            if (data != null) {
-              this.loading.dismiss();
-              self.event.publish('usuario:logado', self.globalVar.getIsFirebaseConnected(), data);
-            } else {
-              this.createAlert("Usuário não encontrado");
-            }
-          },
-          (error) => {
-            this.errorConnection(error);
-          });
+        if (resultFindUser != null) {
+          resultFindUser.then(
+            (data: any) => {
+              if (data != null) {
+                this.loading.dismiss();
+                self.event.publish('usuario:logado', self.globalVar.getIsFirebaseConnected(), data);
+              } else {
+                this.createAlert("Usuário não encontrado");
+              }
+            },
+            (error) => {
+              this.errorConnection(error);
+            });
+        }
+        else {
+          this.errorConnection(null);
+        }
       }
       else {
-        this.errorConnection(null);
+        
       }
     }
+
   }
 
   public criarConta() {
     this.navCtrl.setRoot(SignUpPage);
   }
 
-  private errorConnection(error:any): void {
-    let mensagemError:string = "";
+  private errorConnection(error: any): void {
+    let mensagemError: string = "";
 
     if (error != null && error.code == "auth/wrong-password") {
-        mensagemError = "Ops!!! Dados inválidos"; 
+      mensagemError = "Ops!!! Dados inválidos";
     }
     else {
-        mensagemError = "Ops!!! Não estou conseguindo validar o seu login. Tente mais tarde!";
+      mensagemError = "Ops!!! Não estou conseguindo validar o seu login. Tente mais tarde!";
     }
 
     this.loading.dismiss().then(() => {
