@@ -182,8 +182,7 @@ export class MyApp implements OnInit {
 
     this.splashScreen.hide();
     this.rootPage = LoginPage;
-    // this.fbService.goOffline();
-
+    // this.fbService.goOffline();    
     if (error == true) {
       this.createAlert('Desculpe, no momento estamos fazendo a manutenção em nosso servidor. Tente mais tarde!');
     }
