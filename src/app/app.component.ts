@@ -91,77 +91,109 @@ export class MyApp implements OnInit {
         self.appStateEvent();
         //this.checkForUpdate();
         //Inicializa o servico do sqlLite
-        this.usuaSqlSrv.InitDatabase();    
+        this.usuaSqlSrv.InitDatabase();
       }
     });
   }
 
   ngOnInit() {
-    this.checkFirebase();
+    this.verificarConexao();
     this.userLoggedEvent();
     this.mensagemNovaEvent();
     this.dadosUsuarioAlteradoEvent();
   }
 
-  checkFirebase() {
+  verificarConexao() {
     let self = this;
 
     if (!self.globalVar.getIsFirebaseConnected()) {
       setTimeout(function () {
         self.firebaseConnectionAttempts++;
+
         if (self.firebaseConnectionAttempts < 10) {
           console.log(self.firebaseConnectionAttempts);
-          self.checkFirebase();
+          self.verificarConexao();
+
         } else {
-          self.splashScreen.hide();
-          self.rootPage = LoginPage;
-          self.fbService.goOffline();
-          self.createAlert('Desculpe, no momento estamos fazendo a manutenção em nosso servidor. Tente mais tarde!');
+          self.usuaSrv.pesquisaUsuarioLogadolSq().then((usuLog: UsuarioVO) => {
+            if (usuLog != null) {
+              self.usuaSrv.pesquisarUsarioSqById(usuLog.usua_id)
+                .then((usuario: UsuarioVO) => {
+                  if (usuario != null) {
+                    self.rotinaConectado(usuario);
+                  }
+                  else {
+                    self.rotinaNaoConectado();
+                  }
+                }).catch(() => {
+                  self.rotinaNaoConectado();
+                });
+            }
+          });
         }
       }, 1000);
     }
     else {
       let userCurrent = self.usuaSrv.getLoggedInUser();
       if (userCurrent != null) {
-
-        this.msgSrv.addMensagemEvent();
-
         self.usuaSrv.getUserDetail(userCurrent.uid).then((userRef) => {
-          if (userRef != null) {
-            self.userLogged = userRef.val();
-            self.globalVar.usuarioLogado = self.userLogged;
-            self.popularMenu(true, userRef.val());
-            self.splashScreen.hide();
+          if (userRef.val() != null) {
+            var usuario: UsuarioVO = self.mapSrv.getUsuario(userRef);
 
-            console.log('Uid ' + userCurrent.uid);
-            self.saveTokenDevice(userCurrent.uid);
-            // self.tokenSrv.saveToken(self.tokenPush, userCurrent.uid);
+            self.usuaSrv.pesquisaUsuarioLogadolSq().then((result) => {
+              if (result == null) {
+                self.usuaSrv.addUserSQ(usuario, usuario.usua_sq_id).then((result: number) => {
+                  self.usuaSrv.inseritUsuarioLogadoSq(result);
+                });
+              }
+            }).catch((error) => {
+              console.log(error);
+              this.rotinaNaoConectado();
+            });
 
-            if (self.userLogged.usua_in_ajuda == true) {
-              // self.rootPage = TabsPage;
-              this.app.getRootNav().setRoot(TabsPage);
-              // this.app.getActiveNavs()[0].setRoot(TabsPage);
-            }
-            else {
-              // self.rootPage = AjudaPage;
-              this.app.getRootNav().setRoot(AjudaPage);
-              // this.app.getActiveNavs()[0].setRoot(AjudaPage);
-            }
-
+            this.rotinaConectado(usuario);
           }
           else {
-            // self.rootPage = LoginPage;
-            this.app.getRootNav().setRoot(LoginPage);
-            // this.app.getActiveNavs()[0].setRoot(LoginPage);
-            self.splashScreen.hide();
+            this.rotinaNaoConectado();
           }
         });
-      } else {
-        // self.rootPage = LoginPage;
-        this.app.getRootNav().setRoot(LoginPage);
-        // this.app.getActiveNavs()[0].setRoot(LoginPage);
-        self.splashScreen.hide();
       }
+    }
+  }
+
+  private rotinaNaoConectado() {
+
+    this.splashScreen.hide();
+    this.rootPage = LoginPage;
+    this.fbService.goOffline();
+
+    this.createAlert('Desculpe, no momento estamos fazendo a manutenção em nosso servidor. Tente mais tarde!');
+  }
+
+  //Parameters
+  //1=Firebase 2=Local
+  private rotinaConectado(usuario: UsuarioVO) {
+
+    this.msgSrv.addMensagemEvent();
+
+    this.userLogged = usuario;
+    this.globalVar.usuarioLogado = usuario;
+    this.popularMenu(true, usuario);
+    this.splashScreen.hide();
+
+    console.log('Uid ' + usuario.usua_sq_id);
+    this.saveTokenDevice(usuario.usua_sq_id);
+    // self.tokenSrv.saveToken(self.tokenPush, userCurrent.uid);
+
+    if (usuario.usua_in_ajuda == true) {
+      // self.rootPage = TabsPage;
+      this.app.getRootNav().setRoot(TabsPage);
+      // this.app.getActiveNavs()[0].setRoot(TabsPage);
+    }
+    else {
+      // self.rootPage = AjudaPage;
+      this.app.getRootNav().setRoot(AjudaPage);
+      // this.app.getActiveNavs()[0].setRoot(AjudaPage);
     }
   }
 

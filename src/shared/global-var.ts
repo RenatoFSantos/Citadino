@@ -7,11 +7,14 @@ export class GlobalVar {
   public usuarioLogado:any;
   private isNetworkConnected: boolean;
   private isFirebaseConnected: boolean;
+  private isSqlConnected: boolean;
 
 
   constructor() {
     this.isNetworkConnected = false;
     this.isFirebaseConnected = false;
+    this.isSqlConnected = false;
+
   }
 
   public getIsNetworkConnected(): boolean {
@@ -29,6 +32,16 @@ export class GlobalVar {
   public setIsFirebaseConnected(value: boolean) {
     this.isFirebaseConnected = value;
   }
+
+
+  public setIsSqlConnected(value:boolean) {
+    this.isSqlConnected = value;
+  }
+
+  public getIsSqlConnected():boolean {
+    return this.isSqlConnected;
+  }
+
 
   public isBtnAdicionarVitrine(): boolean {
     var result: boolean = false;

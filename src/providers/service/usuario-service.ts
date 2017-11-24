@@ -40,16 +40,7 @@ export class UsuarioService {
     return self.fbService.getFireBase().auth().signInWithEmailAndPassword(email, password);
   }
 
-  //Login de Usuário SqLite
-  signInUserSQ(email: string, password: string) {
-    let query: string = "SELECT usua_id, usua_sq_id, usua_nm_usuario,";
-    query = query + "usua_ds_email, usua_tx_senha ";
-    query = query + "from Usuario ";
-    query = query + "WHERE usua_ds_email = ? ";
-    query = query + "and usua_tx_senha = ? ";
 
-    return this.usuSqSrv.pesquisar(query, [email, password]);
-  }
 
   //Desconecta usuário Logado
   signOut() {
@@ -66,22 +57,6 @@ export class UsuarioService {
     return this.usersRef.child(user.usua_sq_id).update(userJson);
   }
 
-  addUserSQ(user: UsuarioVO, uid: string) {
-    let self = this;
-    let query: string = "INSERT INTO Usuario (";
-    query = query + "usua_sq_id,usua_nm_usuario,";
-    query = query + "usua_ds_email,usua_tx_senha) ";
-    query = query + "Values (?,?, ?, ?)";
-
-    self.usuSqSrv.inserir(query, [uid, user.usua_nm_usuario, user.usua_ds_email, user.usua_tx_senha]).then(
-      (data) => {
-        console.log("Usuario incluído com sucesso");
-        return true;
-      }, (err) => {
-        console.error('Error ao inserir o usuário: ', err);
-        throw 'Error ao inserir o usuário: ' + err.message;
-      });
-  }
 
   setUserImage(uid: string, urlProfile) {
     this.usersRef.child(uid).update({
@@ -124,4 +99,141 @@ export class UsuarioService {
     return this.usersRef.child(uid).child('tokendevice').once('value');
   }
 
+  addUserSQ(user: UsuarioVO, uid: string) {
+    let self = this;
+    let result: number = null;
+
+    var promise = new Promise(function (resolve, reject) {
+
+      let query: string = "INSERT INTO usuario (";
+      query = query + "usua_sq_id,usua_nm_usuario,";
+      query = query + "usua_ds_email,usua_tx_senha, ";
+      query = query + "usua_in_ajuda,usua_ds_telefone, ";
+      query = query + "usua_tx_urlprofile ) ";
+      query = query + "Values (?, ?, ?, ?, ?, ?, ? )";
+
+      self.usuSqSrv.inserir(query, [uid, user.usua_nm_usuario, user.usua_ds_email,
+        user.usua_tx_senha, user.usua_in_ajuda, user.usua_ds_telefone, ""]).then((data) => {
+
+          if (data.rowsAffected > 0) {
+            result = data.insertId;
+          }
+
+          resolve(result);
+
+        }).catch((error) => {
+          reject(error);
+
+        });
+    });
+
+    return promise;
+  }
+
+  //Login de Usuário SqLite
+  public pesquisarUsarioByEmailSenhaSql(email: string, password: string) {
+    let query: string = "SELECT usua_id, usua_sq_id, usua_nm_usuario,";
+    query = query + "usua_ds_email, usua_tx_senha, usua_in_ajuda, usua_ds_telefone, usua_tx_urlprofile ";
+    query = query + "from usuario ";
+    query = query + "WHERE usua_ds_email = ? ";
+    query = query + "and usua_tx_senha = ? ";
+
+    return this.usuSqSrv.pesquisar(query, [email, password]);
+  }
+
+  public pesquisarUsarioSqById(id: number) {
+    let self = this;
+    let usuario: UsuarioVO = null;
+    var promise = new Promise(function (resolve, reject) {
+
+      let query: string = "SELECT usua_id, usua_sq_id, usua_nm_usuario,";
+      query = query + "usua_ds_email, usua_tx_senha, usua_in_ajuda, usua_ds_telefone, usua_tx_urlprofile ";
+      query = query + "from usuario ";
+      query = query + "WHERE usua_id = ? ";
+
+      self.usuSqSrv.pesquisar(query, [id]).then((result) => {
+
+        if (result.rows.length > 0) {
+          usuario = new UsuarioVO();
+          usuario.usua_id = result.rows.item(0).usua_id;
+          usuario.usua_sq_id = result.rows.item(0).usua_sq_id;
+          usuario.usua_nm_usuario = result.rows.item(0).usua_nm_usuario;
+          usuario.usua_ds_email = result.rows.item(0).usua_ds_email;
+          usuario.usua_tx_senha = result.rows.item(0).usua_tx_senha;
+          if (result.rows.item(0).usua_in_ajuda == "true" 
+          || result.rows.item(0).usua_in_ajuda == true) {
+            usuario.usua_in_ajuda = true;
+          }
+          else {
+            usuario.usua_in_ajuda = false;
+          }
+          usuario.usua_ds_telefone = result.rows.item(0).usua_ds_telefone;
+          usuario.usua_tx_urlprofile = result.rows.item(0).usua_tx_urlprofile;
+
+          resolve(usuario);
+        }
+        else {
+          resolve(null);
+        }
+      }).catch((error) => {
+        reject(error);
+      })
+    });
+
+    return promise;
+  }
+
+  public pesquisaUsuarioLogadolSq() {
+    let self = this;
+    let usua: UsuarioVO = null;
+
+    var promise = new Promise(function (resolve, reject) {
+
+      var query = "select usua_id from usuario_logado ";
+      self.usuSqSrv.pesquisar(query, {}).then((result) => {
+        if (result.rows.length > 0) {
+          usua = new UsuarioVO();
+          usua.usua_id = result.rows.item(0).usua_id;
+          resolve(usua);
+        } else {
+          resolve(usua);
+        }
+      }).catch((error) => {
+        reject(error);
+      });
+    });
+
+    return promise;
+  }
+
+  public atualizaUsuarioLogadoSq(usua: UsuarioVO) {
+    var query = "UPDATE usuario_logado ";
+    query = query + "SET usua_id = ? ";
+
+    this.usuSqSrv.atualizar(query, [usua.usua_id]).then((result) => {
+
+      console.log(result);
+
+      if (result == null) {
+
+      }
+    }).catch((error) => {
+      throw new Error(error);
+    });
+
+  }
+
+  public inseritUsuarioLogadoSq(id: number) {
+
+    var query = "INSERT INTO usuario_logado ( usua_id ) Values ( ? ) ";
+
+    this.usuSqSrv.inserir(query, [id]).then((result) => {
+
+      console.log(result);
+
+    }).catch((error) => {
+      throw new Error(error);
+    });
+
+  }
 }
