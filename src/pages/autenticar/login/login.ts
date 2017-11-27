@@ -27,7 +27,7 @@ export class LoginPage implements OnInit {
     private toastCtrl: ToastController,
     private fb: FormBuilder,
     private event: Events,
-    private loginSrv: UsuarioService,
+    private usuaSrv: UsuarioService,
     private globalVar: GlobalVar,
     private netService: NetworkService,
     private navCtrl: NavController,
@@ -73,14 +73,14 @@ export class LoginPage implements OnInit {
       let resultFindUser: any = null;
 
       if (self.globalVar.getIsFirebaseConnected()) {
-        resultFindUser = this.loginSrv.signInUserFB(user.email, user.password);
+        resultFindUser = this.usuaSrv.signInUserFB(user.email.toLowerCase(), user.password);
 
         if (resultFindUser != null) {
           resultFindUser.then(
-            (data: any) => {
-              if (data != null) {
+            (usuRemote: any) => {
+              if (usuRemote != null) {
                 this.loading.dismiss();
-                self.event.publish('usuario:logado', self.globalVar.getIsFirebaseConnected(), data);
+                self.event.publish('usuario:logado', usuRemote, null);
               } else {
                 this.createAlert("Usuário não encontrado");
               }
@@ -94,7 +94,17 @@ export class LoginPage implements OnInit {
         }
       }
       else {
-        
+        this.usuaSrv.pesquisarUsarioByEmailSenhaSql(user.email.toLowerCase(), user.password)
+          .then((usuLocal) => {
+            if (usuLocal != null) {
+              this.loading.dismiss();
+              self.event.publish('usuario:logado', null, usuLocal);
+            } else {
+              this.errorConnection(null);
+            }
+          }).catch(error => {
+            this.errorConnection(error);
+          });
       }
     }
 

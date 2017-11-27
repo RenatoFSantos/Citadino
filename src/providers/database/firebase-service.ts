@@ -34,11 +34,11 @@ export class FirebaseService {
       var connectedRef = self.getConnectionRef();
       connectedRef.on('value', (snap) => {
         if (snap.val() === true) {
-          this.eventCtrl.publish('firebase:connected');
+          this.eventCtrl.publish('firebase:connected', true);
           self.globalVar.setIsFirebaseConnected(true);
           console.log("conectado");
         } else {
-          this.eventCtrl.publish('firebase:desconectado');
+          this.eventCtrl.publish('firebase:desconectado', false);
           self.globalVar.setIsFirebaseConnected(false);
           console.log("desconectado");
         }

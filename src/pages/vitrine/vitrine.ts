@@ -54,6 +54,46 @@ export class VitrinePage implements OnInit {
     private meusMarcadosSrv: MeusMarcadosService,
     private usuaSrv: UsuarioService) {
 
+    this.loadVitrines();
+
+    // this.loadVitrines();
+
+    // if (this.globalVar.getIsFirebaseConnected()) {
+
+    //   this.loadCtrl = this.loadingCtrl.create({
+    //     spinner: 'circles'
+    //   });
+    //   this.loadCtrl.present();
+
+    //   this.vitrineSrv.getVitrineRef().once("value").then((snapShot) => {
+    //     if (snapShot.exists()) {
+    //       this.vitrineSrv.getVitrineRef().child(this.seqMunicipio).on('child_added', this.onVitrineAdded);
+
+    //       this.vitrineSrv.getVitrineRef().child(this.seqMunicipio).on('child_removed', this.onVitrineRemove);
+
+    //       this.vitrineSrv.getVitrineRef().child(this.seqMunicipio).on('child_changed', this.onVitrineChange);
+
+    //       this.loadVitrines();
+    //       return true;
+    //     }
+    //     else {
+    //       this.loadCtrl.dismiss();
+    //       return false;
+    //     }
+    //   });
+
+    // } else {
+    //   this.createAlert("Ops!!! Não estou conseguindo carregar a vitrine. Tente mais tarde!");
+    // }
+  }
+
+  loadVitrines() {
+    var self = this;
+    self.startPk = "";
+    self.rowCount = 0;
+    self.rowCurrent = 0;
+    self.vitrines = [];
+
     if (this.globalVar.getIsFirebaseConnected()) {
 
       this.loadCtrl = this.loadingCtrl.create({
@@ -69,16 +109,21 @@ export class VitrinePage implements OnInit {
 
           this.vitrineSrv.getVitrineRef().child(this.seqMunicipio).on('child_changed', this.onVitrineChange);
 
-
-          this.loadVitrines();
-          return true;
+          self.vitrineSrv.getVitrineRefTotal(this.seqMunicipio).then((snapShot) => {
+            self.rowCount = snapShot.numChildren();
+            this.getVitrines().then(() => {
+              this.loadCtrl.dismiss();
+            });
+          }).catch((error) => {
+            this.loadCtrl.dismiss();
+            console.log(error);
+            self.rowCount = 0;
+          })
         }
         else {
           this.loadCtrl.dismiss();
-          return false;
         }
-      });
-
+      })
     } else {
       this.createAlert("Ops!!! Não estou conseguindo carregar a vitrine. Tente mais tarde!");
     }
@@ -116,7 +161,6 @@ export class VitrinePage implements OnInit {
       } else {
         self.itemsService.removeItemFromArray(self.vitrines, removeVitrine);
       }
-
     }
   }
 
@@ -143,7 +187,7 @@ export class VitrinePage implements OnInit {
   ionViewDidLoad() {
     this.marcarVitrineEvent();
     this.desmarcarVitrineEvent();
-    // this.excluirVitrineEvent();
+    this.bancoDadosOnlineEvent();
   }
 
   ionViewWillUnload() {
@@ -152,27 +196,7 @@ export class VitrinePage implements OnInit {
     this.events.subscribe('desmarcarVitrine:true', null);
   }
 
-  ngOnInit() {
-  }
-
-  loadVitrines() {
-    var self = this;
-    self.startPk = "";
-    self.rowCount = 0;
-    self.rowCurrent = 0;
-    self.vitrines = [];
-
-    self.vitrineSrv.getVitrineRefTotal(this.seqMunicipio).then((snapShot) => {
-      self.rowCount = snapShot.numChildren();
-      this.getVitrines().then(() => {
-        this.loadCtrl.dismiss();
-      });
-    }).catch((error) => {
-      this.loadCtrl.dismiss();
-      console.log(error);
-      self.rowCount = 0;
-    })
-  }
+  ngOnInit() { }
 
   getVitrines() {
     var self = this;
@@ -519,6 +543,19 @@ export class VitrinePage implements OnInit {
       });
 
     return promAll;
+  }
+
+  public bancoDadosOnlineEvent() {
+    let self = this;
+    this.events.subscribe('firebase:connected', (result: any) => {
+      if (result == true) {
+        setTimeout(() => {
+          if (this.vitrines == null || (this.vitrines != null && this.vitrines.length == 0)) {
+            this.loadVitrines();
+          }
+        }, 2500);
+      }
+    });
   }
 
 }

@@ -89,6 +89,7 @@ export class MyApp implements OnInit {
         self.networkDisconnectEvent();
         self.networkConnectionEvent();
         self.appStateEvent();
+        self.bancoDadosOnlineEvent();
         //this.checkForUpdate();
         //Inicializa o servico do sqlLite
         this.usuaSqlSrv.InitDatabase();
@@ -136,45 +137,56 @@ export class MyApp implements OnInit {
       }, 1000);
     }
     else {
-      self.rotinaLogandoUsuario();
+      self.rotinaLogandoUsuario(null);
     }
   }
 
-  private rotinaLogandoUsuario() {
+  private rotinaLogandoUsuario(usuarioLocal: UsuarioVO) {
     let self = this;
-    let userCurrent = self.usuaSrv.getLoggedInUser();
 
-    if (userCurrent != null) {
-      self.usuaSrv.getUserDetail(userCurrent.uid).then((userRef) => {
-        if (userRef.val() != null) {
-          var usuario: UsuarioVO = self.mapSrv.getUsuario(userRef);
+    if (usuarioLocal == null) {
+      let userCurrent = self.usuaSrv.getLoggedInUser();
 
-          self.usuaSrv.pesquisarUsarioSqByUid(usuario.usua_sq_id).then((result: UsuarioVO) => {
-            if (result == null) {
-              self.usuaSrv.addUserSQ(usuario, usuario.usua_sq_id).then((result: number) => {
-                self.usuaSrv.inseritUsuarioLogadoSq(result);
-              });
-            } else {
-              self.usuaSrv.pesquisaUsuarioLogadoSq().then((usuaLog: UsuarioVO) => {
-                if (usuaLog == null) {
-                  self.usuaSrv.inseritUsuarioLogadoSq(usuaLog.usua_id);
-                }
-              });
-            }
-          }).catch((error) => {
-            console.log(error);
-            this.rotinaNaoConectado(true);
-          });
+      if (userCurrent != null) {
+        self.usuaSrv.getUserDetail(userCurrent.uid).then((userRef) => {
+          if (userRef.val() != null) {
+            var usuario: UsuarioVO = self.mapSrv.getUsuario(userRef);
 
-          this.rotinaConectado(usuario);
-        }
-        else {
-          this.rotinaNaoConectado(false);
+            self.usuaSrv.pesquisarUsarioSqByUid(usuario.usua_sq_id).then((result: UsuarioVO) => {
+              var usuaLocal = result;
+              if (usuaLocal == null) {
+                self.usuaSrv.addUserSQ(usuario, usuario.usua_sq_id).then((result: number) => {
+                  self.usuaSrv.inseritUsuarioLogadoSq(result);
+                });
+              } else {
+                self.usuaSrv.pesquisaUsuarioLogadoSq().then((usuaLog: UsuarioVO) => {
+                  if (usuaLog == null) {
+                    self.usuaSrv.inseritUsuarioLogadoSq(usuaLocal.usua_id);
+                  }
+                });
+              }
+            }).catch((error) => {
+              console.log(error);
+              this.rotinaNaoConectado(true);
+            });
+
+            this.rotinaConectado(usuario);
+          }
+          else {
+            this.rotinaNaoConectado(false);
+          }
+        });
+      }
+      else {
+        this.rotinaNaoConectado(false);
+      }
+    } else {
+      self.usuaSrv.pesquisaUsuarioLogadoSq().then((usuaLog: UsuarioVO) => {
+        if (usuaLog == null) {
+          self.usuaSrv.inseritUsuarioLogadoSq(usuarioLocal.usua_id);
         }
       });
-    }
-    else {
-      this.rotinaNaoConectado(false);
+      this.rotinaConectado(usuarioLocal);
     }
   }
 
@@ -240,9 +252,11 @@ export class MyApp implements OnInit {
   //Evento disparado quando o usuário estiver logado
   userLoggedEvent() {
     var self = this;
-    self.events.subscribe('usuario:logado', (isFirebase, data) => {
-      if (isFirebase == true) {
-        self.rotinaLogandoUsuario();        
+    self.events.subscribe('usuario:logado', (usuRemote, usuLocal) => {
+      if (usuRemote != null) {
+        self.rotinaLogandoUsuario(null);
+      } else if (usuLocal != null) {
+        self.rotinaLogandoUsuario(usuLocal);
       } else {
         // self.popularMenu(true);
         // self.userLogged = this.preencherObjetoUsuario(data);
@@ -375,42 +389,6 @@ export class MyApp implements OnInit {
   }
 
   public popularMenu(value: boolean, usuario: UsuarioVO) {
-
-    // var userJson: any = this.mapSrv.getUserJson(usuarioParam);
-
-    // try {
-    //   this.pages = [
-    //     {
-    //       title: 'Vitrine', component: TabsPage, tabComponent: VitrinePage, index: 0, icon: 'logo-windows'
-    //       , typeMenu: enums.ETypeMenu.default
-    //     },
-    //     {
-    //       title: 'Guia', component: TabsPage, tabComponent: GuiaPage, index: 1, icon: 'compass'
-    //       , typeMenu: enums.ETypeMenu.default
-    //     },
-    //     {
-    //       title: 'Mensagem', component: TabsPage, tabComponent: MensagemListaPage, index: 2, icon: 'chatbubbles'
-    //       , typeMenu: enums.ETypeMenu.default
-    //     }
-    //   ];
-    // }
-    // catch (e) {
-    //   console.log.apply(e);
-    // }
-
-    // this.pages = [
-    //   // { title: 'Configurações', component: TestePage, icon: 'options', typeMenu: enums.ETypeMenu.default },
-    //   // { title: 'Estatísticas', component: RelatoriosListaPage, icon: 'pie', typeMenu: enums.ETypeMenu.default },
-    //   // { title: 'Favoritos', component: TestePage, icon: 'star', typeMenu: enums.ETypeMenu.default },
-    //   { title: 'Minha Conta', component: ProfilePage, icon: 'contact', typeMenu: enums.ETypeMenu.default },
-
-    //   { title: 'Minhas Publicações', component: MinhasPublicacoesPage, icon: 'md-create', typeMenu: enums.ETypeMenu.default },
-
-    //   { title: 'Meus Marcados', component: MeusMarcadosPage, icon: 'md-bookmark', typeMenu: enums.ETypeMenu.default },
-
-    //   { title: 'Ajuda', component: AjudaPage, icon: 'md-help', typeMenu: enums.ETypeMenu.default }
-    //   // { title: 'Sobre', component: TestePage, icon: 'information-circle', typeMenu: enums.ETypeMenu.default }
-    // ];
     this.pages = [];
 
     this.pages.push({ title: 'Minha Conta', component: ProfilePage, icon: 'contact', typeMenu: enums.ETypeMenu.default });
@@ -631,6 +609,44 @@ export class MyApp implements OnInit {
     });
 
     return promise;
+  }
+
+  public bancoDadosOnlineEvent() {
+    let self = this;
+    this.events.subscribe('firebase:connected', (result: any) => {
+      setTimeout(() => {
+        if (self.usuaSrv.getLoggedInUser() == null) {
+          var usua: any = self.globalVar.usuarioLogado;
+          if (usua != null) {
+            var resultFindUser: any = self.usuaSrv.signInUserFB(usua.usua_ds_email.toLowerCase(), usua.usua_tx_senha);
+            resultFindUser.then((usua: any) => {
+              self.usuaSrv.getUserDetail(usua.uid).then((userRef) => {
+                if (userRef.val() != null) {
+                  var usuario: UsuarioVO = self.mapSrv.getUsuario(userRef);
+                  self.userLogged = usuario;
+                  self.globalVar.usuarioLogado = usuario;
+                }
+              }).catch((error) => {
+                console.log(error);
+              });
+            });
+          }
+        }
+        else {
+          if (self.globalVar.usuarioLogado.usua_tx_urlprofile == "") {
+            self.usuaSrv.getUserDetail(self.usuaSrv.getLoggedInUser().uid).then((userRef) => {
+              if (userRef.val() != null) {
+                var usuario: UsuarioVO = self.mapSrv.getUsuario(userRef);
+                self.userLogged = usuario;
+                self.globalVar.usuarioLogado = usuario;
+              }
+            }).catch((error) => {
+              console.log(error);
+            });
+          }
+        }
+      }, 1000);
+    });
   }
 
 

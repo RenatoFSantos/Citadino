@@ -7,7 +7,7 @@ import { MensagemVO } from './../../model/mensagemVO';
 import { EmpresaService } from './../../providers/service/empresa-service';
 import { UsuarioService } from './../../providers/service/usuario-service';
 import { Component, OnInit } from '@angular/core';
-import { ModalController, LoadingController, Events } from 'ionic-angular';
+import { ModalController, LoadingController, Events, ToastController } from 'ionic-angular';
 
 @Component({
   selector: 'page-mensagem-lista',
@@ -16,6 +16,7 @@ import { ModalController, LoadingController, Events } from 'ionic-angular';
 export class MensagemListaPage implements OnInit {
   private mensagens: Array<MensagemVO> = [];
   public usuaSrvTest: any;
+  private toastAlert: any;
 
   constructor(public usuaSrv: UsuarioService,
     private emprSrv: EmpresaService,
@@ -24,7 +25,8 @@ export class MensagemListaPage implements OnInit {
     private events: Events,
     private mensSrv: MensagemService,
     private netService: NetworkService,
-    private globalVar: GlobalVar) {
+    private globalVar: GlobalVar,
+    private toastCtrl: ToastController) {
     this.usuaSrvTest = usuaSrv;
 
     this.eventoNovaMensagem();
@@ -33,6 +35,10 @@ export class MensagemListaPage implements OnInit {
   ionViewWillEnter() {
     this.loadMensagens();
     // this.netService.getStatusConnection();
+  }
+
+  ionViewDidLoad() {
+    this.bancoDadosOnlineEvent();
   }
 
   ngOnInit() { }
@@ -49,34 +55,40 @@ export class MensagemListaPage implements OnInit {
   }
 
   private loadMensagens() {
-    let loader = this.loadingCtrl.create({
-      content: 'Aguarde...',
-      dismissOnPageChange: true
-    });
 
-    loader.present();
-
-    if (this.mensagens != null && this.mensagens.length > 0) {
-      this.mensagens = [];
-    }
-
-    let self = this;
-    this.firstMethod()
-      .then(this.secondMethod)
-      .then(this.thirdMethod)
-      .then(() => {
-        if (self.mensagens.length == 0) {
-          let mensagem: MensagemVO = new MensagemVO();
-          mensagem.usua_sq_id_from = '999999999999';
-          mensagem.usua_sq_id_to = '';
-          mensagem.usua_nm_usuario_to = '';
-          mensagem.mens_nova = false;
-          mensagem.mens_nm_enviado = 'Nenhuma conversa registrada'
-          mensagem.mens_tx_logo_enviado = '';
-          self.mensagens.push(mensagem);
-        }
-        loader.dismiss();
+    if (this.globalVar.getIsFirebaseConnected()) {
+      let loader = this.loadingCtrl.create({
+        content: 'Aguarde...',
+        dismissOnPageChange: true
       });
+
+      loader.present();
+
+      if (this.mensagens != null && this.mensagens.length > 0) {
+        this.mensagens = [];
+      }
+
+      let self = this;
+      this.firstMethod()
+        .then(this.secondMethod)
+        .then(this.thirdMethod)
+        .then(() => {
+          if (self.mensagens.length == 0) {
+            let mensagem: MensagemVO = new MensagemVO();
+            mensagem.usua_sq_id_from = '999999999999';
+            mensagem.usua_sq_id_to = '';
+            mensagem.usua_nm_usuario_to = '';
+            mensagem.mens_nova = false;
+            mensagem.mens_nm_enviado = 'Nenhuma conversa registrada'
+            mensagem.mens_tx_logo_enviado = '';
+            self.mensagens.push(mensagem);
+          }
+          loader.dismiss();
+        });
+    }
+     else {
+      this.createAlert("Ops!!! Não estou conseguindo carregar duas mensagens. Tente mais tarde!");
+    }
   }
 
   //Retorna usuários que foram enviados mensagens
@@ -160,8 +172,8 @@ export class MensagemListaPage implements OnInit {
               }
             });
 
-            self.mensagens.push(mensagem);
-          }          
+          self.mensagens.push(mensagem);
+        }
       });
     });
 
@@ -239,4 +251,31 @@ export class MensagemListaPage implements OnInit {
     });
   }
 
+  public bancoDadosOnlineEvent() {
+    let self = this;
+    this.events.subscribe('firebase:connected', (result: any) => {
+      if (result == true) {
+        setTimeout(() => {
+          if (self.mensagens == null ||
+            (self.mensagens != null && self.mensagens.length == 0)) {
+            self.loadMensagens();
+          }
+        }, 3000);
+      }
+    });
+  }
+
+  createAlert(errorMessage: string) {
+    if (this.toastAlert != null) {
+      this.toastAlert.dismiss();
+    }
+
+    this.toastAlert = this.toastCtrl.create({
+      message: errorMessage,
+      duration: 2500,
+      position: 'top'
+    });
+
+    this.toastAlert.present();
+  }
 }

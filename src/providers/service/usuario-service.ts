@@ -80,8 +80,15 @@ export class UsuarioService {
   }
 
   public getMensagens() {
-    let userCurrent = this.getLoggedInUser();
-    return this.usersRef.child(userCurrent.uid).child("mensagem").once("value");
+    let usuarioid:string = "";
+
+    if (this.getLoggedInUser() != null) {
+      usuarioid = this.getLoggedInUser().uid;
+      return this.usersRef.child(usuarioid).child("mensagem").once("value");
+    }
+    else {
+      return null;
+    }
   }
 
   public saveToken(uid: string, token: string) {
@@ -133,13 +140,47 @@ export class UsuarioService {
 
   //Login de Usuário SqLite
   public pesquisarUsarioByEmailSenhaSql(email: string, password: string) {
-    let query: string = "SELECT usua_id, usua_sq_id, usua_nm_usuario,";
-    query = query + "usua_ds_email, usua_tx_senha, usua_in_ajuda, usua_ds_telefone, usua_tx_urlprofile ";
-    query = query + "from usuario ";
-    query = query + "WHERE usua_ds_email = ? ";
-    query = query + "and usua_tx_senha = ? ";
+    let self = this;
+    let usuario: UsuarioVO = null;
 
-    return this.usuSqSrv.pesquisar(query, [email, password]);
+    var promise = new Promise(function (resolve, reject) {
+
+      let query: string = "SELECT usua_id, usua_sq_id, usua_nm_usuario,";
+      query = query + "usua_ds_email, usua_tx_senha, usua_in_ajuda, usua_ds_telefone, usua_tx_urlprofile ";
+      query = query + "from usuario ";
+      query = query + "WHERE usua_ds_email = ? ";
+      query = query + "and usua_tx_senha = ? ";
+
+      self.usuSqSrv.pesquisar(query, [email, password]).then((result) => {
+        if (result.rows.length > 0) {
+
+          usuario = new UsuarioVO();
+          usuario.usua_id = result.rows.item(0).usua_id;
+          usuario.usua_sq_id = result.rows.item(0).usua_sq_id;
+          usuario.usua_nm_usuario = result.rows.item(0).usua_nm_usuario;
+          usuario.usua_ds_email = result.rows.item(0).usua_ds_email;
+          usuario.usua_tx_senha = result.rows.item(0).usua_tx_senha;
+          if (result.rows.item(0).usua_in_ajuda == "true"
+            || result.rows.item(0).usua_in_ajuda == true) {
+            usuario.usua_in_ajuda = true;
+          }
+          else {
+            usuario.usua_in_ajuda = false;
+          }
+          usuario.usua_ds_telefone = result.rows.item(0).usua_ds_telefone;
+          usuario.usua_tx_urlprofile = result.rows.item(0).usua_tx_urlprofile;
+
+          resolve(usuario);
+        }
+        else {
+          resolve(usuario);
+        }
+      }).catch((error) => {
+        throw new Error(error);
+      });
+    });
+
+    return promise;
   }
 
   public pesquisarUsarioSqById(id: number) {

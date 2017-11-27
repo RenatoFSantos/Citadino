@@ -10,7 +10,7 @@ import { CategoriaVO } from './../../model/categoriaVO';
 import { GuiaService } from './../../providers/service/guia-service';
 import { GuiaListaPage } from './../guia-lista/guia-lista';
 import { Component, OnInit } from '@angular/core';
-import { NavController, LoadingController } from 'ionic-angular';
+import { NavController, LoadingController, ToastController, Events } from 'ionic-angular';
 import { debounceTime } from 'rxjs/operators/debounceTime';
 import { distinctUntilChanged } from 'rxjs/operators/distinctUntilChanged';
 
@@ -29,13 +29,16 @@ export class GuiaPage implements OnInit {
   public searching: any = false;
   public descritorEnable = false;
   private loadCtrl: any;
+  private toastAlert: any;
 
   constructor(public navCtrl: NavController,
     public guiaSrv: GuiaService,
     public loadingCtrl: LoadingController,
     private itemSrv: ItemsService,
     private netService: NetworkService,
-    private globalVar: GlobalVar) {
+    private globalVar: GlobalVar,
+    private toastCtrl: ToastController,
+    public events: Events) {
     this.searchControl = new FormControl();
 
     this.getLoadCategorias();
@@ -45,13 +48,28 @@ export class GuiaPage implements OnInit {
     console.log('ngOnInit');
   }
 
-  ionViewDidLeave() {
-    if (this.categorias != null && this.categorias.length == 0) {
-      this.getLoadCategorias();
-    }
-  }
+  // ionViewDidLeave() {
+  //   if (this.categorias != null && this.categorias.length == 0) {
+  //     this.getLoadCategorias();
+  //   }
+  // }
 
   ionViewDidLoad() {
+    this.onSearchCategoria();
+    this.bancoDadosOnlineEvent();
+  }
+
+  public onSearchInput() {
+    this.searching = true;
+  }
+
+  public onCleanInput() {
+    this.searching = true;
+    this.empresas = [];
+  }
+
+
+  private onSearchCategoria() {
     let self = this;
     this.searchControl.valueChanges
       .pipe(
@@ -113,23 +131,15 @@ export class GuiaPage implements OnInit {
       });
   }
 
-  public onSearchInput() {
-    this.searching = true;
-  }
-
-  public onCleanInput() {
-    this.searching = true;
-    this.empresas = [];
-  }
-
 
   private getLoadCategorias() {
 
-    if (this.loadCtrl != null) {
-      this.loadCtrl.dismiss();
-    }
-
     if (this.globalVar.getIsFirebaseConnected()) {
+
+      if (this.loadCtrl != null) {
+        this.loadCtrl.dismiss();
+      }
+
       this.loadCtrl = this.loadingCtrl.create({
         spinner: 'circles'
       });
@@ -140,6 +150,10 @@ export class GuiaPage implements OnInit {
         .then(() => {
           this.loadCtrl.dismiss();
         });
+
+    }
+    else {
+      this.createAlert("Ops!!! Não estou conseguindo carregar a guia. Tente mais tarde!");
     }
   }
 
@@ -203,7 +217,6 @@ export class GuiaPage implements OnInit {
 
     loader.present();
 
-
     if (cate_in_tipo == 'CT' || cate_in_tipo == '' || typeof cate_in_tipo === 'undefined') {
       let empresaskey: any = [];
       this.guiaSrv.getEmpresaByCategoria(categoriaKey).then((snapShot) => {
@@ -257,7 +270,7 @@ export class GuiaPage implements OnInit {
           slide.imageUrl = paths[2];
           slides.push(slide);
         }
-        
+
         loader.dismiss();
         this.navCtrl.push(AnuncioFullPage, { slideParam: slides, isExcluirImagem: false });
 
@@ -266,8 +279,6 @@ export class GuiaPage implements OnInit {
 
         });
     }
-
-
   }
 
   openGuiaDescritor(descritorNm: string, descritorKey: string) {
@@ -281,16 +292,33 @@ export class GuiaPage implements OnInit {
     empresaskey.push(descritorKey)
     loader.dismiss();
     this.navCtrl.push(GuiaListaPage, { categNm: descritorNm, emprKeys: empresaskey })
-    // this.guiaSrv.getEmpresaByDescritor(descritorKey).then((snapShot) => {
-    //   snapShot.forEach(element => {
-    //     empresaskey.push(element.key);
-    //   });
-
-    //   loader.dismiss();
-    //   if (empresaskey.length > 0) {
-    // this.navCtrl.push(GuiaListaPage, { categNm: descritorNm, emprKeys: empresaskey })
-    // }
-    // });
   }
 
+  createAlert(errorMessage: string) {
+    if (this.toastAlert != null) {
+      this.toastAlert.dismiss();
+    }
+
+    this.toastAlert = this.toastCtrl.create({
+      message: errorMessage,
+      duration: 4000,
+      position: 'top'
+    });
+
+    this.toastAlert.present();
+  }
+
+  public bancoDadosOnlineEvent() {
+    let self = this;
+    this.events.subscribe('firebase:connected', (result: any) => {
+      if (result == true) {
+        setTimeout(() => {
+          if (this.categorias == null ||
+            (this.categorias != null && this.categorias.length == 0)) {
+            this.getLoadCategorias();
+          }
+        }, 2500);
+      }
+    });
+  }
 }

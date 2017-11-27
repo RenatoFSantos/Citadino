@@ -23,7 +23,7 @@ export class TabsPage implements OnInit {
   constructor(public nav: NavController,
     public navParams: NavParams,
     public events: Events,
-    private usuaSrv:UsuarioService) {
+    private usuaSrv: UsuarioService) {
     this.selectedIndex = navParams.data.tabIndex || 1;
   }
 
@@ -65,16 +65,21 @@ export class TabsPage implements OnInit {
 
   private totalNovasMensagens() {
     let totalMensage: number = 0;
-    this.usuaSrv.getMensagens().then((snapMsg) => {
-      snapMsg.forEach(element => {
 
-        if (element.val() == true) {
-          totalMensage++;
-        }
+    var mensPromise = this.usuaSrv.getMensagens();
 
-        this.events.publish('mensagem:nova', totalMensage);
+    if (mensPromise != null) {
+      mensPromise.then((snapMsg) => {
+        snapMsg.forEach(element => {
+
+          if (element.val() == true) {
+            totalMensage++;
+          }
+
+          this.events.publish('mensagem:nova', totalMensage);
+        });
       });
-    });
+    }
   }
 
 }
