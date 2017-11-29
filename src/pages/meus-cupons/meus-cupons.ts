@@ -37,6 +37,8 @@ export class MeusCuponsPage {
     private loadingCtrl: LoadingController,
     private promSrv: PromocaoService,
     private toastCtrl: ToastController) {
+
+    var self = this;
     this.usuario = this.glabalVar.usuarioLogado;
     this.cnpj = "28039364000102";
 
@@ -46,10 +48,10 @@ export class MeusCuponsPage {
         var objProm: any = result.val()[keyProm];
 
         if (objProm.prom_in_ativo == true) {
-          this.statusPromocao = true;
+          self.statusPromocao = true;
         }
         else {
-          this.statusPromocao = false;
+          self.statusPromocao = false;
         }
       }
     })
@@ -141,6 +143,7 @@ export class MeusCuponsPage {
 
   public pegarCupom() {
 
+    var self = this;
     this.loading = true;
     let loader = this.loadingCtrl.create({
       dismissOnPageChange: true,
@@ -151,7 +154,7 @@ export class MeusCuponsPage {
 
     this.barcodeScanner.scan().then((barcodeData) => {
       if (barcodeData.cancelled) {
-        this.loading = false;
+        self.loading = false;
         loader.dismiss();
         return false;
       }
@@ -159,15 +162,15 @@ export class MeusCuponsPage {
         var resultScan: string[] = barcodeData.text.split(",");
 
         if (resultScan[0] == this.cnpj) {
-          this.salvarCupom(resultScan[1]).then((result) => {
+          self.salvarCupom(resultScan[1]).then((result) => {
             loader.dismiss();
           })
             .catch(() => {
               loader.dismiss();
             });
         } else {
-          this.createAlert("Cupom inválido.");  
-          loader.dismiss();        
+          self.createAlert("Cupom inválido.");
+          loader.dismiss();
         }
       }
       else {

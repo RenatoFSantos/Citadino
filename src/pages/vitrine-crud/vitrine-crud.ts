@@ -138,7 +138,8 @@ export class VitrineCrudPage {
         self.salvarPublicacao(self).then(() => {
           loader.dismiss();
           self.createAlert("Publicação criada com sucesso.");
-          this.events.publish("carregaPublicacao:true");
+          self.events.publish("carregaPublicacao:true");
+          loader.dismiss();
           self.navCtrl.pop();
         })
         .catch(err=>{
@@ -373,11 +374,11 @@ export class VitrineCrudPage {
         if (self.imagens.length > 4) {
           self.itemsService.removeItems(self.imagens, self.imagens[self.imagens.length - 1]);
         }
-        this.backSrv.disable();
+        self.backSrv.disable();
 
       },
       error => {
-        this.createAlert("Não foi possível selecionar a imagem.")
+        self.createAlert("Não foi possível selecionar a imagem.")
       }
       );
   }
@@ -442,10 +443,10 @@ export class VitrineCrudPage {
         if (self.imagens.length < 4) {
 
           if (self.itemsService.findElement(self.imagens, self.imagemPadrao) == null) {
-            this.adicionaImagemPadrao();
+            self.adicionaImagemPadrao();
           }
         }
-        this.ordenaImagens();
+        self.ordenaImagens();
       }
 
     });
