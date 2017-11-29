@@ -166,7 +166,8 @@ export class MeusCuponsPage {
               loader.dismiss();
             });
         } else {
-          this.createAlert("Cupom inválido.");          
+          this.createAlert("Cupom inválido.");  
+          loader.dismiss();        
         }
       }
       else {

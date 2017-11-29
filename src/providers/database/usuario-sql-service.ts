@@ -40,6 +40,7 @@ export class UsuarioSqlService {
           resolve({ self, db });
 
         }).catch((error) => {
+          console.log("deu errro ios " + error);
           reject(error);
         });
       }
@@ -49,6 +50,7 @@ export class UsuarioSqlService {
           resolve({ self, db });
         })
           .catch((error) => {
+            console.log("deu errro ios " + error);
             reject(error);
           });
       }
