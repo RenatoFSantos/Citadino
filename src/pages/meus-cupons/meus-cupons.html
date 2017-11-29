@@ -1,0 +1,24 @@
+<ion-header>
+  <ion-navbar color="ctd-navbar">
+    <ion-title>Meus Cupons</ion-title>
+  </ion-navbar>
+</ion-header>
+<ion-content>
+
+  <ion-content>
+    <ion-card class="ctd-card" *ngFor="let item of cupons">
+      <img src="{{item.cupo_tx_urlimagem}}">
+      <!-- <ion-card-content>
+        
+      </ion-card-content> -->
+    </ion-card>
+    <!-- <button ion-button full large >Pegar Cupon</button> -->
+    <div class="footer">
+      <button ion-button full large (click)="pegarCupom()" [disabled]="loading">Pegar Cupom</button>
+    </div>
+    <!-- <ion-fab right bottom *ngIf="globalVar.isBtnAdicionarVitrine()">
+      <button ion-fab (click)="adicionarVitrine()">
+        <ion-icon name="add"></ion-icon>
+      </button>
+    </ion-fab> -->
+  </ion-content>

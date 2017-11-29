@@ -1,3 +1,6 @@
+import { CupomService } from './service/cupom-service';
+import { UsuarioCupomService } from './service/usuario-cupom-service';
+import { BarcodeScanner } from '@ionic-native/barcode-scanner';
 import { UsuarioSqlService } from './database/usuario-sql-service';
 import { MinhasPublicacoesService } from './service/minhas-publicacoes';
 import { MeusMarcadosService } from './service/meus_marcados-service';
@@ -25,6 +28,7 @@ import { OneSignal } from '@ionic-native/onesignal';
 import { Camera } from '@ionic-native/camera';
 import { BackgroundMode } from '@ionic-native/background-mode';
 import { SqlLiteService } from './database/sqlLite-service';
+import { PromocaoService } from './service/promocao-service';
 
 
 export const APP_PROVIDERS = [
@@ -54,5 +58,10 @@ export const APP_PROVIDERS = [
     MeusMarcadosService,
     MinhasPublicacoesService,
     SqlLiteService,
-    UsuarioSqlService
+    UsuarioSqlService,
+    BarcodeScanner,
+    CupomService,
+    UsuarioCupomService,
+    PromocaoService
+    
 ];

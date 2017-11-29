@@ -16,19 +16,24 @@ export enum Connection {
     CELL_2G = <any>"2g",
     CELL_3G = <any>"3g",
     CELL_4G = <any>"4g",
-    CELL=<any>"cellular",
+    CELL = <any>"cellular",
     NONE = <any>"none"
 }
 
 export enum eventoTokenPush {
-    usuarioSalvar = <number> 0,
-    usuarioAlterar = <number> 1,
-    usuarioCorreto = <number> 2
+    usuarioSalvar = <number>0,
+    usuarioAlterar = <number>1,
+    usuarioCorreto = <number>2
 }
 
 export enum eventTypePush {
-    vitrine = <number> 0,
-    guia = <number> 1,
-    mensagem = <number> 2
+    vitrine = <number>0,
+    guia = <number>1,
+    mensagem = <number>2
+}
+
+export enum tipoCupom {
+    sorteio = <number>1,
+    quantidade = <number>2
 }
 

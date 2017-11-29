@@ -1,22 +1,22 @@
 <ion-header>
     <ctd-header [exibirBotao]=[(true)]></ctd-header>
-
 </ion-header>
-
-
+<!-- <ion-tabs tabsPlacement="top">
+    <ion-tab [root]="tab1Root" tabTitle="Publicidades"></ion-tab>
+    <ion-tab [root]="tab2Root" tabTitle="Promoções"></ion-tab>
+</ion-tabs> -->
 <ion-content>
+
     <div *ngIf="loading">
         <img src="assets/img/ring.gif" style="display:block; margin:auto" />
     </div>
     <ion-card class="ctd-card" *ngFor="let item of vitrines">
-
         <ion-item (click)="openPage(item)">
             <ion-avatar item-left>
                 <img src="{{item.anun_tx_urlavatar}}">
             </ion-avatar>
             <h2>{{item.anun_tx_titulo}}</h2>
             <p>{{item.anun_tx_subtitulo}}</p>
-            <!-- <p>{{item.vitr_dt_agendada}}</p> -->
             <p>{{item.vitr_dt_agendada | date: 'shortDate'}}</p>
         </ion-item>
         <ion-card-content>
@@ -43,15 +43,15 @@
         <ion-refresher-content pullingIcon="md-arrow-dropdown-circle" pullingText="Puxe para atualizar" refreshingSpinner="circles"
             refreshingText="Atualizando..." pullMin="0" pullMax="5" closeDuration=1></ion-refresher-content>
     </ion-refresher>
-    
+
     <ion-infinite-scroll (ionInfinite)="doInfinite($event)">
         <ion-infinite-scroll-content loadingSpinner="bubbles" loadingText="Aguarde...">
         </ion-infinite-scroll-content>
     </ion-infinite-scroll>
 
-    <!-- <ion-fab right bottom *ngIf="globalVar.isBtnAdicionarVitrine()">
+    <ion-fab right bottom *ngIf="globalVar.isBtnAdicionarVitrine()">
         <button ion-fab (click)="adicionarVitrine()">
             <ion-icon name="add"></ion-icon>
         </button>
-    </ion-fab> -->
+    </ion-fab>
 </ion-content>

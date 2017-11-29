@@ -1,4 +1,4 @@
-page-vitrine {
+page-vitrine-publicacao {
     ion-page {
         z-index: 70 !important;
     }
@@ -87,7 +87,7 @@ page-vitrine {
     }
 
     ion-fab[bottom] {
-        bottom: 2px !important;
+        bottom: 45px !important;
     }
     ion-fab[right] {
         right: 10px !important;
@@ -98,21 +98,15 @@ page-vitrine {
         margin-top: 55px !important;
     }
 
-    .scroll-content {        
-        margin-top: 55px !important;
-        margin-bottom: 56px !important;
-        transform:none !important;
-    }
+    // .scroll-content {        
+    //     margin-top: 55px !important;
+    //     margin-bottom: 56px !important;
+    //     // transform:none !important;
+    // }
 
-    .has-refresher> 
-      .scroll-content {     
-        border-top: 0px !important;
-      }
-
-      //============
-      .tabs-md .tabbar {
-        background: #f8f8f8;
-        height: 35px;
-    }
+    // .has-refresher> 
+    //   .scroll-content {     
+    //     border-top: 0px !important;
+    //   }
 
 }

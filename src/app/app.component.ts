@@ -1,3 +1,5 @@
+import { PromocaoService } from './../providers/service/promocao-service';
+import { MeusCuponsPage } from './../pages/meus-cupons/meus-cupons';
 import { UsuarioSqlService } from './../providers/database/usuario-sql-service';
 import { MinhasPublicacoesPage } from './../pages/minhas-publicacoes/minhas-publicacoes';
 import { MeusMarcadosPage } from './../pages/meus_marcados/meus-marcados';
@@ -73,7 +75,8 @@ export class MyApp implements OnInit {
     private alertCtrl: AlertController,
     private tokenSrv: TokenDeviceService,
     private oneSignal: OneSignal,
-    private mapSrv: MappingsService) {
+    private mapSrv: MappingsService,
+    private promSrv:PromocaoService) {
 
     this.platform.ready().then(() => {
       var self = this;
@@ -115,7 +118,7 @@ export class MyApp implements OnInit {
           console.log(self.firebaseConnectionAttempts);
           self.verificarConexao();
 
-        } else {
+        } else {        
           self.usuaSrv.pesquisaUsuarioLogadoSq().then((usuLog: UsuarioVO) => {
             if (usuLog != null) {
               self.usuaSrv.pesquisarUsarioSqById(usuLog.usua_id)
@@ -136,7 +139,8 @@ export class MyApp implements OnInit {
         }
       }, 1000);
     }
-    else {
+    else {      
+      self.promSrv.salvar();
       self.rotinaLogandoUsuario(null);
     }
   }
@@ -152,23 +156,25 @@ export class MyApp implements OnInit {
           if (userRef.val() != null) {
             var usuario: UsuarioVO = self.mapSrv.getUsuario(userRef);
 
-            self.usuaSrv.pesquisarUsarioSqByUid(usuario.usua_sq_id).then((result: UsuarioVO) => {
-              var usuaLocal = result;
-              if (usuaLocal == null) {
-                self.usuaSrv.addUserSQ(usuario, usuario.usua_sq_id).then((result: number) => {
-                  self.usuaSrv.inseritUsuarioLogadoSq(result);
-                });
-              } else {
-                self.usuaSrv.pesquisaUsuarioLogadoSq().then((usuaLog: UsuarioVO) => {
-                  if (usuaLog == null) {
-                    self.usuaSrv.inseritUsuarioLogadoSq(usuaLocal.usua_id);
-                  }
-                });
-              }
-            }).catch((error) => {
-              console.log(error);
-              this.rotinaNaoConectado(true);
-            });
+            if (window.cordova) {
+              self.usuaSrv.pesquisarUsarioSqByUid(usuario.usua_sq_id).then((result: UsuarioVO) => {
+                var usuaLocal = result;
+                if (usuaLocal == null) {
+                  self.usuaSrv.addUserSQ(usuario, usuario.usua_sq_id).then((result: number) => {
+                    self.usuaSrv.inseritUsuarioLogadoSq(result);
+                  });
+                } else {
+                  self.usuaSrv.pesquisaUsuarioLogadoSq().then((usuaLog: UsuarioVO) => {
+                    if (usuaLog == null) {
+                      self.usuaSrv.inseritUsuarioLogadoSq(usuaLocal.usua_id);
+                    }
+                  });
+                }
+              }).catch((error) => {
+                console.log(error);
+                this.rotinaNaoConectado(true);
+              });
+            }
 
             this.rotinaConectado(usuario);
           }
@@ -396,6 +402,8 @@ export class MyApp implements OnInit {
     if (usuario.usua_sg_perfil == "ADM" || this.globalVar.isBtnAdicionarVitrine() == true) {
       this.pages.push({ title: 'Meus Anúncios', component: MinhasPublicacoesPage, icon: 'md-create', typeMenu: enums.ETypeMenu.default });
     }
+
+    this.pages.push({ title: 'Meus Cupons', component: MeusCuponsPage, icon: 'ios-cash-outline', typeMenu: enums.ETypeMenu.default });
 
     this.pages.push({ title: 'Meus Marcados', component: MeusMarcadosPage, icon: 'md-bookmark', typeMenu: enums.ETypeMenu.default });
 

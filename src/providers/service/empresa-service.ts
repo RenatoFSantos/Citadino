@@ -26,4 +26,7 @@ export class EmpresaService {
     return this.empresaRef.child(empresaKey).child('smartsite').once('value');
   }
 
+  public getEmpresaByCnpj(cnpj: string) {
+    return this.empresaRef.orderByChild('empr_nr_documento').equalTo(cnpj).once('value');
+  }
 }

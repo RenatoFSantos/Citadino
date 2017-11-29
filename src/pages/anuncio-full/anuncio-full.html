@@ -1,5 +1,10 @@
 <ion-header>
   <ion-navbar color="ctd-navbar">
+    <!-- <ion-buttons left>
+      <button ion-button left (click)="close()">
+        <ion-icon style="font-size: 1.8em;" name="md-arrow-back"></ion-icon>
+      </button>
+    </ion-buttons> -->
     <ion-title>CLIQUE NA IMAGEM PARA AMPLIAR</ion-title>
   </ion-navbar>
 </ion-header>
@@ -12,8 +17,8 @@
     </ion-slide>
   </ion-slides>
   <ion-fab right bottom *ngIf="isBtnExcluirImg == true">
-      <button ion-fab (click)="removeImage()">
-          <ion-icon name="md-trash"></ion-icon>
-      </button>        
+    <button ion-fab (click)="removeImage()">
+      <ion-icon name="md-trash"></ion-icon>
+    </button>
   </ion-fab>
 </ion-content>

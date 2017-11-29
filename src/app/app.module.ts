@@ -1,3 +1,5 @@
+import { MeusCuponsPage } from './../pages/meus-cupons/meus-cupons';
+import { VitrinePublicacaoPage } from './../pages/vitrine-publicacao/vitrine-publicacao';
 import { VitrineCrudPage } from './../pages/vitrine-crud/vitrine-crud';
 import { MinhasPublicacoesPage } from './../pages/minhas-publicacoes/minhas-publicacoes';
 import { MeusMarcadosPage } from './../pages/meus_marcados/meus-marcados';
@@ -95,7 +97,8 @@ export const firebaseConfig = {
     MeusMarcadosPage,  
     AutoresizeDirective,
     MinhasPublicacoesPage,
-    VitrineCrudPage
+    VitrineCrudPage,
+    MeusCuponsPage
   ],
   imports: [
     BrowserModule,
@@ -138,7 +141,8 @@ export const firebaseConfig = {
     ProfilePage,
     MeusMarcadosPage,
     MinhasPublicacoesPage,
-    VitrineCrudPage
+    VitrineCrudPage,
+    MeusCuponsPage
   ],
   providers: [APP_PROVIDERS,
     {provide: LOCALE_ID, useValue: 'pt-PT'}]

@@ -1,6 +1,6 @@
 import { SlideVO } from './../../model/slideVO';
 import { Component } from '@angular/core';
-import { NavController, NavParams, ModalController, Events, ViewController } from 'ionic-angular';
+import { NavController, NavParams,  Events, ViewController } from 'ionic-angular';
 import { ImageViewerController } from 'ionic-img-viewer';
 import { ViewChild } from '@angular/core';
 import { Slides } from 'ionic-angular';
@@ -22,7 +22,6 @@ export class AnuncioFullPage {
   constructor(public navCtrl: NavController,
     public params: NavParams,
     private imageViewerCtrl: ImageViewerController,
-    private modalCtrl: ModalController,
     private events: Events,
     private viewCtrl: ViewController) {
 
@@ -47,6 +46,10 @@ export class AnuncioFullPage {
   removeImage() {
     this.viewCtrl.dismiss();
     this.events.publish("excluirImagem:true", (this.objSlide.getActiveIndex()));
+  }
+
+  close() {
+    this.viewCtrl.dismiss();
   }
 
 }

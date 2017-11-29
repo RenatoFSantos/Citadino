@@ -1,3 +1,5 @@
+import { CupomEmpresaVO } from './../../model/cupomEmpresaVO';
+import { CupomVO } from './../../model/cupomVO';
 import { EmpresaVO } from './../../model/empresaVO';
 import { CtdFuncoes } from './../../shared/ctdFuncoes';
 import { UsuarioVO } from './../../model/usuarioVO';
@@ -11,9 +13,9 @@ export class MappingsService {
     constructor() { }
 
     getVitrines(snapshot: any): Array<VitrineVO> {
-        let vitrines: Array<VitrineVO> = [];        
+        let vitrines: Array<VitrineVO> = [];
 
-        if (snapshot.val() != null) {            
+        if (snapshot.val() != null) {
 
             snapshot.forEach(element => {
 
@@ -275,5 +277,40 @@ export class MappingsService {
         }
         return result;
     }
+
+    getCupom(snapCupo: any): CupomVO {
+        var cupomEmpresa: CupomEmpresaVO = null;
+
+        if (snapCupo.cupoEmpresa != null) {
+            cupomEmpresa = new CupomEmpresaVO();
+            cupomEmpresa.empr_sq_id = snapCupo.cupoEmpresa.empr_sq_id;
+            cupomEmpresa.empr_nm_fantasia = snapCupo.cupoEmpresa.empr_nm_fantasia;
+            cupomEmpresa.empr_tx_endereco = snapCupo.cupoEmpresa.empr_tx_endereco;
+            cupomEmpresa.empr_tx_bairro = snapCupo.cupoEmpresa.empr_tx_bairro;
+            cupomEmpresa.empr_tx_cidade = snapCupo.cupoEmpresa.empr_tx_cidade;
+            cupomEmpresa.empr_tx_telefone_1 = snapCupo.cupoEmpresa.empr_tx_telefone_1;
+        }
+
+        let cupom: CupomVO = {
+
+            cupo_sq_id: snapCupo.cupo_sq_id,
+            cupo_tx_desconto: snapCupo.cupo_tx_desconto,
+            cupo_tx_urlimagem: snapCupo.cupo_tx_urlimagem,
+            cupo_tx_regulamento: snapCupo.cupo_tx_regulamento,
+            cupo_tx_titulo: snapCupo.cupo_tx_titulo,
+            cupo_tx_descricao: snapCupo.cupo_tx_descricao,
+            cupo_nr_vlatual: snapCupo.cupo_nr_vlatual,
+            cupo_nr_vlcomdesconto: snapCupo.cupo_nr_vlcomdesconto,
+            cupo_dt_validade: snapCupo.cupo_dt_validade,
+            tipoCupom: snapCupo.tipoCupom,
+            cupo_nr_qtdecupom: snapCupo.cupo_nr_qtdecupom,
+            cupo_nr_qtdedisponivel: snapCupo.cupo_nr_qtdedisponivel,
+            cupoEmpresa: cupomEmpresa
+        }
+
+        return cupom;
+
+    }
+
 
 }

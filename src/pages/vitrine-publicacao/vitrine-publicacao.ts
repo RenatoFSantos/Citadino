@@ -1,6 +1,3 @@
-import { VitrinePromocaoPage } from './../vitrine-promocao/vitrine-promocao';
-import { VitrinePublicacaoPage } from './../vitrine-publicacao/vitrine-publicacao';
-
 import { MeusMarcadosService } from './../../providers/service/meus_marcados-service';
 import { SlideVO } from './../../model/slideVO';
 import { UsuarioService } from './../../providers/service/usuario-service';
@@ -18,15 +15,14 @@ import { NetworkService } from './../../providers/service/network-service';
 import { VitrineVO } from './../../model/vitrineVO';
 import { VitrineService } from './../../providers/service/vitrine-service';
 import { Component, OnInit } from '@angular/core';
-import { NavController, NavParams, AlertController, Events, LoadingController, ToastController } from 'ionic-angular';
-
+import { NavController, NavParams, AlertController, Events, LoadingController, ToastController, ModalController } from 'ionic-angular';
 
 @Component({
-  selector: 'page-vitrine',
-  templateUrl: 'vitrine.html'
+  selector: 'page-vitrine-publicacao',
+  templateUrl: 'vitrine-publicacao.html',
 })
+export class VitrinePublicacaoPage {
 
-export class VitrinePage implements OnInit {
 
   public seqMunicipio: string = "-KoJyCiR1SOOUrRGimAS";
   private startPk: string = "";
@@ -36,8 +32,6 @@ export class VitrinePage implements OnInit {
   private loading: boolean = false;
   private loadCtrl: any;
   private toastAlert: any;
-  tab1Root: any = VitrinePublicacaoPage;
-  tab2Root: any = VitrinePromocaoPage;
 
   private vitrines: Array<VitrineVO> = [];
   private newVitrines: Array<VitrineVO> = [];
@@ -57,7 +51,8 @@ export class VitrinePage implements OnInit {
     private emprSrv: EmpresaService,
     private smartSrv: SmartSiteService,
     private meusMarcadosSrv: MeusMarcadosService,
-    private usuaSrv: UsuarioService) {
+    private usuaSrv: UsuarioService,
+    public modalCtrl: ModalController) {
 
     this.loadVitrines();
 
@@ -348,7 +343,9 @@ export class VitrinePage implements OnInit {
   }
 
   private openSlideNoticia(vitrine: VitrineVO): void {
-    this.navCtrl.push(AnuncioFullPage, { slideParam: this.retornaLisSlide(vitrine), isExcluirImagem: false });
+    // this.navCtrl.push(AnuncioFullPage, { slideParam: this.retornaLisSlide(vitrine), isExcluirImagem: false });
+    let profileModal = this.modalCtrl.create(AnuncioFullPage, { slideParam: this.retornaLisSlide(vitrine), isExcluirImagem: false });
+    profileModal.present();
   }
 
   public openNoticia(vitrine: VitrineVO) {
@@ -562,6 +559,4 @@ export class VitrinePage implements OnInit {
       }
     });
   }
-
 }
-
