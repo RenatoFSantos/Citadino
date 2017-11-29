@@ -29,7 +29,6 @@ export class MinhasPublicacoesPage {
   private vitrines: any = [];
   private usuario: any;
   private toastAlert: any;
-  private loadCtrl: any;
 
   constructor(private minhasPublicSrv: MinhasPublicacoesService,
     private usuaSrv: UsuarioService,
@@ -69,11 +68,11 @@ export class MinhasPublicacoesPage {
   private carregaMinhaVitrine() {
     let self = this;
 
-    self.loadCtrl = this.loadingCtrl.create({
+    var loadCtrl = this.loadingCtrl.create({
       spinner: 'circles'
     });
 
-    self.loadCtrl.present();
+    loadCtrl.present();
 
     this.minhasPublicSrv.getMinhasPublicacoesRef().once("value").then((snapShot) => {
       if (snapShot.exists()) {
@@ -84,15 +83,19 @@ export class MinhasPublicacoesPage {
               let newVitrine: VitrineVO = self.mapSrv.getVitrine(element.val(), pkVitrine);
               self.itemsService.addItemToStart(self.vitrines, newVitrine);
             });
-            self.loadCtrl.dismiss();
+            loadCtrl.dismiss();
+          }).catch((error) => {
+            loadCtrl.dismiss();
           });
         // this.minhasPublicSrv.getMinhasPublicacoesPorUsuario(this.usuario.uid)
         //   .on('child_added', this.onPublicacaoAdded);
         // self.loadCtrl.dismiss();
       }
       else {
-        self.loadCtrl.dismiss();
+        loadCtrl.dismiss();
       }
+    }).catch((error) => {
+      loadCtrl.dismiss();
     });
   }
 
