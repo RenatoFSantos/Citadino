@@ -32,6 +32,7 @@ export class UsuarioSqlService {
     let self = this;
     let connection: any;
 
+    console.log("Plataforma " + self.plt);
     var promise = new Promise(function (resolve, reject) {
       if (self.plt.is('ios')) {
         this.sqlSrv.createDataBaseIos().then((db: SQLiteObject) => {
