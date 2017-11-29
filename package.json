@@ -37,8 +37,6 @@
     "angularfire2": "^4.0.0-rc.1",
     "call-number": "^1.0.1",
     "chart.js": "^2.7.1",
-    "cordova-android": "~6.3.0",
-    "cordova-ios": "^4.3.1",
     "cordova-plugin-background-mode": "^0.7.2",
     "cordova-plugin-camera": "^2.4.1",
     "cordova-plugin-compat": "^1.2.0",
@@ -85,9 +83,6 @@
       "mx.ferreyra.callnumber": {},
       "phonegap-plugin-barcodescanner": {}
     },
-    "platforms": [
-      "ios",
-      "android"
-    ]
+    "platforms": []
   }
 }
