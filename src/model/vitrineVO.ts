@@ -14,6 +14,7 @@ export class VitrineVO {
     public anun_tx_urlslide1: string = "";
     public anun_tx_urlslide2: string = "";
     public anun_tx_urlslide3: string = "";
+    public anun_tx_urlslide4: string = "";
     public anun_nr_curtidas: number = 0;
     public anun_nr_salvos: number = 0;
     public anun_nr_visitas: number = 0;

@@ -505,6 +505,14 @@ export class VitrinePublicacaoPage {
       slides.push(slide);
     }
 
+    if (vitrine.anun_tx_urlslide4 != null && vitrine.anun_tx_urlslide4 != "") {
+      let slide: SlideVO = new SlideVO();
+      slide.title = "";
+      slide.description = "";
+      slide.imageUrl = vitrine.anun_tx_urlslide4;
+      slides.push(slide);
+    }
+
     return slides;
   }
 

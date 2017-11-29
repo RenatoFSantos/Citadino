@@ -102,7 +102,8 @@ export class VitrineCrudPage {
       'anun_tx_texto': ['',],
       'anun_tx_urlslide1': ['',],
       'anun_tx_urlslide2': ['',],
-      'anun_tx_urlslide3': ['',]
+      'anun_tx_urlslide3': ['',],
+      'anun_tx_urlslide4': ['',]
     });
 
     this.adicionaImagemPadrao();
@@ -224,6 +225,12 @@ export class VitrineCrudPage {
         self.vitrine.anun_tx_urlslide1 = imgs[0];
         self.vitrine.anun_tx_urlslide2 = imgs[1];
         self.vitrine.anun_tx_urlslide3 = imgs[2];
+      }else if (imgs.length == 4) {
+        self.vitrine.anun_tx_urlbanner = imgs[0];
+        self.vitrine.anun_tx_urlslide1 = imgs[0];
+        self.vitrine.anun_tx_urlslide2 = imgs[1];
+        self.vitrine.anun_tx_urlslide3 = imgs[2];
+        self.vitrine.anun_tx_urlslide4 = imgs[3];
       }
 
       self.vtSrv.salvarWithUid(vitrineId, self.seqMunicipio, self.vitrine).then(() => {
@@ -257,6 +264,13 @@ export class VitrineCrudPage {
         self.vitrine.anun_tx_urlslide1 = imgs[0];
         self.vitrine.anun_tx_urlslide2 = imgs[1];
         self.vitrine.anun_tx_urlslide3 = imgs[2];
+      }
+      else if (imgs.length == 4) {
+        self.vitrine.anun_tx_urlbanner = imgs[0];
+        self.vitrine.anun_tx_urlslide1 = imgs[0];
+        self.vitrine.anun_tx_urlslide2 = imgs[1];
+        self.vitrine.anun_tx_urlslide3 = imgs[2];
+        self.vitrine.anun_tx_urlslide4 = imgs[3];
       }
       self.mnPublSrv.salvar(self.usuaKey, vitrineId, self.vitrine).then(() => {
         resolve(self);
@@ -356,7 +370,7 @@ export class VitrineCrudPage {
         self.imagens.push(self.adicionarImagem("data:image/jpeg;base64," + imageURI));
         self.ordenaImagens();
 
-        if (self.imagens.length > 3) {
+        if (self.imagens.length > 4) {
           self.itemsService.removeItems(self.imagens, self.imagens[self.imagens.length - 1]);
         }
         this.backSrv.disable();
@@ -425,7 +439,7 @@ export class VitrineCrudPage {
         self.itemsService.removeItems(self.imagens, self.imagens[result]);
 
 
-        if (self.imagens.length < 3) {
+        if (self.imagens.length < 4) {
 
           if (self.itemsService.findElement(self.imagens, self.imagemPadrao) == null) {
             this.adicionaImagemPadrao();

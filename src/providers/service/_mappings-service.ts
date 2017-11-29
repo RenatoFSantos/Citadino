@@ -35,6 +35,7 @@ export class MappingsService {
                 vitrine.anun_tx_urlslide1 = element.val().anun_tx_urlslide1;
                 vitrine.anun_tx_urlslide2 = element.val().anun_tx_urlslide2;
                 vitrine.anun_tx_urlslide3 = element.val().anun_tx_urlslide3;
+                vitrine.anun_tx_urlslide4 = element.val().anun_tx_urlslide4;
                 vitrine.anun_nr_curtidas = element.val().anun_nr_curtidas;
                 vitrine.anun_nr_salvos = element.val().anun_nr_salvos;
                 vitrine.anun_nr_visitas = element.val().anun_nr_visitas,
@@ -73,6 +74,7 @@ export class MappingsService {
             anun_tx_urlslide1: snapshot.anun_tx_urlslide1,
             anun_tx_urlslide2: snapshot.anun_tx_urlslide2,
             anun_tx_urlslide3: snapshot.anun_tx_urlslide3,
+            anun_tx_urlslide4: snapshot.anun_tx_urlslide4,
             anun_nr_curtidas: snapshot.anun_nr_curtidas,
             anun_nr_salvos: snapshot.anun_nr_salvos,
             anun_nr_visitas: snapshot.anun_nr_visitas,
@@ -108,6 +110,7 @@ export class MappingsService {
                 anun_tx_urlslide1: vitrine.anun_tx_urlslide1,
                 anun_tx_urlslide2: vitrine.anun_tx_urlslide2,
                 anun_tx_urlslide3: vitrine.anun_tx_urlslide3,
+                anun_tx_urlslide4: vitrine.anun_tx_urlslide4,
                 anun_nr_curtidas: vitrine.anun_nr_curtidas,
                 anun_nr_salvos: vitrine.anun_nr_salvos,
                 anun_nr_visitas: vitrine.anun_nr_visitas,

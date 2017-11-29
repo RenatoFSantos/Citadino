@@ -41,14 +41,14 @@ page-vitrine-crud {
         }
     
         ion-avatar img{          
-            width:96px !important; 
-            height:96px !important; 
+            width:90px !important; 
+            height:90px !important; 
             border: 1px solid #ffffff !important;
         }
         }
     
         ion-scroll[scroll-avatar]{
-        height: 97px;
+        height: 91px;
         }
     
         /* Hide ion-content scrollbar */
@@ -57,5 +57,11 @@ page-vitrine-crud {
         margin: 0px 0px 0px 0px;
         }
     
+        ion-fab[bottom] {
+            bottom: 2px !important;
+        }
+        ion-fab[right] {
+            right: 10px !important;
+        }
     }
     
