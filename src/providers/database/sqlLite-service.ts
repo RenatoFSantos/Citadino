@@ -14,7 +14,7 @@ export class SqlLiteService {
         console.log("Db IOS");
         return dbCreate.create({
             name: 'citadinodb.db',
-            iosDatabaseLocation: 'Library/LocalDatabase'
+            iosDatabaseLocation: 'Library'
         });
     }
 
