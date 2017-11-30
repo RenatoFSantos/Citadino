@@ -159,9 +159,9 @@ export class MeusCuponsPage {
       }
       if (barcodeData.text != null) {
         var resultScan: string[] = barcodeData.text.split(",");
-
-        if (resultScan[0] == this.cnpj) {
-          self.salvarCupom(resultScan[1]).then((result) => {
+        
+        if (resultScan[0].trim() == this.cnpj) {
+          self.salvarCupom(resultScan[1].trim()).then((result) => {
             loader.dismiss();
           })
             .catch(() => {

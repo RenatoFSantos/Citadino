@@ -98,8 +98,8 @@ export class VitrineCrudPage {
     this.imagemPadrao.path = "assets/img/camera.png";
 
     this.frmVitrineCrud = this.frmBuilder.group({
-      'anun_tx_titulo': ['',],
-      'anun_tx_texto': ['',],
+      'anun_tx_titulo': ['',Validators.compose([Validators.required, Validators.maxLength(50)])],
+      'anun_tx_texto': ['',Validators.compose([Validators.required, Validators.maxLength(3000)])],
       'anun_tx_urlslide1': ['',],
       'anun_tx_urlslide2': ['',],
       'anun_tx_urlslide3': ['',],
@@ -110,9 +110,13 @@ export class VitrineCrudPage {
   }
 
 
-  public publicarVitrine() {
+  public publicarVitrine(formProfile: any) {
 
     let self = this;
+
+    if (self.frmVitrineCrud.valid) {
+
+
     var vitrineId = self.vtSrv.getNewUidVitrine(self.seqMunicipio);
     var dtAtual = CtdFuncoes.convertDateToStr(new Date(), enums.DateFormat.enUS);
     var nmEmpresa = self.vitrine.empr_nm_fantasia;
@@ -125,7 +129,7 @@ export class VitrineCrudPage {
     self.vitrine.vitr_sq_id = vitrineId;
     self.vitrine.usua_sq_id = self.usuaKey;
 
-    let loader = self.loadingCtrl.create({
+    var loader = self.loadingCtrl.create({
       content: 'Aguarde...',
       dismissOnPageChange: true
     });
@@ -138,8 +142,7 @@ export class VitrineCrudPage {
         self.salvarPublicacao(self).then(() => {
           loader.dismiss();
           self.createAlert("Publicação criada com sucesso.");
-          self.events.publish("carregaPublicacao:true");
-          loader.dismiss();
+          self.events.publish("carregaPublicacao:true");         
           self.navCtrl.pop();
         })
         .catch(err=>{
@@ -151,21 +154,7 @@ export class VitrineCrudPage {
         loader.dismiss();
         self.createAlert("Não foi possível criar sua publicação.");
       });
-
-
-    // this.carregaListaImagens(self, "images/vitrine/")
-    //   .then(this.salvarImages)
-    //   .then(() => {
-    //     this.salvarDadosVitrine(self).then(() => {
-    //       this.carregaListaImagens(self, "images/publicacoes/")
-    //       .then(this.salvarImages)
-    //       .then(() => {
-    //         this.salvarPublicacao(self).then(() => {              
-    //           this.navCtrl.pop();
-    //         });
-    //       });
-    //     });
-    //   });
+    }
   }
 
   private carregaListaImagens = function (self: any, pathImagem: string) {
