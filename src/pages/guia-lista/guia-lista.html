@@ -1,7 +1,8 @@
-<ion-header>    
+<ion-header>
+    <ion-navbar color="ctd-navbar">
         <ctd-header></ctd-header>
+    </ion-navbar>
 </ion-header>
-
 <ion-content>
     <ion-item-group>
         <ion-item-divider color="ctd-subtitulo">{{categoriaNome}}</ion-item-divider>
@@ -13,9 +14,10 @@
                 </ion-avatar>
                 <h2>{{item.empr_nm_razaosocial}}</h2>
                 <div *ngIf="item.empr_tx_subcategoria != '' && item.empr_tx_subcategoria != null">
-                <h3>({{item.empr_tx_subcategoria}})</h3>
+                    <h3>({{item.empr_tx_subcategoria}})</h3>
                 </div>
-                <p>{{item.empr_tx_endereco}}&nbsp;-&nbsp;{{item.empr_tx_cidade}}<br>{{item.empr_tx_telefone_1}}</p>
+                <p>{{item.empr_tx_endereco}}&nbsp;-&nbsp;{{item.empr_tx_cidade}}
+                    <br>{{item.empr_tx_telefone_1}}</p>
             </div>
         </ion-item>
     </ion-item-group>
