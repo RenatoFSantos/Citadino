@@ -21,9 +21,8 @@ import { NavController, NavParams, AlertController, Events, LoadingController, T
   selector: 'page-vitrine-publicacao',
   templateUrl: 'vitrine-publicacao.html',
 })
+
 export class VitrinePublicacaoPage {
-
-
   public seqMunicipio: string = "-KoJyCiR1SOOUrRGimAS";
   private startPk: string = "";
   private limitPage: number = 10;

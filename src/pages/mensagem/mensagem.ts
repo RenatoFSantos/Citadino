@@ -115,10 +115,7 @@ export class MensagemPage {
             if (self.usua_tokens != null && self.usua_tokens.length > 0) {
               self.notifSrv.sendUidMensagem(self.usua_tokens, CtdFuncoes.ellipsis(chat.usua_nm_usuario_from, 20), CtdFuncoes.ellipsis(chat.mens_txt_mensagem, 50), enums.eventTypePush.mensagem);
             }
-          })
-            .catch((error) => {
-              console.log(error);
-            });
+          });
         });
     }
   };

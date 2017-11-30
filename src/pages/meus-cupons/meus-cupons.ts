@@ -11,7 +11,6 @@ import { Component } from '@angular/core';
 import { IonicPage, NavController, NavParams, LoadingController, ToastController } from 'ionic-angular';
 import { BarcodeScanner } from "@ionic-native/barcode-scanner";
 import { usuarioCupomVO } from '../../model/usuarioCupomVO';
-import { Promise } from 'firebase/app';
 import { PromocaoService } from '../../providers/service/promocao-service';
 
 @Component({

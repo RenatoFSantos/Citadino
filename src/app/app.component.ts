@@ -26,12 +26,10 @@ import {
   Platform, MenuController, Nav, ModalController, Events,
   ToastController, App, LoadingController, AlertController
 } from 'ionic-angular';
-import { SplashScreen, } from '@ionic-native/splash-screen';
+import { SplashScreen } from '@ionic-native/splash-screen';
 import { StatusBar } from '@ionic-native/status-bar';
 import * as enums from './../model/dominio/ctdEnum';
 import { OneSignal } from '@ionic-native/onesignal';
-
-
 
 declare var window: any;
 
