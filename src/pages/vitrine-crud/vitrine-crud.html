@@ -4,7 +4,7 @@
     </ion-navbar>
   </ion-header>
   <ion-content>
-    <form [formGroup]="frmVitrineCrud">
+    <form [formGroup]="frmVitrineCrud" (ngSubmit)="publicarVitrine(frmVitrineCrud.value)">
       <ion-grid>
         <ion-row>
           <ion-col col-12>
@@ -19,7 +19,6 @@
           <ion-col col-12>
             <ion-item>
               <ion-label stacked class="labelProfile">Conteúdo</ion-label>
-              <!-- <ion-textarea rows="1" fz-elastic [(ngModel)]="vitrine.anun_tx_texto" formControlName="anun_tx_texto"></ion-textarea> -->
               <ion-textarea maxlength="3000" autoresize="150" [(ngModel)]="vitrine.anun_tx_texto" formControlName="anun_tx_texto" autocomplete="true"
                 spellcheck="true"></ion-textarea>
             </ion-item>
@@ -38,7 +37,7 @@
         <ion-row></ion-row>
         <ion-row>
           <ion-col>
-            <button ion-button full large (click)="publicarVitrine()">Salvar</button>
+            <button ion-button full large  [disabled]="!frmVitrineCrud.valid" >Salvar</button>
           </ion-col>
         </ion-row>
       </ion-grid>
