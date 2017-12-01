@@ -101,18 +101,21 @@ page-vitrine {
     .scroll-content {        
         margin-top: 55px !important;
         margin-bottom: 56px !important;
+        // overflow-y: scroll !important;
         transform:none !important;
     }
 
     .has-refresher> 
       .scroll-content {     
         border-top: 0px !important;
+        // transform:translateY(80px) !important;
       }
 
-      //============
-      .tabs-md .tabbar {
-        background: #f8f8f8;
-        height: 35px;
-    }
+      //   //============
+      // versao promocao
+    //   .tabs-md .tabbar {
+    //     background: #f8f8f8;
+    //     height: 35px;
+    // }
 
 }
