@@ -1,3 +1,4 @@
+import { VitrineService } from './../../../providers/service/vitrine-service';
 import { MinhasPublicacoesPage } from './../../../pages/minhas-publicacoes/minhas-publicacoes';
 import { MeusMarcadosService } from './../../../providers/service/meus_marcados-service';
 import { SlideVO } from './../../../model/slideVO';
@@ -40,10 +41,12 @@ export class CtdButtonsComponent {
   @Input()
   public isBtnRepublicar: Boolean = false;
 
+  @Input()
+  public isBtnNrVisita: Boolean = false;
 
   private usuarioLogado: string;
   private toastAlert: any;
-  private confirmPublic:any;
+  private confirmPublic: any;
 
   constructor(private emprSrv: EmpresaService,
     private smartSrv: SmartSiteService,
@@ -53,15 +56,17 @@ export class CtdButtonsComponent {
     private usuaSrv: UsuarioService,
     private meusMarcadosSrv: MeusMarcadosService,
     private events: Events,
-    private alertCtrl: AlertController) {
+    private alertCtrl: AlertController,
+    private vitrineSrv: VitrineService) {
 
-    this.vitrine = null;  
+    this.vitrine = null;
     this.usuarioLogado = this.usuaSrv.getLoggedInUser().uid;
   }
 
   openSlideNoticia(opcao: number, param: any): void {
     switch (opcao) {
       case 1:
+        this.events.publish("atualizarNrVisita:true", (this.vitrine));
         this.navCtrl.push(AnuncioFullPage, { slideParam: this.retornaLisSlide(param), isExcluirImagem: false });
         break;
       case 2:
@@ -162,27 +167,27 @@ export class CtdButtonsComponent {
 
 
   public showPublicar() {
-    
-      this.confirmPublic = this.alertCtrl.create({
-          title: "Publicação",
-          message: "Confirma a publicação ?",
-          buttons: [{
-            text: "Sim",
-            handler: () => {
-              this.publicarVitrine();
-            }
-          },
-          {
-            text: "Nao",
-            handler: () => {
-              // confirm.dismiss();
-            }
-          }
-          ]
-        })
 
-        this.confirmPublic.present();
+    this.confirmPublic = this.alertCtrl.create({
+      title: "Publicação",
+      message: "Confirma a publicação ?",
+      buttons: [{
+        text: "Sim",
+        handler: () => {
+          this.publicarVitrine();
+        }
+      },
+      {
+        text: "Nao",
+        handler: () => {
+          // confirm.dismiss();
+        }
       }
+      ]
+    })
+
+    this.confirmPublic.present();
+  }
 
   private excluirPublicacao() {
     if (this.navCtrl.getActive().instance instanceof MinhasPublicacoesPage) {
@@ -265,6 +270,7 @@ export class CtdButtonsComponent {
     return slides;
   }
 
+
   public exibirBtnCrudVitrine(): Boolean {
 
     return this.usuarioVitrine == this.usuarioLogado;
@@ -273,6 +279,10 @@ export class CtdButtonsComponent {
   public exibirBtnRepublicar(): Boolean {
 
     return this.isBtnRepublicar == true;
+  }
+
+  public exibirBtnVisitas(): Boolean {
+    return this.isBtnNrVisita;
   }
 
 }

@@ -26,5 +26,6 @@ export class VitrineVO {
     public agen_sq_id: string = "";
     public anun_in_smartsite:boolean = false;   
     public vitr_in_buttonmore:boolean = false;
-    public usua_sq_id:string = ""; // novo    
+    public usua_sq_id:string = ""; // novo   
+    public anun_nr_imagens:string = ""; //novo 
 }

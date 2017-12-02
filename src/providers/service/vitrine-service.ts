@@ -60,4 +60,12 @@ export class VitrineService {
     return this.vitrineRef.child(municipioKey).child(vitrineKey).once('value');
   }
 
+  public atualizarNrVisita(vitrine: VitrineVO) {
+    var nrVisita = this.vitrineRef.child(vitrine.muni_sq_id).child(vitrine.vitr_sq_id).child("anun_nr_visitas");
+
+    nrVisita.transaction(function (currentRank) {
+      return currentRank + 1;
+    });
+  }
+
 }

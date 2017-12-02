@@ -1,3 +1,4 @@
+import { MinhasPublicacoesService } from './../../providers/service/minhas-publicacoes';
 import { VitrinePromocaoPage } from './../vitrine-promocao/vitrine-promocao';
 import { VitrinePublicacaoPage } from './../vitrine-publicacao/vitrine-publicacao';
 
@@ -57,39 +58,11 @@ export class VitrinePage implements OnInit {
     private emprSrv: EmpresaService,
     private smartSrv: SmartSiteService,
     private meusMarcadosSrv: MeusMarcadosService,
-    private usuaSrv: UsuarioService) {
+    private usuaSrv: UsuarioService,
+    private minhaPubSrv: MinhasPublicacoesService) {
 
     this.loadVitrines();
 
-    // this.loadVitrines();
-
-    // if (this.globalVar.getIsFirebaseConnected()) {
-
-    //   this.loadCtrl = this.loadingCtrl.create({
-    //     spinner: 'circles'
-    //   });
-    //   this.loadCtrl.present();
-
-    //   this.vitrineSrv.getVitrineRef().once("value").then((snapShot) => {
-    //     if (snapShot.exists()) {
-    //       this.vitrineSrv.getVitrineRef().child(this.seqMunicipio).on('child_added', this.onVitrineAdded);
-
-    //       this.vitrineSrv.getVitrineRef().child(this.seqMunicipio).on('child_removed', this.onVitrineRemove);
-
-    //       this.vitrineSrv.getVitrineRef().child(this.seqMunicipio).on('child_changed', this.onVitrineChange);
-
-    //       this.loadVitrines();
-    //       return true;
-    //     }
-    //     else {
-    //       this.loadCtrl.dismiss();
-    //       return false;
-    //     }
-    //   });
-
-    // } else {
-    //   this.createAlert("Ops!!! Não estou conseguindo carregar a vitrine. Tente mais tarde!");
-    // }
   }
 
   loadVitrines() {
@@ -179,12 +152,25 @@ export class VitrinePage implements OnInit {
     );
 
     if (!exist) {
-      let newVitrine: VitrineVO = self.mappingsService.getVitrine(childSnapshot.val(), pkVitrine);
-      this.newVitrines.push(newVitrine);
-      this.events.publish('thread:created', this.newVitrines);
 
-      if (self.vitrines != null && self.vitrines.length > 0) {
-        self.itemsService.removeItems(self.vitrines, (v: any) => v.vitr_sq_id == pkVitrine);
+      let oldVitrine: any = self.itemsService.findElement(self.vitrines, (v: any) => v.vitr_sq_id == pkVitrine);
+
+      let newVitrine: VitrineVO = self.mappingsService.getVitrine(childSnapshot.val(), pkVitrine);
+
+      if (oldVitrine.anun_nr_visitas != newVitrine.anun_nr_visitas) {
+        oldVitrine = this.mappingsService.copyVitrine(oldVitrine, newVitrine);
+
+        if (newVitrine.usua_sq_id != "") {
+          this.minhaPubSrv.atualizarNrVisita(newVitrine.usua_sq_id, newVitrine.vitr_sq_id, newVitrine.anun_nr_visitas);
+        }
+      }
+      else {
+        this.newVitrines.push(newVitrine);
+        this.events.publish('thread:created', this.newVitrines);
+
+        if (self.vitrines != null && self.vitrines.length > 0) {
+          self.itemsService.removeItems(self.vitrines, (v: any) => v.vitr_sq_id == pkVitrine);
+        }
       }
     }
   }
@@ -193,12 +179,15 @@ export class VitrinePage implements OnInit {
     this.marcarVitrineEvent();
     this.desmarcarVitrineEvent();
     this.bancoDadosOnlineEvent();
+    this.atualizarNrVisitaEvent();
   }
 
   ionViewWillUnload() {
     // this.events.subscribe('excluirVitrine:true', null);
-    this.events.subscribe('marcarVitrine:true', null);
-    this.events.subscribe('desmarcarVitrine:true', null);
+    this.events.unsubscribe('marcarVitrine:true', null);
+    this.events.unsubscribe('desmarcarVitrine:true', null);
+    this.events.unsubscribe('atualizarNrVisita:true', null);
+
   }
 
   ngOnInit() { }
@@ -304,6 +293,7 @@ export class VitrinePage implements OnInit {
 
 
   openPage(vitrine: VitrineVO) {
+    this.vitrineSrv.atualizarNrVisita(vitrine);
     if (vitrine.anun_tx_urlslide1 != null && vitrine.anun_tx_urlslide1 != "") {
       this.openSlideNoticia(vitrine);
     }
@@ -571,5 +561,11 @@ export class VitrinePage implements OnInit {
     });
   }
 
+  public atualizarNrVisitaEvent() {
+    let self = this;
+    this.events.subscribe('atualizarNrVisita:true', (vitrine: VitrineVO) => {
+      this.vitrineSrv.atualizarNrVisita(vitrine);
+    });
+  }
 }
 

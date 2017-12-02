@@ -1,12 +1,16 @@
 <!-- <button ion-button icon-only clear color="ctd-button">
     <ion-icon name="star"></ion-icon>
-</button>
-<button ion-button icon-only clear color="ctd-button">
-    <ion-icon name="heart"></ion-icon>
-    <ion-badge item-right color="ctd-button">60</ion-badge>
 </button> -->
 
+<!-- <button ion-button icon-only clear color="ctd-button"> -->
+<!-- <ion-icon name="heart"></ion-icon> -->
+<!-- <ion-badge item-right color="ctd-button">60</ion-badge> -->
+<!-- </button> -->
 
+
+<button ion-button icon-only clear class="btnBotaoAvancar" *ngIf="exibirBtnVisitas() == true">
+    <ion-badge class="ctd_visita" item-right color="ctd-button">{{vitrine.anun_nr_visitas}}</ion-badge>
+</button>
 
 <button ion-button icon-only clear class="btnBotaoAvancar" *ngIf="exibirBtnRepublicar() == true" (click)="showPublicar()">
     <ion-icon name="ios-redo"></ion-icon>
@@ -16,14 +20,16 @@
     <ion-icon name="md-trash"></ion-icon>
 </button>
 
-<button ion-button icon-only clear class="btnBotaoAvancar" 
-*ngIf="exibirBtnCrudVitrine() == false" [ngClass]="{'salvar': vitrineSalva == 1}" (click)="marcarVitrine()">
+<button ion-button icon-only clear class="btnBotaoAvancar" *ngIf="exibirBtnCrudVitrine() == false" [ngClass]="{'salvar': vitrineSalva == 1}"
+    (click)="marcarVitrine()">
     <ion-icon name="md-bookmark"></ion-icon>
 </button>
 
 <button ion-button icon-only clear class="btnBotaoAvancar" *ngIf="urlSlide != ''" (click)="openSlideNoticia(1,vitrine)">
-    <ion-icon name="md-images"></ion-icon>
+    <ion-icon name="md-images">
+            <ion-badge *ngIf="vitrine.anun_nr_imagens != ''" class="ctd_image" item-right id="notifications-badge" color="danger">{{vitrine.anun_nr_imagens}}</ion-badge>
+    </ion-icon>
 </button>
-<button  ion-button icon-only clear class="btnBotaoAvancar" *ngIf="smartSite == true" (click)="openSmartSite()" >
+<button ion-button icon-only clear class="btnBotaoAvancar" *ngIf="smartSite == true" (click)="openSmartSite()">
     <ion-icon name="globe"></ion-icon>
 </button>

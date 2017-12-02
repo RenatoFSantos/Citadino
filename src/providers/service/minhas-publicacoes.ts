@@ -49,4 +49,9 @@ export class MinhasPublicacoesService {
     return this.minhasPublicacoesRef.child(uidUsuario).child(uidVitrine).once('value');
   }
 
+  public atualizarNrVisita(uidUsuario: string, uidVitrine: string, nrVisita: number) {
+    return this.minhasPublicacoesRef.child(uidUsuario).child(uidVitrine).child('anun_nr_visitas')
+      .set(nrVisita);
+  }
+
 }

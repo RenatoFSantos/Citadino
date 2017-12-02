@@ -47,6 +47,7 @@ export class MappingsService {
                 vitrine.agen_sq_id = element.val().agen_sq_id;
                 vitrine.anun_in_smartsite = element.val().anun_in_smartsite;
                 vitrine.usua_sq_id = element.val().usua_sq_id != undefined ? element.val().usua_sq_id : "";
+                vitrine.anun_nr_imagens = element.val().anun_nr_imagens != undefined ? element.val().anun_nr_imagens : ""
 
                 vitrines.push(vitrine);
             });
@@ -85,7 +86,8 @@ export class MappingsService {
             tian_sq_id: snapshot.tian_sq_id,
             agen_sq_id: snapshot.agen_sq_id,
             anun_in_smartsite: snapshot.anun_in_smartsite,
-            usua_sq_id: snapshot.usua_sq_id != undefined ? snapshot.usua_sq_id : ""
+            usua_sq_id: snapshot.usua_sq_id != undefined ? snapshot.usua_sq_id : "",
+            anun_nr_imagens: snapshot.anun_nr_imagens != undefined ? snapshot.anun_nr_imagens : ""
         };
 
         return vitrine;
@@ -121,7 +123,8 @@ export class MappingsService {
                 tian_sq_id: vitrine.tian_sq_id,
                 agen_sq_id: vitrine.agen_sq_id,
                 anun_in_smartsite: vitrine.anun_in_smartsite,
-                usua_sq_id: vitrine.usua_sq_id != undefined ? vitrine.usua_sq_id : ""
+                usua_sq_id: vitrine.usua_sq_id != undefined ? vitrine.usua_sq_id : "",
+                anun_nr_imagens: vitrine.anun_nr_imagens != undefined ? vitrine.anun_nr_imagens : ""
             };
 
         return json;
@@ -310,9 +313,42 @@ export class MappingsService {
             cupo_nr_qtdedisponivel: snapCupo.cupo_nr_qtdedisponivel,
             cupoEmpresa: cupomEmpresa
         }
-
         return cupom;
+    }
 
+    copyVitrine(oldVitrine: any, newVitrine: any):VitrineVO {
+        
+        oldVitrine.vitr_sq_id = oldVitrine.vitr_sq_id;
+        oldVitrine.vitr_dt_agendada = newVitrine.vitr_dt_agendada;
+        oldVitrine.vitr_sq_ordem = newVitrine.vitr_sq_ordem;
+        oldVitrine.anun_sq_id = newVitrine.anun_sq_id;
+        oldVitrine.anun_ds_anuncio = newVitrine.anun_ds_anuncio;
+        oldVitrine.anun_tx_titulo = newVitrine.anun_tx_titulo;
+        oldVitrine.anun_tx_subtitulo = newVitrine.anun_tx_subtitulo;
+        oldVitrine.vitr_in_buttonmore = newVitrine.vitr_in_buttonmore;
+        oldVitrine.anun_tx_texto = newVitrine.anun_tx_texto;
+        oldVitrine.anun_tx_urlavatar = newVitrine.anun_tx_urlavatar;
+        oldVitrine.anun_tx_urlthumbnail = newVitrine.anun_tx_urlthumbnail;
+        oldVitrine.anun_tx_urlbanner =  newVitrine.anun_tx_urlbanner;
+        oldVitrine.anun_tx_urlicone =  newVitrine.anun_tx_urlicone;
+        oldVitrine.anun_tx_urlslide1 = newVitrine.anun_tx_urlslide1;
+        oldVitrine.anun_tx_urlslide2 = newVitrine.anun_tx_urlslide2;
+        oldVitrine.anun_tx_urlslide3 = newVitrine.anun_tx_urlslide3;
+        oldVitrine.anun_tx_urlslide4 = newVitrine.anun_tx_urlslide4;
+        oldVitrine.anun_nr_curtidas = newVitrine.anun_nr_curtidas;
+        oldVitrine.anun_nr_salvos = newVitrine.anun_nr_salvos;
+        oldVitrine.anun_nr_visitas = newVitrine.anun_nr_visitas;
+        oldVitrine.anun_in_status = newVitrine.anun_in_status;
+        oldVitrine.empr_sq_id = newVitrine.empr_sq_id;
+        oldVitrine.empr_nm_fantasia = newVitrine.empr_nm_fantasia;
+        oldVitrine.muni_sq_id = newVitrine.muni_sq_id;
+        oldVitrine.tian_sq_id = newVitrine.tian_sq_id;
+        oldVitrine.agen_sq_id = newVitrine.agen_sq_id;
+        oldVitrine.anun_in_smartsite = newVitrine.anun_in_smartsite;
+        oldVitrine.usua_sq_id = newVitrine.usua_sq_id;
+        oldVitrine.anun_nr_imagens = newVitrine.anun_nr_imagens;
+
+        return oldVitrine;
     }
 
 

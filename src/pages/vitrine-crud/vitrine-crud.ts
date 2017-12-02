@@ -128,6 +128,14 @@ export class VitrineCrudPage {
     self.vitrine.vitr_dt_agendada = "";
     self.vitrine.vitr_sq_id = vitrineId;
     self.vitrine.usua_sq_id = self.usuaKey;
+    
+    if (self.imagens.length != null && self.imagens.length > 0) {
+      var nrImg = self.imagens.length - 1;      
+      self.vitrine.anun_nr_imagens = "+" + nrImg.toString();
+    }
+    else {
+      self.vitrine.anun_nr_imagens = "";
+    }
 
     var loader = self.loadingCtrl.create({
       content: 'Aguarde...',

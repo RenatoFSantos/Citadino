@@ -12,6 +12,44 @@ ctd-buttons {
 
     .btnBotaoAvancar.salvar {
         color:#3111E9 !important;  
-        margin-top: -2px;    
+        margin-top: 0px;     
+    }
+
+    #notifications-badge {
+        background-color: red;
+        position: absolute;
+        top: 2px;
+        right: 0px;
+        border-radius: 100%;
+        height: 22px;
+        width: 22px;
+    }
+
+    [icon-only] ion-icon {
+        margin-top: 10px !important;
+    }
+
+    ion-badge.ctd_image {
+        padding: 2px 4px 2px 4px !important;
+        text-align: center !important;
+        display: inline-block;
+        min-width: 10px !important;
+        font-size:small !important;
+        font-weight: bold !important;
+        line-height: 1.4 !important;
+        white-space: nowrap !important;
+        vertical-align: baseline !important;
+    }
+    
+    ion-badge.ctd_visita {
+        margin-top: 9px !important;
+        padding: 5px 10px 5px 10px !important;
+        text-align: center !important;
+        display: inline-block;
+        min-width: 10px !important;
+        font-weight: bold !important;
+        line-height: 1.4 !important;
+        white-space: nowrap !important;
+        vertical-align: baseline !important;
     }
 }
