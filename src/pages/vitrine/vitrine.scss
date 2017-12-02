@@ -5,7 +5,9 @@ page-vitrine {
     ion-card.ctd-card {
         padding: 0px;
         border-radius: 10px;
-        line-height: 20%;
+        // line-height: 20%;
+        position: relative;
+        // text-align: center;
     }
 
     p {
@@ -72,7 +74,7 @@ page-vitrine {
     }
 
     .ctd-btn-vitrine{
-        height: 30px;
+        height: 40px;
         background-color: rgba(204, 204, 204, 0.59);
         text-align: right !important;
         padding: 1px !important;
@@ -117,5 +119,4 @@ page-vitrine {
     //     background: #f8f8f8;
     //     height: 35px;
     // }
-
 }
