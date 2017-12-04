@@ -7,6 +7,11 @@
 <!-- <ion-badge item-right color="ctd-button">60</ion-badge> -->
 <!-- </button> -->
 
+<button ion-button icon-only clear class="btnBotaoAvancar" [disabled]="desabilitarBtnCurtir" (click)="curtirVitrine()" >
+    <ion-icon name="md-heart-outline">
+            <ion-badge class="ctd_image" item-right id="notifications-badge" color="danger">{{vitrine.anun_nr_curtidas}}</ion-badge>
+    </ion-icon>
+</button>
 
 <button ion-button icon-only clear class="btnBotaoAvancar" *ngIf="exibirBtnVisitas() == true">
     <ion-badge class="ctd_visita" item-right color="ctd-button">{{vitrine.anun_nr_visitas}}</ion-badge>

@@ -56,7 +56,6 @@ export class VitrineService {
   }
 
   public getVitrineByKey(municipioKey: string, vitrineKey: string) {
-
     return this.vitrineRef.child(municipioKey).child(vitrineKey).once('value');
   }
 
@@ -68,4 +67,11 @@ export class VitrineService {
     });
   }
 
+  public curtirVitrien(vitrine: VitrineVO) {
+    var nrVisita = this.vitrineRef.child(vitrine.muni_sq_id).child(vitrine.vitr_sq_id).child("anun_nr_curtidas");
+
+    nrVisita.transaction(function (currentRank) {
+      return currentRank + 1;
+    });
+  }
 }

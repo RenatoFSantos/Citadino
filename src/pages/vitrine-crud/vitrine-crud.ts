@@ -1,3 +1,4 @@
+import { VitrineCurtirService } from './../../providers/service/vitrine-curtir-service';
 import { MinhasPublicacoesService } from './../../providers/service/minhas-publicacoes';
 import { VitrineService } from './../../providers/service/vitrine-service';
 import { CtdFuncoes } from './../../shared/ctdFuncoes';
@@ -48,7 +49,8 @@ export class VitrineCrudPage {
     private events: Events,
     private vtSrv: VitrineService,
     private mnPublSrv: MinhasPublicacoesService,
-    public loadingCtrl: LoadingController) {
+    private loadingCtrl: LoadingController,
+    private vtrCurt:VitrineCurtirService) {
 
     this.criarFormulario();
     this.excluirImagemEvent();
@@ -357,16 +359,6 @@ export class VitrineCrudPage {
     })
       .then(
       imageURI => {
-        // self.toBase64(imageURI).then((base64Img) => {
-        //   self.imagens.push(self.adicionarImagem(base64Img));
-        //   self.ordenaImagens();
-
-        //   if (self.imagens.length > 3) {
-        //     self.itemsService.removeItems(self.imagens, self.imagens[self.imagens.length - 1]);
-        //   }
-
-        //   this.backSrv.disable();
-        // });
         self.imagens.push(self.adicionarImagem("data:image/jpeg;base64," + imageURI));
         self.ordenaImagens();
 

@@ -1,3 +1,4 @@
+import { UsuarioVO } from './../../model/usuarioVO';
 import { MinhasPublicacoesService } from './../../providers/service/minhas-publicacoes';
 import { VitrinePromocaoPage } from './../vitrine-promocao/vitrine-promocao';
 import { VitrinePublicacaoPage } from './../vitrine-publicacao/vitrine-publicacao';
@@ -20,6 +21,7 @@ import { VitrineVO } from './../../model/vitrineVO';
 import { VitrineService } from './../../providers/service/vitrine-service';
 import { Component, OnInit } from '@angular/core';
 import { NavController, NavParams, AlertController, Events, LoadingController, ToastController } from 'ionic-angular';
+import { VitrineCurtirService } from '../../providers/service/vitrine-curtir-service';
 
 
 @Component({
@@ -59,7 +61,8 @@ export class VitrinePage implements OnInit {
     private smartSrv: SmartSiteService,
     private meusMarcadosSrv: MeusMarcadosService,
     private usuaSrv: UsuarioService,
-    private minhaPubSrv: MinhasPublicacoesService) {
+    private minhaPubSrv: MinhasPublicacoesService,
+    private vtrCurtiSrv: VitrineCurtirService) {
 
     this.loadVitrines();
 
@@ -157,11 +160,11 @@ export class VitrinePage implements OnInit {
 
       let newVitrine: VitrineVO = self.mappingsService.getVitrine(childSnapshot.val(), pkVitrine);
 
-      if (oldVitrine.anun_nr_visitas != newVitrine.anun_nr_visitas) {
+      if ((oldVitrine.anun_nr_visitas != newVitrine.anun_nr_visitas) || (oldVitrine.anun_nr_curtidas != newVitrine.anun_nr_curtidas)) {
         oldVitrine = this.mappingsService.copyVitrine(oldVitrine, newVitrine);
 
         if (newVitrine.usua_sq_id != "") {
-          this.minhaPubSrv.atualizarNrVisita(newVitrine.usua_sq_id, newVitrine.vitr_sq_id, newVitrine.anun_nr_visitas);
+          this.minhaPubSrv.atualizarDadosVitrine(newVitrine);
         }
       }
       else {
@@ -180,6 +183,7 @@ export class VitrinePage implements OnInit {
     this.desmarcarVitrineEvent();
     this.bancoDadosOnlineEvent();
     this.atualizarNrVisitaEvent();
+    this.curtirVitrineEvent();
   }
 
   ionViewWillUnload() {
@@ -187,7 +191,7 @@ export class VitrinePage implements OnInit {
     this.events.unsubscribe('marcarVitrine:true', null);
     this.events.unsubscribe('desmarcarVitrine:true', null);
     this.events.unsubscribe('atualizarNrVisita:true', null);
-
+    this.events.unsubscribe('curtirVitrine:true', null);
   }
 
   ngOnInit() { }
@@ -565,6 +569,22 @@ export class VitrinePage implements OnInit {
     let self = this;
     this.events.subscribe('atualizarNrVisita:true', (vitrine: VitrineVO) => {
       this.vitrineSrv.atualizarNrVisita(vitrine);
+    });
+  }
+
+
+  public curtirVitrineEvent() {
+    let self = this;
+    let usuario: UsuarioVO = this.globalVar.usuarioLogado;
+
+    this.events.subscribe('curtirVitrine:true', (vitrine: VitrineVO) => {
+      self.vtrCurtiSrv.getVitrineCurtirByKey(vitrine.vitr_sq_id, usuario.usua_sq_id).then((result) => {
+        if (result.val() == null) {
+          self.vtrCurtiSrv.salvar(vitrine.vitr_sq_id, usuario.usua_sq_id, true).then(() => {
+            self.vitrineSrv.curtirVitrien(vitrine);
+          });
+        }
+      });
     });
   }
 }

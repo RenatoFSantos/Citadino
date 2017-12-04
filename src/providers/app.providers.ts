@@ -1,3 +1,4 @@
+import { VitrineCurtirService } from './service/vitrine-curtir-service';
 import { CupomService } from './service/cupom-service';
 import { UsuarioCupomService } from './service/usuario-cupom-service';
 import { BarcodeScanner } from '@ionic-native/barcode-scanner';
@@ -62,6 +63,6 @@ export const APP_PROVIDERS = [
     BarcodeScanner,
     CupomService,
     UsuarioCupomService,
-    PromocaoService
-    
+    PromocaoService,
+    VitrineCurtirService    
 ];

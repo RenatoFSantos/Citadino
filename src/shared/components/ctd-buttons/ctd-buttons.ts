@@ -1,3 +1,5 @@
+import { UsuarioVO } from './../../../model/usuarioVO';
+import { GlobalVar } from './../../global-var';
 import { VitrineService } from './../../../providers/service/vitrine-service';
 import { MinhasPublicacoesPage } from './../../../pages/minhas-publicacoes/minhas-publicacoes';
 import { MeusMarcadosService } from './../../../providers/service/meus_marcados-service';
@@ -44,9 +46,10 @@ export class CtdButtonsComponent {
   @Input()
   public isBtnNrVisita: Boolean = false;
 
-  private usuarioLogado: string;
+  private usuarioLogado: UsuarioVO;
   private toastAlert: any;
   private confirmPublic: any;
+  public desabilitarBtnCurtir:boolean = false;
 
   constructor(private emprSrv: EmpresaService,
     private smartSrv: SmartSiteService,
@@ -57,10 +60,11 @@ export class CtdButtonsComponent {
     private meusMarcadosSrv: MeusMarcadosService,
     private events: Events,
     private alertCtrl: AlertController,
-    private vitrineSrv: VitrineService) {
+    private vitrineSrv: VitrineService,
+    private glbVar: GlobalVar) {
 
     this.vitrine = null;
-    this.usuarioLogado = this.usuaSrv.getLoggedInUser().uid;
+    this.usuarioLogado = this.glbVar.usuarioLogado;
   }
 
   openSlideNoticia(opcao: number, param: any): void {
@@ -204,6 +208,10 @@ export class CtdButtonsComponent {
     this.vitrine = null;
   }
 
+  public curtirVitrine() {
+    this.desabilitarBtnCurtir = true;
+    this.events.publish("curtirVitrine:true", (this.vitrine));
+  }
 
   createToast(errorMessage: string) {
     if (this.toastAlert != null) {
@@ -270,10 +278,9 @@ export class CtdButtonsComponent {
     return slides;
   }
 
-
   public exibirBtnCrudVitrine(): Boolean {
 
-    return this.usuarioVitrine == this.usuarioLogado;
+    return this.usuarioVitrine == this.usuarioLogado.usua_sq_id;
   }
 
   public exibirBtnRepublicar(): Boolean {
@@ -282,7 +289,10 @@ export class CtdButtonsComponent {
   }
 
   public exibirBtnVisitas(): Boolean {
-    return this.isBtnNrVisita;
+
+    return this.usuarioLogado.usua_sg_perfil == "ADM";
+
+    //return this.isBtnNrVisita;
   }
 
 }

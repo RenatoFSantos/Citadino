@@ -49,9 +49,15 @@ export class MinhasPublicacoesService {
     return this.minhasPublicacoesRef.child(uidUsuario).child(uidVitrine).once('value');
   }
 
-  public atualizarNrVisita(uidUsuario: string, uidVitrine: string, nrVisita: number) {
-    return this.minhasPublicacoesRef.child(uidUsuario).child(uidVitrine).child('anun_nr_visitas')
-      .set(nrVisita);
-  }
 
+  public atualizarDadosVitrine(newVitrine: VitrineVO) {
+
+    let updates = {};
+
+    updates['/minhaspublicacoes/' + newVitrine.usua_sq_id + '/' + newVitrine.vitr_sq_id + '/anun_nr_visitas'] = newVitrine.anun_nr_visitas;
+    updates['/minhaspublicacoes/' + newVitrine.usua_sq_id + '/' + newVitrine.vitr_sq_id + '/anun_nr_curtidas'] = newVitrine.anun_nr_curtidas;
+
+    this.getDataBaseRef().update(updates);
+
+  }
 }
