@@ -1,3 +1,4 @@
+import { VitrineCurtirService } from './../../../providers/service/vitrine-curtir-service';
 import { UsuarioVO } from './../../../model/usuarioVO';
 import { GlobalVar } from './../../global-var';
 import { VitrineService } from './../../../providers/service/vitrine-service';
@@ -46,10 +47,13 @@ export class CtdButtonsComponent {
   @Input()
   public isBtnNrVisita: Boolean = false;
 
+  @Input()
+  public isBtnNrCurtir: Boolean = false;
+
   private usuarioLogado: UsuarioVO;
   private toastAlert: any;
   private confirmPublic: any;
-  public desabilitarBtnCurtir:boolean = false;
+  private desabilitarBtnCurtir: boolean = false;
 
   constructor(private emprSrv: EmpresaService,
     private smartSrv: SmartSiteService,
@@ -61,7 +65,8 @@ export class CtdButtonsComponent {
     private events: Events,
     private alertCtrl: AlertController,
     private vitrineSrv: VitrineService,
-    private glbVar: GlobalVar) {
+    private glbVar: GlobalVar,
+    private vtrCut: VitrineCurtirService) {
 
     this.vitrine = null;
     this.usuarioLogado = this.glbVar.usuarioLogado;
@@ -209,7 +214,7 @@ export class CtdButtonsComponent {
   }
 
   public curtirVitrine() {
-    this.desabilitarBtnCurtir = true;
+    this.vitrine.anun_in_curtida = true;
     this.events.publish("curtirVitrine:true", (this.vitrine));
   }
 
@@ -290,9 +295,34 @@ export class CtdButtonsComponent {
 
   public exibirBtnVisitas(): Boolean {
 
-    return this.usuarioLogado.usua_sg_perfil == "ADM";
+    return this.usuarioLogado.usua_sg_perfil == "ADM" && this.isBtnNrVisita;
 
     //return this.isBtnNrVisita;
   }
 
+
+  public exibirBtnCurtir(): Boolean {
+
+    return this.isBtnNrCurtir;
+
+    //return this.isBtnNrVisita;
+  }
+
+  public getStatusBtnCurtir() {
+
+    let usuario = this.usuarioLogado;
+
+    this.vtrCut.getVitrineCurtirByKey(this.vitrine.vitr_sq_id, usuario.usua_sq_id)
+      .then((result) => {
+        if (result.val() != null) {
+          return true;
+        }
+        else {
+          return false;
+        }
+      }).catch((error) => {
+        return false;
+      })
+
+  }
 }

@@ -47,7 +47,8 @@ export class MappingsService {
                 vitrine.agen_sq_id = element.val().agen_sq_id;
                 vitrine.anun_in_smartsite = element.val().anun_in_smartsite;
                 vitrine.usua_sq_id = element.val().usua_sq_id != undefined ? element.val().usua_sq_id : "";
-                vitrine.anun_nr_imagens = element.val().anun_nr_imagens != undefined ? element.val().anun_nr_imagens : ""
+                vitrine.anun_nr_imagens = element.val().anun_nr_imagens != undefined ? element.val().anun_nr_imagens : "",
+                vitrine.anun_in_curtida = element.val().anun_in_curtida != undefined ? element.val().anun_in_curtida : false
 
                 vitrines.push(vitrine);
             });
@@ -87,7 +88,8 @@ export class MappingsService {
             agen_sq_id: snapshot.agen_sq_id,
             anun_in_smartsite: snapshot.anun_in_smartsite,
             usua_sq_id: snapshot.usua_sq_id != undefined ? snapshot.usua_sq_id : "",
-            anun_nr_imagens: snapshot.anun_nr_imagens != undefined ? snapshot.anun_nr_imagens : ""
+            anun_nr_imagens: snapshot.anun_nr_imagens != undefined ? snapshot.anun_nr_imagens : "",
+            anun_in_curtida: snapshot.anun_in_curtida != undefined ? snapshot.anun_in_curtida : false
         };
 
         return vitrine;
@@ -124,7 +126,8 @@ export class MappingsService {
                 agen_sq_id: vitrine.agen_sq_id,
                 anun_in_smartsite: vitrine.anun_in_smartsite,
                 usua_sq_id: vitrine.usua_sq_id != undefined ? vitrine.usua_sq_id : "",
-                anun_nr_imagens: vitrine.anun_nr_imagens != undefined ? vitrine.anun_nr_imagens : ""
+                anun_nr_imagens: vitrine.anun_nr_imagens != undefined ? vitrine.anun_nr_imagens : "",
+                anun_in_curtida: vitrine.anun_in_curtida != undefined ? vitrine.anun_in_curtida : false
             };
 
         return json;

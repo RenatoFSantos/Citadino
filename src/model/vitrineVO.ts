@@ -28,4 +28,6 @@ export class VitrineVO {
     public vitr_in_buttonmore:boolean = false;
     public usua_sq_id:string = ""; // novo   
     public anun_nr_imagens:string = ""; //novo 
+    public anun_in_curtida:boolean = false; //novo
+
 }

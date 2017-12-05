@@ -22,6 +22,7 @@ import { VitrineService } from './../../providers/service/vitrine-service';
 import { Component, OnInit } from '@angular/core';
 import { NavController, NavParams, AlertController, Events, LoadingController, ToastController } from 'ionic-angular';
 import { VitrineCurtirService } from '../../providers/service/vitrine-curtir-service';
+import { Promise } from 'firebase/app';
 
 
 @Component({
@@ -59,10 +60,10 @@ export class VitrinePage implements OnInit {
     private toastCtrl: ToastController,
     private emprSrv: EmpresaService,
     private smartSrv: SmartSiteService,
-    private meusMarcadosSrv: MeusMarcadosService,
+    public meusMarcadosSrv: MeusMarcadosService,
     private usuaSrv: UsuarioService,
     private minhaPubSrv: MinhasPublicacoesService,
-    private vtrCurtiSrv: VitrineCurtirService) {
+    private vtrCut: VitrineCurtirService) {
 
     this.loadVitrines();
 
@@ -211,7 +212,7 @@ export class VitrinePage implements OnInit {
 
     return new Promise((resolve) => {
       let anuncios: any = [];
-      var uidUsuario: string = self.usuaSrv.getLoggedInUser().uid;
+      var usuario: UsuarioVO = self.globalVar.usuarioLogado;
 
       self.vitrineSrv.getVitrineMunicipio(self.seqMunicipio, self.limitPage, self.startPk)
         .then((snapshot: any) => {
@@ -227,16 +228,11 @@ export class VitrinePage implements OnInit {
 
           lstVitrine.forEach(vitrine => {
 
-            self.meusMarcadosSrv.pesquisaPorUidVitrine(uidUsuario, vitrine.vitr_sq_id)
-              .then((vitrineSalva) => {
-
-                if (vitrineSalva.val() != null) {
-                  vitrine.anun_nr_salvos = 1;
-                }
-                else {
-                  vitrine.anun_nr_salvos = 0;
-                }
-
+            self.statusVitrineMarcada(self, vitrine, usuario)
+              .then(self.statusVitrineCurtida)
+              .then((result) => {
+                var vitrine: VitrineVO = result.vitrine;
+            
                 let exist: boolean = self.vitrines.some(campo =>
                   campo.vitr_sq_id == vitrine.vitr_sq_id
                 );
@@ -244,10 +240,12 @@ export class VitrinePage implements OnInit {
                 if (!exist) {
                   self.vitrines.push(vitrine);
                 }
+
               })
-              .catch((error) => {
-                console.log(error);
+              .catch(error => {
+                throw new Error(error.message);
               });
+
 
             self.rowCurrent = self.vitrines.length;
           });
@@ -544,9 +542,11 @@ export class VitrinePage implements OnInit {
 
     self.pathImagens = [];
 
-    var promAll = Promise.all(promises).then((values) => { })
-      .catch(err => {
-        throw new Error(err);
+    var promAll = Promise.all(promises)
+      .then((values) => { }
+      )
+      .catch((err) => {
+        throw new Error(err.message);
       });
 
     return promAll;
@@ -578,14 +578,66 @@ export class VitrinePage implements OnInit {
     let usuario: UsuarioVO = this.globalVar.usuarioLogado;
 
     this.events.subscribe('curtirVitrine:true', (vitrine: VitrineVO) => {
-      self.vtrCurtiSrv.getVitrineCurtirByKey(vitrine.vitr_sq_id, usuario.usua_sq_id).then((result) => {
+      self.vtrCut.getVitrineCurtirByKey(vitrine.vitr_sq_id, usuario.usua_sq_id).then((result) => {
         if (result.val() == null) {
-          self.vtrCurtiSrv.salvar(vitrine.vitr_sq_id, usuario.usua_sq_id, true).then(() => {
+          self.vtrCut.salvar(vitrine.vitr_sq_id, usuario.usua_sq_id, true).then(() => {
             self.vitrineSrv.curtirVitrien(vitrine);
           });
         }
       });
     });
+  }
+
+
+  private statusVitrineMarcada = function (self: any, vitrine: VitrineVO, usuario: UsuarioVO) {
+
+    var promise = new Promise(function (resolve, reject) {
+
+      self.meusMarcadosSrv.pesquisaPorUidVitrine(usuario.usua_sq_id, vitrine.vitr_sq_id)
+        .then((vitrineSalva) => {
+
+          if (vitrineSalva.val() != null) {
+            vitrine.anun_nr_salvos = 1;
+          }
+          else {
+            vitrine.anun_nr_salvos = 0;
+          }
+
+          resolve({ self, vitrine, usuario });
+        })
+        .catch((error) => {
+          reject(error);
+        });
+    });
+
+    return promise
+  }
+
+  private statusVitrineCurtida = function (param) {
+    let self = param.self;
+    let vitrine: VitrineVO = param.vitrine;
+    let usuario: UsuarioVO = param.usuario;
+
+    var promise = new Promise(function (resolve, reject) {
+
+      self.vtrCut.getVitrineCurtirByKey(vitrine.vitr_sq_id, usuario.usua_sq_id)
+        .then((result) => {
+          if (result.val() != null) {
+            vitrine.anun_in_curtida = true;
+          }
+          else {
+            vitrine.anun_in_curtida = false;
+          }
+
+          resolve({ self, vitrine, usuario });
+
+        }).catch((error) => {
+          return false;
+        })
+
+    });
+
+    return promise;
   }
 }
 

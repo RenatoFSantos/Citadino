@@ -7,9 +7,17 @@
 <!-- <ion-badge item-right color="ctd-button">60</ion-badge> -->
 <!-- </button> -->
 
-<button ion-button icon-only clear class="btnBotaoAvancar" [disabled]="desabilitarBtnCurtir" (click)="curtirVitrine()" >
+<button ion-button icon-only clear class="btnBotaoAvancar" *ngIf="vitrine.anun_in_curtida == false && 
+exibirBtnCurtir() == true" (click)="curtirVitrine()">
     <ion-icon name="md-heart-outline">
-            <ion-badge class="ctd_image" item-right id="notifications-badge" color="danger">{{vitrine.anun_nr_curtidas}}</ion-badge>
+        <ion-badge class="ctd_image" item-right id="notifications-badge" color="danger">{{vitrine.anun_nr_curtidas}}</ion-badge>
+    </ion-icon>
+</button>
+
+<button ion-button icon-only clear class="btnBotaoAvancar" *ngIf="vitrine.anun_in_curtida == true && 
+ exibirBtnCurtir() == true" [ngClass]="{'salvar': vitrine.anun_in_curtida == true}">
+    <ion-icon name="md-heart">
+        <ion-badge class="ctd_image" item-right id="notifications-badge" color="danger">{{vitrine.anun_nr_curtidas}}</ion-badge>
     </ion-icon>
 </button>
 
@@ -32,7 +40,7 @@
 
 <button ion-button icon-only clear class="btnBotaoAvancar" *ngIf="urlSlide != ''" (click)="openSlideNoticia(1,vitrine)">
     <ion-icon name="md-images">
-            <ion-badge *ngIf="vitrine.anun_nr_imagens != ''" class="ctd_image" item-right id="notifications-badge" color="danger">{{vitrine.anun_nr_imagens}}</ion-badge>
+        <ion-badge *ngIf="vitrine.anun_nr_imagens != ''" class="ctd_image" item-right id="notifications-badge" color="danger">{{vitrine.anun_nr_imagens}}</ion-badge>
     </ion-icon>
 </button>
 <button ion-button icon-only clear class="btnBotaoAvancar" *ngIf="smartSite == true" (click)="openSmartSite()">
