@@ -185,6 +185,7 @@ export class VitrinePage implements OnInit {
     this.bancoDadosOnlineEvent();
     this.atualizarNrVisitaEvent();
     this.curtirVitrineEvent();
+    this.chutarCurtirEvent();
   }
 
   ionViewWillUnload() {
@@ -232,7 +233,7 @@ export class VitrinePage implements OnInit {
               .then(self.statusVitrineCurtida)
               .then((result) => {
                 var vitrine: VitrineVO = result.vitrine;
-            
+
                 let exist: boolean = self.vitrines.some(campo =>
                   campo.vitr_sq_id == vitrine.vitr_sq_id
                 );
@@ -572,6 +573,13 @@ export class VitrinePage implements OnInit {
     });
   }
 
+
+  public chutarCurtirEvent() {
+    var self = this;
+    this.events.subscribe('chutarCurtir:true', (vitrine: VitrineVO) => {
+      self.vitrineSrv.curtirVitrien(vitrine);
+    });
+  }
 
   public curtirVitrineEvent() {
     let self = this;

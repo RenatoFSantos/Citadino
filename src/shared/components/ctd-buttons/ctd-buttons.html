@@ -7,6 +7,12 @@
 <!-- <ion-badge item-right color="ctd-button">60</ion-badge> -->
 <!-- </button> -->
 
+<button ion-button icon-only clear class="btnBotaoAvancar" *ngIf="exibirBtnChutaCurtir()" 
+(click)="chutarCurtir()">
+    <ion-icon name="md-happy">
+    </ion-icon>
+</button>
+
 <button ion-button icon-only clear class="btnBotaoAvancar" *ngIf="vitrine.anun_in_curtida == false && 
 exibirBtnCurtir() == true" (click)="curtirVitrine()">
     <ion-icon name="md-heart-outline">

@@ -218,6 +218,13 @@ export class CtdButtonsComponent {
     this.events.publish("curtirVitrine:true", (this.vitrine));
   }
 
+
+  public chutarCurtir() {
+    this.events.publish("chutarCurtir:true", (this.vitrine));
+  }
+
+
+
   createToast(errorMessage: string) {
     if (this.toastAlert != null) {
       this.toastAlert.dismiss();
@@ -300,6 +307,9 @@ export class CtdButtonsComponent {
     //return this.isBtnNrVisita;
   }
 
+  public exibirBtnChutaCurtir(): Boolean {
+    return this.usuarioLogado.usua_sg_perfil == "ADM";
+  }
 
   public exibirBtnCurtir(): Boolean {
 
@@ -307,22 +317,5 @@ export class CtdButtonsComponent {
 
     //return this.isBtnNrVisita;
   }
-
-  public getStatusBtnCurtir() {
-
-    let usuario = this.usuarioLogado;
-
-    this.vtrCut.getVitrineCurtirByKey(this.vitrine.vitr_sq_id, usuario.usua_sq_id)
-      .then((result) => {
-        if (result.val() != null) {
-          return true;
-        }
-        else {
-          return false;
-        }
-      }).catch((error) => {
-        return false;
-      })
-
-  }
+  
 }
