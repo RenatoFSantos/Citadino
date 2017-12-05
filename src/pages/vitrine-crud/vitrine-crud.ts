@@ -266,10 +266,8 @@ export class VitrineCrudPage {
         self.vitrine.anun_tx_urlslide4 = imgs[3];
       }
 
-
-
       if (self.imagens.length != null && self.imagens.length - 1 > 0) {
-        var nrImg = self.imagens.length;
+        var nrImg = self.imagens.length - 1;
         self.vitrine.anun_nr_imagens = "+" + nrImg.toString();
       } else {
         self.vitrine.anun_nr_imagens = "";
