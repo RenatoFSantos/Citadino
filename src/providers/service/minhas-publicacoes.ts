@@ -56,6 +56,7 @@ export class MinhasPublicacoesService {
 
     updates['/minhaspublicacoes/' + newVitrine.usua_sq_id + '/' + newVitrine.vitr_sq_id + '/anun_nr_visitas'] = newVitrine.anun_nr_visitas;
     updates['/minhaspublicacoes/' + newVitrine.usua_sq_id + '/' + newVitrine.vitr_sq_id + '/anun_nr_curtidas'] = newVitrine.anun_nr_curtidas;
+    updates['/minhaspublicacoes/' + newVitrine.usua_sq_id + '/' + newVitrine.vitr_sq_id + '/anun_in_curtida'] = newVitrine.anun_in_curtida;
 
     this.getDataBaseRef().update(updates);
 

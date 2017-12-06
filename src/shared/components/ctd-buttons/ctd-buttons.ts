@@ -1,3 +1,4 @@
+import { VitrinePage } from './../../../pages/vitrine/vitrine';
 import { VitrineCurtirService } from './../../../providers/service/vitrine-curtir-service';
 import { UsuarioVO } from './../../../model/usuarioVO';
 import { GlobalVar } from './../../global-var';
@@ -49,6 +50,10 @@ export class CtdButtonsComponent {
 
   @Input()
   public isBtnNrCurtir: Boolean = false;
+
+  @Input()
+  public isBtnChutarCurti: Boolean = false;
+
 
   private usuarioLogado: UsuarioVO;
   private toastAlert: any;
@@ -214,8 +219,10 @@ export class CtdButtonsComponent {
   }
 
   public curtirVitrine() {
-    this.vitrine.anun_in_curtida = true;
-    this.events.publish("curtirVitrine:true", (this.vitrine));
+    if (this.vitrine.vitr_dt_agendada != "") {
+      this.vitrine.anun_in_curtida = true;
+      this.events.publish("curtirVitrine:true", (this.vitrine));
+    }
   }
 
 
@@ -307,15 +314,56 @@ export class CtdButtonsComponent {
     //return this.isBtnNrVisita;
   }
 
-  public exibirBtnChutaCurtir(): Boolean {
-    return this.usuarioLogado.usua_sg_perfil == "ADM";
+  public exibirBtnChutarCurtir(): Boolean {
+    return this.usuarioLogado.usua_sg_perfil == "ADM" && this.isBtnChutarCurti == true;
   }
 
   public exibirBtnCurtir(): Boolean {
 
     return this.isBtnNrCurtir;
-
-    //return this.isBtnNrVisita;
   }
-  
+
+  public statusInCurtida() {
+
+    if (this.navCtrl.last().instance instanceof VitrinePage) {
+      if (this.vitrine != null) {
+        return this.vitrine.anun_in_curtida;
+      }
+      else {
+        return false;
+      }
+    } else {
+      return true;
+    }
+  }
+
+  public getNrCurtidas() {
+
+    if (this.vitrine != null && this.vitrine.anun_nr_curtidas != null) {
+      return this.vitrine.anun_nr_curtidas;
+    }
+    else {
+      return 0;
+    }
+  }
+
+  public getNrVisitas() {
+
+    if (this.vitrine != null && this.vitrine.anun_nr_visitas != null) {
+      return this.vitrine.anun_nr_visitas;
+    }
+    else {
+      return 0;
+    }
+  }
+
+  public getNrImagens() {
+
+    if (this.vitrine != null && this.vitrine.anun_nr_imagens != "") {
+      return this.vitrine.anun_nr_imagens;
+    }
+    else {
+      return "";
+    }
+  }
 }

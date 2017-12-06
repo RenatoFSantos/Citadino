@@ -143,10 +143,12 @@ export class VitrineCrudPage {
         .then(self.salvarImages)
         .then(() => {
           self.salvarPublicacao(self).then(() => {
-            loader.dismiss();
-            self.createAlert("Publicação criada com sucesso.");
-            self.events.publish("carregaPublicacao:true");
-            self.navCtrl.pop();
+            setTimeout(() => {
+              loader.dismiss();
+              self.createAlert("Publicação criada com sucesso.");
+              self.events.publish("carregaPublicacao:true");
+              self.navCtrl.pop();
+            },1500);
           })
             .catch(err => {
               loader.dismiss();

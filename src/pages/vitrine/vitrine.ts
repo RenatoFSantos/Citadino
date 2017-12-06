@@ -141,7 +141,8 @@ export class VitrinePage implements OnInit {
         self.itemsService.removeItemFromArray(self.newVitrines, removeVitrine);
         this.events.publish('thread:created', this.newVitrines);
       } else {
-        self.itemsService.removeItemFromArray(self.vitrines, removeVitrine);
+        self.itemsService.removeItems(self.vitrines, (v: any) => v.vitr_sq_id == pkVitrine);
+        console.log(self.vitrines);
       }
     }
   }
@@ -150,6 +151,7 @@ export class VitrinePage implements OnInit {
 
     var self = this;
     var pkVitrine = childSnapshot.val().vitr_sq_id;
+    var inStatusCurtida: boolean = false;
 
     let exist: boolean = this.newVitrines.some(campo =>
       campo.vitr_sq_id == pkVitrine
@@ -162,9 +164,16 @@ export class VitrinePage implements OnInit {
       let newVitrine: VitrineVO = self.mappingsService.getVitrine(childSnapshot.val(), pkVitrine);
 
       if ((oldVitrine.anun_nr_visitas != newVitrine.anun_nr_visitas) || (oldVitrine.anun_nr_curtidas != newVitrine.anun_nr_curtidas)) {
+
+        if (oldVitrine.anun_nr_curtidas != newVitrine.anun_nr_curtidas) {
+          inStatusCurtida = true;
+        }
+
         oldVitrine = this.mappingsService.copyVitrine(oldVitrine, newVitrine);
 
+
         if (newVitrine.usua_sq_id != "") {
+          newVitrine.anun_in_curtida = inStatusCurtida;
           this.minhaPubSrv.atualizarDadosVitrine(newVitrine);
         }
       }

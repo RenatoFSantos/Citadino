@@ -81,7 +81,6 @@ export class MinhasPublicacoesPage {
             snapPublic.forEach(element => {
               var pkVitrine = element.val().vitr_sq_id;
               let newVitrine: VitrineVO = self.mapSrv.getVitrine(element.val(), pkVitrine);
-              newVitrine.anun_in_curtida = true;
               self.itemsService.addItemToStart(self.vitrines, newVitrine);
             });
             loadCtrl.dismiss();
@@ -263,7 +262,7 @@ export class MinhasPublicacoesPage {
 
             loader.dismiss();
             self.createAlert("Publicação realizada com sucesso.");
-            self.navCtrl.pop();
+            // self.navCtrl.pop();
 
           })
           .catch((err) => {
