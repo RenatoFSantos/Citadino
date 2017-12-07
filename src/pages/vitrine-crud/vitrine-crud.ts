@@ -144,7 +144,7 @@ export class VitrineCrudPage {
         .then(() => {
           self.salvarPublicacao(self).then(() => {
             setTimeout(() => {
-              loader.dismiss();
+              // loader.dismiss();
               self.createAlert("Publicação criada com sucesso.");
               // self.events.publish("carregaPublicacao:true");
               self.navCtrl.pop();
