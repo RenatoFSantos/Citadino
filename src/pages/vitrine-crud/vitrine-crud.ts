@@ -148,7 +148,7 @@ export class VitrineCrudPage {
               self.createAlert("Publicação criada com sucesso.");
               // self.events.publish("carregaPublicacao:true");
               self.navCtrl.pop();
-            },0900);
+            },1000);
           })
             .catch(err => {
               loader.dismiss();
