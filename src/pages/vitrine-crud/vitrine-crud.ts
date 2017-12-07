@@ -1,3 +1,4 @@
+import { VitrineCurtirService } from './../../providers/service/vitrine-curtir-service';
 import { MinhasPublicacoesService } from './../../providers/service/minhas-publicacoes';
 import { VitrineService } from './../../providers/service/vitrine-service';
 import { CtdFuncoes } from './../../shared/ctdFuncoes';
@@ -48,7 +49,8 @@ export class VitrineCrudPage {
     private events: Events,
     private vtSrv: VitrineService,
     private mnPublSrv: MinhasPublicacoesService,
-    public loadingCtrl: LoadingController) {
+    private loadingCtrl: LoadingController,
+    private vtrCurt: VitrineCurtirService) {
 
     this.criarFormulario();
     this.excluirImagemEvent();
@@ -98,8 +100,8 @@ export class VitrineCrudPage {
     this.imagemPadrao.path = "assets/img/camera.png";
 
     this.frmVitrineCrud = this.frmBuilder.group({
-      'anun_tx_titulo': ['',Validators.compose([Validators.required, Validators.maxLength(50)])],
-      'anun_tx_texto': ['',Validators.compose([Validators.required, Validators.maxLength(3000)])],
+      'anun_tx_titulo': ['', Validators.compose([Validators.required, Validators.maxLength(50)])],
+      'anun_tx_texto': ['', Validators.compose([Validators.required, Validators.maxLength(3000)])],
       'anun_tx_urlslide1': ['',],
       'anun_tx_urlslide2': ['',],
       'anun_tx_urlslide3': ['',],
@@ -117,44 +119,46 @@ export class VitrineCrudPage {
     if (self.frmVitrineCrud.valid) {
 
 
-    var vitrineId = self.vtSrv.getNewUidVitrine(self.seqMunicipio);
-    var dtAtual = CtdFuncoes.convertDateToStr(new Date(), enums.DateFormat.enUS);
-    var nmEmpresa = self.vitrine.empr_nm_fantasia;
-    
-    self.vitrine.anun_tx_titulo = self.frmVitrineCrud.controls.anun_tx_titulo.value;
-    self.vitrine.anun_tx_texto = self.frmVitrineCrud.controls.anun_tx_texto.value;
-    self.vitrine.anun_tx_subtitulo = nmEmpresa.substr(0, 35)
-    self.vitrine.vitr_sq_ordem = String(new Date().getTime());
-    self.vitrine.vitr_dt_agendada = "";
-    self.vitrine.vitr_sq_id = vitrineId;
-    self.vitrine.usua_sq_id = self.usuaKey;
-    
+      var vitrineId = self.vtSrv.getNewUidVitrine(self.seqMunicipio);
+      var dtAtual = CtdFuncoes.convertDateToStr(new Date(), enums.DateFormat.enUS);
+      var nmEmpresa = self.vitrine.empr_nm_fantasia;
 
-    var loader = self.loadingCtrl.create({
-      content: 'Aguarde...',
-      dismissOnPageChange: true
-    });
+      self.vitrine.anun_tx_titulo = self.frmVitrineCrud.controls.anun_tx_titulo.value;
+      self.vitrine.anun_tx_texto = self.frmVitrineCrud.controls.anun_tx_texto.value;
+      self.vitrine.anun_tx_subtitulo = nmEmpresa.substr(0, 35)
+      self.vitrine.vitr_sq_ordem = String(new Date().getTime());
+      self.vitrine.vitr_dt_agendada = "";
+      self.vitrine.vitr_sq_id = vitrineId;
+      self.vitrine.usua_sq_id = self.usuaKey;
 
-    loader.present();
 
-    self.carregaListaImagens(self, "images/publicacoes/")
-      .then(self.salvarImages)
-      .then(() => {
-        self.salvarPublicacao(self).then(() => {
-          loader.dismiss();
-          self.createAlert("Publicação criada com sucesso.");
-          self.events.publish("carregaPublicacao:true");         
-          self.navCtrl.pop();
+      var loader = self.loadingCtrl.create({
+        content: 'Aguarde...',
+        dismissOnPageChange: true
+      });
+
+      loader.present();
+
+      self.carregaListaImagens(self, "images/publicacoes/")
+        .then(self.salvarImages)
+        .then(() => {
+          self.salvarPublicacao(self).then(() => {
+            setTimeout(() => {
+              loader.dismiss();
+              self.createAlert("Publicação criada com sucesso.");
+              // self.events.publish("carregaPublicacao:true");
+              self.navCtrl.pop();
+            },2000);
+          })
+            .catch(err => {
+              loader.dismiss();
+              self.createAlert("Não foi possível criar sua publicação.");
+            });
         })
-        .catch(err=>{
+        .catch((err) => {
           loader.dismiss();
           self.createAlert("Não foi possível criar sua publicação.");
         });
-      })
-      .catch((err) => {
-        loader.dismiss();
-        self.createAlert("Não foi possível criar sua publicação.");
-      });
     }
   }
 
@@ -216,7 +220,7 @@ export class VitrineCrudPage {
         self.vitrine.anun_tx_urlslide1 = imgs[0];
         self.vitrine.anun_tx_urlslide2 = imgs[1];
         self.vitrine.anun_tx_urlslide3 = imgs[2];
-      }else if (imgs.length == 4) {
+      } else if (imgs.length == 4) {
         self.vitrine.anun_tx_urlbanner = imgs[0];
         self.vitrine.anun_tx_urlslide1 = imgs[0];
         self.vitrine.anun_tx_urlslide2 = imgs[1];
@@ -264,11 +268,10 @@ export class VitrineCrudPage {
         self.vitrine.anun_tx_urlslide4 = imgs[3];
       }
 
-      if (self.imagens.length != null && self.imagens.length > 0) {
-        var nrImg = self.imagens.length;      
+      if (self.imagens.length != null && self.imagens.length - 1 > 0) {
+        var nrImg = self.imagens.length - 1;
         self.vitrine.anun_nr_imagens = "+" + nrImg.toString();
-      }
-      else {
+      } else {
         self.vitrine.anun_nr_imagens = "";
       }
 
@@ -357,16 +360,6 @@ export class VitrineCrudPage {
     })
       .then(
       imageURI => {
-        // self.toBase64(imageURI).then((base64Img) => {
-        //   self.imagens.push(self.adicionarImagem(base64Img));
-        //   self.ordenaImagens();
-
-        //   if (self.imagens.length > 3) {
-        //     self.itemsService.removeItems(self.imagens, self.imagens[self.imagens.length - 1]);
-        //   }
-
-        //   this.backSrv.disable();
-        // });
         self.imagens.push(self.adicionarImagem("data:image/jpeg;base64," + imageURI));
         self.ordenaImagens();
 

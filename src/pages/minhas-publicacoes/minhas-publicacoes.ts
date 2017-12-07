@@ -52,13 +52,16 @@ export class MinhasPublicacoesPage {
     this.publicarEvent();
     this.excluirVitrineEvent();
     this.carregaPublicacaoEvent();
-    this.carregaMinhaVitrine();
   }
 
   ionViewWillUnload() {
     this.events.unsubscribe('excluirPublicacao:true', null);
     this.events.unsubscribe('publicarVitrine:true', null);
     this.events.unsubscribe('carregaPublicacao:true', null);
+  }
+
+  ionViewWillEnter() {
+    this.carregaMinhaVitrine();
   }
 
   public adicionarVitrine() {
@@ -262,7 +265,7 @@ export class MinhasPublicacoesPage {
 
             loader.dismiss();
             self.createAlert("Publicação realizada com sucesso.");
-            self.navCtrl.pop();
+            // self.navCtrl.pop();
 
           })
           .catch((err) => {

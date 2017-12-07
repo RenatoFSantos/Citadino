@@ -1,3 +1,4 @@
+import { UsuarioVO } from './../../model/usuarioVO';
 import { MinhasPublicacoesService } from './../../providers/service/minhas-publicacoes';
 import { VitrinePromocaoPage } from './../vitrine-promocao/vitrine-promocao';
 import { VitrinePublicacaoPage } from './../vitrine-publicacao/vitrine-publicacao';
@@ -20,6 +21,8 @@ import { VitrineVO } from './../../model/vitrineVO';
 import { VitrineService } from './../../providers/service/vitrine-service';
 import { Component, OnInit } from '@angular/core';
 import { NavController, NavParams, AlertController, Events, LoadingController, ToastController } from 'ionic-angular';
+import { VitrineCurtirService } from '../../providers/service/vitrine-curtir-service';
+import { Promise } from 'firebase/app';
 
 
 @Component({
@@ -57,9 +60,10 @@ export class VitrinePage implements OnInit {
     private toastCtrl: ToastController,
     private emprSrv: EmpresaService,
     private smartSrv: SmartSiteService,
-    private meusMarcadosSrv: MeusMarcadosService,
+    public meusMarcadosSrv: MeusMarcadosService,
     private usuaSrv: UsuarioService,
-    private minhaPubSrv: MinhasPublicacoesService) {
+    private minhaPubSrv: MinhasPublicacoesService,
+    private vtrCut: VitrineCurtirService) {
 
     this.loadVitrines();
 
@@ -137,7 +141,8 @@ export class VitrinePage implements OnInit {
         self.itemsService.removeItemFromArray(self.newVitrines, removeVitrine);
         this.events.publish('thread:created', this.newVitrines);
       } else {
-        self.itemsService.removeItemFromArray(self.vitrines, removeVitrine);
+        self.itemsService.removeItems(self.vitrines, (v: any) => v.vitr_sq_id == pkVitrine);
+        console.log(self.vitrines);
       }
     }
   }
@@ -146,6 +151,7 @@ export class VitrinePage implements OnInit {
 
     var self = this;
     var pkVitrine = childSnapshot.val().vitr_sq_id;
+    var inStatusCurtida: boolean = false;
 
     let exist: boolean = this.newVitrines.some(campo =>
       campo.vitr_sq_id == pkVitrine
@@ -157,11 +163,18 @@ export class VitrinePage implements OnInit {
 
       let newVitrine: VitrineVO = self.mappingsService.getVitrine(childSnapshot.val(), pkVitrine);
 
-      if (oldVitrine.anun_nr_visitas != newVitrine.anun_nr_visitas) {
+      if ((oldVitrine.anun_nr_visitas != newVitrine.anun_nr_visitas) || (oldVitrine.anun_nr_curtidas != newVitrine.anun_nr_curtidas)) {
+
+        if (oldVitrine.anun_nr_curtidas != newVitrine.anun_nr_curtidas) {
+          inStatusCurtida = true;
+        }
+
         oldVitrine = this.mappingsService.copyVitrine(oldVitrine, newVitrine);
 
+
         if (newVitrine.usua_sq_id != "") {
-          this.minhaPubSrv.atualizarNrVisita(newVitrine.usua_sq_id, newVitrine.vitr_sq_id, newVitrine.anun_nr_visitas);
+          newVitrine.anun_in_curtida = inStatusCurtida;
+          this.minhaPubSrv.atualizarDadosVitrine(newVitrine);
         }
       }
       else {
@@ -180,6 +193,8 @@ export class VitrinePage implements OnInit {
     this.desmarcarVitrineEvent();
     this.bancoDadosOnlineEvent();
     this.atualizarNrVisitaEvent();
+    this.curtirVitrineEvent();
+    this.chutarCurtirEvent();
   }
 
   ionViewWillUnload() {
@@ -187,7 +202,7 @@ export class VitrinePage implements OnInit {
     this.events.unsubscribe('marcarVitrine:true', null);
     this.events.unsubscribe('desmarcarVitrine:true', null);
     this.events.unsubscribe('atualizarNrVisita:true', null);
-
+    this.events.unsubscribe('curtirVitrine:true', null);
   }
 
   ngOnInit() { }
@@ -207,7 +222,7 @@ export class VitrinePage implements OnInit {
 
     return new Promise((resolve) => {
       let anuncios: any = [];
-      var uidUsuario: string = self.usuaSrv.getLoggedInUser().uid;
+      var usuario: UsuarioVO = self.globalVar.usuarioLogado;
 
       self.vitrineSrv.getVitrineMunicipio(self.seqMunicipio, self.limitPage, self.startPk)
         .then((snapshot: any) => {
@@ -223,15 +238,10 @@ export class VitrinePage implements OnInit {
 
           lstVitrine.forEach(vitrine => {
 
-            self.meusMarcadosSrv.pesquisaPorUidVitrine(uidUsuario, vitrine.vitr_sq_id)
-              .then((vitrineSalva) => {
-
-                if (vitrineSalva.val() != null) {
-                  vitrine.anun_nr_salvos = 1;
-                }
-                else {
-                  vitrine.anun_nr_salvos = 0;
-                }
+            self.statusVitrineMarcada(self, vitrine, usuario)
+              .then(self.statusVitrineCurtida)
+              .then((result) => {
+                var vitrine: VitrineVO = result.vitrine;
 
                 let exist: boolean = self.vitrines.some(campo =>
                   campo.vitr_sq_id == vitrine.vitr_sq_id
@@ -240,10 +250,12 @@ export class VitrinePage implements OnInit {
                 if (!exist) {
                   self.vitrines.push(vitrine);
                 }
+
               })
-              .catch((error) => {
-                console.log(error);
+              .catch(error => {
+                throw new Error(error.message);
               });
+
 
             self.rowCurrent = self.vitrines.length;
           });
@@ -540,9 +552,11 @@ export class VitrinePage implements OnInit {
 
     self.pathImagens = [];
 
-    var promAll = Promise.all(promises).then((values) => { })
-      .catch(err => {
-        throw new Error(err);
+    var promAll = Promise.all(promises)
+      .then((values) => { }
+      )
+      .catch((err) => {
+        throw new Error(err.message);
       });
 
     return promAll;
@@ -566,6 +580,81 @@ export class VitrinePage implements OnInit {
     this.events.subscribe('atualizarNrVisita:true', (vitrine: VitrineVO) => {
       this.vitrineSrv.atualizarNrVisita(vitrine);
     });
+  }
+
+
+  public chutarCurtirEvent() {
+    var self = this;
+    this.events.subscribe('chutarCurtir:true', (vitrine: VitrineVO) => {
+      self.vitrineSrv.curtirVitrien(vitrine);
+    });
+  }
+
+  public curtirVitrineEvent() {
+    let self = this;
+    let usuario: UsuarioVO = this.globalVar.usuarioLogado;
+
+    this.events.subscribe('curtirVitrine:true', (vitrine: VitrineVO) => {
+      self.vtrCut.getVitrineCurtirByKey(vitrine.vitr_sq_id, usuario.usua_sq_id).then((result) => {
+        if (result.val() == null) {
+          self.vtrCut.salvar(vitrine.vitr_sq_id, usuario.usua_sq_id, true).then(() => {
+            self.vitrineSrv.curtirVitrien(vitrine);
+          });
+        }
+      });
+    });
+  }
+
+
+  private statusVitrineMarcada = function (self: any, vitrine: VitrineVO, usuario: UsuarioVO) {
+
+    var promise = new Promise(function (resolve, reject) {
+
+      self.meusMarcadosSrv.pesquisaPorUidVitrine(usuario.usua_sq_id, vitrine.vitr_sq_id)
+        .then((vitrineSalva) => {
+
+          if (vitrineSalva.val() != null) {
+            vitrine.anun_nr_salvos = 1;
+          }
+          else {
+            vitrine.anun_nr_salvos = 0;
+          }
+
+          resolve({ self, vitrine, usuario });
+        })
+        .catch((error) => {
+          reject(error);
+        });
+    });
+
+    return promise
+  }
+
+  private statusVitrineCurtida = function (param) {
+    let self = param.self;
+    let vitrine: VitrineVO = param.vitrine;
+    let usuario: UsuarioVO = param.usuario;
+
+    var promise = new Promise(function (resolve, reject) {
+
+      self.vtrCut.getVitrineCurtirByKey(vitrine.vitr_sq_id, usuario.usua_sq_id)
+        .then((result) => {
+          if (result.val() != null) {
+            vitrine.anun_in_curtida = true;
+          }
+          else {
+            vitrine.anun_in_curtida = false;
+          }
+
+          resolve({ self, vitrine, usuario });
+
+        }).catch((error) => {
+          return false;
+        })
+
+    });
+
+    return promise;
   }
 }
 

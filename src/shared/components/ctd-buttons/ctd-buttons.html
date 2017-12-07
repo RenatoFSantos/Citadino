@@ -7,9 +7,28 @@
 <!-- <ion-badge item-right color="ctd-button">60</ion-badge> -->
 <!-- </button> -->
 
+<button ion-button icon-only clear class="btnBotaoAvancar" *ngIf="exibirBtnChutarCurtir()" 
+(click)="chutarCurtir()">
+    <ion-icon name="md-happy">
+    </ion-icon>
+</button>
+
+<button ion-button icon-only clear class="btnBotaoAvancar" *ngIf="statusInCurtida() == false && 
+exibirBtnCurtir() == true" (click)="curtirVitrine()">
+    <ion-icon name="md-heart-outline">
+        <ion-badge class="ctd_image" item-right id="notifications-badge" color="danger">{{getNrCurtidas()}}</ion-badge>
+    </ion-icon>
+</button>
+
+<button ion-button icon-only clear class="btnBotaoAvancar" *ngIf="statusInCurtida() == true && 
+ exibirBtnCurtir() == true" [ngClass]="{'salvar': statusInCurtida() == true}">
+    <ion-icon name="md-heart">
+        <ion-badge class="ctd_image" item-right id="notifications-badge" color="danger">{{getNrCurtidas()}}</ion-badge>
+    </ion-icon>
+</button>
 
 <button ion-button icon-only clear class="btnBotaoAvancar" *ngIf="exibirBtnVisitas() == true">
-    <ion-badge class="ctd_visita" item-right color="ctd-button">{{vitrine.anun_nr_visitas}}</ion-badge>
+    <ion-badge class="ctd_visita" item-right color="ctd-button">{{getNrVisitas()}}</ion-badge>
 </button>
 
 <button ion-button icon-only clear class="btnBotaoAvancar" *ngIf="exibirBtnRepublicar() == true" (click)="showPublicar()">
@@ -27,7 +46,7 @@
 
 <button ion-button icon-only clear class="btnBotaoAvancar" *ngIf="urlSlide != ''" (click)="openSlideNoticia(1,vitrine)">
     <ion-icon name="md-images">
-            <ion-badge *ngIf="vitrine.anun_nr_imagens != ''" class="ctd_image" item-right id="notifications-badge" color="danger">{{vitrine.anun_nr_imagens}}</ion-badge>
+        <ion-badge *ngIf="getNrImagens() != ''" class="ctd_image" item-right id="notifications-badge" color="danger">{{getNrImagens()}}</ion-badge>
     </ion-icon>
 </button>
 <button ion-button icon-only clear class="btnBotaoAvancar" *ngIf="smartSite == true" (click)="openSmartSite()">
