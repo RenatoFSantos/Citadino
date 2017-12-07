@@ -1,3 +1,4 @@
+import { VitrineCurtirService } from './../../providers/service/vitrine-curtir-service';
 import { VitrineCrudPage } from './../vitrine-crud/vitrine-crud';
 import { GlobalVar } from './../../shared/global-var';
 
@@ -42,7 +43,8 @@ export class MinhasPublicacoesPage {
     public navParams: NavParams,
     private toastCtrl: ToastController,
     private vitrineSrv: VitrineService,
-    public globalVar: GlobalVar) {
+    private globalVar: GlobalVar,
+    private vtrCurt:VitrineCurtirService) {
 
     this.usuario = this.usuaSrv.getLoggedInUser();
   }
@@ -86,13 +88,14 @@ export class MinhasPublicacoesPage {
               let newVitrine: VitrineVO = self.mapSrv.getVitrine(element.val(), pkVitrine);
               self.itemsService.addItemToStart(self.vitrines, newVitrine);
             });
-            loadCtrl.dismiss();
+            // loadCtrl.dismiss();
           }).catch((error) => {
             loadCtrl.dismiss();
           });
         // this.minhasPublicSrv.getMinhasPublicacoesPorUsuario(this.usuario.uid)
         //   .on('child_added', this.onPublicacaoAdded);
         // self.loadCtrl.dismiss();
+        loadCtrl.dismiss();
       }
       else {
         loadCtrl.dismiss();
@@ -290,11 +293,12 @@ export class MinhasPublicacoesPage {
         this.pesquisarVitrine(this, vitrine)
           .then(this.excluirVitrine)
           .then(() => {
-            this.excluirPublicacao(self, vitrine)
+            self.excluirPublicacao(self, vitrine)
               .then(() => {
-                this.vitrines = [];
-                this.carregaMinhaVitrine();
-                this.createAlert("Publicação excluída com sucesso.");
+                self.vtrCurt.excluir(vitrine.vitr_sq_id);
+                self.vitrines = [];
+                self.carregaMinhaVitrine();
+                self.createAlert("Publicação excluída com sucesso.");
                 loader.dismiss();
               });
           })

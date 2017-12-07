@@ -31,4 +31,8 @@ export class VitrineCurtirService {
     return this.vitrineCurtirRef.child(vtrUid).child(usuaUid).set(value);
   }
 
+  public excluir(vtrUid: string) {
+    return this.vitrineCurtirRef.child(vtrUid).set(null);
+  }
+
 }
