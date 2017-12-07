@@ -1,6 +1,4 @@
 import { VitrineVO } from './../../model/vitrineVO';
-import { CupomVO } from './../../model/cupomVO';
-import { CupomEmpresaVO } from './../../model/cupomEmpresaVO';
 import { MappingsService } from './_mappings-service';
 import { FirebaseService } from './../database/firebase-service';
 import { Injectable } from '@angular/core';
