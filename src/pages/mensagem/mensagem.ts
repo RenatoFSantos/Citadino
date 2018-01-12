@@ -5,7 +5,7 @@ import { CtdFuncoes } from './../../shared/ctdFuncoes';
 import * as enums from './../../model/dominio/ctdEnum';
 import { MensagemService } from './../../providers/service/mensagem-service';
 import { Component, ViewChild } from '@angular/core';
-import { NavParams, Content } from 'ionic-angular';
+import { NavParams, Content, ViewController } from 'ionic-angular';
 import { FirebaseListObservable } from 'angularfire2/database';
 
 @Component({
@@ -34,7 +34,8 @@ export class MensagemPage {
     private mensSrv: MensagemService,
     private fbSrv: FirebaseService,
     private usuaSrv: UsuarioService,
-    private notifSrv: NotificacaoService) {
+    private notifSrv: NotificacaoService,
+    private viewCtrl: ViewController) {
 
     this.usua_sq_logado = params.data.usua_sq_logado;
     this.usua_sq_id_to = params.data.usua_sq_id_to;
@@ -120,7 +121,7 @@ export class MensagemPage {
     }
   };
 
-  statusMensagemEvent() {
-
+  public close() {
+    this.viewCtrl.dismiss();
   }
 }

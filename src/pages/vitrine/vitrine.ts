@@ -1,3 +1,5 @@
+import { MunicipioVO } from './../../model/municipioVO';
+import { MunicipioService } from './../../providers/service/municipio-service';
 import { UsuarioVO } from './../../model/usuarioVO';
 import { MinhasPublicacoesService } from './../../providers/service/minhas-publicacoes';
 import { VitrinePromocaoPage } from './../vitrine-promocao/vitrine-promocao';
@@ -24,7 +26,6 @@ import { NavController, NavParams, AlertController, Events, LoadingController, T
 import { VitrineCurtirService } from '../../providers/service/vitrine-curtir-service';
 import { Promise } from 'firebase/app';
 
-
 @Component({
   selector: 'page-vitrine',
   templateUrl: 'vitrine.html'
@@ -32,7 +33,6 @@ import { Promise } from 'firebase/app';
 
 export class VitrinePage implements OnInit {
 
-  public seqMunicipio: string = "-KoJyCiR1SOOUrRGimAS";
   private startPk: string = "";
   private limitPage: number = 10;
   private rowCount: number = 0;
@@ -46,6 +46,9 @@ export class VitrinePage implements OnInit {
   private vitrines: Array<VitrineVO> = [];
   private newVitrines: Array<VitrineVO> = [];
 
+  private municipios: MunicipioVO[] = [];
+  private municipioAnterior: string = "";
+
   constructor(
     public navCtrl: NavController,
     public navParams: NavParams,
@@ -55,7 +58,7 @@ export class VitrinePage implements OnInit {
     private alertCtrl: AlertController,
     private vitrineSrv: VitrineService,
     private netService: NetworkService,
-    private mappingsService: MappingsService,
+    private mapSrv: MappingsService,
     private itemsService: ItemsService,
     private toastCtrl: ToastController,
     private emprSrv: EmpresaService,
@@ -63,14 +66,16 @@ export class VitrinePage implements OnInit {
     public meusMarcadosSrv: MeusMarcadosService,
     private usuaSrv: UsuarioService,
     private minhaPubSrv: MinhasPublicacoesService,
-    private vtrCut: VitrineCurtirService) {
+    private vtrCut: VitrineCurtirService,
+    private muniSrv: MunicipioService) {
 
+    this.municipioAnterior = this.globalVar.getMunicipioPadrao().muni_sq_id;
     this.loadVitrines();
-
   }
 
   loadVitrines() {
     var self = this;
+
     self.startPk = "";
     self.rowCount = 0;
     self.rowCurrent = 0;
@@ -81,17 +86,15 @@ export class VitrinePage implements OnInit {
       this.loadCtrl = this.loadingCtrl.create({
         spinner: 'circles'
       });
+
       this.loadCtrl.present();
 
       this.vitrineSrv.getVitrineRef().once("value").then((snapShot) => {
         if (snapShot.exists()) {
-          this.vitrineSrv.getVitrineRef().child(this.seqMunicipio).on('child_added', this.onVitrineAdded);
 
-          this.vitrineSrv.getVitrineRef().child(this.seqMunicipio).on('child_removed', this.onVitrineRemove);
+          self.connectRealTime();
 
-          this.vitrineSrv.getVitrineRef().child(this.seqMunicipio).on('child_changed', this.onVitrineChange);
-
-          self.vitrineSrv.getVitrineRefTotal(this.seqMunicipio).then((snapShot) => {
+          self.vitrineSrv.getVitrineRefTotal(self.globalVar.getMunicipioPadrao().muni_sq_id).then((snapShot) => {
             self.rowCount = snapShot.numChildren();
             this.getVitrines().then(() => {
               this.loadCtrl.dismiss();
@@ -111,83 +114,6 @@ export class VitrinePage implements OnInit {
     }
   }
 
-  public onVitrineAdded = (childSnapshot, prevChildKey) => {
-    var self = this;
-    var pkVitrine = childSnapshot.val().vitr_sq_id;
-
-    if (this.vitrines != null && this.vitrines.length > 0) {
-      let exist: boolean = this.vitrines.some(campo =>
-        campo.vitr_sq_id == pkVitrine
-      );
-
-      if (!exist) {
-        let newVitrine: VitrineVO = self.mappingsService.getVitrine(childSnapshot.val(), pkVitrine);
-        this.newVitrines.push(newVitrine);
-        this.events.publish('thread:created', this.newVitrines);
-      }
-    }
-  }
-
-  public onVitrineRemove = (childSnapshot) => {
-    var self = this;
-
-    if (childSnapshot.val() != null) {
-      var pkVitrine = childSnapshot.val().vitr_sq_id;
-      let removeVitrine: VitrineVO = self.mappingsService.getVitrine(childSnapshot.val(), pkVitrine);
-
-      var objResult: any = self.itemsService.findElement(self.newVitrines, (v: any) => v.vitr_sq_id == pkVitrine);
-
-      if (objResult != null) {
-        self.itemsService.removeItemFromArray(self.newVitrines, removeVitrine);
-        this.events.publish('thread:created', this.newVitrines);
-      } else {
-        self.itemsService.removeItems(self.vitrines, (v: any) => v.vitr_sq_id == pkVitrine);
-        console.log(self.vitrines);
-      }
-    }
-  }
-
-  public onVitrineChange = (childSnapshot, prevChildKey) => {
-
-    var self = this;
-    var pkVitrine = childSnapshot.val().vitr_sq_id;
-    var inStatusCurtida: boolean = false;
-
-    let exist: boolean = this.newVitrines.some(campo =>
-      campo.vitr_sq_id == pkVitrine
-    );
-
-    if (!exist) {
-
-      let oldVitrine: any = self.itemsService.findElement(self.vitrines, (v: any) => v.vitr_sq_id == pkVitrine);
-
-      let newVitrine: VitrineVO = self.mappingsService.getVitrine(childSnapshot.val(), pkVitrine);
-
-      if ((oldVitrine.anun_nr_visitas != newVitrine.anun_nr_visitas) || (oldVitrine.anun_nr_curtidas != newVitrine.anun_nr_curtidas)) {
-
-        if (oldVitrine.anun_nr_curtidas != newVitrine.anun_nr_curtidas) {
-          inStatusCurtida = true;
-        }
-
-        oldVitrine = this.mappingsService.copyVitrine(oldVitrine, newVitrine);
-
-
-        if (newVitrine.usua_sq_id != "") {
-          newVitrine.anun_in_curtida = inStatusCurtida;
-          this.minhaPubSrv.atualizarDadosVitrine(newVitrine);
-        }
-      }
-      else {
-        this.newVitrines.push(newVitrine);
-        this.events.publish('thread:created', this.newVitrines);
-
-        if (self.vitrines != null && self.vitrines.length > 0) {
-          self.itemsService.removeItems(self.vitrines, (v: any) => v.vitr_sq_id == pkVitrine);
-        }
-      }
-    }
-  }
-
   ionViewDidLoad() {
     this.marcarVitrineEvent();
     this.desmarcarVitrineEvent();
@@ -195,6 +121,14 @@ export class VitrinePage implements OnInit {
     this.atualizarNrVisitaEvent();
     this.curtirVitrineEvent();
     this.chutarCurtirEvent();
+    this.onChangeMunicipioEvent();
+  }
+
+  ionViewDidEnter() {
+    if (this.municipioAnterior != this.globalVar.getMunicipioPadrao().muni_sq_id) {
+      this.atualizaDadosVitrine();
+      this.municipioAnterior = this.globalVar.getMunicipioPadrao().muni_sq_id;
+    }
   }
 
   ionViewWillUnload() {
@@ -203,6 +137,7 @@ export class VitrinePage implements OnInit {
     this.events.unsubscribe('desmarcarVitrine:true', null);
     this.events.unsubscribe('atualizarNrVisita:true', null);
     this.events.unsubscribe('curtirVitrine:true', null);
+    this.events.unsubscribe("vitrine:onChangeMunicipio", null);
   }
 
   ngOnInit() { }
@@ -224,14 +159,14 @@ export class VitrinePage implements OnInit {
       let anuncios: any = [];
       var usuario: UsuarioVO = self.globalVar.usuarioLogado;
 
-      self.vitrineSrv.getVitrineMunicipio(self.seqMunicipio, self.limitPage, self.startPk)
+      self.vitrineSrv.getVitrineMunicipio(self.globalVar.getMunicipioPadrao().muni_sq_id, self.limitPage, self.startPk)
         .then((snapshot: any) => {
 
           anuncios = self.itemsService.getPropertyValues(snapshot.val(), "vitr_sq_ordem");
 
           self.startPk = String(self.itemsService.getFirstElement(anuncios));
 
-          var lstVitrineOld: VitrineVO[] = self.mappingsService.getVitrines(snapshot);
+          var lstVitrineOld: VitrineVO[] = self.mapSrv.getVitrines(snapshot);
 
           var lstVitrine: VitrineVO[] = [];
           lstVitrine = self.itemsService.reversedItems<VitrineVO>(lstVitrineOld);
@@ -655,6 +590,123 @@ export class VitrinePage implements OnInit {
     });
 
     return promise;
+  }
+
+  public onChangeMunicipioEvent() {
+    let self = this;
+
+    this.events.subscribe("vitrine:onChangeMunicipio", () => {
+      self.municipioAnterior = this.globalVar.getMunicipioPadrao().muni_sq_id;
+      self.atualizaDadosVitrine();
+    });
+  }
+
+  private disconectRealTime() {
+
+    let self = this;
+    this.vitrineSrv.getVitrineRef().child(self.globalVar.getMunicipioPadrao().muni_sq_id).off('child_added');
+
+    this.vitrineSrv.getVitrineRef().child(self.globalVar.getMunicipioPadrao().muni_sq_id).off('child_removed');
+
+    this.vitrineSrv.getVitrineRef().child(self.globalVar.getMunicipioPadrao().muni_sq_id).off('child_changed');
+  }
+
+  private connectRealTime() {
+
+    let self = this;
+
+    this.vitrineSrv.getVitrineRef().child(self.globalVar.getMunicipioPadrao().muni_sq_id).on('child_added', this.onVitrineAdded);
+
+    this.vitrineSrv.getVitrineRef().child(self.globalVar.getMunicipioPadrao().muni_sq_id).on('child_removed', this.onVitrineRemove);
+
+    this.vitrineSrv.getVitrineRef().child(self.globalVar.getMunicipioPadrao().muni_sq_id).on('child_changed', this.onVitrineChange);
+  }
+
+  public onVitrineAdded = (childSnapshot, prevChildKey) => {
+    var self = this;
+    var pkVitrine = childSnapshot.val().vitr_sq_id;
+
+    if (self.vitrines != null && self.vitrines.length > 0) {
+      let exist: boolean = self.vitrines.some(campo =>
+        campo.vitr_sq_id == pkVitrine
+      );
+
+      if (!exist) {
+        let newVitrine: VitrineVO = self.mapSrv.getVitrine(childSnapshot.val(), pkVitrine);
+        self.newVitrines.push(newVitrine);
+        self.events.publish('thread:created', self.newVitrines);
+      }
+    }
+  }
+
+  public onVitrineRemove = (childSnapshot) => {
+    var self = this;
+
+    if (childSnapshot.val() != null) {
+      var pkVitrine = childSnapshot.val().vitr_sq_id;
+      let removeVitrine: VitrineVO = self.mapSrv.getVitrine(childSnapshot.val(), pkVitrine);
+
+      var objResult: any = self.itemsService.findElement(self.newVitrines, (v: any) => v.vitr_sq_id == pkVitrine);
+
+      if (objResult != null) {
+        self.itemsService.removeItemFromArray(self.newVitrines, removeVitrine);
+        self.events.publish('thread:created', self.newVitrines);
+      } else {
+        self.itemsService.removeItems(self.vitrines, (v: any) => v.vitr_sq_id == pkVitrine);
+        console.log(self.vitrines);
+      }
+    }
+  }
+
+  public onVitrineChange = (childSnapshot, prevChildKey) => {
+
+    var self = this;
+    var pkVitrine = childSnapshot.val().vitr_sq_id;
+    var inStatusCurtida: boolean = false;
+
+    let exist: boolean = self.newVitrines.some(campo =>
+      campo.vitr_sq_id == pkVitrine
+    );
+
+    if (!exist) {
+
+      let oldVitrine: any = self.itemsService.findElement(self.vitrines, (v: any) => v.vitr_sq_id == pkVitrine);
+
+      let newVitrine: VitrineVO = self.mapSrv.getVitrine(childSnapshot.val(), pkVitrine);
+
+      if ((oldVitrine.anun_nr_visitas != newVitrine.anun_nr_visitas) || (oldVitrine.anun_nr_curtidas != newVitrine.anun_nr_curtidas)) {
+
+        if (oldVitrine.anun_nr_curtidas != newVitrine.anun_nr_curtidas) {
+          inStatusCurtida = true;
+        }
+
+        oldVitrine = self.mapSrv.copyVitrine(oldVitrine, newVitrine);
+
+
+        if (newVitrine.usua_sq_id != "" && inStatusCurtida != false) {
+          newVitrine.anun_in_curtida = inStatusCurtida;
+          self.minhaPubSrv.atualizarDadosVitrine(newVitrine);
+        }
+      }
+      else {
+        self.newVitrines.push(newVitrine);
+        self.events.publish('thread:created', self.newVitrines);
+
+        if (self.vitrines != null && self.vitrines.length > 0) {
+          self.itemsService.removeItems(self.vitrines, (v: any) => v.vitr_sq_id == pkVitrine);
+        }
+      }
+    }
+  }
+
+  private atualizaDadosVitrine() {
+    this.disconectRealTime();
+    this.newVitrines = [];
+    this.startPk = "";
+    this.limitPage = 10;
+    this.rowCount = 0;
+    this.rowCurrent = 0;
+    this.loadVitrines();
   }
 }
 

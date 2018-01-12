@@ -26,15 +26,17 @@ export class VitrineService {
   }
 
   public getVitrineRefTotal(seqMunicipio: string) {
-    return this.vitrineRef.child(seqMunicipio).orderByChild('vitr_sq_ordem').once('value');
+    return this.vitrineRef.child(seqMunicipio).orderByChild('vitr_sq_ordem').once('value')
   }
 
   public getVitrineMunicipio(seqMunicipio: string, limitPage: number, startPk: string) {
+
     if (startPk == "") {
       return this.vitrineRef.child(seqMunicipio).orderByChild('vitr_sq_ordem').limitToLast(limitPage).once('value');
     } else {
       return this.vitrineRef.child(seqMunicipio).orderByChild('vitr_sq_ordem').endAt(startPk).limitToLast(limitPage).once('value');
     }
+
   }
 
   public getNewUidVitrine(seqMunicipio: string): string {

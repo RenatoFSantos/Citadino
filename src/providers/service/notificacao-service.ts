@@ -20,7 +20,7 @@ export class NotificacaoService {
           contents: { "en": content },
           include_player_ids: uid,
           small_icon: "ic_stat_icon",
-          large_icon: "icon",
+          large_icon: "ic_large_icon",
           ios_badgeType:"Increase",
           ios_badgeCount: 1,
           android_group: subtitle,

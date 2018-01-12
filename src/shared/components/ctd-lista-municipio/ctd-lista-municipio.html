@@ -1,0 +1,11 @@
+<ion-header>
+    <ctd-header-modal titulo="Cidades"></ctd-header-modal>
+</ion-header>
+<ion-content>
+    <ion-list>
+        <ion-item *ngFor="let munic of municipios" (click)="municipioSelecionado(munic)">
+            <div class="municipioTxt">{{munic.muni_nm_municipio}}</div>
+            <ion-icon name="md-checkmark" *ngIf="munic.muni_sq_id == municSelected.muni_sq_id" item-end></ion-icon>
+        </ion-item>
+    </ion-list> 
+</ion-content>

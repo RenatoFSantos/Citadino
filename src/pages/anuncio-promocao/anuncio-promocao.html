@@ -1,0 +1,36 @@
+<ion-header>
+  <ctd-header-modal [titulo]=[(titulo)]></ctd-header-modal>
+</ion-header>
+<ion-content>
+  <ion-card class="ctd-card" *ngFor="let cupom of cupons">
+    <ion-card-header>
+      <img src="{{cupom.cupo_tx_urlimagem}}">
+    </ion-card-header>
+    <ion-card-content>
+      <ion-card-title>
+        {{cupom.cupo_tx_titulo}}
+      </ion-card-title>
+      <ion-grid>
+        <ion-row>
+          <ion-col>
+            -{{cupom.cupo_nr_desconto}}% de desconto
+          </ion-col>
+        </ion-row>
+        <ion-row>
+          <ion-col>
+            {{cupom.cupo_nr_vlcomdesconto | currency:'BRL':true:'1.2-2'}}
+          </ion-col>
+          <ion-col>
+            <div style="text-decoration: line-through">{{cupom.cupo_nr_vlatual | currency:'BRL':true:'1.2-2'}}</div>
+          </ion-col>
+        </ion-row>
+      </ion-grid>
+    </ion-card-content>
+    <ctd-btn-promocao [isBtnPublicar]=true [cupom]=cupom></ctd-btn-promocao>
+  </ion-card>
+  <ion-fab right bottom>
+    <button ion-fab (click)="adicionarPromocao()">
+      <ion-icon name="add"></ion-icon>
+    </button>
+  </ion-fab>
+</ion-content>

@@ -1,0 +1,20 @@
+<ion-grid class="barraBtnEvento">
+  <ion-row>
+    <ion-col col-8>
+      
+    </ion-col>
+    <ion-col col-2>
+      <button ion-button icon-only clear class="btnEvento" *ngIf="isBtnPause == true">
+        <ion-icon name="md-pause">
+        </ion-icon>
+      </button>
+    </ion-col>
+    <ion-col col-2>
+      <button ion-button icon-only clear class="btnEvento" 
+      *ngIf="isBtnPublicar == true" (click)="publicarPromocao()">
+        <ion-icon name="ios-redo">
+        </ion-icon>
+      </button>
+    </ion-col>
+  </ion-row>
+</ion-grid>

@@ -1,0 +1,19 @@
+page-meus-anuncios {
+
+    .tabs-md .tabbar {
+        background: #e1e1e1 !important;
+        height: 30px;
+    }    
+
+    .tabs-md .tab-button-text {
+        font-size: 1.4rem !important;
+    }
+
+    .tabs-md .tab-button[aria-selected=false] {
+        color: black !important;
+    }
+
+    .tabs-md .tab-button[aria-selected=true] {
+        color: #387ef5;
+    }    
+}

@@ -6,11 +6,13 @@ import { Injectable } from '@angular/core';
 export class GuiaService {
 
   private categoriaRef: any;
+  private muniFiltroRef: any;
   private descritorRef: any;
 
 
   constructor(public fbService: FirebaseService) {
     this.categoriaRef = this.fbService.getDataBase().ref('categoria');
+    this.muniFiltroRef = this.fbService.getDataBase().ref('_municipioflt');
     this.descritorRef = this.fbService.getDataBase().ref('descritorempresa');
   }
 
@@ -18,8 +20,8 @@ export class GuiaService {
     return this.categoriaRef.orderByChild('cate_nm_pesquisa').once('value');
   }
 
-  public getDescritorPorNome(nome: string) {
-    return this.descritorRef.orderByChild('desc_nm_pesquisa')
+  public getDescritorPorNome(muniUid: string,nome: string) {
+    return this.muniFiltroRef.child(muniUid).child('descritorempresa').orderByChild('desc_nm_pesquisa')
       .startAt(CtdFuncoes.removerAcentos(
         CtdFuncoes.removeEspacosDuplos(nome.toLowerCase().trim())))
       .endAt(CtdFuncoes.removerAcentos(
@@ -27,8 +29,8 @@ export class GuiaService {
       .once('value');
   }
 
-  public getEmpresaByCategoria(categoria: string) {
-    return this.categoriaRef.child(categoria).child('empresa').orderByChild('empr_nm_razaosocial').once('value');
+  public getEmpresaByCategoria(muniUid: string, categoria: string) {
+    return this.muniFiltroRef.child(muniUid).child('categoriaempresa').child(categoria).child('empresa').orderByChild('empr_nm_razaosocial').once('value');
 
   }
 

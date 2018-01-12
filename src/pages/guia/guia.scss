@@ -36,4 +36,25 @@ page-guia {
         // -moz-box-shadow: 0 0 0 3px #fff, 0 0 0 4px #999, 0 2px 5px 4px rgba(0,0,0,.2);
         // box-shadow: 0 0 0 3px #fff, 0 0 0 4px #999, 0 2px 5px 4px rgba(0,0,0,.2);
     }
+
+    .btnGeolocalizacao {
+        color: white !important;
+        font-size: 1.6em !important;
+    }
+
+    .select-text {
+        color: white !important;
+        font-size: 1.2em !important;
+    }
+
+    .select-md {
+        padding: 0px !important;
+        max-width: 90%!important;
+    }
+
+    .select-md .select-icon .select-icon-inner {
+        color: white !important;
+        font-size: 1.1em !important;
+        left: 0px !important;
+    }
 }

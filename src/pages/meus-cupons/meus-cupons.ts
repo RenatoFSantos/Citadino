@@ -3,7 +3,6 @@ import { CupomService } from './../../providers/service/cupom-service';
 import { UsuarioVO } from './../../model/usuarioVO';
 import { GlobalVar } from './../../shared/global-var';
 import { CupomEmpresaVO } from './../../model/cupomEmpresaVO';
-import { EmpresaCupomVO } from './../../model/empresaCupomVO';
 import { MappingsService } from './../../providers/service/_mappings-service';
 import { EmpresaService } from './../../providers/service/empresa-service';
 import { CupomVO } from './../../model/cupomVO';
@@ -194,7 +193,7 @@ export class MeusCuponsPage {
           var empresaVO = self.mapSrv.getEmpresa(objEmpresa);
 
           var objcupom: CupomVO = new CupomVO();
-          objcupom.cupo_tx_desconto = "";
+          objcupom.cupo_nr_desconto = 0;
           objcupom.cupo_tx_urlimagem = barcodeData;
           objcupom.cupo_tx_regulamento = "";
           objcupom.cupo_tx_titulo = "";

@@ -1,3 +1,6 @@
+import { MunicipioService } from './service/municipio-service';
+import { CupomCriadoService } from './service/cupom-criado-service';
+import { CurrencyMask } from './../shared/currency-mask';
 import { VitrineCurtirService } from './service/vitrine-curtir-service';
 import { CupomService } from './service/cupom-service';
 import { UsuarioCupomService } from './service/usuario-cupom-service';
@@ -64,5 +67,8 @@ export const APP_PROVIDERS = [
     CupomService,
     UsuarioCupomService,
     PromocaoService,
-    VitrineCurtirService    
+    VitrineCurtirService,
+    CurrencyMask,
+    CupomCriadoService,
+    MunicipioService
 ];

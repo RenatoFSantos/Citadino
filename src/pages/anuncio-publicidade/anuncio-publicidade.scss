@@ -1,4 +1,4 @@
-page-minhas-publicacoes {
+page-anuncio-publicidade {
     ion-card.ctd-card {
         padding: 0px;
         border-radius: 10px;
@@ -91,12 +91,20 @@ page-minhas-publicacoes {
     }
 
     .fixed-content {
-        margin-bottom: 56px !important;
-        margin-top: 63px !important;
+        margin-bottom: 52px !important;
+        margin-top: 78px !important;
+        padding: 1px !important;
     }
 
     .scroll-content {
-        margin-top: 63px !important;
+        margin-top: 78px !important;
+        padding: 0px !important;
     }
 
+    .grid {
+        padding: 2px !important;
+    }
+    .col {
+        padding: 2px !important;
+    }  
 }

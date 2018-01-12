@@ -1,5 +1,6 @@
 import { PlanoVO } from './planoVO';
 import { CategoriaVO } from './categoriaVO';
+import { MunicipioVO } from './municipioVO';
 export class EmpresaVO {
 
     public empr_sq_id: string;
@@ -31,6 +32,7 @@ export class EmpresaVO {
     public categoria: CategoriaVO;
     public plano: PlanoVO;
     public isIndexNome:boolean; 
+    public municipio:MunicipioVO;
 
     constructor() {
         this.empr_sq_id = '';
@@ -62,5 +64,6 @@ export class EmpresaVO {
         this.categoria = new CategoriaVO();
         this.plano = new PlanoVO();
         this.isIndexNome = false; 
+        this.municipio = new MunicipioVO();
     }
 }

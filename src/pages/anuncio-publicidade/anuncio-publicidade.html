@@ -1,11 +1,8 @@
 <ion-header>
-  <ion-navbar color="ctd-navbar">
-    <ion-title>Meus Anúncios</ion-title>
-  </ion-navbar>
+  <ctd-header-modal [titulo]=[(titulo)]></ctd-header-modal>
 </ion-header>
 <ion-content>
   <ion-card class="ctd-card" *ngFor="let item of vitrines">
-    <!-- <div *ngIf="item.tian_sq_id == 'TP-1'"> -->
     <ion-item (click)="openPage(item)">
       <ion-avatar item-left>
         <img src="{{item.anun_tx_urlavatar}}">
@@ -13,7 +10,7 @@
       <h2>{{item.anun_tx_titulo}}</h2>
       <p>{{item.anun_tx_subtitulo}}</p>
       <p *ngIf="item.vitr_dt_agendada != ''">
-          {{item.vitr_dt_agendada | date: 'shortDate'}}
+        {{item.vitr_dt_agendada | date: 'shortDate'}}
       </p>
       <p *ngIf="item.vitr_dt_agendada == ''">Não publicado</p>
     </ion-item>
@@ -26,13 +23,12 @@
         <a detail-none (click)="exibirTextoVitrine(item)">Continuar lendo</a>
       </p>
     </ion-card-content>
-    <img style="max-height:480px" src="{{item.anun_tx_urlbanner}}" (click)="openPage(item)" />
+    <img *ngIf="item.anun_tx_urlbanner != ''" style="max-height:480px" src="{{item.anun_tx_urlbanner}}" (click)="openPage(item)" />
 
     <ion-row>
       <ion-col width-100 class="ctd-btn-vitrine">
         <ctd-buttons [urlSlide]=(item.anun_tx_urlslide1) [empresaKey]=(item.empr_sq_id) [vitrine]=(item) [vitrineSalva]=item.anun_nr_salvos
-          [usuarioVitrine]=item.usua_sq_id [isBtnRepublicar]="true" [isBtnNrVisita]=true 
-          [isBtnNrCurtir]=true [isBtnChutarCurti]=false></ctd-buttons>
+          [usuarioVitrine]=item.usua_sq_id [isBtnRepublicar]="true" [isBtnNrVisita]=true [isBtnNrCurtir]=true [isBtnChutarCurti]=false></ctd-buttons>
       </ion-col>
     </ion-row>
   </ion-card>

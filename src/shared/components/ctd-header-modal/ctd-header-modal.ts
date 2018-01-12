@@ -1,4 +1,4 @@
-import { ViewController } from 'ionic-angular';
+import { ViewController, Events } from 'ionic-angular';
 import { Component, Input } from '@angular/core';
 
 @Component({
@@ -7,16 +7,21 @@ import { Component, Input } from '@angular/core';
 })
 export class CtdHeaderModalComponent {
 
-  @Input() 
-  public titulo:string = "CITADINO";
+  @Input()
+  public titulo: string = "";
 
-  @Input() 
-  public pathImage:string = "assets/img/icon.png";
+  @Input()
+  public modal: boolean = false;
 
- constructor(public viewCtrl: ViewController) {}
+  constructor(public viewCtrl: ViewController,
+    private events: Events) { }
 
-  close() {
-    this.viewCtrl.dismiss();
+  public close() {
+    if (this.modal == false) {
+      this.events.publish("anuncio_close:true", true);
+    }
+    else {
+      this.viewCtrl.dismiss();
+    }
   }
-
 }

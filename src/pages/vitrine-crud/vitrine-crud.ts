@@ -1,3 +1,5 @@
+import { MunicipioVO } from './../../model/municipioVO';
+import { MunicipioService } from './../../providers/service/municipio-service';
 import { VitrineCurtirService } from './../../providers/service/vitrine-curtir-service';
 import { MinhasPublicacoesService } from './../../providers/service/minhas-publicacoes';
 import { VitrineService } from './../../providers/service/vitrine-service';
@@ -18,6 +20,7 @@ import { UsuarioService } from './../../providers/service/usuario-service';
 import { EmpresaService } from './../../providers/service/empresa-service';
 import * as enums from './../../model/dominio/ctdEnum';
 import { Component } from '@angular/core';
+import { GlobalVar } from '../../shared/global-var';
 
 @Component({
   selector: 'page-vitrine-crud',
@@ -29,11 +32,12 @@ export class VitrineCrudPage {
   public frmVitrineCrud: FormGroup;
   public vitrine: VitrineVO = new VitrineVO();
   public imagens: any[] = [];
+  public titulo: string = "Criar Publicidade";
   private imagemPadrao: any;
   private pathImagens: any[];
   private usuaKey: string = "";
-
-  private seqMunicipio: string = "-KoJyCiR1SOOUrRGimAS";
+  private usuario: UsuarioVO;
+  private muniEmpr: MunicipioVO;
 
   constructor(private emprSrv: EmpresaService,
     private usuaSrv: UsuarioService,
@@ -50,7 +54,11 @@ export class VitrineCrudPage {
     private vtSrv: VitrineService,
     private mnPublSrv: MinhasPublicacoesService,
     private loadingCtrl: LoadingController,
-    private vtrCurt: VitrineCurtirService) {
+    private vtrCurt: VitrineCurtirService,
+    private glbVar: GlobalVar) {
+
+    this.usuario = this.glbVar.usuarioLogado;
+    this.getMunicipioEmpresa(this.usuario);
 
     this.criarFormulario();
     this.excluirImagemEvent();
@@ -58,6 +66,10 @@ export class VitrineCrudPage {
 
   ionViewDidLoad() {
     this.pesquisarEmpresa();
+  }
+
+  ionViewWillUnload() {
+    this.events.unsubscribe('excluirImagem:true', null);
   }
 
   private pesquisarEmpresa() {
@@ -75,6 +87,15 @@ export class VitrineCrudPage {
           self.vitrine.empr_sq_id = empresa.empr_sq_id;
           self.vitrine.anun_tx_urlavatar = empresa.empr_tx_logomarca;
           self.vitrine.empr_nm_fantasia = empresa.empr_nm_razaosocial;
+          self.vitrine.empr_sq_id = empresa.empr_sq_id;
+
+          var munic = empresa.municipio;
+          if (munic != null) {
+            self.vitrine.muni_sq_id = munic.muni_sq_id;
+          }
+          else {
+            self.vitrine.muni_sq_id = self.glbVar.getMunicipioPadrao().muni_sq_id;
+          }
 
           if (snapEmpresa.child("smartsite").exists()) {
             self.vitrine.anun_in_smartsite = true;
@@ -83,7 +104,6 @@ export class VitrineCrudPage {
             self.vitrine.anun_in_smartsite = false;
           }
 
-          self.vitrine.muni_sq_id = self.seqMunicipio;
           self.vitrine.anun_in_status = "A"
 
         }).catch((error) => {
@@ -118,19 +138,20 @@ export class VitrineCrudPage {
 
     if (self.frmVitrineCrud.valid) {
 
+      var newOrder = String(new Date().getTime());
+      var newOrdeMunic = newOrder + '_' + self.vitrine.muni_sq_id;
 
-      var vitrineId = self.vtSrv.getNewUidVitrine(self.seqMunicipio);
+      var vitrineId = self.vtSrv.getNewUidVitrine(self.glbVar.getMunicipioPadrao().muni_sq_id);
       var dtAtual = CtdFuncoes.convertDateToStr(new Date(), enums.DateFormat.enUS);
       var nmEmpresa = self.vitrine.empr_nm_fantasia;
 
       self.vitrine.anun_tx_titulo = self.frmVitrineCrud.controls.anun_tx_titulo.value;
       self.vitrine.anun_tx_texto = self.frmVitrineCrud.controls.anun_tx_texto.value;
       self.vitrine.anun_tx_subtitulo = nmEmpresa.substr(0, 35)
-      self.vitrine.vitr_sq_ordem = String(new Date().getTime());
+      self.vitrine.vitr_sq_ordem = newOrder;
       self.vitrine.vitr_dt_agendada = "";
       self.vitrine.vitr_sq_id = vitrineId;
       self.vitrine.usua_sq_id = self.usuaKey;
-
 
       var loader = self.loadingCtrl.create({
         content: 'Aguarde...',
@@ -146,9 +167,9 @@ export class VitrineCrudPage {
             loader.dismiss();
             setTimeout(() => {
               self.createAlert("Publicação criada com sucesso.");
-              // self.events.publish("carregaPublicacao:true");
+              self.events.publish("carregaPublicacao:true");
               self.navCtrl.pop();
-            },1000);
+            }, 1000);
           })
             .catch(err => {
               loader.dismiss();
@@ -200,45 +221,6 @@ export class VitrineCrudPage {
 
     return promAll;
   }
-
-  private salvarDadosVitrine = function (self: any) {
-    let vitrineId = self.vitrine.vitr_sq_id;
-    let imgs: any[] = self.pathImagens;
-
-    var promise = new Promise(function (resolve, reject) {
-
-      if (imgs.length == 1) {
-        self.vitrine.anun_tx_urlbanner = imgs[0];
-        self.vitrine.anun_tx_urlslide1 = imgs[0];
-      }
-      else if (imgs.length == 2) {
-        self.vitrine.anun_tx_urlbanner = imgs[0];
-        self.vitrine.anun_tx_urlslide1 = imgs[0];
-        self.vitrine.anun_tx_urlslide2 = imgs[1];
-      } else if (imgs.length == 3) {
-        self.vitrine.anun_tx_urlbanner = imgs[0];
-        self.vitrine.anun_tx_urlslide1 = imgs[0];
-        self.vitrine.anun_tx_urlslide2 = imgs[1];
-        self.vitrine.anun_tx_urlslide3 = imgs[2];
-      } else if (imgs.length == 4) {
-        self.vitrine.anun_tx_urlbanner = imgs[0];
-        self.vitrine.anun_tx_urlslide1 = imgs[0];
-        self.vitrine.anun_tx_urlslide2 = imgs[1];
-        self.vitrine.anun_tx_urlslide3 = imgs[2];
-        self.vitrine.anun_tx_urlslide4 = imgs[3];
-      }
-
-      self.vtSrv.salvarWithUid(vitrineId, self.seqMunicipio, self.vitrine).then(() => {
-        resolve(self);
-      })
-        .catch((error) => {
-          reject(error);
-        });
-    });
-
-    return promise;
-  }
-
 
   private salvarPublicacao = function (self: any) {
     let vitrineId = self.vitrine.vitr_sq_id;
@@ -443,7 +425,56 @@ export class VitrineCrudPage {
 
     });
   }
+
+  private getMunicipioEmpresa(usuario: UsuarioVO) {
+    let self = this;
+    if (usuario.empresa != null) {
+      this.emprSrv.getMunicipioEmpresaKey(usuario.empresa.empr_sq_id).then((snap) => {
+        var emprKey: any = Object.keys(snap.val());
+        self.muniEmpr = self.mapSrv.getMunicipio(snap.val()[emprKey]);
+      })
+    }
+  }
+
 }
+
+  // private salvarDadosVitrine = function (self: any) {
+  //   let vitrineId = self.vitrine.vitr_sq_id;
+  //   let imgs: any[] = self.pathImagens;
+
+  //   var promise = new Promise(function (resolve, reject) {
+
+  //     if (imgs.length == 1) {
+  //       self.vitrine.anun_tx_urlbanner = imgs[0];
+  //       self.vitrine.anun_tx_urlslide1 = imgs[0];
+  //     }
+  //     else if (imgs.length == 2) {
+  //       self.vitrine.anun_tx_urlbanner = imgs[0];
+  //       self.vitrine.anun_tx_urlslide1 = imgs[0];
+  //       self.vitrine.anun_tx_urlslide2 = imgs[1];
+  //     } else if (imgs.length == 3) {
+  //       self.vitrine.anun_tx_urlbanner = imgs[0];
+  //       self.vitrine.anun_tx_urlslide1 = imgs[0];
+  //       self.vitrine.anun_tx_urlslide2 = imgs[1];
+  //       self.vitrine.anun_tx_urlslide3 = imgs[2];
+  //     } else if (imgs.length == 4) {
+  //       self.vitrine.anun_tx_urlbanner = imgs[0];
+  //       self.vitrine.anun_tx_urlslide1 = imgs[0];
+  //       self.vitrine.anun_tx_urlslide2 = imgs[1];
+  //       self.vitrine.anun_tx_urlslide3 = imgs[2];
+  //       self.vitrine.anun_tx_urlslide4 = imgs[3];
+  //     }
+
+  //     self.vtSrv.salvarWithUid(vitrineId, self.seqMunicipio, self.vitrine).then(() => {
+  //       resolve(self);
+  //     })
+  //       .catch((error) => {
+  //         reject(error);
+  //       });
+  //   });
+
+  //   return promise;
+  // }
 
 
 

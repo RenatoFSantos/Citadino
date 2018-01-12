@@ -41,5 +41,4 @@ export class VitrineVO {
     public cupo_nr_qtdedisponivel:number = 0; //V. Cupom Desconto
     public cupo_in_status:boolean = true; //V. Cupom Desconto
 
-
 }

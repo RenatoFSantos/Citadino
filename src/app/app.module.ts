@@ -1,8 +1,14 @@
+import { CtdListaMunicipio } from './../shared/components/ctd-lista-municipio/ctd-lista-municipio';
+import { CtdBtnPromocaoComponent } from './../shared/components/ctd-btn-promocao/ctd-btn-promocao';
+import { AnuncioPromocaoCrudPage } from './../pages/anuncio-promocao-crud/anuncio-promocao-crud';
+import { AnuncioClassificadoPage } from './../pages/anuncio-classificado/anuncio-classificado';
+import { AnuncioPromocaoPage } from './../pages/anuncio-promocao/anuncio-promocao';
+import { AnuncioPublicidadePage } from './../pages/anuncio-publicidade/anuncio-publicidade';
+import { MeusAnunciosPage } from './../pages/meus-anuncios/meus-anuncios';
 import { VitrinePromocaoPage } from './../pages/vitrine-promocao/vitrine-promocao';
 import { MeusCuponsPage } from './../pages/meus-cupons/meus-cupons';
 import { VitrinePublicacaoPage } from './../pages/vitrine-publicacao/vitrine-publicacao';
 import { VitrineCrudPage } from './../pages/vitrine-crud/vitrine-crud';
-import { MinhasPublicacoesPage } from './../pages/minhas-publicacoes/minhas-publicacoes';
 import { MeusMarcadosPage } from './../pages/meus_marcados/meus-marcados';
 import { SettingsService } from './../shared/settingsService';
 import { AutoresizeDirective } from './../shared/components/drt_autoresize/autoresize';
@@ -42,28 +48,31 @@ import { AngularFireDatabaseModule } from 'angularfire2/database';
 import { IonicImageViewerModule } from 'ionic-img-viewer';
 import { registerLocaleData } from '@angular/common';
 import ptBr from '@angular/common/locales/pt';
+import { BrMaskerModule } from 'brmasker-ionic-3';
+import { CtdHeaderMunicipio } from '../shared/components/ctd-header-municipio/ctd-header-municipio';
+
 registerLocaleData(ptBr)
 
 // providers
 import { APP_PROVIDERS } from '../providers/app.providers';
 
-// export const firebaseConfig = {
-//   apiKey: "AIzaSyC0maPdTdMQ7ccxuiXHLcZ1IsgeX7qVD6I",
-//   authDomain: "citadinodsv.firebaseapp.com",
-//   databaseURL: "https://citadinodsv.firebaseio.com",
-//   projectId: "citadinodsv",
-//   storageBucket: "citadinodsv.appspot.com",
-//   messagingSenderId: "180769307423"
-// };
-
 export const firebaseConfig = {
-  apiKey: "AIzaSyCuOY5Kt7_Zo08khwYFiLsIQC4kFe5LWwE",
-  authDomain: "citadinoprd-13651.firebaseapp.com",
-  databaseURL: "https://citadinoprd-13651.firebaseio.com",
-  projectId: "citadinoprd-13651",
-  storageBucket: "citadinoprd-13651.appspot.com",
-  messagingSenderId: "960817085241"
+  apiKey: "AIzaSyC0maPdTdMQ7ccxuiXHLcZ1IsgeX7qVD6I",
+  authDomain: "citadinodsv.firebaseapp.com",
+  databaseURL: "https://citadinodsv.firebaseio.com",
+  projectId: "citadinodsv",
+  storageBucket: "citadinodsv.appspot.com",
+  messagingSenderId: "180769307423"
 };
+
+// export const firebaseConfig = {
+//   apiKey: "AIzaSyCuOY5Kt7_Zo08khwYFiLsIQC4kFe5LWwE",
+//   authDomain: "citadinoprd-13651.firebaseapp.com",
+//   databaseURL: "https://citadinoprd-13651.firebaseio.com",
+//   projectId: "citadinoprd-13651",
+//   storageBucket: "citadinoprd-13651.appspot.com",
+//   messagingSenderId: "960817085241"
+// };
 
 
 @NgModule({
@@ -97,11 +106,18 @@ export const firebaseConfig = {
     ProfilePage,
     MeusMarcadosPage,  
     AutoresizeDirective,
-    MinhasPublicacoesPage,
     VitrineCrudPage,
     MeusCuponsPage,
     VitrinePromocaoPage,
-    VitrinePublicacaoPage
+    VitrinePublicacaoPage,
+    MeusAnunciosPage,
+    AnuncioPublicidadePage,
+    AnuncioPromocaoPage,
+    AnuncioClassificadoPage,
+    AnuncioPromocaoCrudPage,
+    CtdBtnPromocaoComponent,
+    CtdHeaderMunicipio,
+    CtdListaMunicipio
   ],
   imports: [
     BrowserModule,
@@ -111,7 +127,8 @@ export const firebaseConfig = {
       }),
     AngularFireModule.initializeApp(firebaseConfig),
     AngularFireDatabaseModule,
-    IonicImageViewerModule
+    IonicImageViewerModule,
+    BrMaskerModule
   ],
   bootstrap: [IonicApp],
   entryComponents: [
@@ -143,13 +160,20 @@ export const firebaseConfig = {
     EnviarNotificacaoPage,
     ProfilePage,
     MeusMarcadosPage,
-    MinhasPublicacoesPage,
     VitrineCrudPage,
     MeusCuponsPage,
     VitrinePromocaoPage,
-    VitrinePublicacaoPage
+    VitrinePublicacaoPage,
+    MeusAnunciosPage,
+    AnuncioPublicidadePage,
+    AnuncioPromocaoPage,
+    AnuncioClassificadoPage,
+    AnuncioPromocaoCrudPage,
+    CtdBtnPromocaoComponent,
+    CtdHeaderMunicipio,
+    CtdListaMunicipio
   ],
   providers: [APP_PROVIDERS,
-    {provide: LOCALE_ID, useValue: 'pt-PT'}]
+    {provide: LOCALE_ID, useValue: 'pt-PT'} ]
 })
 export class AppModule { }

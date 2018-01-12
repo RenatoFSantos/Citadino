@@ -1,5 +1,4 @@
 import { CupomVO } from './../../model/cupomVO';
-import { CupomEmpresaVO } from './../../model/cupomEmpresaVO';
 import { MappingsService } from './_mappings-service';
 import { FirebaseService } from './../database/firebase-service';
 import { Injectable } from '@angular/core';
@@ -24,11 +23,10 @@ export class CupomService {
 
   public salvar(cupom: CupomVO) {
     var self = this;
-    var newKey = this.cupomRef.push().key;
+    var newKey = cupom.cupo_sq_id;
     var result: string = null;
 
-    var promise = new Promise(function (resolve, reject) {
-      cupom.cupo_sq_id = newKey;
+    var promise = new Promise(function (resolve, reject) {   
       self.cupomRef.child(newKey).set(cupom)
         .then(() => {
           result = newKey;

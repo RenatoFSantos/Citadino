@@ -1,7 +1,8 @@
+import { MunicipioVO } from './../model/municipioVO';
+import { MeusAnunciosPage } from './../pages/meus-anuncios/meus-anuncios';
 import { PromocaoService } from './../providers/service/promocao-service';
 import { MeusCuponsPage } from './../pages/meus-cupons/meus-cupons';
 import { UsuarioSqlService } from './../providers/database/usuario-sql-service';
-import { MinhasPublicacoesPage } from './../pages/minhas-publicacoes/minhas-publicacoes';
 import { MeusMarcadosPage } from './../pages/meus_marcados/meus-marcados';
 import { ProfilePage } from './../pages/profile/profile';
 import { MappingsService } from './../providers/service/_mappings-service';
@@ -74,26 +75,34 @@ export class MyApp implements OnInit {
     private tokenSrv: TokenDeviceService,
     private oneSignal: OneSignal,
     private mapSrv: MappingsService,
-    private promSrv:PromocaoService) {
+    private promSrv: PromocaoService) {
 
     this.platform.ready().then(() => {
       var self = this;
       this.statusBar.styleDefault();
+
+      var munic:MunicipioVO = new MunicipioVO();
+      munic.muni_sq_id = "-KoJyCiR1SOOUrRGimAS";
+      munic.muni_nm_municipio = "Bicas";
+
+      self.globalVar.setMunicipioPadrao(munic);
 
       if (window.cordova) {
 
         setTimeout(function () {
           self.initPushConfigurate();
         }, 1000);
-
+      
         self.netService.initializeNetworkEvents();
         self.networkDisconnectEvent();
         self.networkConnectionEvent();
         self.appStateEvent();
         self.bancoDadosOnlineEvent();
+        self.globalVar.setIsCordova(window.cordova);
+
         //this.checkForUpdate();
         //Inicializa o servico do sqlLite
-        this.usuaSqlSrv.InitDatabase();
+        self.usuaSqlSrv.InitDatabase();
       }
     });
   }
@@ -116,7 +125,7 @@ export class MyApp implements OnInit {
           console.log(self.firebaseConnectionAttempts);
           self.verificarConexao();
 
-        } else {        
+        } else {
           self.usuaSrv.pesquisaUsuarioLogadoSq().then((usuLog: UsuarioVO) => {
             if (usuLog != null) {
               self.usuaSrv.pesquisarUsarioSqById(usuLog.usua_id)
@@ -137,7 +146,7 @@ export class MyApp implements OnInit {
         }
       }, 1000);
     }
-    else {      
+    else {
       self.promSrv.salvar();
       self.rotinaLogandoUsuario(null);
     }
@@ -334,6 +343,7 @@ export class MyApp implements OnInit {
 
   openPage(page: IMenu) {
     let params = {};
+    let self = this;
 
     switch (page.typeMenu) {
       case enums.ETypeMenu.default:
@@ -358,9 +368,10 @@ export class MyApp implements OnInit {
 
       case enums.ETypeMenu.logout:
         this.timeOutSession = setTimeout(() => {
-          this.usuaSrv.signOut();
+          
+          this.usuaSrv.signOut(self.globalVar.getIsCordova());
 
-          if (window.cordova) {
+          if (self.globalVar.getIsCordova()) {
             this.tokenSrv.removeToken(this.tokenPushAtual, this.userLogged.usua_sq_id);
             this.usuaSrv.removeToken(this.userLogged.usua_sq_id, this.tokenPushAtual);
           }
@@ -398,7 +409,7 @@ export class MyApp implements OnInit {
     this.pages.push({ title: 'Minha Conta', component: ProfilePage, icon: 'contact', typeMenu: enums.ETypeMenu.default });
 
     if (usuario.usua_sg_perfil == "ADM" || this.globalVar.isBtnAdicionarVitrine() == true) {
-      this.pages.push({ title: 'Meus Anúncios', component: MinhasPublicacoesPage, icon: 'md-create', typeMenu: enums.ETypeMenu.default });
+      this.pages.push({ title: 'Meus Anúncios', component: MeusAnunciosPage, icon: 'md-create', typeMenu: enums.ETypeMenu.default });
     }
 
     this.pages.push({ title: 'Meus Cupons', component: MeusCuponsPage, icon: 'ios-cash-outline', typeMenu: enums.ETypeMenu.default });
@@ -445,16 +456,16 @@ export class MyApp implements OnInit {
     var self = this;
 
     //Producao
-    let headers = {
-      "Content-Type": "application/json; charset=utf-8",
-      "Authorization": "Basic 02655c01-f40d-4b22-ac0d-07358b012b57"
-    };
-
-    //Desenvolvimento
     // let headers = {
     //   "Content-Type": "application/json; charset=utf-8",
-    //   "Authorization": "Basic dde460af-2898-4f1a-88b8-ff9fd97be308"
+    //   "Authorization": "Basic 02655c01-f40d-4b22-ac0d-07358b012b57"
     // };
+
+    //Desenvolvimento
+    let headers = {
+      "Content-Type": "application/json; charset=utf-8",
+      "Authorization": "Basic dde460af-2898-4f1a-88b8-ff9fd97be308"
+    };
 
     //Chamado quando recebe uma notificacao com o app aberto
     let notificationReceivedCallback = function (jsonData) {
@@ -468,20 +479,20 @@ export class MyApp implements OnInit {
 
 
     //Producao
-    window.plugins.OneSignal
-      .startInit("02655c01-f40d-4b22-ac0d-07358b012b57", "960817085241")
-      .handleNotificationOpened(notificationOpenedCallback)
-      .handleNotificationReceived(notificationReceivedCallback)
-      .inFocusDisplaying(self.oneSignal.OSInFocusDisplayOption.None)
-      .endInit();
-
-    //Desenvolvimento
     // window.plugins.OneSignal
-    //   .startInit("dde460af-2898-4f1a-88b8-ff9fd97be308", "180769307423")
+    //   .startInit("02655c01-f40d-4b22-ac0d-07358b012b57", "960817085241")
     //   .handleNotificationOpened(notificationOpenedCallback)
     //   .handleNotificationReceived(notificationReceivedCallback)
     //   .inFocusDisplaying(self.oneSignal.OSInFocusDisplayOption.None)
     //   .endInit();
+
+    //Desenvolvimento
+    window.plugins.OneSignal
+      .startInit("dde460af-2898-4f1a-88b8-ff9fd97be308", "180769307423")
+      .handleNotificationOpened(notificationOpenedCallback)
+      .handleNotificationReceived(notificationReceivedCallback)
+      .inFocusDisplaying(self.oneSignal.OSInFocusDisplayOption.None)
+      .endInit();
 
   }
 
@@ -554,7 +565,7 @@ export class MyApp implements OnInit {
     let usuarioLogado: UsuarioVO = verificarToken.usuario;
 
     //Token vinculado ao usuario
-    let tokenVinculadoUsuario: string = "";
+    let tokenVinculadoUsuario: string = self.tokenPushAtual;
 
     let eventoToken: number;
 
@@ -600,7 +611,7 @@ export class MyApp implements OnInit {
           .child("tokendevice").child(tokenVinculadoUsuario).set(null);
 
         self.usuaSrv.usersRef.child(usuarioLogado.usua_sq_id)
-          .child("tokendevice").set(self.tokenPushAtual);
+          .child("tokendevice").set(self.tokenPushAtual).set(true);
 
       }
       else if (eventoToken == enums.eventoTokenPush.usuarioSalvar) {

@@ -1,9 +1,9 @@
+import { AnuncioPublicidadePage } from './../../../pages/anuncio-publicidade/anuncio-publicidade';
 import { VitrinePage } from './../../../pages/vitrine/vitrine';
 import { VitrineCurtirService } from './../../../providers/service/vitrine-curtir-service';
 import { UsuarioVO } from './../../../model/usuarioVO';
 import { GlobalVar } from './../../global-var';
 import { VitrineService } from './../../../providers/service/vitrine-service';
-import { MinhasPublicacoesPage } from './../../../pages/minhas-publicacoes/minhas-publicacoes';
 import { MeusMarcadosService } from './../../../providers/service/meus_marcados-service';
 import { SlideVO } from './../../../model/slideVO';
 import { UsuarioService } from './../../../providers/service/usuario-service';
@@ -204,7 +204,7 @@ export class CtdButtonsComponent {
   }
 
   private excluirPublicacao() {
-    if (this.navCtrl.getActive().instance instanceof MinhasPublicacoesPage) {
+    if (this.navCtrl.getActive().instance instanceof AnuncioPublicidadePage) {
       this.events.publish("excluirPublicacao:true", (this.vitrine));
     }
     else {

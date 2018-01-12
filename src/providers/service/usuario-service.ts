@@ -43,8 +43,10 @@ export class UsuarioService {
 
 
   //Desconecta usuário Logado
-  signOut() {
-    this.deletarUsuarioLogadoSq();
+  signOut(isCordova:boolean) {
+    if (isCordova) {
+      this.deletarUsuarioLogadoSq();
+    }
     return this.fbService.getFireBase().auth().signOut();
   }
 

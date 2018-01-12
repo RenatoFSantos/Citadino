@@ -113,6 +113,27 @@ page-vitrine {
         // transform:translateY(80px) !important;
       }
 
+    .btnGeolocalizacao {
+        color: white !important;
+        font-size: 1.6em !important;
+    }
+
+    .select-text {
+        color: white !important;
+        font-size: 1.2em !important;
+    }
+
+    .select-md {
+        padding: 0px !important;
+        max-width: 90%!important;
+    }
+
+    .select-md .select-icon .select-icon-inner {
+        color: white !important;
+        font-size: 1.1em !important;
+        left: 0px !important;
+    }
+
       //   //============
       // versao promocao
     //   .tabs-md .tabbar {

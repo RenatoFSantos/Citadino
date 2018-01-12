@@ -1,3 +1,4 @@
+import { MunicipioVO } from './../../model/municipioVO';
 import { CupomEmpresaVO } from './../../model/cupomEmpresaVO';
 import { CupomVO } from './../../model/cupomVO';
 import { EmpresaVO } from './../../model/empresaVO';
@@ -6,13 +7,15 @@ import { UsuarioVO } from './../../model/usuarioVO';
 import { VitrineVO } from './../../model/vitrineVO';
 import * as enums from './../../model/dominio/ctdEnum';
 import { Injectable } from '@angular/core';
+import { CupomCriadoVO } from '../../model/cupomCriadoVO';
+import { CategoriaVO } from '../../model/categoriaVO';
 
 @Injectable()
 export class MappingsService {
 
     constructor() { }
 
-    getVitrines(snapshot: any): Array<VitrineVO> {
+    public getVitrines(snapshot: any): Array<VitrineVO> {
         let vitrines: Array<VitrineVO> = [];
 
         if (snapshot.val() != null) {
@@ -35,13 +38,13 @@ export class MappingsService {
                 vitrine.anun_tx_urlslide1 = element.val().anun_tx_urlslide1;
                 vitrine.anun_tx_urlslide2 = element.val().anun_tx_urlslide2;
                 vitrine.anun_tx_urlslide3 = element.val().anun_tx_urlslide3;
-                vitrine.anun_tx_urlslide4 = element.val().anun_tx_urlslide4 != undefined ? element.val().anun_tx_urlslide4  : "";
+                vitrine.anun_tx_urlslide4 = element.val().anun_tx_urlslide4 != undefined ? element.val().anun_tx_urlslide4 : "";
                 vitrine.anun_nr_curtidas = element.val().anun_nr_curtidas;
                 vitrine.anun_nr_salvos = element.val().anun_nr_salvos;
                 vitrine.anun_nr_visitas = element.val().anun_nr_visitas,
                     vitrine.anun_in_status = element.val().anun_in_status;
                 vitrine.empr_sq_id = element.val().empr_sq_id;
-                vitrine.empr_nm_fantasia = element.val().empr_nm_fantasia != undefined ? element.val().empr_nm_fantasia : "";                
+                vitrine.empr_nm_fantasia = element.val().empr_nm_fantasia != undefined ? element.val().empr_nm_fantasia : "";
                 vitrine.empr_tx_endereco = element.val().empr_tx_endereco != undefined ? element.val().empr_tx_endereco : "";
                 vitrine.empr_tx_bairro = element.val().empr_tx_bairro != undefined ? element.val().empr_tx_bairro : "";
                 vitrine.empr_tx_cidade = element.val().empr_tx_cidade != undefined ? element.val().empr_tx_cidade : "";
@@ -52,16 +55,16 @@ export class MappingsService {
                 vitrine.anun_in_smartsite = element.val().anun_in_smartsite;
                 vitrine.usua_sq_id = element.val().usua_sq_id != undefined ? element.val().usua_sq_id : "";
                 vitrine.anun_nr_imagens = element.val().anun_nr_imagens != undefined ? element.val().anun_nr_imagens : "",
-                vitrine.anun_in_curtida = element.val().anun_in_curtida != undefined ? element.val().anun_in_curtida : false,               
-                vitrine.cupo_sq_id = element.val().cupo_sq_id != undefined ? element.val().cupo_sq_id : false,
-                vitrine.cupo_nr_desconto = element.val().cupo_nr_desconto != undefined ? element.val().cupo_nr_desconto : false,
-                vitrine.cupo_nr_vlatual = element.val().cupo_nr_vlatual != undefined ? element.val().cupo_nr_vlatual : false,
-                vitrine.tpcu_sq_id = element.val().tpcu_sq_id != undefined ? element.val().tpcu_sq_id : false,
-                vitrine.cupo_nnr_qtdecupom = element.val().cupo_nnr_qtdecupom != undefined ? element.val().cupo_nnr_qtdecupom : false,
-                vitrine.cupo_nr_qtdedisponivel = element.val().cupo_nr_qtdedisponivel != undefined ? element.val().cupo_nr_qtdedisponivel : false,
-                vitrine.cupo_in_status = element.val().cupo_in_status != undefined ? element.val().cupo_in_status : false,
+                    vitrine.anun_in_curtida = element.val().anun_in_curtida != undefined ? element.val().anun_in_curtida : false,
+                    vitrine.cupo_sq_id = element.val().cupo_sq_id != undefined ? element.val().cupo_sq_id : false,
+                    vitrine.cupo_nr_desconto = element.val().cupo_nr_desconto != undefined ? element.val().cupo_nr_desconto : false,
+                    vitrine.cupo_nr_vlatual = element.val().cupo_nr_vlatual != undefined ? element.val().cupo_nr_vlatual : false,
+                    vitrine.tpcu_sq_id = element.val().tpcu_sq_id != undefined ? element.val().tpcu_sq_id : false,
+                    vitrine.cupo_nnr_qtdecupom = element.val().cupo_nnr_qtdecupom != undefined ? element.val().cupo_nnr_qtdecupom : false,
+                    vitrine.cupo_nr_qtdedisponivel = element.val().cupo_nr_qtdedisponivel != undefined ? element.val().cupo_nr_qtdedisponivel : false,
+                    vitrine.cupo_in_status = element.val().cupo_in_status != undefined ? element.val().cupo_in_status : false,
 
-                vitrines.push(vitrine);
+                    vitrines.push(vitrine);
             });
         }
 
@@ -69,7 +72,7 @@ export class MappingsService {
     };
 
 
-    getVitrine(snapshot: any, key: string): VitrineVO {
+    public getVitrine(snapshot: any, key: string): VitrineVO {
         let vitrine: VitrineVO = {
             vitr_sq_id: key,
             vitr_dt_agendada: snapshot.vitr_dt_agendada,
@@ -97,7 +100,7 @@ export class MappingsService {
             empr_tx_endereco: snapshot.empr_tx_endereco != undefined ? snapshot.empr_tx_endereco : "",
             empr_tx_bairro: snapshot.empr_tx_bairro != undefined ? snapshot.empr_tx_bairro : "",
             empr_tx_cidade: snapshot.empr_tx_cidade != undefined ? snapshot.empr_tx_cidade : "",
-            empr_tx_telefone_1: snapshot.empr_tx_telefone_1 != undefined ? snapshot.empr_tx_telefone_1 : "",            
+            empr_tx_telefone_1: snapshot.empr_tx_telefone_1 != undefined ? snapshot.empr_tx_telefone_1 : "",
             muni_sq_id: snapshot.muni_sq_id,
             tian_sq_id: snapshot.tian_sq_id,
             agen_sq_id: snapshot.agen_sq_id,
@@ -155,22 +158,22 @@ export class MappingsService {
     //     return json;
     // }
 
-    getUserJson(user: UsuarioVO): string {
+    public getUserJson(user: UsuarioVO): string {
         let json: any =
             {
                 usua_sq_id: user.usua_sq_id,
                 usua_nm_usuario: user.usua_nm_usuario,
                 usua_tx_login: user.usua_tx_login,
                 usua_tx_senha: user.usua_tx_senha,
-                usua_ds_sexo: '',
+                usua_ds_sexo: user.usua_ds_sexo,
                 usua_dt_inclusao: CtdFuncoes.convertDateToStr(new Date(), enums.DateFormat.enUS),
-                usua_ds_telefone: '',
-                usua_ds_email: '',
+                usua_ds_telefone: user.usua_ds_telefone,
+                usua_ds_email: user.usua_ds_email,
                 usua_nr_reputacao: 0,
-                usua_tx_observacao: '',
+                usua_tx_observacao: user.usua_tx_observacao,
                 usua_in_empresa: false,
                 usua_in_ajuda: false,
-                usua_tx_urlprofile: user.usua_tx_urlprofile != undefined ? user.usua_tx_urlprofile : "",
+                usua_tx_urlprofile: user.usua_tx_urlprofile != undefined ? user.usua_tx_urlprofile : user.usua_tx_urlprofile,
                 usua_sg_perfil: user.usua_sg_perfil
             }
 
@@ -178,7 +181,7 @@ export class MappingsService {
     }
 
 
-    getUsuario(snapshot: any): UsuarioVO {
+    public getUsuario(snapshot: any): UsuarioVO {
 
         let usuario: UsuarioVO = {
             usua_id: 0,
@@ -239,6 +242,7 @@ export class MappingsService {
                 empr_in_parceiro: false,
                 empr_tx_subcategoria: '',
                 categoria: null,
+                municipio: null,
                 plano: null,
                 isIndexNome: false
             }
@@ -251,6 +255,27 @@ export class MappingsService {
     }
 
     getEmpresa(snapEmpr: any): EmpresaVO {
+        let munic: MunicipioVO = null;
+        let categ: CategoriaVO = null;
+
+        if (snapEmpr.municipio != undefined) {
+            var muniKey:any = Object.keys(snapEmpr.municipio);
+            munic = {
+                muni_sq_id: snapEmpr.municipio[muniKey].muni_sq_id,
+                muni_nm_municipio: snapEmpr.municipio[muniKey].muni_nm_municipio
+            }
+        }
+
+        if (snapEmpr.categoria != undefined) {
+            var cateKey:any = Object.keys(snapEmpr.categoria);
+
+            categ = {
+                cate_sq_id: snapEmpr.categoria[cateKey].cate_sq_id,
+                cate_nm_categoria: snapEmpr.categoria[cateKey].cate_nm_categoria,
+                cate_tx_imagem: '',
+                cate_in_tipo: ''
+            }
+        }
 
         let empresa: EmpresaVO = {
             empr_sq_id: snapEmpr.empr_sq_id,
@@ -279,22 +304,14 @@ export class MappingsService {
             empr_in_mensagem: snapEmpr.empr_in_mensagem,
             empr_in_parceiro: snapEmpr.empr_in_parceiro,
             empr_tx_subcategoria: snapEmpr.empr_tx_subcategoria,
-            categoria: null,
+            categoria: categ,
             plano: null,
-            isIndexNome: false
+            isIndexNome: false,
+            municipio: munic
         }
 
         return empresa;
 
-    }
-
-    private replaceLineBreakVitrine(texto: string) {
-        // var newText = "<p class='ctd-noticia'>";
-        // newText = newText + texto.replace(/\n/gi,'<br/>');
-        // newText = newText + "</p>";
-
-        var newText = texto.replace(/\n/gi, '<br/>');
-        return newText;
     }
 
     private enableShowMore(texto: string) {
@@ -309,7 +326,45 @@ export class MappingsService {
         return result;
     }
 
-    getCupom(snapCupo: any): CupomVO {
+    public getCupomCriado(snapCupo: any): CupomCriadoVO {
+        var cupomEmpresa: CupomEmpresaVO = null;
+
+        if (snapCupo.cupoEmpresa != null) {
+            cupomEmpresa = new CupomEmpresaVO();
+            cupomEmpresa.empr_sq_id = snapCupo.cupoEmpresa.empr_sq_id;
+            cupomEmpresa.empr_nm_fantasia = snapCupo.cupoEmpresa.empr_nm_fantasia;
+            cupomEmpresa.empr_tx_endereco = snapCupo.cupoEmpresa.empr_tx_endereco;
+            cupomEmpresa.empr_tx_bairro = snapCupo.cupoEmpresa.empr_tx_bairro;
+            cupomEmpresa.empr_tx_cidade = snapCupo.cupoEmpresa.empr_tx_cidade;
+            cupomEmpresa.empr_tx_telefone_1 = snapCupo.cupoEmpresa.empr_tx_telefone_1;
+        }
+
+        let cupomCriado: CupomCriadoVO = {
+            usua_sq_id: snapCupo.usua_sq_id,
+            usua_nm_usuario: snapCupo.usua_nm_usuario,
+            cupo_sq_id: snapCupo.cupo_sq_id,
+            cupo_nr_desconto: snapCupo.cupo_nr_desconto,
+            cupo_tx_urlimagem: snapCupo.cupo_tx_urlimagem,
+            cupo_tx_regulamento: snapCupo.cupo_tx_regulamento,
+            cupo_tx_titulo: snapCupo.cupo_tx_titulo,
+            cupo_tx_descricao: snapCupo.cupo_tx_descricao,
+            cupo_nr_vlatual: snapCupo.cupo_nr_vlatual,
+            cupo_nr_vlcomdesconto: snapCupo.cupo_nr_vlcomdesconto,
+            cupo_dt_cadastro: snapCupo.cupo_dt_cadastro != undefined ? snapCupo.cupo_dt_cadastro : "",
+            cupo_dt_validade: snapCupo.cupo_dt_validade,
+            tipoCupom: snapCupo.tipoCupom,
+            cupo_nr_qtdecupom: snapCupo.cupo_nr_qtdecupom,
+            cupo_nr_qtdedisponivel: snapCupo.cupo_nr_qtdedisponivel,
+            cupoEmpresa: cupomEmpresa,
+            cupo_in_status: snapCupo.cupo_in_status,
+            cupo_sq_ordem: snapCupo.cupo_sq_ordem != undefined ? snapCupo.cupo_sq_ordem : "",
+            vitr_sq_id: snapCupo.vitr_sq_id != undefined ? snapCupo.vitr_sq_id : ""
+        }
+
+        return cupomCriado;
+    }
+
+    public getCupom(snapCupo: any): CupomVO {
         var cupomEmpresa: CupomEmpresaVO = null;
 
         if (snapCupo.cupoEmpresa != null) {
@@ -331,18 +386,21 @@ export class MappingsService {
             cupo_tx_descricao: snapCupo.cupo_tx_descricao,
             cupo_nr_vlatual: snapCupo.cupo_nr_vlatual,
             cupo_nr_vlcomdesconto: snapCupo.cupo_nr_vlcomdesconto,
+            cupo_dt_cadastro: snapCupo.cupo_dt_cadastro != undefined ? snapCupo.cupo_dt_cadastro : "",
             cupo_dt_validade: snapCupo.cupo_dt_validade,
             tipoCupom: snapCupo.tipoCupom,
             cupo_nr_qtdecupom: snapCupo.cupo_nr_qtdecupom,
             cupo_nr_qtdedisponivel: snapCupo.cupo_nr_qtdedisponivel,
             cupoEmpresa: cupomEmpresa,
-            cupo_in_status: snapCupo.cupo_in_status
+            cupo_in_status: snapCupo.cupo_in_status,
+            cupo_sq_ordem: snapCupo.cupo_sq_ordem != undefined ? snapCupo.cupo_sq_ordem : "",
+            vitr_sq_id: snapCupo.vitr_sq_id != undefined ? snapCupo.vitr_sq_id : ""
         }
         return cupom;
     }
 
-    copyVitrine(oldVitrine: any, newVitrine: any):VitrineVO {
-        
+    public copyVitrine(oldVitrine: any, newVitrine: any): VitrineVO {
+
         oldVitrine.vitr_sq_id = oldVitrine.vitr_sq_id;
         oldVitrine.vitr_dt_agendada = newVitrine.vitr_dt_agendada;
         oldVitrine.vitr_sq_ordem = newVitrine.vitr_sq_ordem;
@@ -354,8 +412,8 @@ export class MappingsService {
         oldVitrine.anun_tx_texto = newVitrine.anun_tx_texto;
         oldVitrine.anun_tx_urlavatar = newVitrine.anun_tx_urlavatar;
         oldVitrine.anun_tx_urlthumbnail = newVitrine.anun_tx_urlthumbnail;
-        oldVitrine.anun_tx_urlbanner =  newVitrine.anun_tx_urlbanner;
-        oldVitrine.anun_tx_urlicone =  newVitrine.anun_tx_urlicone;
+        oldVitrine.anun_tx_urlbanner = newVitrine.anun_tx_urlbanner;
+        oldVitrine.anun_tx_urlicone = newVitrine.anun_tx_urlicone;
         oldVitrine.anun_tx_urlslide1 = newVitrine.anun_tx_urlslide1;
         oldVitrine.anun_tx_urlslide2 = newVitrine.anun_tx_urlslide2;
         oldVitrine.anun_tx_urlslide3 = newVitrine.anun_tx_urlslide3;
@@ -376,5 +434,25 @@ export class MappingsService {
         return oldVitrine;
     }
 
+
+    private replaceLineBreakVitrine(texto: string) {
+        // var newText = "<p class='ctd-noticia'>";
+        // newText = newText + texto.replace(/\n/gi,'<br/>');
+        // newText = newText + "</p>";
+
+        var newText = texto.replace(/\n/gi, '<br/>');
+        return newText;
+    }
+
+    public getMunicipio(snapMunicipio: any): MunicipioVO {
+
+        let municipio: MunicipioVO = {
+            muni_sq_id: snapMunicipio.muni_sq_id,
+            muni_nm_municipio: snapMunicipio.muni_nm_municipio
+        }
+
+        return municipio;
+
+    }
 
 }
