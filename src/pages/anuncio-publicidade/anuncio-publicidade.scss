@@ -84,10 +84,10 @@ page-anuncio-publicidade {
     }
 
     ion-fab[bottom] {
-        bottom: -30px !important;
+        bottom: -50px !important;
     }
     ion-fab[right] {
-        right: 20px !important;
+        right: 10px !important;
     }
 
     .fixed-content {
@@ -107,4 +107,8 @@ page-anuncio-publicidade {
     .col {
         padding: 2px !important;
     }  
+
+    .card-header-md {
+        padding: 0px 0px 10px 0px !important;
+    }
 }

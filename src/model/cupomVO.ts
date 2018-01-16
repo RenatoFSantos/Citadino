@@ -1,4 +1,4 @@
-import { CupomEmpresaVO } from './cupomEmpresaVO';
+import { CupomEmpresaDTO } from './dominio/cupomEmpresaDTO';
 
 export class CupomVO {
     public cupo_sq_id: string;
@@ -13,12 +13,13 @@ export class CupomVO {
     public cupo_nr_vlcomdesconto: number = null;
     //1=Desconto 2=Promoção
     public tipoCupom: number = 1;
-    public cupoEmpresa: CupomEmpresaVO;
+    public empresa: CupomEmpresaDTO;
     public cupo_nr_qtdecupom: number = null;
     public cupo_nr_qtdedisponivel: number = null;
     //True=Ativo False=Inativo
     public cupo_in_status: boolean = true;
     public cupo_sq_ordem: string = ""; // novo
     public vitr_sq_id: string = "";
+    public cupo_dt_publicado:Date;
     
 }

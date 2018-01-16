@@ -21,12 +21,14 @@ export class CupomService {
     return this.cupomRef;
   }
 
+
   public salvar(cupom: CupomVO) {
     var self = this;
-    var newKey = cupom.cupo_sq_id;
+
+    var newKey = cupom.cupo_sq_id != undefined ? cupom.cupo_sq_id : this.cupomRef.push().key;
     var result: string = null;
 
-    var promise = new Promise(function (resolve, reject) {   
+    var promise = new Promise(function (resolve, reject) {
       self.cupomRef.child(newKey).set(cupom)
         .then(() => {
           result = newKey;
@@ -40,7 +42,7 @@ export class CupomService {
     return promise;
   }
 
-  public pesquisarCupomPorId(cupomKey:string) {
-    return  this.cupomRef.child(cupomKey).once("value");
+  public pesquisarCupomPorId(cupomKey: string) {
+    return this.cupomRef.child(cupomKey).once("value");
   }
 }

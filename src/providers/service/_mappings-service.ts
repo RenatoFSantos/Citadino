@@ -1,5 +1,6 @@
+import { CupomEmpresaDTO } from './../../model/dominio/cupomEmpresaDTO';
+import { UsuarioCupomDTO } from './../../model/dominio/usuarioCupomDTO';
 import { MunicipioVO } from './../../model/municipioVO';
-import { CupomEmpresaVO } from './../../model/cupomEmpresaVO';
 import { CupomVO } from './../../model/cupomVO';
 import { EmpresaVO } from './../../model/empresaVO';
 import { CtdFuncoes } from './../../shared/ctdFuncoes';
@@ -54,17 +55,19 @@ export class MappingsService {
                 vitrine.agen_sq_id = element.val().agen_sq_id;
                 vitrine.anun_in_smartsite = element.val().anun_in_smartsite;
                 vitrine.usua_sq_id = element.val().usua_sq_id != undefined ? element.val().usua_sq_id : "";
-                vitrine.anun_nr_imagens = element.val().anun_nr_imagens != undefined ? element.val().anun_nr_imagens : "",
-                    vitrine.anun_in_curtida = element.val().anun_in_curtida != undefined ? element.val().anun_in_curtida : false,
-                    vitrine.cupo_sq_id = element.val().cupo_sq_id != undefined ? element.val().cupo_sq_id : false,
-                    vitrine.cupo_nr_desconto = element.val().cupo_nr_desconto != undefined ? element.val().cupo_nr_desconto : false,
-                    vitrine.cupo_nr_vlatual = element.val().cupo_nr_vlatual != undefined ? element.val().cupo_nr_vlatual : false,
-                    vitrine.tpcu_sq_id = element.val().tpcu_sq_id != undefined ? element.val().tpcu_sq_id : false,
-                    vitrine.cupo_nnr_qtdecupom = element.val().cupo_nnr_qtdecupom != undefined ? element.val().cupo_nnr_qtdecupom : false,
-                    vitrine.cupo_nr_qtdedisponivel = element.val().cupo_nr_qtdedisponivel != undefined ? element.val().cupo_nr_qtdedisponivel : false,
-                    vitrine.cupo_in_status = element.val().cupo_in_status != undefined ? element.val().cupo_in_status : false,
+                vitrine.anun_nr_imagens = element.val().anun_nr_imagens != undefined ? element.val().anun_nr_imagens : "";
+                vitrine.anun_in_curtida = element.val().anun_in_curtida != undefined ? element.val().anun_in_curtida : false;
+                vitrine.cupo_sq_id = element.val().cupo_sq_id != undefined ? element.val().cupo_sq_id : false;
+                vitrine.cupo_nr_desconto = element.val().cupo_nr_desconto != undefined ? element.val().cupo_nr_desconto : false;
+                vitrine.cupo_nr_vlatual = element.val().cupo_nr_vlatual != undefined ? element.val().cupo_nr_vlatual : false;
+                vitrine.tpcu_sq_id = element.val().tpcu_sq_id != undefined ? element.val().tpcu_sq_id : false;
+                vitrine.cupo_nnr_qtdecupom = element.val().cupo_nnr_qtdecupom != undefined ? element.val().cupo_nnr_qtdecupom : false;
+                vitrine.cupo_nr_qtdedisponivel = element.val().cupo_nr_qtdedisponivel != undefined ? element.val().cupo_nr_qtdedisponivel: false;
+                vitrine.cupo_in_status = element.val().cupo_in_status != undefined ? element.val().cupo_in_status : false;
+                vitrine.cupo_dt_validade = element.val().cupo_dt_validade != undefined ? element.val().cupo_dt_validade : false;
+                vitrine.cupo_nr_vlcomdesconto = element.val().cupo_nr_vlcomdesconto != undefined ? element.val().cupo_nr_vlcomdesconto : false;
 
-                    vitrines.push(vitrine);
+                vitrines.push(vitrine);
             });
         }
 
@@ -115,6 +118,8 @@ export class MappingsService {
             cupo_nnr_qtdecupom: snapshot.cupo_nnr_qtdecupom != undefined ? snapshot.cupo_nnr_qtdecupom : false,
             cupo_nr_qtdedisponivel: snapshot.cupo_nr_qtdedisponivel != undefined ? snapshot.cupo_nr_qtdedisponivel : false,
             cupo_in_status: snapshot.cupo_in_status != undefined ? snapshot.cupo_in_status : false,
+            cupo_dt_validade: snapshot.cupo_dt_validade != undefined ? snapshot.cupo_dt_validade : null,
+            cupo_nr_vlcomdesconto: snapshot.cupo_nr_vlcomdesconto != undefined ? snapshot.cupo_nr_vlcomdesconto : null,
         };
 
         return vitrine;
@@ -259,7 +264,7 @@ export class MappingsService {
         let categ: CategoriaVO = null;
 
         if (snapEmpr.municipio != undefined) {
-            var muniKey:any = Object.keys(snapEmpr.municipio);
+            var muniKey: any = Object.keys(snapEmpr.municipio);
             munic = {
                 muni_sq_id: snapEmpr.municipio[muniKey].muni_sq_id,
                 muni_nm_municipio: snapEmpr.municipio[muniKey].muni_nm_municipio
@@ -267,7 +272,7 @@ export class MappingsService {
         }
 
         if (snapEmpr.categoria != undefined) {
-            var cateKey:any = Object.keys(snapEmpr.categoria);
+            var cateKey: any = Object.keys(snapEmpr.categoria);
 
             categ = {
                 cate_sq_id: snapEmpr.categoria[cateKey].cate_sq_id,
@@ -327,21 +332,37 @@ export class MappingsService {
     }
 
     public getCupomCriado(snapCupo: any): CupomCriadoVO {
-        var cupomEmpresa: CupomEmpresaVO = null;
+        var empresa: CupomEmpresaDTO = null;
+        var municipio: MunicipioVO = null;
+        var usuario: UsuarioCupomDTO = null;
 
-        if (snapCupo.cupoEmpresa != null) {
-            cupomEmpresa = new CupomEmpresaVO();
-            cupomEmpresa.empr_sq_id = snapCupo.cupoEmpresa.empr_sq_id;
-            cupomEmpresa.empr_nm_fantasia = snapCupo.cupoEmpresa.empr_nm_fantasia;
-            cupomEmpresa.empr_tx_endereco = snapCupo.cupoEmpresa.empr_tx_endereco;
-            cupomEmpresa.empr_tx_bairro = snapCupo.cupoEmpresa.empr_tx_bairro;
-            cupomEmpresa.empr_tx_cidade = snapCupo.cupoEmpresa.empr_tx_cidade;
-            cupomEmpresa.empr_tx_telefone_1 = snapCupo.cupoEmpresa.empr_tx_telefone_1;
+        if (snapCupo.empresa != undefined) {
+            empresa = new CupomEmpresaDTO();
+            empresa.empr_sq_id = snapCupo.empresa.empr_sq_id;
+            empresa.empr_nm_fantasia = snapCupo.empresa.empr_nm_fantasia;
+            empresa.empr_tx_endereco = snapCupo.empresa.empr_tx_endereco;
+            empresa.empr_tx_bairro = snapCupo.empresa.empr_tx_bairro;
+            empresa.empr_tx_cidade = snapCupo.empresa.empr_tx_cidade;
+            empresa.empr_tx_telefone_1 = snapCupo.empresa.empr_tx_telefone_1;
+
+            if (snapCupo.empresa.municipio != undefined) {
+                municipio = new MunicipioVO();
+                municipio.muni_sq_id = snapCupo.empresa.municipio.muni_sq_id;
+                municipio.muni_nm_municipio = snapCupo.empresa.municipio.muni_nm_municipio;
+
+                empresa.municipio = municipio;
+            }
         }
 
+        if (snapCupo.usuario != undefined && snapCupo.usuario != null) {
+            usuario = new UsuarioCupomDTO();
+            usuario.usua_sq_id = snapCupo.usuario.usua_sq_id;
+            usuario.usua_nm_usuario = snapCupo.usuario.usua_nm_usuario;
+        }
+
+
         let cupomCriado: CupomCriadoVO = {
-            usua_sq_id: snapCupo.usua_sq_id,
-            usua_nm_usuario: snapCupo.usua_nm_usuario,
+            usuario: usuario,
             cupo_sq_id: snapCupo.cupo_sq_id,
             cupo_nr_desconto: snapCupo.cupo_nr_desconto,
             cupo_tx_urlimagem: snapCupo.cupo_tx_urlimagem,
@@ -355,26 +376,45 @@ export class MappingsService {
             tipoCupom: snapCupo.tipoCupom,
             cupo_nr_qtdecupom: snapCupo.cupo_nr_qtdecupom,
             cupo_nr_qtdedisponivel: snapCupo.cupo_nr_qtdedisponivel,
-            cupoEmpresa: cupomEmpresa,
+            empresa: empresa,
             cupo_in_status: snapCupo.cupo_in_status,
             cupo_sq_ordem: snapCupo.cupo_sq_ordem != undefined ? snapCupo.cupo_sq_ordem : "",
-            vitr_sq_id: snapCupo.vitr_sq_id != undefined ? snapCupo.vitr_sq_id : ""
+            vitr_sq_id: snapCupo.vitr_sq_id != undefined ? snapCupo.vitr_sq_id : "",
+            cupo_dt_publicado: snapCupo.cupo_dt_publicado != undefined ? snapCupo.cupo_dt_publicado : null
         }
 
         return cupomCriado;
     }
 
     public getCupom(snapCupo: any): CupomVO {
-        var cupomEmpresa: CupomEmpresaVO = null;
+        var empresa: CupomEmpresaDTO = null;
+        var municipio: MunicipioVO = null;
 
-        if (snapCupo.cupoEmpresa != null) {
-            cupomEmpresa = new CupomEmpresaVO();
-            cupomEmpresa.empr_sq_id = snapCupo.cupoEmpresa.empr_sq_id;
-            cupomEmpresa.empr_nm_fantasia = snapCupo.cupoEmpresa.empr_nm_fantasia;
-            cupomEmpresa.empr_tx_endereco = snapCupo.cupoEmpresa.empr_tx_endereco;
-            cupomEmpresa.empr_tx_bairro = snapCupo.cupoEmpresa.empr_tx_bairro;
-            cupomEmpresa.empr_tx_cidade = snapCupo.cupoEmpresa.empr_tx_cidade;
-            cupomEmpresa.empr_tx_telefone_1 = snapCupo.cupoEmpresa.empr_tx_telefone_1;
+        if (snapCupo.cupoEmpresa != undefined) {
+            empresa = new CupomEmpresaDTO();
+            empresa.empr_sq_id = snapCupo.cupoEmpresa.empr_sq_id;
+            empresa.empr_nm_fantasia = snapCupo.cupoEmpresa.empr_nm_fantasia;
+            empresa.empr_tx_endereco = snapCupo.cupoEmpresa.empr_tx_endereco;
+            empresa.empr_tx_bairro = snapCupo.cupoEmpresa.empr_tx_bairro;
+            empresa.empr_tx_cidade = snapCupo.cupoEmpresa.empr_tx_cidade;
+            empresa.empr_tx_telefone_1 = snapCupo.cupoEmpresa.empr_tx_telefone_1;
+
+        } else if (snapCupo.empresa != undefined) {
+            empresa = new CupomEmpresaDTO();
+            empresa.empr_sq_id = snapCupo.empresa.empr_sq_id;
+            empresa.empr_nm_fantasia = snapCupo.empresa.empr_nm_fantasia;
+            empresa.empr_tx_endereco = snapCupo.empresa.empr_tx_endereco;
+            empresa.empr_tx_bairro = snapCupo.empresa.empr_tx_bairro;
+            empresa.empr_tx_cidade = snapCupo.empresa.empr_tx_cidade;
+            empresa.empr_tx_telefone_1 = snapCupo.empresa.empr_tx_telefone_1;
+
+            if (snapCupo.empresa.municipio != undefined) {
+                municipio = new MunicipioVO();
+                municipio.muni_sq_id = snapCupo.empresa.municipio.muni_sq_id;
+                municipio.muni_nm_municipio = snapCupo.empresa.municipio.muni_nm_municipio;
+
+                empresa.municipio = municipio;
+            }
         }
 
         let cupom: CupomVO = {
@@ -391,10 +431,11 @@ export class MappingsService {
             tipoCupom: snapCupo.tipoCupom,
             cupo_nr_qtdecupom: snapCupo.cupo_nr_qtdecupom,
             cupo_nr_qtdedisponivel: snapCupo.cupo_nr_qtdedisponivel,
-            cupoEmpresa: cupomEmpresa,
+            empresa: empresa,
             cupo_in_status: snapCupo.cupo_in_status,
             cupo_sq_ordem: snapCupo.cupo_sq_ordem != undefined ? snapCupo.cupo_sq_ordem : "",
-            vitr_sq_id: snapCupo.vitr_sq_id != undefined ? snapCupo.vitr_sq_id : ""
+            vitr_sq_id: snapCupo.vitr_sq_id != undefined ? snapCupo.vitr_sq_id : "",
+            cupo_dt_publicado: snapCupo.cupo_dt_publicado != undefined ? snapCupo.cupo_dt_publicado : null
         }
         return cupom;
     }
@@ -452,6 +493,58 @@ export class MappingsService {
         }
 
         return municipio;
+
+    }
+
+    public copyCupomForVitrine(cupom: CupomCriadoVO): VitrineVO {
+
+        let vitrine: VitrineVO = {
+            vitr_sq_id: null,
+            vitr_dt_agendada: null,
+            vitr_sq_ordem: null,
+            anun_sq_id: null,
+            anun_ds_anuncio: cupom.cupo_tx_descricao,
+            anun_tx_titulo: cupom.cupo_tx_titulo,
+            anun_tx_subtitulo: null,
+            vitr_in_buttonmore: null,
+            anun_tx_texto: cupom.cupo_tx_regulamento,
+            anun_tx_urlavatar: null,
+            anun_tx_urlthumbnail: null,
+            anun_tx_urlbanner: null,
+            anun_tx_urlicone: null,
+            anun_tx_urlslide1: cupom.cupo_tx_urlimagem,
+            anun_tx_urlslide2: null,
+            anun_tx_urlslide3: null,
+            anun_tx_urlslide4: null,
+            anun_nr_curtidas: null,
+            anun_nr_salvos: null,
+            anun_nr_visitas: null,
+            anun_in_status: null,
+            empr_sq_id: cupom.empresa.empr_sq_id,
+            empr_nm_fantasia: cupom.empresa.empr_nm_fantasia,
+            empr_tx_endereco: cupom.empresa.empr_tx_endereco,
+            empr_tx_bairro: cupom.empresa.empr_tx_bairro,
+            empr_tx_cidade: cupom.empresa.empr_tx_cidade,
+            empr_tx_telefone_1: cupom.empresa.empr_tx_telefone_1,
+            muni_sq_id: cupom.empresa.municipio.muni_sq_id,
+            tian_sq_id: "TPA-DESCONTO",
+            agen_sq_id: null,
+            anun_in_smartsite: null,
+            usua_sq_id: cupom.usuario.usua_sq_id,
+            anun_nr_imagens: null,
+            anun_in_curtida: false,
+            cupo_sq_id: cupom.cupo_sq_id,
+            cupo_nr_desconto: cupom.cupo_nr_desconto,
+            cupo_nr_vlatual: cupom.cupo_nr_vlatual,
+            tpcu_sq_id: cupom.tipoCupom,
+            cupo_nnr_qtdecupom: cupom.cupo_nr_qtdecupom,
+            cupo_nr_qtdedisponivel: cupom.cupo_nr_qtdedisponivel,
+            cupo_in_status: cupom.cupo_in_status,
+            cupo_dt_validade: cupom.cupo_dt_validade != undefined ? cupom.cupo_dt_validade : null,
+            cupo_nr_vlcomdesconto: cupom.cupo_nr_vlcomdesconto != undefined ? cupom.cupo_nr_vlcomdesconto : null,
+        }
+
+        return vitrine;
 
     }
 

@@ -1,40 +1,59 @@
 <ion-header>
     <ctd-header-municipio tela="VITRINE"></ctd-header-municipio>
 </ion-header>
-<!-- <ion-tabs tabsPlacement="top">
-    <ion-tab [root]="tab1Root" tabTitle="Publicidades"></ion-tab>
-    <ion-tab [root]="tab2Root" tabTitle="Promoções"></ion-tab>
-</ion-tabs> -->
 <ion-content>
     <div *ngIf="loading">
         <img src="assets/img/ring.gif" style="display:block; margin:auto" />
     </div>
     <ion-card class="ctd-card" *ngFor="let item of vitrines">
-        <ion-item (click)="openPage(item)">
-            <ion-avatar item-left *ngIf="item.anun_tx_urlavatar != ''">
-                <img src="{{item.anun_tx_urlavatar}}">
-            </ion-avatar>
-            <h2>{{item.anun_tx_titulo}}</h2>
-            <p>{{item.anun_tx_subtitulo}}</p>
-            <p>{{item.vitr_dt_agendada | date: 'shortDate'}}</p>
-        </ion-item>
-        <ion-card-content>
-            <div *ngIf="item.vitr_in_buttonmore == true" class="ctd-noticia" [innerHTML]="item.anun_tx_texto"></div>
+        <div *ngIf="item.tian_sq_id != 'TPA-DESCONTO'">
+            <ion-item (click)="openPage(item)">
+                <ion-avatar item-left *ngIf="item.anun_tx_urlavatar != ''">
+                    <img src="{{item.anun_tx_urlavatar}}">
+                </ion-avatar>
+                <h2>{{item.anun_tx_titulo}}</h2>
+                <p>{{item.anun_tx_subtitulo}}</p>
+                <p>{{item.vitr_dt_agendada | date: 'shortDate'}}</p>
+            </ion-item>
+            <ion-card-content>
+                <div *ngIf="item.vitr_in_buttonmore == true" class="ctd-noticia" [innerHTML]="item.anun_tx_texto"></div>
 
-            <div *ngIf="item.vitr_in_buttonmore == false" class="ctd_noticia_exibir" [innerHTML]="item.anun_tx_texto"></div>
+                <div *ngIf="item.vitr_in_buttonmore == false" class="ctd_noticia_exibir" [innerHTML]="item.anun_tx_texto"></div>
 
-            <p *ngIf="item.vitr_in_buttonmore == true" text-right>
-                <a detail-none (click)="exibirTextoVitrine(item)">Continuar lendo</a>
-            </p>
-        </ion-card-content>
-        <img style="max-height:480px" src="{{item.anun_tx_urlbanner}}" (click)="openPage(item)" *ngIf="item.anun_tx_urlbanner != ''"
-        />
-        <ion-row>
-            <ion-col width-100 class="ctd-btn-vitrine">
-                <ctd-buttons [urlSlide]=(item.anun_tx_urlslide1) [smartSite]=(item.anun_in_smartsite) [empresaKey]=(item.empr_sq_id) [vitrine]=(item)
-                    [vitrineSalva]=(item.anun_nr_salvos) [usuarioVitrine]=[null] [isBtnNrVisita]=true [isBtnNrCurtir]=true [isBtnChutarCurti]=true></ctd-buttons>
-            </ion-col>
-        </ion-row>
+                <p *ngIf="item.vitr_in_buttonmore == true" text-right>
+                    <a detail-none (click)="exibirTextoVitrine(item)">Continuar lendo</a>
+                </p>
+            </ion-card-content>
+            <img style="max-height:480px" src="{{item.anun_tx_urlbanner}}" (click)="openPage(item)" *ngIf="item.anun_tx_urlbanner != ''"
+            />
+            <ion-row>
+                <ion-col width-100 class="ctd-btn-vitrine">
+                    <ctd-buttons [urlSlide]=(item.anun_tx_urlslide1) [smartSite]=(item.anun_in_smartsite) [empresaKey]=(item.empr_sq_id) [vitrine]=(item)
+                        [vitrineSalva]=(item.anun_nr_salvos) [usuarioVitrine]=[null] [isBtnNrVisita]=true [isBtnNrCurtir]=true
+                        [isBtnChutarCurti]=true></ctd-buttons>
+                </ion-col>
+            </ion-row>
+        </div>
+        <div *ngIf="item.tian_sq_id == 'TPA-DESCONTO'">
+            <ion-card-header>
+                <img src="{{item.anun_tx_urlslide1}}" class="ctd-head-promocao">
+            </ion-card-header>
+            <ion-card-content>
+                <ion-card-title class="card-title-promocao">
+                    {{item.anun_tx_titulo}}
+                </ion-card-title>
+                <p class="card-subtitle-promocao">
+                    {{item.empr_nm_fantasia}}
+                </p>
+                <ion-grid>
+                    <ion-row>
+                        <ion-col class="ctd-perc-desc" text-right>
+                            {{item.cupo_nr_desconto}}% DESCONTO
+                        </ion-col>
+                    </ion-row>                  
+                </ion-grid>
+            </ion-card-content>
+        </div>
     </ion-card>
 
     <ion-refresher (ionRefresh)="reloadVitrines($event)">

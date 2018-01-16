@@ -401,40 +401,7 @@ export class AnuncioPublicidadePage {
     return promise;
   }
 
-  // private excluirVitrine = function (param) {
-  //   let self = param.self;
-  //   let vitrine = param.vitrine;
-  //   let publicacao = param.publicacao;
-
-  //   var result: boolean = true;
-
-  //   let promise = new Promise(function (resolve, reject) {
-
-  //     if (vitrine != null) {
-  //       self.carregaListaImagens(self, vitrine)
-  //         .then(self.excluirImages)
-  //         .then(() => {
-  //           self.vitrineSrv.excluir(vitrine).then(() => {
-  //             resolve({ self, publicacao, result });
-  //           })
-  //             .catch(err => {
-  //               reject(err);
-  //             });
-  //         })
-  //         .catch((err) => {
-  //           reject(err);
-  //         }
-  //         );
-  //     }
-  //     else {
-  //       resolve({ self, publicacao, result });
-  //     }
-  //   });
-
-  //   return promise;
-  // }
-
-  private carregaListaImagens = function (self: any, vitrine: VitrineVO) {
+   private carregaListaImagens = function (self: any, vitrine: VitrineVO) {
     let promises: any = [];
 
     let slides: SlideVO[] = self.retornaLisSlide(vitrine);
@@ -477,3 +444,36 @@ export class AnuncioPublicidadePage {
     });
   }
 }
+
+ // private excluirVitrine = function (param) {
+  //   let self = param.self;
+  //   let vitrine = param.vitrine;
+  //   let publicacao = param.publicacao;
+
+  //   var result: boolean = true;
+
+  //   let promise = new Promise(function (resolve, reject) {
+
+  //     if (vitrine != null) {
+  //       self.carregaListaImagens(self, vitrine)
+  //         .then(self.excluirImages)
+  //         .then(() => {
+  //           self.vitrineSrv.excluir(vitrine).then(() => {
+  //             resolve({ self, publicacao, result });
+  //           })
+  //             .catch(err => {
+  //               reject(err);
+  //             });
+  //         })
+  //         .catch((err) => {
+  //           reject(err);
+  //         }
+  //         );
+  //     }
+  //     else {
+  //       resolve({ self, publicacao, result });
+  //     }
+  //   });
+
+  //   return promise;
+  // }

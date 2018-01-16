@@ -51,7 +51,7 @@ page-anuncio-promocao {
         display: -webkit-box;
         -webkit-box-orient: vertical;
         -webkit-line-clamp: 4; /* number of lines to show */
-        max-height: 5.5em;
+        max-height: 220px;
         line-height: 1.4
     }
 
@@ -84,10 +84,10 @@ page-anuncio-promocao {
     }
 
     ion-fab[bottom] {
-        bottom: -30px !important;
+        bottom: -50px !important;
     }
     ion-fab[right] {
-        right: 20px !important;
+        right: 10px !important;
     }
 
     .fixed-content {
@@ -106,5 +106,13 @@ page-anuncio-promocao {
     }
     .col {
         padding: 2px !important;
+    }
+
+    .label-md {
+        margin: 0px !important;
+    }
+
+    .card-header-md {
+        padding: 0px 0px 10px 0px !important;
     }
 }

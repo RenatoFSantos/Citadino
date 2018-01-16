@@ -1,3 +1,5 @@
+import { UsuarioCupomDTO } from './../../model/dominio/usuarioCupomDTO';
+import { CupomEmpresaDTO } from './../../model/dominio/cupomEmpresaDTO';
 import { CupomCriadoService } from './../../providers/service/cupom-criado-service';
 import { CupomCriadoVO } from './../../model/cupomCriadoVO';
 import { UsuarioVO } from './../../model/usuarioVO';
@@ -17,7 +19,6 @@ import { Component } from '@angular/core';
 import { NavController, NavParams, ToastController, Events, LoadingController } from 'ionic-angular';
 import { AnuncioFullPage } from '../anuncio-full/anuncio-full';
 import { AlertController } from 'ionic-angular/components/alert/alert-controller';
-import { CupomEmpresaVO } from '../../model/cupomEmpresaVO';
 import * as enums from './../../model/dominio/ctdEnum';
 import { GlobalVar } from '../../shared/global-var';
 
@@ -36,7 +37,7 @@ export class AnuncioPromocaoCrudPage {
   public dateMax: any = "";
   private toastAlert: any;
   private usuaKey: string = "";
-  private dtAtual: string;
+  private dtAtual: any;
   public usuario: UsuarioVO;
 
   private imagemPadrao: any;
@@ -109,8 +110,11 @@ export class AnuncioPromocaoCrudPage {
 
       var cupomId = self.cupoCriaSrv.getNewUidCpom(this.usuario.usua_sq_id);
 
-      self.cupom.usua_sq_id = this.usuario.usua_sq_id;
-      self.cupom.usua_nm_usuario = this.usuario.usua_nm_usuario
+      var usuarioParam:UsuarioCupomDTO = new UsuarioCupomDTO();
+      usuarioParam.usua_sq_id = this.usuario.usua_sq_id;
+      usuarioParam.usua_nm_usuario = this.usuario.usua_nm_usuario; 
+
+      self.cupom.usuario = usuarioParam;
       self.cupom.cupo_sq_id = cupomId;
       self.cupom.tipoCupom = self.frmPromocaoCrud.controls.tipoCupom.value;
       self.cupom.cupo_tx_titulo = self.frmPromocaoCrud.controls.cupo_tx_titulo.value;
@@ -122,9 +126,10 @@ export class AnuncioPromocaoCrudPage {
       self.cupom.cupo_nr_vlatual = self.frmPromocaoCrud.controls.cupo_nr_vlatual.value;
       self.cupom.cupo_nr_desconto = self.frmPromocaoCrud.controls.cupo_nr_desconto.value;
       self.cupom.cupo_in_status = true;
-      self.cupom.cupo_dt_cadastro = new Date(self.dtAtual);
+      self.cupom.cupo_dt_cadastro = self.dtAtual;
       self.cupom.cupo_sq_ordem = String(new Date().getTime());
       self.cupom.cupo_nr_vlcomdesconto = self.getVlDesconto(self.cupom);
+      self.cupom.cupo_dt_publicado = null;
 
       var loader = self.loadingCtrl.create({
         content: 'Aguarde...',
@@ -388,7 +393,7 @@ export class AnuncioPromocaoCrudPage {
         self.emprSrv.getEmpresaPorKey(emprKey).then((snapEmpresa) => {
 
           var empresa: EmpresaVO = self.mapSrv.getEmpresa(snapEmpresa.val());
-          var cupomEmpresa: CupomEmpresaVO = new CupomEmpresaVO();
+          var cupomEmpresa: CupomEmpresaDTO = new CupomEmpresaDTO();
 
           cupomEmpresa.empr_sq_id = empresa.empr_sq_id;
 
@@ -403,8 +408,9 @@ export class AnuncioPromocaoCrudPage {
           cupomEmpresa.empr_tx_cidade = empresa.empr_tx_cidade;
           cupomEmpresa.empr_tx_endereco = empresa.empr_tx_endereco;
           cupomEmpresa.empr_tx_telefone_1 = empresa.empr_tx_telefone_1;
+          cupomEmpresa.municipio =  empresa.municipio;
 
-          self.cupom.cupoEmpresa = cupomEmpresa;
+          self.cupom.empresa = cupomEmpresa;
 
         }).catch((error) => {
           console.log(error);

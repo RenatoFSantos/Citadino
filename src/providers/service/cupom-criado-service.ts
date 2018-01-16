@@ -14,6 +14,16 @@ export class CupomCriadoService {
     this.cupomCriadoRef = this.fbService.getDataBase().ref('cupomcriado');
   }
 
+    //Retorna Ref de storage
+    public getStorageRef() {
+      return this.fbService.getStorageRef();
+    }
+  
+    //Retorna storage
+    public getStorage() {
+      return this.fbService.getStorage();
+    }
+
   public getDataBaseRef() {
     return this.fbService.getDataBase().ref();
   }
@@ -24,6 +34,10 @@ export class CupomCriadoService {
 
   public salvar(uidUsuario: string, uidCupom: string, cupom: CupomCriadoVO) {
     return this.cupomCriadoRef.child(uidUsuario).child(uidCupom).set(cupom);
+  }
+
+  public excluir(uidUsuario: string, uidCupom: string) {
+    return this.cupomCriadoRef.child(uidUsuario).child(uidCupom).set(null);
   }
 
   public pesquisarCupomPorUsuarioId(usuarioKey: string) {

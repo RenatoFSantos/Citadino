@@ -1,5 +1,9 @@
+import { CupomCriadoVO } from './../../../model/cupomCriadoVO';
+
+import { AlertController } from 'ionic-angular/components/alert/alert-controller';
 import { CupomVO } from './../../../model/cupomVO';
 import { Component, Input } from '@angular/core';
+import { Events } from 'ionic-angular';
 
 /**
  * Generated class for the CtdBtnPromocaoComponent component.
@@ -14,23 +18,62 @@ import { Component, Input } from '@angular/core';
 export class CtdBtnPromocaoComponent {
 
   @Input()
-  public isBtnPublicar:Boolean = false;
+  public isBtnPublicar: Boolean = false;
 
   @Input()
-  public isBtnPause:Boolean = false;
+  public isBtnPause: Boolean = false;
 
   @Input()
-  public cupom:CupomVO = null;
+  public isBtnExcluir: Boolean = false;
+
+  @Input()
+  public cupom: CupomCriadoVO = null;
 
 
-  constructor() {
-  
+  constructor(private alertCtrl: AlertController,
+    private events: Events) {
   }
 
   public publicarPromocao() {
-    if (this.cupom != null) {
-      console.log(this.cupom);
-    }
+    let confirm = this.alertCtrl.create({
+      title: "Cupom",
+      message: "Confirma a publicação ?",
+      buttons: [{
+        text: "Sim",
+        handler: () => {
+          this.events.publish("publicarCupom", this.cupom);
+        }
+      },
+      {
+        text: "Nao",
+        handler: () => {
+          // confirm.dismiss();
+        }
+      }
+      ]
+    })
+    confirm.present();
+  }
+
+  public showExclusao() {
+    let confirm = this.alertCtrl.create({
+      title: "Cupom",
+      message: "Confirma a exclusão ?",
+      buttons: [{
+        text: "Sim",
+        handler: () => {
+          this.events.publish("excluirCupom", this.cupom);
+        }
+      },
+      {
+        text: "Nao",
+        handler: () => {
+          // confirm.dismiss();
+        }
+      }
+      ]
+    })
+    confirm.present();
   }
 
 }

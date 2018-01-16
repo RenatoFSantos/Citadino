@@ -1,8 +1,8 @@
+import { CupomEmpresaDTO } from './../../model/dominio/cupomEmpresaDTO';
 import { UsuarioCupomService } from './../../providers/service/usuario-cupom-service';
 import { CupomService } from './../../providers/service/cupom-service';
 import { UsuarioVO } from './../../model/usuarioVO';
 import { GlobalVar } from './../../shared/global-var';
-import { CupomEmpresaVO } from './../../model/cupomEmpresaVO';
 import { MappingsService } from './../../providers/service/_mappings-service';
 import { EmpresaService } from './../../providers/service/empresa-service';
 import { CupomVO } from './../../model/cupomVO';
@@ -203,14 +203,14 @@ export class MeusCuponsPage {
           objcupom.cupo_dt_validade = new Date('2018/01/12');
           objcupom.tipoCupom = 1;
 
-          var cupomEmpresaVO: CupomEmpresaVO = new CupomEmpresaVO();
+          var cupomEmpresaVO: CupomEmpresaDTO = new CupomEmpresaDTO();
           cupomEmpresaVO.empr_sq_id = empresaVO.empr_sq_id;
           cupomEmpresaVO.empr_nm_fantasia = empresaVO.empr_nm_razaosocial;
           cupomEmpresaVO.empr_tx_bairro = empresaVO.empr_tx_bairro;
           cupomEmpresaVO.empr_tx_endereco = empresaVO.empr_tx_endereco;
           cupomEmpresaVO.empr_tx_cidade = empresaVO.empr_tx_cidade;
           cupomEmpresaVO.empr_tx_telefone_1 = empresaVO.empr_tx_telefone_1;
-          objcupom.cupoEmpresa = cupomEmpresaVO;
+          objcupom.empresa = cupomEmpresaVO;
 
           objcupom.cupo_nr_qtdecupom = 0;
           objcupom.cupo_nr_qtdedisponivel = 0;

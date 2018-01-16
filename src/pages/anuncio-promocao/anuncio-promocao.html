@@ -4,7 +4,7 @@
 <ion-content>
   <ion-card class="ctd-card" *ngFor="let cupom of cupons">
     <ion-card-header>
-      <img src="{{cupom.cupo_tx_urlimagem}}">
+      <img src="{{cupom.cupo_tx_urlimagem}}" class="ctd-noticia">
     </ion-card-header>
     <ion-card-content>
       <ion-card-title>
@@ -24,9 +24,48 @@
             <div style="text-decoration: line-through">{{cupom.cupo_nr_vlatual | currency:'BRL':true:'1.2-2'}}</div>
           </ion-col>
         </ion-row>
+        <ion-row>
+          <ion-col>
+            <ion-label>Nr. Cupons</ion-label>
+          </ion-col>
+          <ion-col>
+            <ion-label>Nr. Disponível</ion-label>
+          </ion-col>
+        </ion-row>
+        <ion-row>
+          <ion-col>
+            <ion-label>{{cupom.cupo_nr_qtdecupom}}</ion-label>
+          </ion-col>
+          <ion-col>
+            <ion-label>{{cupom.cupo_nr_qtdedisponivel}}</ion-label>
+          </ion-col>
+        </ion-row>
+        <ion-row>
+          <ion-col>
+            <ion-label>Validade</ion-label>
+          </ion-col>
+          <ion-col>
+            <ion-label>Publicado</ion-label>
+          </ion-col>
+        </ion-row>
+        <ion-row>
+          <ion-col>
+            <ion-label>
+              {{cupom.cupo_dt_validade | date: 'shortDate'}}
+            </ion-label>
+          </ion-col>
+          <ion-col>
+            <ion-label>
+              <div *ngIf="cupom.cupo_dt_publicado != ''">
+                {{cupom.cupo_dt_publicado | date: 'shortDate'}}
+              </div>
+              <div *ngIf="cupom.cupo_dt_publicado == null"></div>
+            </ion-label>
+          </ion-col>
+        </ion-row>
       </ion-grid>
     </ion-card-content>
-    <ctd-btn-promocao [isBtnPublicar]=true [cupom]=cupom></ctd-btn-promocao>
+    <ctd-btn-promocao [isBtnPublicar]=true [isBtnExcluir]="cupom.cupo_dt_publicado == null" [cupom]=(cupom)></ctd-btn-promocao>
   </ion-card>
   <ion-fab right bottom>
     <button ion-fab (click)="adicionarPromocao()">

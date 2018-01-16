@@ -21,6 +21,19 @@ page-vitrine {
         padding: 5px 0 5px 0;
     }
 
+    .card-title-promocao.card-title-md  {
+        font-size: 1.8rem !important;
+        font-weight: bold !important;
+    }
+
+    .card-subtitle-promocao {
+        font-size: 1.4rem !important;
+        font-weight: bold !important;
+        color: #9b9b36 !important;
+        margin: 0 auto !important;     
+        padding: 2px 0px 0px 0px !important;
+    }
+    
     ion-content {
         background-color: #c2b49a !important;
     }
@@ -58,6 +71,10 @@ page-vitrine {
         -webkit-line-clamp: 4; /* number of lines to show */
         max-height: 5.5em;
         line-height: 1.4
+    }
+
+    .ctd-head-promocao {
+        max-height: 230px;
     }
 
     .ctd_noticia_exibir {
@@ -132,6 +149,18 @@ page-vitrine {
         color: white !important;
         font-size: 1.1em !important;
         left: 0px !important;
+    }
+
+    .ctd-perc-desc {
+        font-size: 2.4rem !important;
+        font-weight: bold !important;
+        color: red !important;
+        margin: 0 auto !important;     
+        padding: 2px 0 2px 0 !important;
+    }
+
+    .card-header-md {
+        padding: 0px 0px 10px 0px !important;
     }
 
       //   //============
