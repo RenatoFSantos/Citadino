@@ -1,3 +1,4 @@
+import { DownloadImageService } from './../../providers/service/download-image-service';
 import { Promise } from 'firebase/app';
 import { CtdFuncoes } from './../../shared/ctdFuncoes';
 import { Events } from 'ionic-angular/util/events';
@@ -36,7 +37,7 @@ export class MeusCuponsPage {
   constructor(private emprSrv: EmpresaService,
     private mapSrv: MappingsService,
     private usuaCupSrv: UsuarioCupomService,
-    private glabalVar: GlobalVar,
+    private glbVar: GlobalVar,
     private loadingCtrl: LoadingController,
     private promSrv: PromocaoService,
     private toastCtrl: ToastController,
@@ -44,10 +45,11 @@ export class MeusCuponsPage {
     private cupoCriaSrv: CupomCriadoService,
     private mdlCtrl: ModalController,
     private events: Events,
-    private cupomSrv: CupomService) {
+    private cupomSrv: CupomService,
+    private downSrv: DownloadImageService) {
 
     var self = this;
-    this.usuario = this.glabalVar.usuarioLogado;
+    this.usuario = this.glbVar.usuarioLogado;
     this.cnpj = "28039364000102";
 
   }
@@ -115,13 +117,29 @@ export class MeusCuponsPage {
       self.meuCupomSqlSrv.listarTodos(query)
         .then((result) => {
           if (result != null && result.length > 0) {
-            var count = 1;
+            var count = 0;
             result.forEach(cupom => {
-              self.meusCupons.push(self.mapSrv.getMeuCupom(cupom))
+
+              self.downSrv.readFile(self.glbVar.getStorageDirectory(), cupom.cupo_sq_id + ".jpg")
+                .then((fileStr) => {
+                  console.log("Novo caminho " + fileStr);
+                  cupom.cupo_tx_urlimagem = fileStr;
+                  self.meusCupons.push(self.mapSrv.getMeuCupom(cupom));
+                  count++;
+                });
+
               if (count == result.length) {
                 resolve({ self, result });
               }
-              count++;
+              // File.readAsText(this.dataDirectory, "mydir/data.txt").then(fileStr => {
+              //   console.log(fileStr);
+              //   var fileObj = JSON.parse(String(fileStr));
+              //   console.log(fileObj);
+              //   this.setData(fileObj);
+              // }).catch(err => {
+              //   console.log('it messed up wow');
+              //   console.log(err);
+              // });
             });
           } else {
             self.meusCupons = new Array<CupomCriadoVO>();

@@ -15,12 +15,14 @@ export class DownloadImageService {
     var urlImage: string = "";
     const fileTransfer: FileTransferObject = this.transfer.create();
 
-     return fileTransfer.download(url, this.glbVar.getStorageDirectory() + cupomKey + '.jpg');
+    return fileTransfer.download(url, this.glbVar.getStorageDirectory() + cupomKey + '.jpg');
   }
 
   public removeFile(url: string, fileName: string) {
     return this.file.removeFile(url, fileName);
   }
 
-
+  public readFile(url: string, fileName: string) {
+    return this.file.readAsText(url, fileName);
+  }
 }
