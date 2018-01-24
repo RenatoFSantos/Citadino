@@ -99,6 +99,7 @@ export class MyApp implements OnInit {
           console.log("Diretorio IOS " + window.cordova.file.documentsDirectory);
         }
         else if (self.platform.is('android')) {
+          console.log("Diretorio Android " + window.cordova.file.dataDirectory);
           self.globalVar.setStorageDirectory(window.cordova.file.dataDirectory);
         }
 
