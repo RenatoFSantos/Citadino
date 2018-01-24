@@ -103,4 +103,6 @@
     <plugin name="cordova-plugin-inappbrowser" spec="^1.7.1" />
     <plugin name="mx.ferreyra.callnumber" spec="~0.0.2" />
     <plugin name="phonegap-plugin-barcodescanner" spec="^7.0.0" />
+    <plugin name="cordova-plugin-file-transfer" spec="^1.7.0" />
+    <plugin name="cordova-plugin-file" spec="^5.0.0" />
 </widget>

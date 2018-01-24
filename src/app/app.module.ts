@@ -1,3 +1,4 @@
+import { AnuncioPromocaoDetalhePage } from './../pages/anuncio-promocao-detalhe/anuncio-promocao-detalhe';
 import { CtdListaMunicipio } from './../shared/components/ctd-lista-municipio/ctd-lista-municipio';
 import { CtdBtnPromocaoComponent } from './../shared/components/ctd-btn-promocao/ctd-btn-promocao';
 import { AnuncioPromocaoCrudPage } from './../pages/anuncio-promocao-crud/anuncio-promocao-crud';
@@ -117,7 +118,8 @@ export const firebaseConfig = {
     AnuncioPromocaoCrudPage,
     CtdBtnPromocaoComponent,
     CtdHeaderMunicipio,
-    CtdListaMunicipio
+    CtdListaMunicipio,
+    AnuncioPromocaoDetalhePage
   ],
   imports: [
     BrowserModule,
@@ -171,9 +173,10 @@ export const firebaseConfig = {
     AnuncioPromocaoCrudPage,
     CtdBtnPromocaoComponent,
     CtdHeaderMunicipio,
-    CtdListaMunicipio
+    CtdListaMunicipio,
+    AnuncioPromocaoDetalhePage
   ],
   providers: [APP_PROVIDERS,
-    {provide: LOCALE_ID, useValue: 'pt-PT'} ]
+    {provide: LOCALE_ID, useValue: 'pt-PT'}]
 })
 export class AppModule { }

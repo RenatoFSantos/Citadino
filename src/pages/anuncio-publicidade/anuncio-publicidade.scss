@@ -71,7 +71,7 @@ page-anuncio-publicidade {
     .ctd-btn-vitrine{
         height: 40px;
         background-color: rgba(204, 204, 204, 0.59);
-        text-align: right !important;
+        // text-align: right !important;
         padding: 1px !important;
         // border-radius: 5px;
         // width: 102%;
@@ -111,4 +111,15 @@ page-anuncio-publicidade {
     .card-header-md {
         padding: 0px 0px 10px 0px !important;
     }
+
+    .ctd-card.card-md {
+        margin: 3px 0px 10px 2px !important;
+        width: calc(100% - 2px) !important;
+    }
+
+    .ctd-title-vitrine {
+        font-size: 1.4rem !important;
+        font-weight: bold !important;
+    }
+
 }

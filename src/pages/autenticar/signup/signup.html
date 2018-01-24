@@ -1,4 +1,4 @@
-<ion-header>
+<!-- <ion-header>
     <ion-navbar color="ctd-navbar">
         <img class="icocit" src="assets/img/icon.png" />
         <ion-title class="citadino">
@@ -10,12 +10,14 @@
     </button>
         </ion-buttons>
     </ion-navbar>
-</ion-header>
+</ion-header> -->
 <ion-content id="signup">
 
     <form [formGroup]="createLoginForm" (ngSubmit)="onSubmit(createLoginForm.value)">
         <ion-row>
-            <ion-col width-100><br></ion-col>
+            <ion-col width-100>
+                <br>
+            </ion-col>
         </ion-row>
 
         <ion-row>
@@ -46,18 +48,24 @@
                     <ion-label class="labelEmail">
                         <ion-icon name="md-lock"></ion-icon>
                     </ion-label>
-                    <ion-input type="password" value="" [formControl]="usua_tx_senha" placeholder="Senha" ></ion-input>
+                    <ion-input type="password" value="" [formControl]="usua_tx_senha" placeholder="Senha"></ion-input>
                 </ion-item>
                 <div *ngIf="(usua_tx_senha.hasError('required')|| usua_tx_senha.hasError('minlength')) && usua_tx_senha.touched" class="error-box">* Senha com no mínimo de 6 caracteres.</div>
             </ion-col>
         </ion-row>
 
         <ion-row>
-            <ion-col width-25></ion-col>
-            <ion-col width-50>
-                <button ion-button type="submit" class="custom-button" [disabled]="!createLoginForm.valid" block>Salvar</button>
+            <ion-col col-6>
+                <div id="btnSalvar">
+                    <button class="btnSalvar" full ion-button (click)="close()" block>Cancelar</button>
+                </div>
             </ion-col>
-            <ion-col width-25></ion-col>
+            <ion-col col-6>
+                <div id="btnSalvar">
+                    <button ion-button type="submit" class="btnSalvar" [disabled]="!createLoginForm.valid" block>Salvar</button>
+                </div>
+            </ion-col>
+            <!-- <ion-col width-25></ion-col> -->
         </ion-row>
         <ion-row>
             <ion-col width-25></ion-col>

@@ -13,7 +13,7 @@ export class CupomVO {
     public cupo_nr_vlcomdesconto: number = null;
     //1=Desconto 2=Promoção
     public tipoCupom: number = 1;
-    public empresa: CupomEmpresaDTO;
+    public empresa: CupomEmpresaDTO = new CupomEmpresaDTO();
     public cupo_nr_qtdecupom: number = null;
     public cupo_nr_qtdedisponivel: number = null;
     //True=Ativo False=Inativo

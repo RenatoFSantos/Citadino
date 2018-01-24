@@ -11,7 +11,9 @@
                 <ion-avatar item-left *ngIf="item.anun_tx_urlavatar != ''">
                     <img src="{{item.anun_tx_urlavatar}}">
                 </ion-avatar>
-                <h2>{{item.anun_tx_titulo}}</h2>
+                <h2 class="ctd-title-vitrine">
+                    {{item.anun_tx_titulo}}
+                </h2>
                 <p>{{item.anun_tx_subtitulo}}</p>
                 <p>{{item.vitr_dt_agendada | date: 'shortDate'}}</p>
             </ion-item>
@@ -24,7 +26,7 @@
                     <a detail-none (click)="exibirTextoVitrine(item)">Continuar lendo</a>
                 </p>
             </ion-card-content>
-            <img style="max-height:480px" src="{{item.anun_tx_urlbanner}}" (click)="openPage(item)" *ngIf="item.anun_tx_urlbanner != ''"
+            <img style="max-height:400px" src="{{item.anun_tx_urlbanner}}" (click)="openPage(item)" *ngIf="item.anun_tx_urlbanner != ''"
             />
             <ion-row>
                 <ion-col width-100 class="ctd-btn-vitrine">
@@ -34,7 +36,7 @@
                 </ion-col>
             </ion-row>
         </div>
-        <div *ngIf="item.tian_sq_id == 'TPA-DESCONTO'">
+        <div *ngIf="item.tian_sq_id == 'TPA-DESCONTO'" (click)="openPromocao(item)">
             <ion-card-header>
                 <img src="{{item.anun_tx_urlslide1}}" class="ctd-head-promocao">
             </ion-card-header>
@@ -50,7 +52,7 @@
                         <ion-col class="ctd-perc-desc" text-right>
                             {{item.cupo_nr_desconto}}% DESCONTO
                         </ion-col>
-                    </ion-row>                  
+                    </ion-row>
                 </ion-grid>
             </ion-card-content>
         </div>

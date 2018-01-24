@@ -25,6 +25,7 @@ export class VitrineVO {
     public empr_tx_bairro: string; //BAIRRO CUPOM
     public empr_tx_cidade: string; //CIDADE CUPOM
     public empr_tx_telefone_1: string; //TELEFONE CUPOM
+    public empr_nr_documento: string; //CNPJ CPF
     public muni_sq_id: string = "";
     public tian_sq_id: string = "";
     public agen_sq_id: string = "";

@@ -115,4 +115,43 @@ page-anuncio-promocao {
     .card-header-md {
         padding: 0px 0px 10px 0px !important;
     }
+
+    .card-header-md {
+        padding: 0px 0px 10px 0px !important;
+    }
+
+    .ctd-card.card-md {
+        margin: 3px 0px 10px 2px !important;
+        width: calc(100% - 2px) !important;
+    }
+
+    .ctd-perc-desc {
+        font-size: 1.4rem !important;
+        font-weight: bold !important;
+        color: red !important;
+        margin: 0 auto !important;     
+        padding: 2px 0 2px 0 !important;
+    }
+
+    .ctd-label {
+        font-size: 1.4rem !important;
+        font-weight: bold !important;
+        color: black !important;
+        margin: 0 auto !important;     
+        padding: 2px 0 2px 0 !important;
+    }
+
+    .card-content-md {
+        padding: 5px 5px;
+    }
+
+    .ctd-row-conteudo {
+        line-height: 0.9 !important;       
+    }
+
+    .card-descricao-promocao {
+        font-size: 1.4rem !important;
+        margin: 0 auto !important;     
+        padding: 5px 0px 0px 0px !important;
+    }
 }

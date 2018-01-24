@@ -1,3 +1,5 @@
+import { CupomCriadoService } from './../../providers/service/cupom-criado-service';
+import { AnuncioPromocaoDetalhePage } from './../anuncio-promocao-detalhe/anuncio-promocao-detalhe';
 import { MunicipioVO } from './../../model/municipioVO';
 import { MunicipioService } from './../../providers/service/municipio-service';
 import { UsuarioVO } from './../../model/usuarioVO';
@@ -22,7 +24,7 @@ import { NetworkService } from './../../providers/service/network-service';
 import { VitrineVO } from './../../model/vitrineVO';
 import { VitrineService } from './../../providers/service/vitrine-service';
 import { Component, OnInit } from '@angular/core';
-import { NavController, NavParams, AlertController, Events, LoadingController, ToastController } from 'ionic-angular';
+import { NavController, NavParams, AlertController, Events, LoadingController, ToastController, ModalController } from 'ionic-angular';
 import { VitrineCurtirService } from '../../providers/service/vitrine-curtir-service';
 import { Promise } from 'firebase/app';
 
@@ -67,7 +69,9 @@ export class VitrinePage implements OnInit {
     private usuaSrv: UsuarioService,
     private minhaPubSrv: MinhasPublicacoesService,
     private vtrCut: VitrineCurtirService,
-    private muniSrv: MunicipioService) {
+    private muniSrv: MunicipioService,
+    public mdlCtrl: ModalController,
+    private compCriadoSrv: CupomCriadoService) {
 
     this.municipioAnterior = this.globalVar.getMunicipioPadrao().muni_sq_id;
     this.loadVitrines();
@@ -95,10 +99,16 @@ export class VitrinePage implements OnInit {
           self.connectRealTime();
 
           self.vitrineSrv.getVitrineRefTotal(self.globalVar.getMunicipioPadrao().muni_sq_id).then((snapShot) => {
-            self.rowCount = snapShot.numChildren();
-            this.getVitrines().then(() => {
+            if (snapShot.val() != null) {
+              self.rowCount = snapShot.numChildren();
+              this.getVitrines().then(() => {
+                this.loadCtrl.dismiss();
+              });
+            } else {
+              this.createAlert("Não existe publicação para essa cidade.");
               this.loadCtrl.dismiss();
-            });
+            }
+
           }).catch((error) => {
             this.loadCtrl.dismiss();
             console.log(error);
@@ -190,7 +200,6 @@ export class VitrinePage implements OnInit {
               .catch(error => {
                 throw new Error(error.message);
               });
-
 
             self.rowCurrent = self.vitrines.length;
           });
@@ -292,6 +301,23 @@ export class VitrinePage implements OnInit {
     this.navCtrl.push(NoticiaFullPage, { vitrine: vitrine, slideParam: this.retornaLisSlide(vitrine) });
   }
 
+  public openPromocao(vitrine: VitrineVO) {
+    let self = this;
+    let loader = this.loadingCtrl.create({
+      spinner: 'circles'
+    });
+
+    loader.present();
+
+    self.compCriadoSrv.pesquisarCupomPorId(vitrine.usua_sq_id, vitrine.cupo_sq_id)
+      .then((cupomSnap) => {
+        var cupom = self.mapSrv.getCupomCriado(cupomSnap.val());
+        let promocaoModal = this.mdlCtrl.create(AnuncioPromocaoDetalhePage,
+          { cupom: cupom, isBtnPegarCupom: true, isBtnUsarCupom: false, isControleManual: false });
+        loader.dismiss();
+        promocaoModal.present();
+      });
+  }
 
   // showPromocao() {
   //   let confirm = this.alertCtrl.create({
@@ -502,9 +528,9 @@ export class VitrinePage implements OnInit {
     this.events.subscribe('firebase:connected', (result: any) => {
       if (result == true) {
         setTimeout(() => {
-          if (this.vitrines == null || (this.vitrines != null && this.vitrines.length == 0)) {
+          if (self.vitrines == null || (self.vitrines != null && self.vitrines.length == 0)) {
             this.loadVitrines();
-          }
+          }          
         }, 2500);
       }
     });

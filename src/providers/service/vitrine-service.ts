@@ -6,9 +6,11 @@ import { Injectable } from '@angular/core';
 export class VitrineService {
 
   private vitrineRef: any;
+  private cupomCriadoRef: any;
 
   constructor(public fbService: FirebaseService) {
     this.vitrineRef = this.fbService.getDataBase().ref('vitrine');
+    this.cupomCriadoRef = this.fbService.getDataBase().ref('cupomcriado');
   }
 
   public getVitrineRef() {
@@ -74,6 +76,24 @@ export class VitrineService {
 
     nrVisita.transaction(function (currentRank) {
       return currentRank + 1;
+    }, function (error, committed, snapshot) {
+      if (error) {
+        console.log('Transaction failed abnormally!', error);
+      } else if (!committed) {
+        console.log('We aborted the transaction (because ada already exists).');
+      } else {
+        console.log('User ada added!');
+      }
+      console.log("Ada's data: ", snapshot.val());
     });
+  }
+
+  public baixarCupomTransacion(municipioKey:string, vitrineKey:String) {
+    return this.vitrineRef.child(municipioKey).child(vitrineKey).child("cupo_nr_qtdedisponivel");
+  }
+
+  public baixarCupom() {
+    return this.cupomCriadoRef.child("3rWFZa3v3KTWcks1DSlZJj476Bo2/-L39lWkpyuoBLP_w94j4/cupo_nr_qtdedisponivel");
+ 
   }
 }

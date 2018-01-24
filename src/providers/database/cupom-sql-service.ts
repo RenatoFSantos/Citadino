@@ -32,26 +32,19 @@ export class CupomSqlService {
     let self = this;
     let connection: any;
 
-    console.log("Plataforma " + self.plt.is(('ios')));
-
     var promise = new Promise(function (resolve, reject) {
       if (self.plt.is('ios')) {
         self.sqlSrv.createDataBaseIos().then((db: SQLiteObject) => {
-          console.log("Banco Conectado no ios");
           resolve({ self, db });
-
         }).catch((error) => {
-          console.log("deu errro ios " + error);
           reject(error);
         });
       }
       else {
         self.sqlSrv.createDataBaseAndroid().then((db: SQLiteObject) => {
-          console.log("Banco Conectado no android");
           resolve({ self, db });
         })
           .catch((error) => {
-            console.log("deu errro ios " + error);
             reject(error);
           });
       }
@@ -67,27 +60,31 @@ export class CupomSqlService {
     var promise = new Promise(function (resolve, reject) {
       var querys: string[] = [];
 
-      // var query = "DROP TABLE IF EXISTS usuario";
-      var query = "CREATE TABLE IF NOT EXISTS usuario ( ";
-      query = query + "usua_id INTEGER PRIMARY KEY AUTOINCREMENT,";
-      query = query + "usua_sq_id TEXT,";
-      query = query + "usua_nm_usuario TEXT,";
-      query = query + "usua_ds_email TEXT,";
-      query = query + "usua_tx_senha TEXT,";
-      query = query + "usua_in_ajuda INTEGER,";
-      query = query + "usua_ds_telefone TEXT,";
-      query = query + "usua_tx_urlprofile TEXT)";
-      querys.push(query);
-
-      // query = "DROP TABLE IF EXISTS usuario_logado";
-      query = "CREATE TABLE IF NOT EXISTS usuario_logado ( ";
-      query = query + "usua_id INTEGER PRIMARY KEY )";
+      // var query = "DROP TABLE IF EXISTS cupom";
+      var query = "CREATE TABLE IF NOT EXISTS meu_cupom ( ";
+      query = query + "cupo_sq_id TEXT,";
+      query = query + "cupo_tx_titulo TEXT,";
+      query = query + "cupo_tx_descricao TEXT,";
+      query = query + "cupo_tx_regulamento TEXT,";
+      query = query + "cupo_dt_validade TEXT,";
+      query = query + "cupo_nr_desconto INTEGER,";
+      query = query + "cupo_tx_urlimagem TEXT,";
+      query = query + "cupo_nr_vlatual REAL,";
+      query = query + "cupo_nr_vlcomdesconto REAL,";
+      query = query + "empr_sq_id TEXT,";
+      query = query + "empr_nm_fantasia TEXT,";
+      query = query + "empr_tx_endereco TEXT,";
+      query = query + "empr_tx_bairro TEXT,";
+      query = query + "empr_tx_cidade TEXT,";
+      query = query + "empr_tx_telefone_1 TEXT,";
+      query = query + "empr_tx_telefone_1 TEXT,";
+      query = query + "empr_nr_documento TEXT,";      
+      query = query + "muni_sq_id TEXT)";
 
       querys.push(query);
 
       db.sqlBatch(querys).then((data) => {
-        resolve({ self, db });
-        console.log("Tabela Usuario e usuario-logado criada " + data);
+        resolve({ self, db });        
       })
         .catch((error) => {
           reject(error);

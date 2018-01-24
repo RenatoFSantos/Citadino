@@ -1,3 +1,5 @@
+import { FileTransfer } from '@ionic-native/file-transfer';
+import { DownloadImageService } from './service/download-image-service';
 import { MunicipioService } from './service/municipio-service';
 import { CupomCriadoService } from './service/cupom-criado-service';
 import { CurrencyMask } from './../shared/currency-mask';
@@ -33,6 +35,7 @@ import { Camera } from '@ionic-native/camera';
 import { BackgroundMode } from '@ionic-native/background-mode';
 import { SqlLiteService } from './database/sqlLite-service';
 import { PromocaoService } from './service/promocao-service';
+import { File } from '@ionic-native/file';
 
 
 export const APP_PROVIDERS = [
@@ -70,5 +73,8 @@ export const APP_PROVIDERS = [
     VitrineCurtirService,
     CurrencyMask,
     CupomCriadoService,
-    MunicipioService
+    MunicipioService,
+    DownloadImageService,
+    FileTransfer,
+    File
 ];

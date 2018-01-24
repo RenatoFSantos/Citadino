@@ -298,7 +298,7 @@ export class AnuncioPublicidadePage {
     this.events.subscribe('excluirPublicacao:true', (vitrine: VitrineVO) => {
       if (vitrine != null) {
         let loader = this.loadingCtrl.create({
-          content: 'Aguarde...',
+          spinner: 'circles',
           dismissOnPageChange: true
         });
 

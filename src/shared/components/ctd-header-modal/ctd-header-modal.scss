@@ -3,6 +3,10 @@ ctd-header-modal {
         margin: -2px 10px !important;
 
     }
+    .ctd-title-nav-bar.col {
+        margin-top: 3px !important;
+    }
+
     .btnAnuncioIcon {
         font-size: 1.7rem !important;
         font-weight: 700 !important;
@@ -11,4 +15,11 @@ ctd-header-modal {
     .toolbar-md {
       min-height: 50px !important;
     } 
+
+    .toolbar-title-md {
+        // padding: 0 12px;
+        font-size: 1.6rem;
+        font-weight: bold;
+        color: #424242;
+    }
 }

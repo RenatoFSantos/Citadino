@@ -408,6 +408,7 @@ export class AnuncioPromocaoCrudPage {
           cupomEmpresa.empr_tx_cidade = empresa.empr_tx_cidade;
           cupomEmpresa.empr_tx_endereco = empresa.empr_tx_endereco;
           cupomEmpresa.empr_tx_telefone_1 = empresa.empr_tx_telefone_1;
+          cupomEmpresa.empr_nr_documento = empresa.empr_nr_documento           
           cupomEmpresa.municipio =  empresa.municipio;
 
           self.cupom.empresa = cupomEmpresa;

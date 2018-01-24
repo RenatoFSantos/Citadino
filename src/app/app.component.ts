@@ -1,6 +1,6 @@
+import { MunicipioService } from './../providers/service/municipio-service';
 import { MunicipioVO } from './../model/municipioVO';
 import { MeusAnunciosPage } from './../pages/meus-anuncios/meus-anuncios';
-import { PromocaoService } from './../providers/service/promocao-service';
 import { MeusCuponsPage } from './../pages/meus-cupons/meus-cupons';
 import { UsuarioSqlService } from './../providers/database/usuario-sql-service';
 import { MeusMarcadosPage } from './../pages/meus_marcados/meus-marcados';
@@ -75,30 +75,31 @@ export class MyApp implements OnInit {
     private tokenSrv: TokenDeviceService,
     private oneSignal: OneSignal,
     private mapSrv: MappingsService,
-    private promSrv: PromocaoService) {
+    private muniSrv: MunicipioService) {
 
     this.platform.ready().then(() => {
       var self = this;
       this.statusBar.styleDefault();
-
-      var munic:MunicipioVO = new MunicipioVO();
-      munic.muni_sq_id = "-KoJyCiR1SOOUrRGimAS";
-      munic.muni_nm_municipio = "Bicas";
-
-      self.globalVar.setMunicipioPadrao(munic);
 
       if (window.cordova) {
 
         setTimeout(function () {
           self.initPushConfigurate();
         }, 1000);
-      
+
         self.netService.initializeNetworkEvents();
         self.networkDisconnectEvent();
         self.networkConnectionEvent();
         self.appStateEvent();
         self.bancoDadosOnlineEvent();
         self.globalVar.setIsCordova(window.cordova);
+
+        if (self.platform.is('ios')) {
+          self.globalVar.setStorageDirectory(window.cordova.file.documentsDirectory);
+        }
+        else if (self.platform.is('android')) {
+          self.globalVar.setStorageDirectory(window.cordova.file.dataDirectory);
+        }
 
         //this.checkForUpdate();
         //Inicializa o servico do sqlLite
@@ -147,7 +148,8 @@ export class MyApp implements OnInit {
       }, 1000);
     }
     else {
-      self.promSrv.salvar();
+      // self.promSrv.salvar();
+      self.carregaMunicipio();
       self.rotinaLogandoUsuario(null);
     }
   }
@@ -156,12 +158,14 @@ export class MyApp implements OnInit {
     let self = this;
 
     if (usuarioLocal == null) {
-      let userCurrent = self.usuaSrv.getLoggedInUser();
-
+      var userCurrent = self.usuaSrv.getLoggedInUser();
       if (userCurrent != null) {
         self.usuaSrv.getUserDetail(userCurrent.uid).then((userRef) => {
           if (userRef.val() != null) {
             var usuario: UsuarioVO = self.mapSrv.getUsuario(userRef);
+            if (usuario.usua_ds_email == "") {
+              self.usuaSrv.atualizaEmail(usuario, userCurrent.email);
+            }
 
             if (window.cordova) {
               self.usuaSrv.pesquisarUsarioSqByUid(usuario.usua_sq_id).then((result: UsuarioVO) => {
@@ -267,6 +271,7 @@ export class MyApp implements OnInit {
     var self = this;
     self.events.subscribe('usuario:logado', (usuRemote, usuLocal) => {
       if (usuRemote != null) {
+        self.carregaMunicipio();
         self.rotinaLogandoUsuario(null);
       } else if (usuLocal != null) {
         self.rotinaLogandoUsuario(usuLocal);
@@ -368,7 +373,7 @@ export class MyApp implements OnInit {
 
       case enums.ETypeMenu.logout:
         this.timeOutSession = setTimeout(() => {
-          
+
           this.usuaSrv.signOut(self.globalVar.getIsCordova());
 
           if (self.globalVar.getIsCordova()) {
@@ -665,6 +670,19 @@ export class MyApp implements OnInit {
       }, 1000);
     });
   }
+
+  private carregaMunicipio() {
+    let self = this;
+
+    self.muniSrv.listMunicipio().then((snapEmpr) => {
+      var munickey: any[] = Object.keys(snapEmpr.val());
+      munickey.forEach(element => {
+        var munic: MunicipioVO = self.mapSrv.getMunicipio(snapEmpr.val()[element]);
+        self.globalVar.setMunicipios(munic);
+      });
+    });
+  }
+
 
 
   // checkForUpdate() {

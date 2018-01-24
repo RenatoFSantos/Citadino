@@ -1,3 +1,4 @@
+import { AnuncioPromocaoDetalhePage } from './../anuncio-promocao-detalhe/anuncio-promocao-detalhe';
 import { CtdFuncoes } from './../../shared/ctdFuncoes';
 import { VitrineVO } from './../../model/vitrineVO';
 import { UsuarioVO } from './../../model/usuarioVO';
@@ -44,9 +45,11 @@ export class AnuncioPromocaoPage {
     this.excluirCupomEvent();
     this.carregaPromocoesEvent();
     this.publicarPromocaoEvent();
+    this.closeEvent();
   }
 
   ionViewWillUnload() {
+    this.events.unsubscribe('anuncio_close:true', null);
     this.events.unsubscribe('carregaPromocoes:true', null);
     this.events.unsubscribe('publicarCupom', null);
     this.events.unsubscribe('excluirCupom', null);
@@ -169,14 +172,14 @@ export class AnuncioPromocaoPage {
 
         } else {
 
-          self.vitrSrv.getVitrineByKey(vitrine.muni_sq_id, vitrine.vitr_sq_id)
+          self.vitrSrv.getVitrineByKey(cupom.empresa.municipio.muni_sq_id, cupom.vitr_sq_id)
             .then((snapVitrine) => {
 
               if (snapVitrine.val() != null) {
 
-                updates['/vitrine/' + vitrine.muni_sq_id + '/' + vitrine.vitr_sq_id + '/vitr_dt_agendada'] = dtAtual;
+                updates['/vitrine/' + cupom.empresa.municipio.muni_sq_id + '/' + cupom.vitr_sq_id + '/vitr_dt_agendada'] = dtAtual;
 
-                updates['/vitrine/' + vitrine.muni_sq_id + '/' + vitrine.vitr_sq_id + '/vitr_sq_ordem'] = newOrder;
+                updates['/vitrine/' + cupom.empresa.municipio.muni_sq_id + '/' + cupom.vitr_sq_id + '/vitr_sq_ordem'] = newOrder;
 
                 self.cupoCriaSrv.getDataBaseRef().update(updates);
               }
@@ -206,22 +209,97 @@ export class AnuncioPromocaoPage {
 
         self.loadCtrl.present();
 
-        var usuaKey: string = self.usuario.usua_sq_id;
-        var cupoKey: string = cupom.cupo_sq_id;
+        // var usuaKey: string = self.usuario.usua_sq_id;
+        // var cupoKey: string = cupom.cupo_sq_id;
 
-        self.cupoCriaSrv.excluir(usuaKey, cupoKey).then(() => {
+        self.excluirCupom(cupom)
+          .then(self.pesquisarVitrine)
+          .then(self.excluirVitrine)
+          .then((result) => {
+            self.carregaPromocoes();
 
-          self.carregaPromocoes();
-
-          var urlImagem = cupom.cupo_tx_urlimagem;
-          var httpsReference = self.cupoCriaSrv.getStorage().refFromURL(urlImagem);
-          self.cupoCriaSrv.getStorageRef().child(httpsReference.fullPath).delete();
-
-        });
+            var urlImagem = cupom.cupo_tx_urlimagem;
+            var httpsReference = self.cupoCriaSrv.getStorage().refFromURL(urlImagem);
+            self.cupoCriaSrv.getStorageRef().child(httpsReference.fullPath).delete();
+          })
+          .catch((error) => {
+            self.createAlert(error.message);
+          });
       }
-
     });
   }
+
+  private excluirCupom = function (cupom: CupomCriadoVO) {
+    var self = this;
+
+    var promise = new Promise(function (resolve, reject) {
+      self.cupoCriaSrv.excluir(cupom.usuario.usua_sq_id, cupom.cupo_sq_id)
+        .then(() => {
+          resolve({ self, cupom });
+        })
+        .catch((error) => {
+          reject(error);
+        });
+    });
+
+    return promise;
+  }
+
+
+  private pesquisarVitrine = function (params) {
+    var self = params.self;
+    var cupom: CupomCriadoVO = params.cupom;
+    var vitrine: VitrineVO = null;
+
+    let promise = new Promise(function (resolve, reject) {
+      if (cupom.cupo_dt_publicado != null) {
+        self.vitrSrv.getVitrineByKey(cupom.empresa.municipio.muni_sq_id, cupom.vitr_sq_id)
+          .then((snapVtr) => {
+            if (snapVtr.val() != null) {
+              vitrine = self.mapSrv.getVitrine(snapVtr.val(), snapVtr.key);
+              resolve({ self, cupom, vitrine });
+            }
+            else {
+              resolve({ self, cupom, vitrine });
+            }
+          })
+          .catch((err) => {
+            reject(err);
+          });
+      }
+      else {
+        resolve({ self, cupom, vitrine });
+      }
+    });
+
+    return promise;
+  }
+
+  private excluirVitrine = function (param) {
+    var self = param.self;
+    var vitrine: VitrineVO = param.vitrine;
+    var cupom: CupomCriadoVO = param.cupom;
+
+    let promise = new Promise(function (resolve, reject) {
+
+      if (vitrine != null) {
+        self.vitrSrv.excluir(vitrine).then(() => {
+          resolve({ self, cupom });
+        })
+          .catch(err => {
+            reject(err);
+          });
+
+      }
+      else {
+        resolve({ self, cupom });
+      }
+    });
+
+    return promise;
+  }
+
+
 
   createAlert(errorMessage: string) {
     if (this.toastAlert != null) {
@@ -235,5 +313,59 @@ export class AnuncioPromocaoPage {
     });
 
     this.toastAlert.present();
+  }
+
+  public openPromocao(cupom: CupomCriadoVO) {
+    let self = this;
+    let loader = this.loadingCtrl.create({
+      spinner: 'circles'
+    });
+
+    loader.present();
+
+    self.cupoCriaSrv.pesquisarCupomPorId(cupom.usuario.usua_sq_id, cupom.cupo_sq_id)
+      .then((cupomSnap) => {
+        var cupom = self.mapSrv.getCupomCriado(cupomSnap.val());
+        let promocaoModal = this.mdlCtrl.create(AnuncioPromocaoDetalhePage,
+          { cupom: cupom, isBtnPegarCupom: false, isBtnUsarCupom: false, isControleManual: true });
+        loader.dismiss();
+        promocaoModal.present();
+      });
+  }
+
+
+  public isExcluirCupom(cupom: CupomCriadoVO): boolean {
+    var result: boolean = false;
+
+    if (cupom.cupo_dt_publicado == null) {
+      result = true
+    }
+    else {
+      result = !this.verificarIsValidade(cupom.cupo_dt_validade);
+    }
+
+    return result;
+  }
+
+
+  private verificarIsValidade(dataValidade: any): boolean {
+    var result: boolean = true;
+
+    var dataAtual: any = CtdFuncoes.convertDateToStr(new Date(), enums.DateFormat.enUS);
+
+    if (dataAtual > dataValidade) {
+      result = false;
+    }
+
+    return result;
+  }
+
+
+  private closeEvent() {
+    this.events.subscribe("anuncio_close:true", (result) => {
+      if (result) {
+        this.navCtrl.pop();
+      }
+    });
   }
 }

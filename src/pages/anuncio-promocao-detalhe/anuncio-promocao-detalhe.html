@@ -1,0 +1,83 @@
+<ion-header>
+  <ctd-header-modal [titulo]=[(cupom.empresa.empr_nm_fantasia)] [modal]=true></ctd-header-modal>
+</ion-header>
+<ion-content>
+  <ion-card class="ctd-card">
+    <ion-card-header>
+      <img src="{{cupom.cupo_tx_urlimagem}}" class="ctd-head-promocao">
+    </ion-card-header>
+    <ion-card-content>
+      <ion-card-title>
+        {{cupom.cupo_tx_titulo}}
+      </ion-card-title>
+      <ion-grid>
+        <ion-row>
+          <ion-col class="ctd-perc-desc">
+            {{cupom.cupo_nr_desconto}}% DESCONTO
+          </ion-col>
+        </ion-row>
+        <ion-row>
+          <ion-col col-5>
+            {{cupom.cupo_nr_vlcomdesconto | currency:'BRL':true:'1.2-2'}}
+          </ion-col>
+          <ion-col col-5>
+            <div style="text-decoration: line-through">{{cupom.cupo_nr_vlatual | currency:'BRL':true:'1.2-2'}}</div>
+          </ion-col>
+          <ion-col col-2 text-center>
+            <ion-icon name="call" class="ctd-btn-call" (click)="discar(cupom.empresa.empr_tx_telefone_1)"></ion-icon>
+          </ion-col>
+        </ion-row>
+        <ion-row>
+          <ion-col col-12 text-center class="ctd-dt-validade">
+            Válido até {{cupom.cupo_dt_validade | date: 'shortDate'}}
+          </ion-col>
+        </ion-row>
+        <ion-row>
+          <ion-col>
+            <ion-item-group>
+              <ion-item-divider class="ctd-divider-promocao" light>Descrição</ion-item-divider>
+              <p class="ctd-descricao-promocao">
+                {{cupom.cupo_tx_descricao}}
+              </p>
+            </ion-item-group>
+            <ion-item-group>
+              <ion-item-divider class="ctd-divider-promocao" light>Regulamento</ion-item-divider>
+              <p class="ctd-descricao-promocao">{{cupom.cupo_tx_regulamento}}</p>
+            </ion-item-group>
+            <ion-item-group>
+              <ion-item-divider class="ctd-divider-promocao" light>Endereço</ion-item-divider>
+              <p class="ctd-descricao-promocao">
+                {{cupom.empresa.empr_tx_endereco}} - {{cupom.empresa.empr_tx_bairro}}
+              </p>
+            </ion-item-group>
+          </ion-col>
+        </ion-row>
+      </ion-grid>
+    </ion-card-content>
+  </ion-card>
+</ion-content>
+<ion-footer *ngIf="isBtnPegarCupom == true || isBtnUsarCupom == true">
+  <button *ngIf="isBtnPegarCupom == true" ion-button full class="ctd-bt-promocao" (click)="pegarCupoEvent()">
+    <ion-grid>
+      <ion-row>
+        <ion-col>
+          PEGAR CUPOM
+        </ion-col>
+      </ion-row>
+      <ion-row>
+        <ion-col>
+          Restante {{cupom.cupo_nr_qtdedisponivel}} até {{cupom.cupo_dt_validade | date: 'shortDate'}}
+        </ion-col>
+      </ion-row>
+    </ion-grid>
+  </button>
+  <button *ngIf="isBtnUsarCupom == true" ion-button full class="ctd-bt-promocao" (click)="usarCupom()">
+    <ion-grid>
+      <ion-row>
+        <ion-col>
+          USAR CUPOM
+        </ion-col>
+      </ion-row>
+    </ion-grid>
+  </button>
+</ion-footer>

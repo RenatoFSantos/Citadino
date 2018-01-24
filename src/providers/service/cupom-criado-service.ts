@@ -40,10 +40,6 @@ export class CupomCriadoService {
     return this.cupomCriadoRef.child(uidUsuario).child(uidCupom).set(null);
   }
 
-  public pesquisarCupomPorUsuarioId(usuarioKey: string) {
-    return this.cupomCriadoRef.child(usuarioKey).once("value");
-  }
-
   public pesquisarCupomPorId(usuariokey: string, cupomKey: string) {
     return this.cupomCriadoRef.child(usuariokey).child(cupomKey).once("value");
   }
@@ -56,4 +52,9 @@ export class CupomCriadoService {
   public getPromocoesPorUsuario(uidUsuario: string) {
     return this.cupomCriadoRef.child(uidUsuario).orderByChild('cupo_sq_ordem').once("value");
   }
+
+  public baixarCupomTransacion(usuariokey:string, cupomKey:String) {
+    return this.getCupomRef().child(usuariokey).child(cupomKey).child("cupo_nr_qtdedisponivel");
+  }
+
 }

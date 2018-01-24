@@ -29,9 +29,61 @@ page-profile {
         margin-left: 35%;
     }
 
+    .item-md {
+        background-color: transparent !important;
+    }
     .item-md ion-avatar ion-img,
     .item-md ion-avatar img {
         height: 80px !important;
         width: 80px !important
+    }
+
+    .ctd-label-error {
+        color: red !important;
+        margin-left: 10px !important;
+    }
+    .item-md.item-block .item-inner {
+        // padding-right: 8px !important;
+        // border-bottom: 2px !important;
+    }
+
+    .ctd-background-profile {
+        background-image:url('../assets/img/cidade.jpg');
+        background-size: 265px;       
+    }
+
+    .ctd-item-background-profile.item-md.item-block .item-inner {
+        padding-right: 8px;
+        border-bottom: 2px;
+    }
+
+    .ctd-item.item-md {
+        padding-left: 5px !important;
+    }
+
+    .ctd-divider-promocao.item-divider-md {
+        padding-left: 5px !important;
+        color: black !important;
+        background-color: #c2b49a !important;
+        font-weight: bold !important;
+    }
+
+    .ctd-ion-grid-head-col {
+        padding: 2px 0px;
+    }
+    .grid {
+        padding: 0px;
+    }
+
+    .item-md.item-block .item-inner {     
+        border-bottom: 1px solid #dedede;
+    }
+
+    .select-md {
+        padding: 6px 5px 6px 5px;
+    }
+
+    ion-select {     
+        max-width: 95% !important;
     }
 }

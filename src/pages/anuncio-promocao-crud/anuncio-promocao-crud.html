@@ -22,7 +22,7 @@
             <ion-input type="text" maxlength="40" [(ngModel)]="cupom.cupo_tx_titulo" formControlName="cupo_tx_titulo" autocomplete="true"
               spellcheck="true"></ion-input>
           </ion-item>
-          <div *ngIf="!frmPromocaoCrud.controls.cupo_tx_titulo.valid && frmPromocaoCrud.controls.cupo_tx_titulo.touched" class="error-box">*Informe o título.</div>
+          <div *ngIf="!frmPromocaoCrud.controls.cupo_tx_titulo.valid && frmPromocaoCrud.controls.cupo_tx_titulo.touched" class="ctd-label-error">*Informe o título.</div>
         </ion-col>
       </ion-row>
       <ion-row>
@@ -32,7 +32,7 @@
             <ion-textarea maxlength="500" autoresize="150" [(ngModel)]="cupom.cupo_tx_descricao" formControlName="cupo_tx_descricao"
               autocomplete="true" spellcheck="true"></ion-textarea>
           </ion-item>
-          <div *ngIf="(!frmPromocaoCrud.controls.cupo_tx_descricao.valid && frmPromocaoCrud.controls.cupo_tx_descricao.touched)" class="error-box">*Informe a descrição.</div>
+          <div *ngIf="(!frmPromocaoCrud.controls.cupo_tx_descricao.valid && frmPromocaoCrud.controls.cupo_tx_descricao.touched)" class="ctd-label-error">*Informe a descrição.</div>
         </ion-col>
       </ion-row>
       <ion-row>
@@ -43,7 +43,7 @@
               autocomplete="true" spellcheck="true"></ion-textarea>
           </ion-item>
           <div *ngIf="(!frmPromocaoCrud.controls.cupo_tx_regulamento.valid && frmPromocaoCrud.controls.cupo_tx_regulamento.touched)"
-            class="error-box">*Informe o regulamento.</div>
+            class="ctd-label-error">*Informe o regulamento.</div>
         </ion-col>
       </ion-row>
       <ion-row>
@@ -53,14 +53,14 @@
             <ion-datetime displayFormat="DD/MM/YYYY" pickerFormat="DD MM YYYY" [(ngModel)]="cupom.cupo_dt_validade" formControlName="cupo_dt_validade"
               cancelText="Cancelar" doneText="Confirmar" [min]="dateMin" [max]="dateMax" (ionCancel)="clearDate()"></ion-datetime>
           </ion-item>
-          <div *ngIf="(!frmPromocaoCrud.controls.cupo_dt_validade.valid && frmPromocaoCrud.controls.cupo_dt_validade.touched)" class="error-box">*Informe a validade.</div>
+          <div *ngIf="(!frmPromocaoCrud.controls.cupo_dt_validade.valid && frmPromocaoCrud.controls.cupo_dt_validade.touched)" class="ctd-label-error">*Informe a validade.</div>
         </ion-col>
         <ion-col col-6>
           <ion-item>
             <ion-label stacked>Quantidade</ion-label>
             <ion-input type="number" clearInput [(ngModel)]="cupom.cupo_nr_qtdecupom" formControlName="cupo_nr_qtdecupom" [brmasker]="{mask:'000', len:3}"></ion-input>
           </ion-item>
-          <div *ngIf="(!frmPromocaoCrud.controls.cupo_nr_qtdecupom.valid && frmPromocaoCrud.controls.cupo_nr_qtdecupom.touched)" class="error-box">*Informe a quantidade.</div>
+          <div *ngIf="(!frmPromocaoCrud.controls.cupo_nr_qtdecupom.valid && frmPromocaoCrud.controls.cupo_nr_qtdecupom.touched)" class="ctd-label-error">*Informe a quantidade.</div>
         </ion-col>
       </ion-row>
       <ion-row *ngIf="cupom.tipoCupom == 1">
@@ -69,15 +69,15 @@
             <ion-label stacked>Vl. Atual</ion-label>
             <ion-input type="tel" [(ngModel)]="cupom.cupo_nr_vlatual" formControlName="cupo_nr_vlatual" (keyup)="currencyChange()" placeholder="0.00"></ion-input>
           </ion-item>
-          <div *ngIf="(!frmPromocaoCrud.controls.cupo_nr_vlatual.valid && frmPromocaoCrud.controls.cupo_nr_vlatual.touched)" class="error-box">*Informe o valor atual.</div>
+          <div *ngIf="(!frmPromocaoCrud.controls.cupo_nr_vlatual.valid && frmPromocaoCrud.controls.cupo_nr_vlatual.touched)" class="ctd-label-error">*Informe o valor atual.</div>
         </ion-col>
         <ion-col width-25 offset-50>
           <ion-item>
             <ion-label stacked>% Desconto</ion-label>
-            <ion-input type="number" placeholder="0%" [brmasker]="{mask:'00', len:2}" clearInput [(ngModel)]="cupom.cupo_nr_desconto"
+            <ion-input type="number" maxlength=9 placeholder="0%" [brmasker]="{mask:'00', len:2}" clearInput [(ngModel)]="cupom.cupo_nr_desconto"
               formControlName="cupo_nr_desconto"></ion-input>
           </ion-item>
-          <div *ngIf="(!frmPromocaoCrud.controls.cupo_nr_desconto.valid && frmPromocaoCrud.controls.cupo_nr_desconto.touched)" class="error-box">*Informe o desconto.</div>
+          <div *ngIf="(!frmPromocaoCrud.controls.cupo_nr_desconto.valid && frmPromocaoCrud.controls.cupo_nr_desconto.touched)" class="ctd-label-error">*Informe o desconto.</div>
         </ion-col>
       </ion-row>
       <ion-row *ngIf="cupom.tipoCupom == 1">

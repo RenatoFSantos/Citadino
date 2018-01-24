@@ -88,7 +88,7 @@ export class GuiaPage implements OnInit {
   public onCleanInput() {
     this.searching = true;
     this.empresas = [];
-    
+
     let loader = this.loadingCtrl.create({
       content: 'Aguarde...',
       dismissOnPageChange: true,
@@ -350,6 +350,11 @@ export class GuiaPage implements OnInit {
             (this.categorias != null && this.categorias.length == 0)) {
             this.getLoadCategorias();
           }
+          
+          if (self.globalVar.getMunicipios() == null) {
+            self.carregaMunicipio();
+          }
+
         }, 2500);
       }
     });
@@ -361,5 +366,17 @@ export class GuiaPage implements OnInit {
       self.municipioAnterior = this.globalVar.getMunicipioPadrao().muni_sq_id;
       self.carregaDadosDescritorEmpresa(self.searchControl.value);
     })
+  }
+
+  private carregaMunicipio() {
+    let self = this;
+
+    self.muniSrv.listMunicipio().then((snapEmpr) => {
+      var munickey: any[] = Object.keys(snapEmpr.val());
+      munickey.forEach(element => {
+        var munic: MunicipioVO = self.mapSrv.getMunicipio(snapEmpr.val()[element]);
+        self.globalVar.setMunicipios(munic);
+      });
+    });
   }
 }

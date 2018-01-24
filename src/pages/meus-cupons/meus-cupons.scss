@@ -1,20 +1,190 @@
 page-meus-cupons {
-    #btnPegarCupom {
-        text-align: center!important;
-        margin-bottom: 5px !important;
+    ion-page {
+        z-index: 70 !important;
     }
 
-    .footer {
-        position: fixed;
-        right: 0;
-        height: 20px;
-        font-size: 80%;
-        bottom: 0;
-        left: 0;
-        padding: 0;
-        color:#FFF;
+    p {
+        text-align: justify;
+    }
+
+    .card-title-md {
+        margin: 0 auto;
+        line-height: 40%;
+        font-size: 2.0rem;
+        padding: 5px 0 5px 0;
+    }
+
+    .card-title-promocao.card-title-md  {
+        font-size: 1.8rem !important;
+        font-weight: bold !important;
+    }
+
+    .ctd-title-vitrine {
+        font-size: 1.4rem !important;
+        font-weight: bold !important;
+    }
+
+    .card-subtitle-promocao {
+        font-size: 1.4rem !important;
+        font-weight: bold !important;
+        color: #9b9b36 !important;
+        margin: 0 auto !important;     
+        padding: 2px 0px 0px 0px !important;
+    }
+    
+    ion-content {
+        background-color: #c2b49a !important;
+    }
+
+    ion-card-content.ctd-faixa {
+        background-color: #000 !important;
+        color: #fff;
         text-align: center;
-        width: 100%;
-        margin-bottom: 45px;
+        padding:3px 0px 0px 3px !important;
+    }
+
+    ion-card-content.ctd-texto {
+        text-align: justify; 
+        padding:8px;
+    }  
+
+    .ctd-subtitulo {
+        color: white !important;   
+    } 
+    
+    .ctd-noticia_titulo {
+        overflow: hidden;
+        text-overflow: ellipsis;     
+        -webkit-box-orient: vertical;
+        -webkit-line-clamp: 1; /* number of lines to show */
+        max-height: 1.5em;
+        line-height: 1.4em;
+    }  
+    
+    .ctd-noticia {
+        overflow: hidden;
+        text-overflow: ellipsis;
+        display: -webkit-box;
+        -webkit-box-orient: vertical;
+        -webkit-line-clamp: 4; /* number of lines to show */
+        max-height: 5.5em;
+        line-height: 1.4
+    }
+
+    .ctd-head-promocao {
+        max-height: 300px;
+    }
+
+    .ctd_noticia_exibir {
+        max-height: 800px;
+        overflow: hidden;
+        -moz-transition: height 1s ease;
+        -webkit-transition: height 1s ease;
+        -o-transition: height 1s ease;
+        transition: max-height 0.25s ease-in;
+    }
+
+    .ctd-noticia-head {
+        background-color:#e7a904 !important;
+    }
+
+    .ctd-btn-vitrine{
+        height: 40px;
+        background-color: rgba(204, 204, 204, 0.59);
+        text-align: right !important;
+        padding: 1px !important;
+        // border-radius: 5px;
+        // width: 102%;
+        // margin-left: -2px;
+    }
+
+    .ctd-ver-mais {
+        text-align: right;
+        padding: 2px 8px 0px 0px;
+    }
+
+    ion-fab[bottom] {
+        bottom: 2px !important;
+    }
+    ion-fab[right] {
+        right: 10px !important;
+    }
+
+    .fixed-content {
+        margin-bottom: 1px !important;
+        margin-top: 55px !important;
+    }
+
+    .scroll-content {        
+        margin-top: 55px !important;
+        margin-bottom: 1px !important;
+        // overflow-y: scroll !important;
+        // transform:none !important;
+    }
+
+    .has-refresher> 
+      .scroll-content {     
+        border-top: 0px !important;
+        // transform:translateY(80px) !important;
       }
+
+    .btnGeolocalizacao {
+        color: white !important;
+        font-size: 1.6em !important;
+    }
+
+    .select-text {
+        color: white !important;
+        font-size: 1.2em !important;
+    }
+
+    .select-md {
+        padding: 0px !important;
+        max-width: 90%!important;
+    }
+
+    .select-md .select-icon .select-icon-inner {
+        color: white !important;
+        font-size: 1.1em !important;
+        left: 0px !important;
+    }
+
+    .ctd-perc-desc {
+        font-size: 1.4rem !important;
+        font-weight: bold !important;
+        color: red !important;
+        margin: 0 auto !important;     
+        padding: 2px 0 2px 0 !important;
+    }
+
+    .card-header-md {
+        padding: 0px 0px 10px 0px !important;
+    }
+
+    .ctd-card.card-md {
+        margin: 2px 0px 10px 2px !important;
+        width: calc(100% - 2px) !important;
+    }
+
+    ion-card.ctd-card {
+        padding: 0px;
+        border-radius: 10px;
+        // line-height: 20%;
+        position: relative;
+        // text-align: center;
+    }
+
+    .ctd-dt-validade {
+        background-color: #faec8c !important;
+        font-weight: bold !important;
+    
+    }
+
+      //   //============
+      // versao promocao
+    //   .tabs-md .tabbar {
+    //     background: #f8f8f8;
+    //     height: 35px;
+    // }
+ 
 }

@@ -6,5 +6,6 @@ export class CupomEmpresaDTO {
     public empr_tx_bairro: string;
     public empr_tx_cidade: string;
     public empr_tx_telefone_1: string;
-    public municipio:MunicipioVO;
+    public empr_nr_documento: string;
+    public municipio:MunicipioVO = new MunicipioVO() ;
 }

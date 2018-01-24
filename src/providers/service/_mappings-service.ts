@@ -1,3 +1,4 @@
+import { CupomCriadoVO } from './../../model/cupomCriadoVO';
 import { CupomEmpresaDTO } from './../../model/dominio/cupomEmpresaDTO';
 import { UsuarioCupomDTO } from './../../model/dominio/usuarioCupomDTO';
 import { MunicipioVO } from './../../model/municipioVO';
@@ -8,7 +9,6 @@ import { UsuarioVO } from './../../model/usuarioVO';
 import { VitrineVO } from './../../model/vitrineVO';
 import * as enums from './../../model/dominio/ctdEnum';
 import { Injectable } from '@angular/core';
-import { CupomCriadoVO } from '../../model/cupomCriadoVO';
 import { CategoriaVO } from '../../model/categoriaVO';
 
 @Injectable()
@@ -50,6 +50,7 @@ export class MappingsService {
                 vitrine.empr_tx_bairro = element.val().empr_tx_bairro != undefined ? element.val().empr_tx_bairro : "";
                 vitrine.empr_tx_cidade = element.val().empr_tx_cidade != undefined ? element.val().empr_tx_cidade : "";
                 vitrine.empr_tx_telefone_1 = element.val().empr_tx_telefone_1 != undefined ? element.val().empr_tx_telefone_1 : "";
+                vitrine.empr_nr_documento = element.val().empr_nr_documento != undefined ? element.val().empr_nr_documento : "";
                 vitrine.muni_sq_id = element.val().muni_sq_id;
                 vitrine.tian_sq_id = element.val().tian_sq_id;
                 vitrine.agen_sq_id = element.val().agen_sq_id;
@@ -62,7 +63,7 @@ export class MappingsService {
                 vitrine.cupo_nr_vlatual = element.val().cupo_nr_vlatual != undefined ? element.val().cupo_nr_vlatual : false;
                 vitrine.tpcu_sq_id = element.val().tpcu_sq_id != undefined ? element.val().tpcu_sq_id : false;
                 vitrine.cupo_nnr_qtdecupom = element.val().cupo_nnr_qtdecupom != undefined ? element.val().cupo_nnr_qtdecupom : false;
-                vitrine.cupo_nr_qtdedisponivel = element.val().cupo_nr_qtdedisponivel != undefined ? element.val().cupo_nr_qtdedisponivel: false;
+                vitrine.cupo_nr_qtdedisponivel = element.val().cupo_nr_qtdedisponivel != undefined ? element.val().cupo_nr_qtdedisponivel : false;
                 vitrine.cupo_in_status = element.val().cupo_in_status != undefined ? element.val().cupo_in_status : false;
                 vitrine.cupo_dt_validade = element.val().cupo_dt_validade != undefined ? element.val().cupo_dt_validade : false;
                 vitrine.cupo_nr_vlcomdesconto = element.val().cupo_nr_vlcomdesconto != undefined ? element.val().cupo_nr_vlcomdesconto : false;
@@ -104,6 +105,7 @@ export class MappingsService {
             empr_tx_bairro: snapshot.empr_tx_bairro != undefined ? snapshot.empr_tx_bairro : "",
             empr_tx_cidade: snapshot.empr_tx_cidade != undefined ? snapshot.empr_tx_cidade : "",
             empr_tx_telefone_1: snapshot.empr_tx_telefone_1 != undefined ? snapshot.empr_tx_telefone_1 : "",
+            empr_nr_documento: snapshot.empr_nr_documento != undefined ? snapshot.empr_nr_documento : "",
             muni_sq_id: snapshot.muni_sq_id,
             tian_sq_id: snapshot.tian_sq_id,
             agen_sq_id: snapshot.agen_sq_id,
@@ -187,6 +189,13 @@ export class MappingsService {
 
 
     public getUsuario(snapshot: any): UsuarioVO {
+        let muniUsu: MunicipioVO = null;
+
+        if (snapshot.val().municipio != undefined) {
+            muniUsu = new MunicipioVO();
+            muniUsu.muni_sq_id = snapshot.val().municipio.muni_sq_id;
+            muniUsu.muni_nm_municipio = snapshot.val().municipio.muni_nm_municipio;
+        }
 
         let usuario: UsuarioVO = {
             usua_id: 0,
@@ -204,8 +213,8 @@ export class MappingsService {
             usua_in_ajuda: snapshot.val().usua_in_ajuda,
             usua_tx_urlprofile: snapshot.val().usua_tx_urlprofile != undefined ? snapshot.val().usua_tx_urlprofile : "",
             usua_sg_perfil: snapshot.val().usua_sg_perfil,
-            empresa: this.getUsuarioEmpresa(snapshot)
-
+            empresa: this.getUsuarioEmpresa(snapshot),
+            municipio: muniUsu
         };
 
         return usuario;
@@ -344,6 +353,7 @@ export class MappingsService {
             empresa.empr_tx_bairro = snapCupo.empresa.empr_tx_bairro;
             empresa.empr_tx_cidade = snapCupo.empresa.empr_tx_cidade;
             empresa.empr_tx_telefone_1 = snapCupo.empresa.empr_tx_telefone_1;
+            empresa.empr_nr_documento = snapCupo.empresa.empr_nr_documento;
 
             if (snapCupo.empresa.municipio != undefined) {
                 municipio = new MunicipioVO();
@@ -398,6 +408,7 @@ export class MappingsService {
             empresa.empr_tx_bairro = snapCupo.cupoEmpresa.empr_tx_bairro;
             empresa.empr_tx_cidade = snapCupo.cupoEmpresa.empr_tx_cidade;
             empresa.empr_tx_telefone_1 = snapCupo.cupoEmpresa.empr_tx_telefone_1;
+            empresa.empr_nr_documento = snapCupo.cupoEmpresa.empr_nr_documento;
 
         } else if (snapCupo.empresa != undefined) {
             empresa = new CupomEmpresaDTO();
@@ -526,6 +537,7 @@ export class MappingsService {
             empr_tx_bairro: cupom.empresa.empr_tx_bairro,
             empr_tx_cidade: cupom.empresa.empr_tx_cidade,
             empr_tx_telefone_1: cupom.empresa.empr_tx_telefone_1,
+            empr_nr_documento: cupom.empresa.empr_nr_documento,
             muni_sq_id: cupom.empresa.municipio.muni_sq_id,
             tian_sq_id: "TPA-DESCONTO",
             agen_sq_id: null,
@@ -545,7 +557,37 @@ export class MappingsService {
         }
 
         return vitrine;
+    }
 
+    public getMeusCupon(cupom: any): CupomCriadoVO {
+        var meuCupom: CupomCriadoVO = new CupomCriadoVO();
+        meuCupom.cupo_sq_id = cupom.cupo_sq_id;
+        meuCupom.cupo_tx_titulo = cupom.cupo_tx_titulo;
+        meuCupom.cupo_tx_descricao = cupom.cupo_tx_descricao;
+        meuCupom.cupo_tx_regulamento = cupom.cupo_tx_regulamento;
+        meuCupom.cupo_dt_validade = cupom.cupo_dt_validade;
+        meuCupom.cupo_nr_desconto = cupom.cupo_nr_desconto;
+        meuCupom.cupo_tx_urlimagem = cupom.cupo_tx_urlimagem;
+        meuCupom.cupo_nr_vlatual = cupom.cupo_nr_vlatual;
+        meuCupom.cupo_nr_vlcomdesconto = cupom.cupo_nr_vlcomdesconto;
+
+        var empresa: CupomEmpresaDTO = new CupomEmpresaDTO();
+        empresa.empr_sq_id = cupom.empr_sq_id;
+        empresa.empr_nm_fantasia = cupom.empr_nm_fantasia;
+        empresa.empr_tx_bairro = cupom.empr_tx_bairro;
+        empresa.empr_tx_cidade = cupom.empr_tx_cidade;
+        empresa.empr_tx_telefone_1 = cupom.empr_tx_telefone_1;
+        empresa.empr_tx_endereco = cupom.empr_tx_endereco;
+        empresa.empr_nr_documento = cupom.empr_nr_documento;
+
+        var municipio: MunicipioVO = new MunicipioVO();
+        municipio.muni_sq_id = cupom.muni_sq_id;
+
+        empresa.municipio = municipio;
+        meuCupom.empresa = empresa;
+
+
+        return meuCupom;
     }
 
 }

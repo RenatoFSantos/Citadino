@@ -1,3 +1,6 @@
+import { MunicipioVO } from './../../model/municipioVO';
+import { UsuarioVO } from './../../model/usuarioVO';
+import { GlobalVar } from './../../shared/global-var';
 import { UsuarioService } from './../../providers/service/usuario-service';
 import { MensagemListaPage } from './../mensagem-lista/mensagem-lista';
 
@@ -23,7 +26,9 @@ export class TabsPage implements OnInit {
   constructor(public nav: NavController,
     public navParams: NavParams,
     public events: Events,
-    private usuaSrv: UsuarioService) {
+    private usuaSrv: UsuarioService,
+    private glbVar: GlobalVar) {
+    this.setMunicipioPadrao();
     this.selectedIndex = navParams.data.tabIndex || 1;
   }
 
@@ -79,6 +84,24 @@ export class TabsPage implements OnInit {
           this.events.publish('mensagem:nova', totalMensage);
         });
       });
+    }
+  }
+
+  private setMunicipioPadrao() {
+
+    if (this.glbVar.usuarioLogado != null) {
+      var usuario: UsuarioVO = this.glbVar.usuarioLogado;
+
+      if (usuario.municipio != null && usuario.municipio.muni_sq_id != null) {
+        this.glbVar.setMunicipioPadrao(usuario.municipio);
+      }
+      else {
+        var munic: MunicipioVO = new MunicipioVO();
+        munic.muni_sq_id = "-KoJyCiR1SOOUrRGimAS";
+        munic.muni_nm_municipio = "Bicas";
+
+        this.glbVar.setMunicipioPadrao(munic);
+      }
     }
   }
 

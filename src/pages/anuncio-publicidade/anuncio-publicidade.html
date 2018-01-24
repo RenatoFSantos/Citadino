@@ -7,7 +7,7 @@
       <ion-avatar item-left>
         <img src="{{item.anun_tx_urlavatar}}">
       </ion-avatar>
-      <h2>{{item.anun_tx_titulo}}</h2>
+      <h2 class="ctd-title-vitrine">{{item.anun_tx_titulo}}</h2>
       <p>{{item.anun_tx_subtitulo}}</p>
       <p *ngIf="item.vitr_dt_agendada != ''">
         {{item.vitr_dt_agendada | date: 'shortDate'}}
@@ -23,7 +23,7 @@
         <a detail-none (click)="exibirTextoVitrine(item)">Continuar lendo</a>
       </p>
     </ion-card-content>
-    <img *ngIf="item.anun_tx_urlbanner != ''" style="max-height:480px" src="{{item.anun_tx_urlbanner}}" (click)="openPage(item)" />
+    <img *ngIf="item.anun_tx_urlbanner != ''" style="max-height:400px" src="{{item.anun_tx_urlbanner}}" (click)="openPage(item)" />
 
     <ion-row>
       <ion-col width-100 class="ctd-btn-vitrine">

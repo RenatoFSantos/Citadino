@@ -10,7 +10,9 @@ export class GlobalVar {
   private isFirebaseConnected: boolean;
   private isSqlConnected: boolean;
   private isCordova: boolean;
-  private municipioPadrao:MunicipioVO;
+  private municipioPadrao: MunicipioVO;
+  private storageDirectory: string;
+  private municipios: Array<MunicipioVO> = null;
 
 
   constructor() {
@@ -19,6 +21,7 @@ export class GlobalVar {
     this.isSqlConnected = false;
     this.isCordova = false;
     this.municipioPadrao = null;
+    this.storageDirectory = "";
 
   }
 
@@ -66,12 +69,32 @@ export class GlobalVar {
     return result;
   }
 
-  public setMunicipioPadrao(munic:MunicipioVO) {
+  public setMunicipioPadrao(munic: MunicipioVO) {
     this.municipioPadrao = munic;
   }
 
   public getMunicipioPadrao() {
     return this.municipioPadrao;
+  }
+
+  public setStorageDirectory(value: string) {
+    this.storageDirectory = value;
+  }
+
+  public getStorageDirectory() {
+    return this.storageDirectory;
+  }
+
+  public setMunicipios(municipio: MunicipioVO) {
+    if (this.municipios == null) {
+      this.municipios = new Array<MunicipioVO>();
+    }
+
+    this.municipios.push(municipio);
+  }
+
+  public getMunicipios(): Array<MunicipioVO> {
+    return this.municipios;
   }
 
 }

@@ -33,15 +33,9 @@ export class CtdListaMunicipio {
   }
 
   private carregaMunicipio() {
-    let self = this;
 
-    self.muniSrv.listMunicipio().then((snapEmpr) => {
-      var munickey: any[] = Object.keys(snapEmpr.val());
-      munickey.forEach(element => {
-        var munic: MunicipioVO = self.mapSrv.getMunicipio(snapEmpr.val()[element]);
-        self.municipios.push(munic);
-      });
-    });
+    this.municipios = this.glbVar.getMunicipios();
+
   }
 
   public municipioSelecionado(munic: MunicipioVO) {
@@ -49,11 +43,11 @@ export class CtdListaMunicipio {
     if (this.municSelected.muni_sq_id != munic.muni_sq_id) {
       this.glbVar.setMunicipioPadrao(munic);
       this.municSelected = this.glbVar.getMunicipioPadrao();
-     
+
       if (this.tela == "VITRINE") {
         this.events.publish("vitrine:onChangeMunicipio");
       }
-      else if( this.tela == "GUIA") {
+      else if (this.tela == "GUIA") {
         this.events.publish("guia:municipio");
       }
     }

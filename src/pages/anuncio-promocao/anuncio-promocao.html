@@ -1,71 +1,72 @@
 <ion-header>
-  <ctd-header-modal [titulo]=[(titulo)]></ctd-header-modal>
+  <ctd-header-modal [titulo]=[(titulo)] [modal]=false></ctd-header-modal>
 </ion-header>
 <ion-content>
   <ion-card class="ctd-card" *ngFor="let cupom of cupons">
-    <ion-card-header>
-      <img src="{{cupom.cupo_tx_urlimagem}}" class="ctd-noticia">
-    </ion-card-header>
-    <ion-card-content>
-      <ion-card-title>
-        {{cupom.cupo_tx_titulo}}
-      </ion-card-title>
-      <ion-grid>
-        <ion-row>
-          <ion-col>
-            -{{cupom.cupo_nr_desconto}}% de desconto
-          </ion-col>
-        </ion-row>
-        <ion-row>
-          <ion-col>
-            {{cupom.cupo_nr_vlcomdesconto | currency:'BRL':true:'1.2-2'}}
-          </ion-col>
-          <ion-col>
-            <div style="text-decoration: line-through">{{cupom.cupo_nr_vlatual | currency:'BRL':true:'1.2-2'}}</div>
-          </ion-col>
-        </ion-row>
-        <ion-row>
-          <ion-col>
-            <ion-label>Nr. Cupons</ion-label>
-          </ion-col>
-          <ion-col>
-            <ion-label>Nr. Disponível</ion-label>
-          </ion-col>
-        </ion-row>
-        <ion-row>
-          <ion-col>
-            <ion-label>{{cupom.cupo_nr_qtdecupom}}</ion-label>
-          </ion-col>
-          <ion-col>
-            <ion-label>{{cupom.cupo_nr_qtdedisponivel}}</ion-label>
-          </ion-col>
-        </ion-row>
-        <ion-row>
-          <ion-col>
-            <ion-label>Validade</ion-label>
-          </ion-col>
-          <ion-col>
-            <ion-label>Publicado</ion-label>
-          </ion-col>
-        </ion-row>
-        <ion-row>
-          <ion-col>
-            <ion-label>
-              {{cupom.cupo_dt_validade | date: 'shortDate'}}
-            </ion-label>
-          </ion-col>
-          <ion-col>
-            <ion-label>
-              <div *ngIf="cupom.cupo_dt_publicado != ''">
-                {{cupom.cupo_dt_publicado | date: 'shortDate'}}
-              </div>
-              <div *ngIf="cupom.cupo_dt_publicado == null"></div>
-            </ion-label>
-          </ion-col>
-        </ion-row>
-      </ion-grid>
-    </ion-card-content>
-    <ctd-btn-promocao [isBtnPublicar]=true [isBtnExcluir]="cupom.cupo_dt_publicado == null" [cupom]=(cupom)></ctd-btn-promocao>
+      <ion-card-header>
+        <img src="{{cupom.cupo_tx_urlimagem}}" class="ctd-noticia" (click)="openPromocao(cupom)">
+      </ion-card-header>
+      <ion-card-content (click)="openPromocao(cupom)">
+        <ion-card-title>
+          {{cupom.cupo_tx_titulo}}
+        </ion-card-title>
+        <p class="card-descricao-promocao">
+          {{cupom.cupo_tx_descricao}}
+        </p>
+        <ion-grid>
+          <ion-row>
+            <ion-col col-5 class="ctd-perc-desc" text-left>
+              {{cupom.cupo_nr_desconto}}% Desc.
+            </ion-col>
+            <ion-col col-4 text-left>
+              {{cupom.cupo_nr_vlcomdesconto | currency:'BRL':true:'1.2-2'}}
+            </ion-col>
+            <ion-col col-3 text-left>
+              <div style="text-decoration: line-through">{{cupom.cupo_nr_vlatual | currency:'BRL':true:'1.2-2'}}</div>
+            </ion-col>
+          </ion-row>
+          <ion-row>
+            <ion-col col-5 class="ctd-label">
+              <ion-label>Nr. Cupons</ion-label>
+            </ion-col>
+            <ion-col col-7 class="ctd-label">
+              <ion-label>Nr. Disponível</ion-label>
+            </ion-col>
+          </ion-row>
+          <ion-row class="ctd-row-conteudo">
+            <ion-col col-5>
+              <ion-label>{{cupom.cupo_nr_qtdecupom}}</ion-label>
+            </ion-col>
+            <ion-col col-7>
+              <ion-label>{{cupom.cupo_nr_qtdedisponivel}}</ion-label>
+            </ion-col>
+          </ion-row>
+          <ion-row>
+            <ion-col col-5 class="ctd-label">
+              <ion-label>Validade</ion-label>
+            </ion-col>
+            <ion-col col-7 class="ctd-label">
+              <ion-label>Publicado</ion-label>
+            </ion-col>
+          </ion-row>
+          <ion-row class="ctd-row-conteudo">
+            <ion-col col-5>
+              <ion-label>
+                {{cupom.cupo_dt_validade | date: 'shortDate'}}
+              </ion-label>
+            </ion-col>
+            <ion-col col-7>
+              <ion-label>
+                <div *ngIf="cupom.cupo_dt_publicado != ''">
+                  {{cupom.cupo_dt_publicado | date: 'shortDate'}}
+                </div>
+                <div *ngIf="cupom.cupo_dt_publicado == null"></div>
+              </ion-label>
+            </ion-col>
+          </ion-row>
+        </ion-grid>
+      </ion-card-content>
+      <ctd-btn-promocao [isBtnPublicar]=true [isBtnExcluir]="isExcluirCupom(cupom)" [cupom]=(cupom)></ctd-btn-promocao>
   </ion-card>
   <ion-fab right bottom>
     <button ion-fab (click)="adicionarPromocao()">
