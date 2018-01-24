@@ -117,6 +117,9 @@ export class MeusCuponsPage {
           if (result != null && result.length > 0) {
             var count = 1;
             result.forEach(cupom => {
+              var reader = new FileReader();
+              console.log("Caminho novo " + reader.readAsDataURL(cupom.cupo_tx_urlimagem));
+
               console.log("Caminho da imagem ...." + cupom.cupo_tx_urlimagem);
               self.meusCupons.push(self.mapSrv.getMeuCupom(cupom))
               if (count == result.length) {
