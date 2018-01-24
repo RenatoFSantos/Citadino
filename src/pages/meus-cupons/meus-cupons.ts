@@ -19,6 +19,8 @@ import { usuarioCupomVO } from '../../model/usuarioCupomVO';
 import { PromocaoService } from '../../providers/service/promocao-service';
 import * as enums from './../../model/dominio/ctdEnum';
 
+declare var window: any;
+
 @Component({
   selector: 'page-meus-cupons',
   templateUrl: 'meus-cupons.html',
@@ -36,7 +38,7 @@ export class MeusCuponsPage {
   constructor(private emprSrv: EmpresaService,
     private mapSrv: MappingsService,
     private usuaCupSrv: UsuarioCupomService,
-    private glabalVar: GlobalVar,
+    private glbVar: GlobalVar,
     private loadingCtrl: LoadingController,
     private promSrv: PromocaoService,
     private toastCtrl: ToastController,
@@ -47,7 +49,7 @@ export class MeusCuponsPage {
     private cupomSrv: CupomService) {
 
     var self = this;
-    this.usuario = this.glabalVar.usuarioLogado;
+    this.usuario = this.glbVar.usuarioLogado;
     this.cnpj = "28039364000102";
 
   }
@@ -117,11 +119,16 @@ export class MeusCuponsPage {
           if (result != null && result.length > 0) {
             var count = 1;
             result.forEach(cupom => {
-              self.meusCupons.push(self.mapSrv.getMeuCupom(cupom))
-              if (count == result.length) {
-                resolve({ self, result });
-              }
-              count++;
+
+              window.resolveLocalFileSystemURL(self.glbVar.getStorageDirectory(), (entry) => {
+                cupom.cupo_tx_urlimagem = entry.toInternalURL() + cupom.cupo_sq_id + ".jpg";
+                console.log("Caminho alterado " +  cupom.cupo_tx_urlimagem);
+                self.meusCupons.push(self.mapSrv.getMeuCupom(cupom))
+                if (count == result.length) {
+                  resolve({ self, result });
+                }
+                count++;
+              });
             });
           } else {
             self.meusCupons = new Array<CupomCriadoVO>();
