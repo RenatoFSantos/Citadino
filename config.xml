@@ -4,6 +4,7 @@
     <description>Sua plataforma de negócios na cidade</description>
     <author email="contato@citadino.com.br" href="http://citadino.com.br/">Citadino</author>
     <content src="index.html" />
+    <access origin="cdvfile://*" />
     <access origin="*" />
     <allow-intent href="http://*/*" />
     <allow-intent href="https://*/*" />
