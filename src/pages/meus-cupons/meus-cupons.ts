@@ -202,7 +202,8 @@ export class MeusCuponsPage {
           self.cupomSrv.pesquisarCupomPorId(resultCupom.val().cupo_sq_id)
             .then((snapCupom) => {
               var cupom: CupomCriadoVO = self.mapSrv.getMeuCupom(snapCupom.val());
-              cupom.cupo_dt_validade = new Date('2018-01-20');
+              cupom.cupo_dt_validade = new Date('2018-01-18');
+              cupom.tipoCupom = 2;
               self.meusCupons.push(cupom);
               resolve(true);
             })
