@@ -156,13 +156,13 @@ export class UsuarioSqlService {
   }
 
   public inserir(sqlInsert: string, sqlParam: any) {
-    console.log("teste paramentros " + sqlParam);
+    console.log("Lista parametros " + sqlParam);
     return this.dataBase.executeSql(sqlInsert, sqlParam);
   }
 
   public pesquisar(sqlquery: any, sqlParm: any) {
     console.log("Query " + sqlquery);
-    console.log("Parametros " + sqlParm);
+    console.log("Lista Parametros " + sqlParm);
     return this.dataBase.executeSql(sqlquery, sqlParm);
   } 
 

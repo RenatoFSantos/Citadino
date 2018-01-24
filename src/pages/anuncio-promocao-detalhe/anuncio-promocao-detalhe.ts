@@ -152,8 +152,7 @@ export class AnuncioPromocaoDetalhePage {
         } else {
           self.downSrv.donwload(self.cupom.cupo_tx_urlimagem, self.cupom.cupo_sq_id)
             .then((value) => {
-              // urlImage = value.toURL();
-              urlImage = value.toInternalURL();
+              urlImage = value.toURL(); 
               resolve({ self, urlImage });
             })
             .catch(() => {
