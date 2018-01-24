@@ -1,3 +1,5 @@
+import { NotificacaoService } from './../../providers/service/notificacao-service';
+import { TokenDeviceService } from './../../providers/service/token-device';
 import { AnuncioPromocaoDetalhePage } from './../anuncio-promocao-detalhe/anuncio-promocao-detalhe';
 import { CtdFuncoes } from './../../shared/ctdFuncoes';
 import { VitrineVO } from './../../model/vitrineVO';
@@ -36,7 +38,8 @@ export class AnuncioPromocaoPage {
     private cupoCriaSrv: CupomCriadoService, private glbVar: GlobalVar,
     private itemsService: ItemsService, private mapSrv: MappingsService,
     private cupoSrv: CupomService, private vitrSrv: VitrineService,
-    private toastCtrl: ToastController) {
+    private toastCtrl: ToastController, private tokenSrv: TokenDeviceService,
+    private notifSrv: NotificacaoService) {
 
     this.usuario = this.glbVar.usuarioLogado;
   }
@@ -164,6 +167,8 @@ export class AnuncioPromocaoPage {
           self.cupoCriaSrv.getDataBaseRef().update(updates).then(() => {
             loader.dismiss();
             self.createAlert("Publicação realizada com sucesso.");
+
+            self.enviarNotificacao("CITADINO - " + cupom.cupo_tx_titulo);
           })
             .catch((err) => {
               loader.dismiss();
@@ -186,6 +191,8 @@ export class AnuncioPromocaoPage {
 
               loader.dismiss();
               self.createAlert("Publicação realizada com sucesso.");
+
+              self.enviarNotificacao("CITADINO - " + cupom.cupo_tx_titulo);
             })
             .catch((err) => {
               loader.dismiss();
@@ -360,12 +367,63 @@ export class AnuncioPromocaoPage {
     return result;
   }
 
-
   private closeEvent() {
     this.events.subscribe("anuncio_close:true", (result) => {
       if (result) {
         this.navCtrl.pop();
       }
     });
+  }
+
+  private enviarNotificacao(titulo: string) {
+    var self = this;
+
+    self.pesquisarTokensNotificacao()
+      .then((result: any) => {
+
+        var tokens: string[] = result.tokens;
+
+        if (tokens.length > 0) {
+          self.notifSrv.sendUidMensagem(tokens, titulo, "Pegue seu cupom agora!!!", enums.eventTypePush.vitrine).then(() => {
+            // this.createAlert("Notificação enviada com sucesso.");
+          }).catch((error) => {
+            // this.createAlert("Não foi possível enviar a notificação.");
+          });
+        }
+      })
+  }
+
+  private pesquisarTokensNotificacao = function () {
+    var self = this;
+    var tokens: string[] = [];
+    var count = 0;
+
+    var promise = new Promise(function (resolve, reject) {
+
+      self.tokenSrv.getTokenDeviceRef().once("value")
+        .then((snapTokens) => {
+          if (snapTokens != null) {
+            var values: any = Object.keys(snapTokens.val());
+
+            values.forEach(element => {
+              tokens.push(element);
+              count++;
+            });
+
+            if (count == values.length) {
+              resolve({ self, tokens });
+            }
+          }
+          else {
+
+            resolve({ self, tokens });
+          }
+        })
+        .catch((error) => {
+          reject(error);
+        });
+    });
+
+    return promise;
   }
 }

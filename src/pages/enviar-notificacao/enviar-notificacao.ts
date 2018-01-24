@@ -39,6 +39,13 @@ export class EnviarNotificacaoPage implements OnInit {
     var self = this;
     var tokens: string[] = [];
 
+    if (self.formNotif.valid) {
+      self.enviarNotificacao(signupForm);
+    }
+  }
+
+  private enviarNotificacao(signupForm: any) {
+    var self = this;
     let loader = this.loadingCtrl.create({
       content: 'Aguarde...',
       dismissOnPageChange: true
@@ -46,28 +53,61 @@ export class EnviarNotificacaoPage implements OnInit {
 
     loader.present();
 
-    if (self.formNotif.valid) {
-      this.tokenSrv.getTokenDeviceRef().once("value").then((snapTokens) => {
-        if (snapTokens != null) {
-          var values: any = Object.keys(snapTokens.val());
-          values.forEach(element => {
-            tokens.push(element);
-          });
+    self.pesquisarTokensNotificacao()
+      .then((result: any) => {
 
-          if (tokens.length > 0) {
-            this.notifSrv.sendUidMensagem(tokens, CtdFuncoes.ellipsis(signupForm.notif_tx_titulo, 20), CtdFuncoes.ellipsis(signupForm.notif_tx_mensagem, 50), enums.eventTypePush.vitrine).then(() => {
-              loader.dismiss();
+        var tokens: string[] = result.tokens;
+
+        if (tokens.length > 0) {
+          self.notifSrv.sendUidMensagem(tokens, CtdFuncoes.ellipsis(signupForm.notif_tx_titulo, 20), CtdFuncoes.ellipsis(signupForm.notif_tx_mensagem, 1000), enums.eventTypePush.vitrine)
+            .then(() => {
               this.resetForm();
+              loader.dismiss();
               this.createAlert("Notificação enviada com sucesso.");
 
             }).catch((error) => {
               loader.dismiss();
               this.createAlert("Não foi possível enviar a notificação.");
             });
-          }
         }
-      });
-    }
+        else {
+          loader.dismiss();
+        }
+      })
+  }
+
+  private pesquisarTokensNotificacao = function () {
+    var self = this;
+    var tokens: string[] = [];
+    var count = 0;
+
+    var promise = new Promise(function (resolve, reject) {
+
+      self.tokenSrv.getTokenDeviceRef().once("value")
+        .then((snapTokens) => {
+          if (snapTokens != null) {
+            var values: any = Object.keys(snapTokens.val());
+
+            values.forEach(element => {
+              tokens.push(element);
+              count++;
+            });
+
+            if (count == values.length) {
+              resolve({ self, tokens });
+            }
+          }
+          else {
+
+            resolve({ self, tokens });
+          }
+        })
+        .catch((error) => {
+          reject(error);
+        });
+    });
+
+    return promise;
   }
 
   resetForm() {
