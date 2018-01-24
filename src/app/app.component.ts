@@ -98,7 +98,7 @@ export class MyApp implements OnInit {
 
           window.resolveLocalFileSystemURL(window.cordova.file.documentsDirectory, (entry) => {
             self.globalVar.setStorageDirectory(entry.toInternalURL());
-            console.log("Diretorio IOS " + entry);
+            console.log("Diretorio IOS " + entry.toInternalURL());
           });
         }
         else if (self.platform.is('android')) {
