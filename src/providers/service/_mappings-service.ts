@@ -559,7 +559,7 @@ export class MappingsService {
         return vitrine;
     }
 
-    public getMeusCupon(cupom: any): CupomCriadoVO {
+    public getMeuCupom(cupom: any): CupomCriadoVO {
         var meuCupom: CupomCriadoVO = new CupomCriadoVO();
         meuCupom.cupo_sq_id = cupom.cupo_sq_id;
         meuCupom.cupo_tx_titulo = cupom.cupo_tx_titulo;

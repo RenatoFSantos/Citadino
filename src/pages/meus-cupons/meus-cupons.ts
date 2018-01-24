@@ -43,28 +43,13 @@ export class MeusCuponsPage {
     private meuCupomSqlSrv: UsuarioSqlService,
     private cupoCriaSrv: CupomCriadoService,
     private mdlCtrl: ModalController,
-    private events: Events) {
+    private events: Events,
+    private cupomSrv: CupomService) {
 
     var self = this;
     this.usuario = this.glabalVar.usuarioLogado;
     this.cnpj = "28039364000102";
 
-    // this.promSrv.getPromocao().then((result) => {
-    //   if (result.val() != null) {
-    //     var keyProm: any = Object.keys(result.val());
-    //     var objProm: any = result.val()[keyProm];
-
-    //     if (objProm.prom_in_ativo == true) {
-    //       self.statusPromocao = true;
-    //     }
-    //     else {
-    //       self.statusPromocao = false;
-    //     }
-    //   }
-    // })
-    //   .catch((error) => {
-
-    //   })
   }
 
   ionViewDidLoad() {
@@ -80,6 +65,8 @@ export class MeusCuponsPage {
 
     self.excluirCupomForaValidade()
       .then(self.carregaMeuCupom)
+      .then(self.carregaCupomPromocao)
+      .then(self.carregaCupomPromocaoDetalhe)
       .then((result) => {
         loader.dismiss();
       })
@@ -114,19 +101,14 @@ export class MeusCuponsPage {
     return promise;
   }
 
-  private carregaMeuCupom = function (params) {
-    var self =  params.self;
 
-    // if (params.self != null) {
-    //   self = params.self;
-    // }
-    // else {
-    //   self = params;
-    // }
+  private carregaMeuCupom = function (params) {
+    var self = params.self;
 
     var result: boolean = true;
 
     var promise = new Promise(function (resolve, reject) {
+      self.meusCupons = new Array<CupomCriadoVO>();
 
       let query: string = "SELECT * from meu_cupom order by cupo_dt_validade";
 
@@ -134,10 +116,8 @@ export class MeusCuponsPage {
         .then((result) => {
           if (result != null && result.length > 0) {
             var count = 1;
-            self.meusCupons = new Array<CupomCriadoVO>();
-
             result.forEach(cupom => {
-              self.meusCupons.push(self.mapSrv.getMeusCupon(cupom))
+              self.meusCupons.push(self.mapSrv.getMeuCupom(cupom))
               if (count == result.length) {
                 resolve({ self, result });
               }
@@ -157,6 +137,7 @@ export class MeusCuponsPage {
     return promise;
   }
 
+
   private carregaMeuCupomEvent() {
     var self = this;
     self.events.subscribe("carregaMeuCupomEvent", (result) => {
@@ -165,7 +146,6 @@ export class MeusCuponsPage {
         var params: Object = {
           self: self
         }
-
         self.carregaMeuCupom(params);
       }
     })
@@ -186,91 +166,60 @@ export class MeusCuponsPage {
 
   }
 
-  private getMeusCupons = function () {
-    let self = this;
+  private carregaCupomPromocao = function (params) {
+    var self = params.self;
+    var cupons: any = null;
 
     var promise = new Promise(function (resolve, reject) {
 
-      self.usuaCupSrv.getMeusCupons(self.usuario.usua_sq_id)
-        .then((cupons) => {
-          resolve({ self, cupons });
-        })
-        .catch((error) => {
-          reject(error);
+      if (self.glabalVar.getIsFirebaseConnected()) {
+        self.usuaCupSrv.getMeusCupons(self.glabalVar.usuarioLogado.usua_sq_id)
+          .then((snapCupons) => {
+            cupons = snapCupons;
+            resolve({ self, cupons });
+          })
+          .catch((error) => {
+            reject(error);
+          });
+      }
+      else {
+        resolve({ self, cupons })
+      }
+    })
+
+    return promise;
+  }
+
+
+  private carregaCupomPromocaoDetalhe = function (params) {
+    let self = params.self;
+    var cupons: any = params.cupons;
+
+    var promise = new Promise(function (resolve, reject) {
+
+      if (cupons != null && cupons.val() != null) {
+        cupons.forEach(resultCupom => {
+          self.cupomSrv.pesquisarCupomPorId(resultCupom.val().cupo_sq_id)
+            .then((snapCupom) => {
+              var cupom: CupomCriadoVO = self.mapSrv.getMeuCupom(snapCupom.val());
+              cupom.cupo_dt_validade = new Date('2018-01-20');
+              self.meusCupons.push(cupom);
+              resolve(true);
+            })
+            .catch((error) => {
+              console.log(error);
+              reject(error);
+            });
         });
-    })
+      } else {
+        resolve(false);
+      }
+    });
 
     return promise;
   }
 
 
-
-  private salvarCupom(barcodeData) {
-    var self = this;
-    var promise = new Promise(function (resolve, reject) {
-      self.emprSrv.getEmpresaByCnpj(self.cnpj)
-        .then((snapEmpr) => {
-
-          // var empresaKey: any = Object.keys(snapEmpr.val());
-          // var objEmpresa = snapEmpr.val()[empresaKey];
-
-          // var empresaVO = self.mapSrv.getEmpresa(objEmpresa);
-
-          // var objcupom: CupomVO = new CupomVO();
-          // objcupom.cupo_nr_desconto = 0;
-          // objcupom.cupo_tx_urlimagem = barcodeData;
-          // objcupom.cupo_tx_regulamento = "";
-          // objcupom.cupo_tx_titulo = "";
-          // objcupom.cupo_tx_descricao = "";
-          // objcupom.cupo_nr_vlatual = 0;
-          // objcupom.cupo_nr_vlcomdesconto = 0;
-          // objcupom.cupo_dt_validade = new Date('2018/01/12');
-          // objcupom.tipoCupom = 1;
-
-          // var cupomEmpresaVO: CupomEmpresaDTO = new CupomEmpresaDTO();
-          // cupomEmpresaVO.empr_sq_id = empresaVO.empr_sq_id;
-          // cupomEmpresaVO.empr_nm_fantasia = empresaVO.empr_nm_razaosocial;
-          // cupomEmpresaVO.empr_tx_bairro = empresaVO.empr_tx_bairro;
-          // cupomEmpresaVO.empr_tx_endereco = empresaVO.empr_tx_endereco;
-          // cupomEmpresaVO.empr_tx_cidade = empresaVO.empr_tx_cidade;
-          // cupomEmpresaVO.empr_tx_telefone_1 = empresaVO.empr_tx_telefone_1;
-          // objcupom.empresa = cupomEmpresaVO;
-
-          // objcupom.cupo_nr_qtdecupom = 0;
-          // objcupom.cupo_nr_qtdedisponivel = 0;
-
-          // self.cupons.push(objcupom);
-
-          // self.cupomSrv.salvar(objcupom).then((result) => {
-          //   var keyCupom: any = result;
-
-          //   var objUsuaCupom: usuarioCupomVO = new usuarioCupomVO();
-          //   objUsuaCupom.cupo_sq_id = keyCupom;
-          //   objUsuaCupom.usua_sq_id = self.usuario.usua_sq_id;
-          //   objUsuaCupom.uscu_in_status = "";
-          //   objUsuaCupom.uscu_tx_codigo = "";
-
-          //   self.usuaCupSrv.salvar(objUsuaCupom).then((result) => {
-          //     resolve(true);
-          //   })
-          //     .catch((error) => {
-          //       reject(error);
-          //     });
-          // })
-          //   .catch(error => {
-          //     reject(error);
-          //   });
-
-          // self.loading = true;
-
-        })
-        .catch((error) => {
-          self.loading = false;
-          reject(error);
-        })
-    })
-    return promise;
-  }
 
   private createAlert(errorMessage: string) {
 
@@ -285,35 +234,6 @@ export class MeusCuponsPage {
     });
 
     this.toastAlert.present();
-  }
-
-
-
-  private getCupomDetalhe = function (param) {
-    let self = param.self;
-    var cupons: any = param.cupons;
-
-    var promise = new Promise(function (resolve, reject) {
-
-      if (cupons.val() != null) {
-        cupons.forEach(resultCupom => {
-          self.cupomSrv.pesquisarCupomPorId(resultCupom.val().cupo_sq_id)
-            .then((snapCupom) => {
-              var cupom: CupomVO = self.mapSrv.getCupom(snapCupom.val());
-              self.cupons.push(cupom);
-              resolve(true);
-            })
-            .catch((error) => {
-              console.log(error);
-              reject(error);
-            });
-        });
-      } else {
-        resolve(false);
-      }
-    });
-
-    return promise;
   }
 
 }

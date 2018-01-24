@@ -332,7 +332,7 @@ export class AnuncioPromocaoDetalhePage {
       self.meuCupomSqlSrv.pesquisar(query, [self.cupom.cupo_sq_id])
         .then((result) => {
           if (result != null && result.rows.length > 0) {
-            meuCupom = self.mapSrv.getMeusCupon(result.rows.item(0));
+            meuCupom = self.mapSrv.getMeuCupom(result.rows.item(0));
             resolve({ self, meuCupom });
           } else {
             resolve({ self, meuCupom });
