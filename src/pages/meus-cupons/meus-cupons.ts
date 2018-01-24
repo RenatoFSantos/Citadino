@@ -120,17 +120,17 @@ export class MeusCuponsPage {
             var count = 0;
             result.forEach(cupom => {
 
-              self.downSrv.readFile(self.glbVar.getStorageDirectory(), cupom.cupo_sq_id + ".jpg")
-                .then((fileStr) => {
-                  console.log("Novo caminho " + fileStr);
-                  cupom.cupo_tx_urlimagem = fileStr;
-                  self.meusCupons.push(self.mapSrv.getMeuCupom(cupom));
-                  count++;
-                });
+              // self.downSrv.readFile(self.glbVar.getStorageDirectory(), cupom.cupo_sq_id + ".jpg")
+              //   .then((fileStr) => {
+              //     console.log("Novo caminho " + fileStr);
+              // cupom.cupo_tx_urlimagem = fileStr;
+              self.meusCupons.push(self.mapSrv.getMeuCupom(cupom));
+              count++;
+              // })
+              // .catch((error)=> {
+              //   reject
+              // });
 
-              if (count == result.length) {
-                resolve({ self, result });
-              }
               // File.readAsText(this.dataDirectory, "mydir/data.txt").then(fileStr => {
               //   console.log(fileStr);
               //   var fileObj = JSON.parse(String(fileStr));
@@ -141,6 +141,9 @@ export class MeusCuponsPage {
               //   console.log(err);
               // });
             });
+            if (count == result.length) {
+              resolve({ self, result });
+            }
           } else {
             self.meusCupons = new Array<CupomCriadoVO>();
             result = false
