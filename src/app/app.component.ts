@@ -95,7 +95,7 @@ export class MyApp implements OnInit {
         self.globalVar.setIsCordova(window.cordova);
 
         if (self.platform.is('ios')) {
-          self.globalVar.setStorageDirectory(window.cordova.file.documentsDirectory + "/citadino/");
+          self.globalVar.setStorageDirectory(window.cordova.file.documentsDirectory);
           console.log("Diretorio IOS " + self.globalVar.getStorageDirectory());
           
         }
