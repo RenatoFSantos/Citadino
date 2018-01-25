@@ -20,6 +20,8 @@ import { usuarioCupomVO } from '../../model/usuarioCupomVO';
 import { PromocaoService } from '../../providers/service/promocao-service';
 import * as enums from './../../model/dominio/ctdEnum';
 
+declare var window: any;
+
 @Component({
   selector: 'page-meus-cupons',
   templateUrl: 'meus-cupons.html',
@@ -33,6 +35,7 @@ export class MeusCuponsPage {
   private cnpj: string = "";
   private statusPromocao: boolean = false;
   private toastAlert: any;
+  private path: string;
 
   constructor(private emprSrv: EmpresaService,
     private mapSrv: MappingsService,
@@ -51,6 +54,8 @@ export class MeusCuponsPage {
     var self = this;
     this.usuario = this.glbVar.usuarioLogado;
     this.cnpj = "28039364000102";
+
+    this.path = window.file.window.cordova.file.applicationStorageDirectory;
 
   }
 
@@ -121,9 +126,9 @@ export class MeusCuponsPage {
 
             result.forEach(cupom => {
               self.meusCupons.push(self.mapSrv.getMeuCupom(cupom));
-              count++;          
+              count++;
             });
-            
+
             if (count == result.length) {
               resolve({ self, result });
             }
