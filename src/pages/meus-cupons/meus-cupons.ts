@@ -118,29 +118,12 @@ export class MeusCuponsPage {
         .then((result) => {
           if (result != null && result.length > 0) {
             var count = 0;
+
             result.forEach(cupom => {
-
-              // self.downSrv.readFile(self.glbVar.getStorageDirectory(), cupom.cupo_sq_id + ".jpg")
-              //   .then((fileStr) => {
-              //     console.log("Novo caminho " + fileStr);
-              // cupom.cupo_tx_urlimagem = fileStr;
               self.meusCupons.push(self.mapSrv.getMeuCupom(cupom));
-              count++;
-              // })
-              // .catch((error)=> {
-              //   reject
-              // });
-
-              // File.readAsText(this.dataDirectory, "mydir/data.txt").then(fileStr => {
-              //   console.log(fileStr);
-              //   var fileObj = JSON.parse(String(fileStr));
-              //   console.log(fileObj);
-              //   this.setData(fileObj);
-              // }).catch(err => {
-              //   console.log('it messed up wow');
-              //   console.log(err);
-              // });
+              count++;          
             });
+            
             if (count == result.length) {
               resolve({ self, result });
             }
@@ -193,8 +176,8 @@ export class MeusCuponsPage {
 
     var promise = new Promise(function (resolve, reject) {
 
-      if (self.glabalVar.getIsFirebaseConnected()) {
-        self.usuaCupSrv.getMeusCupons(self.glabalVar.usuarioLogado.usua_sq_id)
+      if (self.glbVar.getIsFirebaseConnected()) {
+        self.usuaCupSrv.getMeusCupons(self.glbVar.usuarioLogado.usua_sq_id)
           .then((snapCupons) => {
             cupons = snapCupons;
             resolve({ self, cupons });
