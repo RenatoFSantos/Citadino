@@ -350,7 +350,7 @@ export class GuiaPage implements OnInit {
             (this.categorias != null && this.categorias.length == 0)) {
             this.getLoadCategorias();
           }
-          
+
           if (self.globalVar.getMunicipios() == null) {
             self.carregaMunicipio();
           }
@@ -375,7 +375,9 @@ export class GuiaPage implements OnInit {
       var munickey: any[] = Object.keys(snapEmpr.val());
       munickey.forEach(element => {
         var munic: MunicipioVO = self.mapSrv.getMunicipio(snapEmpr.val()[element]);
-        self.globalVar.setMunicipios(munic);
+        if (self.globalVar.getMunicipios() == null) {
+          self.globalVar.setMunicipios(munic);
+        }
       });
     });
   }

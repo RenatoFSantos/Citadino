@@ -686,7 +686,9 @@ export class MyApp implements OnInit {
       var munickey: any[] = Object.keys(snapEmpr.val());
       munickey.forEach(element => {
         var munic: MunicipioVO = self.mapSrv.getMunicipio(snapEmpr.val()[element]);
-        self.glbVar.setMunicipios(munic);
+        if (self.glbVar.getMunicipios() == null) {
+          self.glbVar.setMunicipios(munic);
+        }
       });
     });
   }
