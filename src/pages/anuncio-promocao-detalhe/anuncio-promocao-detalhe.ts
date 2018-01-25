@@ -15,6 +15,8 @@ import { Component } from '@angular/core';
 import { NavController, NavParams, LoadingController, ModalController, ToastController } from 'ionic-angular';
 import * as enums from './../../model/dominio/ctdEnum';
 
+declare var window: any;
+
 @Component({
   selector: 'page-anuncio-promocao-detalhe',
   templateUrl: 'anuncio-promocao-detalhe.html',
@@ -150,18 +152,29 @@ export class AnuncioPromocaoDetalhePage {
           exception.message = "Quantidade indisponível";
           reject(exception);
         } else {
-          self.downSrv.donwload(self.cupom.cupo_tx_urlimagem, self.cupom.cupo_sq_id)
-            .then((value) => {
-              console.log("toURL " + value.toURL());
-              urlImage = value.toURL();
-              resolve({ self, urlImage });
+
+          self.downSrv.listDir(self.globalVar.getStorageDirectory(), "Library/Image/")
+            .then((result: any) => {
+              result.forEach(element => {
+                console.log(element);
+              });
             })
             .catch((error) => {
               console.log("Deu error nessa porra " + error);
-              exception.stack = "0";
-              exception.message = error.message;
-              reject(exception);
-            });
+            })
+
+          // self.downSrv.donwload(self.cupom.cupo_tx_urlimagem, self.cupom.cupo_sq_id)
+          //   .then((value) => {
+          //     console.log("toURL " + value.toURL());
+          //     urlImage = value.toURL();
+          //     resolve({ self, urlImage });
+          //   })
+          //   .catch((error) => {
+          //     console.log("Deu error nessa porra " + error);
+          //     exception.stack = "0";
+          //     exception.message = error.message;
+          //     reject(exception);
+          //   });
         }
       });
     });

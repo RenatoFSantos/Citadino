@@ -30,4 +30,8 @@ export class DownloadImageService {
   public readFile(url: string, fileName: string) {
     return this.file.readAsText(url, fileName);
   }
+
+  public listDir(url:string, dirName:string) {
+    return this.file.listDir(url, dirName);
+  }
 }
