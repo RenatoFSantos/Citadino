@@ -152,10 +152,12 @@ export class AnuncioPromocaoDetalhePage {
         } else {
           self.downSrv.donwload(self.cupom.cupo_tx_urlimagem, self.cupom.cupo_sq_id)
             .then((value) => {
-              urlImage = value.toURL(); 
+              console.log("toURL " + value.toURL());
+              urlImage = value.toURL();
               resolve({ self, urlImage });
             })
-            .catch(() => {
+            .catch((error) => {
+              console.log("Deu error nessa porra " + error);
               exception.stack = "0";
               exception.message = error.message;
               reject(exception);

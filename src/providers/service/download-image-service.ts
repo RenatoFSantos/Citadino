@@ -15,6 +15,11 @@ export class DownloadImageService {
     var urlImage: string = "";
     const fileTransfer: FileTransferObject = this.transfer.create();
 
+    console.log("fileTransfer " + fileTransfer);
+    console.log("url " + url);
+    console.log("StorageDirectory " + this.glbVar.getStorageDirectory());
+
+    
     return fileTransfer.download(url, this.glbVar.getStorageDirectory() + cupomKey + '.jpg');
   }
 
