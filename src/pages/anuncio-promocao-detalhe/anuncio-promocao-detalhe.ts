@@ -111,7 +111,7 @@ export class AnuncioPromocaoDetalhePage {
       content: 'Aguarde...'
     });
 
-    loader.present();
+    // loader.present();
 
     self.pegarCupom(self)
       .then(this.salvarMeuCupomDevice)
@@ -153,14 +153,17 @@ export class AnuncioPromocaoDetalhePage {
           reject(exception);
         } else {
 
-          self.downSrv.listDir(self.globalVar.getStorageDirectory(), "Library/Image/")
+          self.downSrv.listDir(self.glbVar.getStorageDirectory(), "Library/Image")
             .then((result: any) => {
               result.forEach(element => {
-                console.log("Elemento :" + element);
+                console.log("Elemento :" + element.fullPath);
+                console.log("Elemento :" + element.nativeURL);
+                console.log("Elemento :" + element.name);
               });
             })
             .catch((error) => {
-              console.log("Deu error nessa porra " + error);
+              console.log("Deu error nessa porra " + error.message);
+              reject(error);
             })
 
           // self.downSrv.donwload(self.cupom.cupo_tx_urlimagem, self.cupom.cupo_sq_id)
