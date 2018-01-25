@@ -55,7 +55,7 @@ export class MeusCuponsPage {
     this.usuario = this.glbVar.usuarioLogado;
     this.cnpj = "28039364000102";
 
-    this.path = window.cordova.file.applicationStorageDirectory + "Library/Image/-L3d-7x14d06l0lOwoG8.jpg";
+    this.path = window.cordova.file.applicationStorageDirectory.replace("file:///", "/") + "Library/Image/-L3d-7x14d06l0lOwoG8.jpg";
 
   }
 
