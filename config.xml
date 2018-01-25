@@ -30,8 +30,7 @@
     <preference name="AutoHideSplashScreen" value="false" />
     <preference name="AllowInlineMediaPlayback" value="true" />
     <preference name="iosPersistentFileLocation" value="Library" />
-    <preference name="iosExtraFilesystems" value="library-nosync" />
-    <feature name="StatusBar">
+     <feature name="StatusBar">
         <param name="ios-package" onload="true" value="CDVStatusBar" />
     </feature>
     <platform name="android">
