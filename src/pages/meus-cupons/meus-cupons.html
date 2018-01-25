@@ -7,7 +7,8 @@
   <ion-card class="ctd-card" *ngFor="let item of meusCupons">
     <div (click)="openPromocao(item)" *ngIf="item.tipoCupom == 1">
       <ion-card-header>
-        <img src="{{item.cupo_tx_urlimagem}}" class="ctd-head-promocao">
+        <img src="./Library/Image/-L3d-7x14d06l0lOwoG8.jpg" class="ctd-head-promocao">
+        <!-- <img src="{{item.cupo_tx_urlimagem}}" class="ctd-head-promocao"> -->
         <textarea rows="5" style="border:5px solid green; font-size: 1.0rem;">
           {{item.cupo_tx_urlimagem}}
         </textarea>
