@@ -57,6 +57,8 @@
   </ion-card>
 </ion-content>
 <ion-footer *ngIf="isBtnPegarCupom == true || isBtnUsarCupom == true">
+   <button (click)="listarDiretorio()">Listar
+   </button>
   <button *ngIf="isBtnPegarCupom == true" ion-button full class="ctd-bt-promocao" (click)="pegarCupoEvent()">
     <ion-grid>
       <ion-row>

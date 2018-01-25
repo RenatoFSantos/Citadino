@@ -153,19 +153,6 @@ export class AnuncioPromocaoDetalhePage {
           reject(exception);
         } else {
 
-          // self.downSrv.listDir(self.glbVar.getStorageDirectory(), "Library/Image")
-          //   .then((result: any) => {
-          //     result.forEach(element => {
-          //       console.log("Elemento :" + element.fullPath);
-          //       console.log("Elemento :" + element.nativeURL);
-          //       console.log("Elemento :" + element.name);
-          //     });
-          //   })
-          //   .catch((error) => {
-          //     console.log("Deu error nessa porra " + error.message);
-          //     reject(error);
-          //   })
-
           self.downSrv.donwload(self.cupom.cupo_tx_urlimagem, self.cupom.cupo_sq_id)
             .then((value) => {
               console.log("toURL " + value.toURL());
@@ -401,5 +388,21 @@ export class AnuncioPromocaoDetalhePage {
         this.navCtrl.pop();
       }
     });
+  }
+
+
+  public listarDiretorio() {
+
+    this.downSrv.listDir(window.cordova.file.applicationStorageDirectory, "Library/Image")
+      .then((result: any) => {
+        result.forEach(element => {
+          console.log("Elemento :" + element.fullPath);
+          console.log("Elemento :" + element.nativeURL);
+          console.log("Elemento :" + element.name);
+        });
+      })
+      .catch((error) => {
+        console.log("Deu error nessa porra " + error.message);
+      })
   }
 }
