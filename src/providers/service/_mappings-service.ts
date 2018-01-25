@@ -195,6 +195,8 @@ export class MappingsService {
             muniUsu = new MunicipioVO();
             muniUsu.muni_sq_id = snapshot.val().municipio.muni_sq_id;
             muniUsu.muni_nm_municipio = snapshot.val().municipio.muni_nm_municipio;
+        } else {
+            muniUsu = new MunicipioVO();
         }
 
         let usuario: UsuarioVO = {
