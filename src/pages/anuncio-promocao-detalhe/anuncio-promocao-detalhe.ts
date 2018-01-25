@@ -15,8 +15,6 @@ import { Component } from '@angular/core';
 import { NavController, NavParams, LoadingController, ModalController, ToastController } from 'ionic-angular';
 import * as enums from './../../model/dominio/ctdEnum';
 
-declare var window: any;
-
 @Component({
   selector: 'page-anuncio-promocao-detalhe',
   templateUrl: 'anuncio-promocao-detalhe.html',
@@ -89,6 +87,11 @@ export class AnuncioPromocaoDetalhePage {
     if (this.cupom.usuario != null && this.cupom.usuario.usua_sq_id != null) {
       this.compCriadoSrv.getCupomRef().child(this.cupom.usuario.usua_sq_id).child(this.cupom.cupo_sq_id).off('child_added');
     }
+
+    this.downSrv.resolveDirectoryUrl(this.glbVar.getAppPathStorage())
+      .then((result) => {
+        console.log("native path " + result.nativeURL);
+      });
   }
 
   public discar(number: string) {
@@ -111,7 +114,7 @@ export class AnuncioPromocaoDetalhePage {
       content: 'Aguarde...'
     });
 
-    // loader.present();
+    loader.present();
 
     self.pegarCupom(self)
       .then(this.salvarMeuCupomDevice)
@@ -152,15 +155,17 @@ export class AnuncioPromocaoDetalhePage {
           exception.message = "Quantidade indisponível";
           reject(exception);
         } else {
+          var nameFile: string = self.cupom.cupo_sq_id + ".jpg";
+          self.glbVar.setAppFullPathStorage(
+            self.glbVar.getAppPathStorage() + self.glbVar.getMyPathStorage() + "/" + nameFile
+          );
 
           self.downSrv.donwload(self.cupom.cupo_tx_urlimagem, self.cupom.cupo_sq_id)
             .then((value) => {
-              console.log("toURL " + value.toURL());
               urlImage = value.toURL();
               resolve({ self, urlImage });
             })
             .catch((error) => {
-              console.log("Deu error nessa porra " + error);
               exception.stack = "0";
               exception.message = error.message;
               reject(exception);
@@ -391,18 +396,18 @@ export class AnuncioPromocaoDetalhePage {
   }
 
 
-  public listarDiretorio() {
+  // public listarDiretorio() {
 
-    this.downSrv.listDir(window.cordova.file.applicationStorageDirectory, "Library/Image")
-      .then((result: any) => {
-        result.forEach(element => {
-          console.log("Elemento :" + element.fullPath);
-          console.log("Elemento :" + element.nativeURL);
-          console.log("Elemento :" + element.name);
-        });
-      })
-      .catch((error) => {
-        console.log("Deu error nessa porra " + error.message);
-      })
-  }
+  //   this.downSrv.listDir(window.cordova.file.applicationStorageDirectory, "Library/Image")
+  //     .then((result: any) => {
+  //       result.forEach(element => {
+  //         console.log("Elemento :" + element.fullPath);
+  //         console.log("Elemento :" + element.nativeURL);
+  //         console.log("Elemento :" + element.name);
+  //       });
+  //     })
+  //     .catch((error) => {
+  //       console.log("Deu error nessa porra " + error.message);
+  //     })
+  // }
 }

@@ -10,17 +10,12 @@ export class DownloadImageService {
   constructor(private transfer: FileTransfer, private file: File, private glbVar: GlobalVar) {
   }
 
-  public donwload(url: string, cupomKey: string) {
+  public donwload(urlFrom: string, urlTo: string) {
 
     var urlImage: string = "";
     const fileTransfer: FileTransferObject = this.transfer.create();
 
-    console.log("fileTransfer " + fileTransfer);
-    console.log("url " + url);
-    console.log("StorageDirectory " + this.glbVar.getStorageDirectory());
-    console.log("cupomKey " + cupomKey);
-
-    return fileTransfer.download(url, this.glbVar.getStorageDirectory() + cupomKey + '.jpg');
+    return fileTransfer.download(urlFrom, urlTo);
   }
 
   public removeFile(url: string, fileName: string) {
@@ -31,7 +26,11 @@ export class DownloadImageService {
     return this.file.readAsText(url, fileName);
   }
 
-  public listDir(url:string, dirName:string) {
+  public listDir(url: string, dirName: string) {
     return this.file.listDir(url, dirName);
+  }
+
+  public resolveDirectoryUrl(url: string) {
+    return this.file.resolveDirectoryUrl(url);
   }
 }

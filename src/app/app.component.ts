@@ -68,7 +68,7 @@ export class MyApp implements OnInit {
     private statusBar: StatusBar,
     private netService: NetworkService,
     private toastCtrl: ToastController,
-    private globalVar: GlobalVar,
+    private glbVar: GlobalVar,
     private app: App,
     private loadingCtrl: LoadingController,
     private alertCtrl: AlertController,
@@ -92,18 +92,16 @@ export class MyApp implements OnInit {
         self.networkConnectionEvent();
         self.appStateEvent();
         self.bancoDadosOnlineEvent();
-        self.globalVar.setIsCordova(window.cordova);
+        self.glbVar.setIsCordova(window.cordova);
 
         if (self.platform.is('ios')) {
-          self.globalVar.setStorageDirectory(window.cordova.file.applicationStorageDirectory + "Library/Image/");
-          console.log("Diretorio IOS " + self.globalVar.getStorageDirectory());
+          self.glbVar.setAppPathStorage(window.cordova.file.dataDirectory);
+          self.glbVar.setMyPathStorage("Library/Image");
 
-          console.log("applicationStorageDirectory " + window.cordova.file.applicationStorageDirectory);
-          console.log("dataDirectory " + window.cordova.file.dataDirectory);
         }
         else if (self.platform.is('android')) {
-          self.globalVar.setStorageDirectory(window.cordova.file.applicationStorageDirectory + "Image/");
-          console.log("Diretorio Android " + self.globalVar.getStorageDirectory());
+          self.glbVar.setAppPathStorage(window.cordova.file.dataDirectory);
+          self.glbVar.setMyPathStorage("Image");
         }
 
         //this.checkForUpdate();
@@ -118,12 +116,17 @@ export class MyApp implements OnInit {
     this.userLoggedEvent();
     this.mensagemNovaEvent();
     this.dadosUsuarioAlteradoEvent();
+
+  }
+
+  ionViewDidEnter() {
+    console.log("Diretorio Android " + window.cordova.file.dataDirectory);
   }
 
   verificarConexao() {
     let self = this;
 
-    if (!self.globalVar.getIsFirebaseConnected()) {
+    if (!self.glbVar.getIsFirebaseConnected()) {
       setTimeout(function () {
         self.firebaseConnectionAttempts++;
 
@@ -229,7 +232,7 @@ export class MyApp implements OnInit {
     this.msgSrv.addMensagemEvent();
 
     this.userLogged = usuario;
-    this.globalVar.usuarioLogado = usuario;
+    this.glbVar.usuarioLogado = usuario;
     this.popularMenu(true, usuario);
     this.splashScreen.hide();
 
@@ -379,9 +382,9 @@ export class MyApp implements OnInit {
       case enums.ETypeMenu.logout:
         this.timeOutSession = setTimeout(() => {
 
-          this.usuaSrv.signOut(self.globalVar.getIsCordova());
+          this.usuaSrv.signOut(self.glbVar.getIsCordova());
 
-          if (self.globalVar.getIsCordova()) {
+          if (self.glbVar.getIsCordova()) {
             this.tokenSrv.removeToken(this.tokenPushAtual, this.userLogged.usua_sq_id);
             this.usuaSrv.removeToken(this.userLogged.usua_sq_id, this.tokenPushAtual);
           }
@@ -418,7 +421,7 @@ export class MyApp implements OnInit {
 
     this.pages.push({ title: 'Minha Conta', component: ProfilePage, icon: 'contact', typeMenu: enums.ETypeMenu.default });
 
-    if (usuario.usua_sg_perfil == "ADM" || this.globalVar.isBtnAdicionarVitrine() == true) {
+    if (usuario.usua_sg_perfil == "ADM" || this.glbVar.isBtnAdicionarVitrine() == true) {
       this.pages.push({ title: 'Meus Anúncios', component: MeusAnunciosPage, icon: 'md-create', typeMenu: enums.ETypeMenu.default });
     }
 
@@ -643,7 +646,7 @@ export class MyApp implements OnInit {
     this.events.subscribe('firebase:connected', (result: any) => {
       setTimeout(() => {
         if (self.usuaSrv.getLoggedInUser() == null) {
-          var usua: any = self.globalVar.usuarioLogado;
+          var usua: any = self.glbVar.usuarioLogado;
           if (usua != null) {
             var resultFindUser: any = self.usuaSrv.signInUserFB(usua.usua_ds_email.toLowerCase(), usua.usua_tx_senha);
             resultFindUser.then((usua: any) => {
@@ -651,7 +654,7 @@ export class MyApp implements OnInit {
                 if (userRef.val() != null) {
                   var usuario: UsuarioVO = self.mapSrv.getUsuario(userRef);
                   self.userLogged = usuario;
-                  self.globalVar.usuarioLogado = usuario;
+                  self.glbVar.usuarioLogado = usuario;
                 }
               }).catch((error) => {
                 console.log(error);
@@ -660,12 +663,12 @@ export class MyApp implements OnInit {
           }
         }
         else {
-          if (self.globalVar.usuarioLogado.usua_tx_urlprofile == "") {
+          if (self.glbVar.usuarioLogado.usua_tx_urlprofile == "") {
             self.usuaSrv.getUserDetail(self.usuaSrv.getLoggedInUser().uid).then((userRef) => {
               if (userRef.val() != null) {
                 var usuario: UsuarioVO = self.mapSrv.getUsuario(userRef);
                 self.userLogged = usuario;
-                self.globalVar.usuarioLogado = usuario;
+                self.glbVar.usuarioLogado = usuario;
               }
             }).catch((error) => {
               console.log(error);
@@ -683,7 +686,7 @@ export class MyApp implements OnInit {
       var munickey: any[] = Object.keys(snapEmpr.val());
       munickey.forEach(element => {
         var munic: MunicipioVO = self.mapSrv.getMunicipio(snapEmpr.val()[element]);
-        self.globalVar.setMunicipios(munic);
+        self.glbVar.setMunicipios(munic);
       });
     });
   }

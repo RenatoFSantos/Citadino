@@ -11,9 +11,10 @@ export class GlobalVar {
   private isSqlConnected: boolean;
   private isCordova: boolean;
   private municipioPadrao: MunicipioVO;
-  private storageDirectory: string;
   private municipios: Array<MunicipioVO> = null;
-
+  private appPathStorage: string;
+  private imagePathStorage: string;
+  private myPathStorage: string = "";
 
   constructor() {
     this.isNetworkConnected = false;
@@ -21,8 +22,9 @@ export class GlobalVar {
     this.isSqlConnected = false;
     this.isCordova = false;
     this.municipioPadrao = null;
-    this.storageDirectory = "";
-
+    this.appPathStorage = "";
+    this.imagePathStorage = "";
+    this.myPathStorage = "";
   }
 
   public getIsNetworkConnected(): boolean {
@@ -77,14 +79,6 @@ export class GlobalVar {
     return this.municipioPadrao;
   }
 
-  public setStorageDirectory(value: string) {
-    this.storageDirectory = value;
-  }
-
-  public getStorageDirectory() {
-    return this.storageDirectory;
-  }
-
   public setMunicipios(municipio: MunicipioVO) {
     if (this.municipios == null) {
       this.municipios = new Array<MunicipioVO>();
@@ -96,5 +90,30 @@ export class GlobalVar {
   public getMunicipios(): Array<MunicipioVO> {
     return this.municipios;
   }
+
+  public setAppPathStorage(value: string) {
+    this.appPathStorage = value;
+  }
+
+  public getAppPathStorage() {
+    return this.appPathStorage;
+  }
+
+  public setImagePathStorage(value:string) {
+    return this.imagePathStorage
+  }
+
+  public getImagePathStorage() {
+    return this.imagePathStorage
+  }
+
+  public setMyPathStorage(value: string) {
+    this.myPathStorage = value;
+  }
+
+  public getMyPathStorage() {
+    return this.myPathStorage;
+  }
+
 
 }

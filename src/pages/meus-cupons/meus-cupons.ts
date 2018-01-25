@@ -20,8 +20,6 @@ import { usuarioCupomVO } from '../../model/usuarioCupomVO';
 import { PromocaoService } from '../../providers/service/promocao-service';
 import * as enums from './../../model/dominio/ctdEnum';
 
-declare var window: any;
-
 @Component({
   selector: 'page-meus-cupons',
   templateUrl: 'meus-cupons.html',
@@ -35,7 +33,6 @@ export class MeusCuponsPage {
   private cnpj: string = "";
   private statusPromocao: boolean = false;
   private toastAlert: any;
-  private path: string;
 
   constructor(private emprSrv: EmpresaService,
     private mapSrv: MappingsService,
@@ -54,8 +51,6 @@ export class MeusCuponsPage {
     var self = this;
     this.usuario = this.glbVar.usuarioLogado;
     this.cnpj = "28039364000102";
-
-    this.path = window.cordova.file.applicationStorageDirectory.replace("file:///", "/") + "Library/Image/-L3d-7x14d06l0lOwoG8.jpg";
 
   }
 
@@ -123,12 +118,10 @@ export class MeusCuponsPage {
         .then((result) => {
           if (result != null && result.length > 0) {
             var count = 0;
-
             result.forEach(cupom => {
               self.meusCupons.push(self.mapSrv.getMeuCupom(cupom));
-              count++;
+              count++;         
             });
-
             if (count == result.length) {
               resolve({ self, result });
             }
@@ -181,8 +174,8 @@ export class MeusCuponsPage {
 
     var promise = new Promise(function (resolve, reject) {
 
-      if (self.glbVar.getIsFirebaseConnected()) {
-        self.usuaCupSrv.getMeusCupons(self.glbVar.usuarioLogado.usua_sq_id)
+      if (self.glabalVar.getIsFirebaseConnected()) {
+        self.usuaCupSrv.getMeusCupons(self.glabalVar.usuarioLogado.usua_sq_id)
           .then((snapCupons) => {
             cupons = snapCupons;
             resolve({ self, cupons });
