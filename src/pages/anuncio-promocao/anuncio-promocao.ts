@@ -192,7 +192,7 @@ export class AnuncioPromocaoPage {
               loader.dismiss();
               self.createAlert("Publicação realizada com sucesso.");
 
-              self.enviarNotificacao("CITADINO - " + cupom.cupo_tx_titulo);
+              // self.enviarNotificacao("CITADINO - " + cupom.cupo_tx_titulo);
             })
             .catch((err) => {
               loader.dismiss();
