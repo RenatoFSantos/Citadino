@@ -13,7 +13,6 @@ export class GlobalVar {
   private municipioPadrao: MunicipioVO;
   private municipios: Array<MunicipioVO> = null;
   private appPathStorage: string;
-  private imagePathStorage: string;
   private myPathStorage: string = "";
 
   constructor() {
@@ -23,7 +22,6 @@ export class GlobalVar {
     this.isCordova = false;
     this.municipioPadrao = null;
     this.appPathStorage = "";
-    this.imagePathStorage = "";
     this.myPathStorage = "";
   }
 
@@ -99,14 +97,6 @@ export class GlobalVar {
     return this.appPathStorage;
   }
 
-  public setImagePathStorage(value:string) {
-    return this.imagePathStorage
-  }
-
-  public getImagePathStorage() {
-    return this.imagePathStorage
-  }
-
   public setMyPathStorage(value: string) {
     this.myPathStorage = value;
   }
@@ -114,6 +104,4 @@ export class GlobalVar {
   public getMyPathStorage() {
     return this.myPathStorage;
   }
-
-
 }

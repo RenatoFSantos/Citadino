@@ -87,11 +87,6 @@ export class AnuncioPromocaoDetalhePage {
     if (this.cupom.usuario != null && this.cupom.usuario.usua_sq_id != null) {
       this.compCriadoSrv.getCupomRef().child(this.cupom.usuario.usua_sq_id).child(this.cupom.cupo_sq_id).off('child_added');
     }
-
-    this.downSrv.resolveDirectoryUrl(this.glbVar.getAppPathStorage())
-      .then((result) => {
-        console.log("native path " + result.nativeURL);
-      });
   }
 
   public discar(number: string) {
@@ -156,13 +151,11 @@ export class AnuncioPromocaoDetalhePage {
           reject(exception);
         } else {
           var nameFile: string = self.cupom.cupo_sq_id + ".jpg";
-          self.glbVar.setAppFullPathStorage(
-            self.glbVar.getAppPathStorage() + self.glbVar.getMyPathStorage() + "/" + nameFile
-          );
+          var urlTo: string = self.glbVar.getAppPathStorage() + self.glbVar.getMyPathStorage() + "/" + nameFile;
 
-          self.downSrv.donwload(self.cupom.cupo_tx_urlimagem, self.cupom.cupo_sq_id)
+          self.downSrv.donwload(self.cupom.cupo_tx_urlimagem, urlTo)
             .then((value) => {
-              urlImage = value.toURL();
+              urlImage = self.glbVar.getMyPathStorage() + "/" + nameFile;
               resolve({ self, urlImage });
             })
             .catch((error) => {
@@ -308,14 +301,10 @@ export class AnuncioPromocaoDetalhePage {
 
     var promise = new Promise(function (resolve, reject) {
 
-      var index: number = meuCupom.cupo_tx_urlimagem.lastIndexOf("/");
-
-      var url: String = meuCupom.cupo_tx_urlimagem;
-      url = url.substr(0, index);
-
+      var pathApp: string = self.glbVar.getAppPathStorage() + self.glbVar.getMyPathStorage();
       var file: string = meuCupom.cupo_sq_id + ".jpg";
 
-      self.downSrv.removeFile(url, file)
+      self.downSrv.removeFile(pathApp, file)
         .then((result) => {
           result = true;
           resolve({ self, result });
