@@ -18,8 +18,8 @@ export class DownloadImageService {
     console.log("fileTransfer " + fileTransfer);
     console.log("url " + url);
     console.log("StorageDirectory " + this.glbVar.getStorageDirectory());
+    console.log("cupomKey " + cupomKey);
 
-    
     return fileTransfer.download(url, this.glbVar.getStorageDirectory() + cupomKey + '.jpg');
   }
 
