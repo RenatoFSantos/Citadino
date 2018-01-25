@@ -156,7 +156,7 @@ export class AnuncioPromocaoDetalhePage {
           self.downSrv.listDir(self.globalVar.getStorageDirectory(), "Library/Image/")
             .then((result: any) => {
               result.forEach(element => {
-                console.log(element);
+                console.log("Elemento :" + element);
               });
             })
             .catch((error) => {
