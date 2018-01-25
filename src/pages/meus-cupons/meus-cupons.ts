@@ -55,7 +55,7 @@ export class MeusCuponsPage {
     this.usuario = this.glbVar.usuarioLogado;
     this.cnpj = "28039364000102";
 
-    this.path = window.file.window.cordova.file.applicationStorageDirectory;
+    this.path = window.cordova.file.applicationStorageDirectory;
 
   }
 
