@@ -147,6 +147,8 @@ export class AnuncioPromocaoPage {
           dismissOnPageChange: true
         });
 
+        this.loadCtrl.present();
+
         var dtAtual = CtdFuncoes.convertDateToStr(new Date(), enums.DateFormat.enUS);
         var newOrder = String(new Date().getTime());
 
