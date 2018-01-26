@@ -1,7 +1,8 @@
-import { PromocaoService } from './../providers/service/promocao-service';
+import { MunicipioService } from './../providers/service/municipio-service';
+import { MunicipioVO } from './../model/municipioVO';
+import { MeusAnunciosPage } from './../pages/meus-anuncios/meus-anuncios';
 import { MeusCuponsPage } from './../pages/meus-cupons/meus-cupons';
 import { UsuarioSqlService } from './../providers/database/usuario-sql-service';
-import { MinhasPublicacoesPage } from './../pages/minhas-publicacoes/minhas-publicacoes';
 import { MeusMarcadosPage } from './../pages/meus_marcados/meus-marcados';
 import { ProfilePage } from './../pages/profile/profile';
 import { MappingsService } from './../providers/service/_mappings-service';
@@ -67,14 +68,14 @@ export class MyApp implements OnInit {
     private statusBar: StatusBar,
     private netService: NetworkService,
     private toastCtrl: ToastController,
-    private globalVar: GlobalVar,
+    private glbVar: GlobalVar,
     private app: App,
     private loadingCtrl: LoadingController,
     private alertCtrl: AlertController,
     private tokenSrv: TokenDeviceService,
     private oneSignal: OneSignal,
     private mapSrv: MappingsService,
-    private promSrv:PromocaoService) {
+    private muniSrv: MunicipioService) {
 
     this.platform.ready().then(() => {
       var self = this;
@@ -91,9 +92,21 @@ export class MyApp implements OnInit {
         self.networkConnectionEvent();
         self.appStateEvent();
         self.bancoDadosOnlineEvent();
+        self.glbVar.setIsCordova(window.cordova);
+
+        if (self.platform.is('ios')) {
+          self.glbVar.setAppPathStorage(window.cordova.file.dataDirectory);
+          self.glbVar.setMyPathStorage("Library/Image");
+
+        }
+        else if (self.platform.is('android')) {
+          self.glbVar.setAppPathStorage(window.cordova.file.dataDirectory);
+          self.glbVar.setMyPathStorage("Image");
+        }
+
         //this.checkForUpdate();
         //Inicializa o servico do sqlLite
-        this.usuaSqlSrv.InitDatabase();
+        self.usuaSqlSrv.InitDatabase();
       }
     });
   }
@@ -103,12 +116,17 @@ export class MyApp implements OnInit {
     this.userLoggedEvent();
     this.mensagemNovaEvent();
     this.dadosUsuarioAlteradoEvent();
+
+  }
+
+  ionViewDidEnter() {
+    console.log("Diretorio Android " + window.cordova.file.dataDirectory);
   }
 
   verificarConexao() {
     let self = this;
 
-    if (!self.globalVar.getIsFirebaseConnected()) {
+    if (!self.glbVar.getIsFirebaseConnected()) {
       setTimeout(function () {
         self.firebaseConnectionAttempts++;
 
@@ -116,7 +134,7 @@ export class MyApp implements OnInit {
           console.log(self.firebaseConnectionAttempts);
           self.verificarConexao();
 
-        } else {        
+        } else {
           self.usuaSrv.pesquisaUsuarioLogadoSq().then((usuLog: UsuarioVO) => {
             if (usuLog != null) {
               self.usuaSrv.pesquisarUsarioSqById(usuLog.usua_id)
@@ -137,8 +155,9 @@ export class MyApp implements OnInit {
         }
       }, 1000);
     }
-    else {      
-      self.promSrv.salvar();
+    else {
+      // self.promSrv.salvar();
+      self.carregaMunicipio();
       self.rotinaLogandoUsuario(null);
     }
   }
@@ -147,12 +166,14 @@ export class MyApp implements OnInit {
     let self = this;
 
     if (usuarioLocal == null) {
-      let userCurrent = self.usuaSrv.getLoggedInUser();
-
+      var userCurrent = self.usuaSrv.getLoggedInUser();
       if (userCurrent != null) {
         self.usuaSrv.getUserDetail(userCurrent.uid).then((userRef) => {
           if (userRef.val() != null) {
             var usuario: UsuarioVO = self.mapSrv.getUsuario(userRef);
+            if (usuario.usua_ds_email == "") {
+              self.usuaSrv.atualizaEmail(usuario, userCurrent.email);
+            }
 
             if (window.cordova) {
               self.usuaSrv.pesquisarUsarioSqByUid(usuario.usua_sq_id).then((result: UsuarioVO) => {
@@ -211,7 +232,7 @@ export class MyApp implements OnInit {
     this.msgSrv.addMensagemEvent();
 
     this.userLogged = usuario;
-    this.globalVar.usuarioLogado = usuario;
+    this.glbVar.usuarioLogado = usuario;
     this.popularMenu(true, usuario);
     this.splashScreen.hide();
 
@@ -258,6 +279,7 @@ export class MyApp implements OnInit {
     var self = this;
     self.events.subscribe('usuario:logado', (usuRemote, usuLocal) => {
       if (usuRemote != null) {
+        self.carregaMunicipio();
         self.rotinaLogandoUsuario(null);
       } else if (usuLocal != null) {
         self.rotinaLogandoUsuario(usuLocal);
@@ -334,6 +356,7 @@ export class MyApp implements OnInit {
 
   openPage(page: IMenu) {
     let params = {};
+    let self = this;
 
     switch (page.typeMenu) {
       case enums.ETypeMenu.default:
@@ -358,9 +381,10 @@ export class MyApp implements OnInit {
 
       case enums.ETypeMenu.logout:
         this.timeOutSession = setTimeout(() => {
-          this.usuaSrv.signOut();
 
-          if (window.cordova) {
+          this.usuaSrv.signOut(self.glbVar.getIsCordova());
+
+          if (self.glbVar.getIsCordova()) {
             this.tokenSrv.removeToken(this.tokenPushAtual, this.userLogged.usua_sq_id);
             this.usuaSrv.removeToken(this.userLogged.usua_sq_id, this.tokenPushAtual);
           }
@@ -397,8 +421,8 @@ export class MyApp implements OnInit {
 
     this.pages.push({ title: 'Minha Conta', component: ProfilePage, icon: 'contact', typeMenu: enums.ETypeMenu.default });
 
-    if (usuario.usua_sg_perfil == "ADM" || this.globalVar.isBtnAdicionarVitrine() == true) {
-      this.pages.push({ title: 'Meus Anúncios', component: MinhasPublicacoesPage, icon: 'md-create', typeMenu: enums.ETypeMenu.default });
+    if (usuario.usua_sg_perfil == "ADM" || this.glbVar.isBtnAdicionarVitrine() == true) {
+      this.pages.push({ title: 'Meus Anúncios', component: MeusAnunciosPage, icon: 'md-create', typeMenu: enums.ETypeMenu.default });
     }
 
     this.pages.push({ title: 'Meus Cupons', component: MeusCuponsPage, icon: 'ios-cash-outline', typeMenu: enums.ETypeMenu.default });
@@ -554,7 +578,7 @@ export class MyApp implements OnInit {
     let usuarioLogado: UsuarioVO = verificarToken.usuario;
 
     //Token vinculado ao usuario
-    let tokenVinculadoUsuario: string = "";
+    let tokenVinculadoUsuario: string = self.tokenPushAtual;
 
     let eventoToken: number;
 
@@ -600,7 +624,7 @@ export class MyApp implements OnInit {
           .child("tokendevice").child(tokenVinculadoUsuario).set(null);
 
         self.usuaSrv.usersRef.child(usuarioLogado.usua_sq_id)
-          .child("tokendevice").set(self.tokenPushAtual);
+          .child("tokendevice").set(self.tokenPushAtual).set(true);
 
       }
       else if (eventoToken == enums.eventoTokenPush.usuarioSalvar) {
@@ -622,7 +646,7 @@ export class MyApp implements OnInit {
     this.events.subscribe('firebase:connected', (result: any) => {
       setTimeout(() => {
         if (self.usuaSrv.getLoggedInUser() == null) {
-          var usua: any = self.globalVar.usuarioLogado;
+          var usua: any = self.glbVar.usuarioLogado;
           if (usua != null) {
             var resultFindUser: any = self.usuaSrv.signInUserFB(usua.usua_ds_email.toLowerCase(), usua.usua_tx_senha);
             resultFindUser.then((usua: any) => {
@@ -630,7 +654,7 @@ export class MyApp implements OnInit {
                 if (userRef.val() != null) {
                   var usuario: UsuarioVO = self.mapSrv.getUsuario(userRef);
                   self.userLogged = usuario;
-                  self.globalVar.usuarioLogado = usuario;
+                  self.glbVar.usuarioLogado = usuario;
                 }
               }).catch((error) => {
                 console.log(error);
@@ -639,12 +663,12 @@ export class MyApp implements OnInit {
           }
         }
         else {
-          if (self.globalVar.usuarioLogado.usua_tx_urlprofile == "") {
+          if (self.glbVar.usuarioLogado.usua_tx_urlprofile == "") {
             self.usuaSrv.getUserDetail(self.usuaSrv.getLoggedInUser().uid).then((userRef) => {
               if (userRef.val() != null) {
                 var usuario: UsuarioVO = self.mapSrv.getUsuario(userRef);
                 self.userLogged = usuario;
-                self.globalVar.usuarioLogado = usuario;
+                self.glbVar.usuarioLogado = usuario;
               }
             }).catch((error) => {
               console.log(error);
@@ -654,6 +678,21 @@ export class MyApp implements OnInit {
       }, 1000);
     });
   }
+
+  private carregaMunicipio() {
+    let self = this;
+
+    self.muniSrv.listMunicipio().then((snapEmpr) => {
+      var munickey: any[] = Object.keys(snapEmpr.val());
+      munickey.forEach(element => {
+        var munic: MunicipioVO = self.mapSrv.getMunicipio(snapEmpr.val()[element]);
+        if (self.glbVar.getMunicipios() == null) {
+          self.glbVar.setMunicipios(munic);
+        }
+      });
+    });
+  }
+
 
 
   // checkForUpdate() {

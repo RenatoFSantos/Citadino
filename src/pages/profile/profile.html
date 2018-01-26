@@ -6,78 +6,120 @@
 
 <ion-content id="profileForm">
   <form [formGroup]="frmProfile" (ngSubmit)="onSubmit(frmProfile.value)">
-    <ion-row>
-      <ion-col>
-        <ion-item>
-         <!-- <div id="imgwrap"> -->
-          <ion-avatar class="avatar_profile">
-            <img src="{{myPhoto}}" (click)="selecionarTipoUpload()">
-          </ion-avatar>
-        <!-- </div> -->
-        </ion-item>
-      </ion-col>
-    </ion-row>
-    <ion-row>
-      <ion-col>
-        <ion-item [class.error]="!frmProfile.controls.usua_nm_usuario.valid && frmProfile.controls.usua_nm_usuario.touched">
-          <ion-label stacked class="labelProfile">*Nome</ion-label>
-          <ion-input class="inputProfile" type="text" [(ngModel)]="usuario.usua_nm_usuario" formControlName="usua_nm_usuario"></ion-input>
-        </ion-item>
-        <div *ngIf="!frmProfile.controls.usua_nm_usuario.valid &&   frmProfile.controls.usua_nm_usuario.touched" class="error-box">* Máximo de 60 caracteres.</div>
-      </ion-col>
-    </ion-row>
-    <ion-row>
-      <ion-col>
-        <ion-item [class.error]="!frmProfile.controls.usua_ds_email.valid && frmProfile.controls.usua_ds_email.touched" class="inputEmail">
-          <ion-label stacked class="labelProfile">*E-mail</ion-label>
-          <ion-input class="inputProfile" readonly="true" type="text" [(ngModel)]="usuario.usua_ds_email" formControlName="usua_ds_email"></ion-input>
-        </ion-item>
-        <div *ngIf="!frmProfile.controls.usua_ds_email.valid && frmProfile.controls.usua_ds_email.touched" class="error-box">* Informe um email válido.</div>
-      </ion-col>
-    </ion-row>
-    <ion-row>
-      <ion-col>
-        <ion-item>
-          <ion-label stacked class="labelProfile">Telefone</ion-label>
-          <ion-input type="tel" class="inputProfile" [(ngModel)]="usuario.usua_ds_telefone" formControlName="usua_ds_telefone" placeholder="(000) 0000-0000"></ion-input>
-        </ion-item>
-      </ion-col>
-    </ion-row>
-    <ion-row>
-      <ion-col>
-        <ion-item [class.error]="!frmProfile.controls.usua_tx_senha_atual.valid && frmProfile.controls.usua_tx_senha_atual.touched"
-          class="inputEmail">
-          <ion-label stacked class="labelProfile">Senha atual</ion-label>
-          <ion-input class="inputProfile" type="password" value="" formControlName="usua_tx_senha_atual"></ion-input>
-        </ion-item>
-        <div *ngIf="!frmProfile.controls.usua_tx_senha_atual.valid && frmProfile.controls.usua_tx_senha_atual.touched" class="error-box">* Senha com no mínimo de 6 caracteres.</div>
-      </ion-col>
-    </ion-row>
-    <ion-row>
-      <ion-col>
-        <ion-item [class.error]="!frmProfile.controls.usua_tx_senha.valid && frmProfile.controls.usua_tx_senha.touched" class="inputEmail">
-          <ion-label stacked class="labelProfile">Nova senha</ion-label>
-          <ion-input class="inputProfile" type="password" value="" formControlName="usua_tx_senha"></ion-input>
-        </ion-item>
-        <div *ngIf="!frmProfile.controls.usua_tx_senha.valid && frmProfile.controls.usua_tx_senha.touched" class="error-box">* Senha com no mínimo de 6 caracteres.</div>
-      </ion-col>
-    </ion-row>
-    <ion-row>
-      <ion-col>
-        <ion-item [class.error]="!frmProfile.controls.usua_tx_nova_senha.valid && frmProfile.controls.usua_tx_nova_senha.touched"
-          class="inputEmail">
-          <ion-label stacked class="labelProfile">Repetir nova senha</ion-label>
-          <ion-input class="inputProfile" type="password" value="" formControlName="usua_tx_nova_senha"></ion-input>
-        </ion-item>
-        <div *ngIf="frmProfile.hasError('senhaDiferente')" class="error-box">* As senhas estão diferentes.</div>
-      </ion-col>
-    </ion-row>
-    <ion-row>
+    <ion-grid>
+      <ion-row>
+        <ion-col class="ctd-background-profile">
+          <ion-item class="ctd-item-background-profile">
+            <!-- <div id="imgwrap"> -->
+            <ion-avatar class="avatar_profile">
+              <img src="{{myPhoto}}" (click)="selecionarTipoUpload()">
+            </ion-avatar>
+            <!-- </div> -->
+          </ion-item>
+        </ion-col>
+      </ion-row>
+    </ion-grid>
+    <ion-grid>
+      <ion-row>
+        <ion-col>
+          <ion-item-group>
+            <ion-item-divider class="ctd-divider-promocao" light>Dados Básicos</ion-item-divider>
+            <ion-grid class="ctd-ion-grid-group-col">
+              <ion-row>
+                <ion-col class="ctd-ion-grid-group-col">
+                  <ion-item class="ctd-item">
+                    <ion-label stacked class="labelProfile">*Nome</ion-label>
+                    <ion-input class="inputProfile" type="text" [(ngModel)]="usuario.usua_nm_usuario" formControlName="usua_nm_usuario"></ion-input>
+                  </ion-item>
+                  <div *ngIf="!frmProfile.controls.usua_nm_usuario.valid &&   frmProfile.controls.usua_nm_usuario.touched" class="ctd-label-error">* Máximo de 60 caracteres.</div>
+                </ion-col>
+              </ion-row>
+              <ion-row>
+                <ion-col class="ctd-ion-grid-group-col">
+                  <ion-item class="ctd-item">
+                    <ion-label stacked class="labelProfile">*E-mail</ion-label>
+                    <ion-input class="inputProfile" readonly="true" type="text" [(ngModel)]="usuario.usua_ds_email" formControlName="usua_ds_email"></ion-input>
+                  </ion-item>
+                  <div *ngIf="!frmProfile.controls.usua_ds_email.valid && frmProfile.controls.usua_ds_email.touched" class="ctd-label-error">* Informe um email válido.</div>
+                </ion-col>
+              </ion-row>
+              <ion-row>
+                <ion-col class="ctd-ion-grid-group-col">
+                  <ion-item class="ctd-item">
+                    <ion-label stacked class="labelProfile">Telefone</ion-label>
+                    <ion-input type="tel" class="inputProfile" [(ngModel)]="usuario.usua_ds_telefone" formControlName="usua_ds_telefone" placeholder="(000) 0000-0000"></ion-input>
+                  </ion-item>
+                </ion-col>
+              </ion-row>
+            </ion-grid>
+          </ion-item-group>
+          <ion-item-group>
+            <ion-item-divider class="ctd-divider-promocao" light>Município</ion-item-divider>
+            <ion-grid>
+              <ion-row>
+                <ion-col class="ctd-ion-grid-group-col">
+                  <ion-select [(ngModel)]="usuario.municipio.muni_sq_id" (ngModelChange)="onChangeMunicipio($event)" formControlName="muni_sq_id" interface="popover">
+                    <ion-option *ngFor="let munic of municipios" value="{{munic.muni_sq_id}}">{{munic.muni_nm_municipio}}</ion-option>
+                  </ion-select>
+                </ion-col>
+              </ion-row>
+            </ion-grid>
+          </ion-item-group>
+          <ion-item-group>
+            <ion-item-divider class="ctd-divider-promocao" light>Segurança</ion-item-divider>
+            <ion-grid>
+              <ion-row>
+                <ion-col class="ctd-ion-grid-group-col">
+                  <ion-item class="ctd-item">
+                    <ion-label stacked class="labelProfile">Senha atual</ion-label>
+                    <ion-input class="inputProfile" type="password" value="" formControlName="usua_tx_senha_atual"></ion-input>
+                  </ion-item>
+                  <div *ngIf="!frmProfile.controls.usua_tx_senha_atual.valid && frmProfile.controls.usua_tx_senha_atual.touched" class="ctd-label-error">* Senha com no mínimo de 6 caracteres.</div>
+                </ion-col>
+              </ion-row>
+              <ion-row>
+                <ion-col class="ctd-ion-grid-group-col">
+                  <ion-item class="ctd-item">
+                    <ion-label stacked class="labelProfile">Nova senha</ion-label>
+                    <ion-input class="inputProfile" type="password" value="" formControlName="usua_tx_senha"></ion-input>
+                  </ion-item>
+                  <div *ngIf="!frmProfile.controls.usua_tx_senha.valid && frmProfile.controls.usua_tx_senha.touched" class="ctd-label-error">* Senha com no mínimo de 6 caracteres.</div>
+                </ion-col>
+              </ion-row>
+              <ion-row>
+                <ion-col class="ctd-ion-grid-group-col">
+                  <ion-item class="ctd-item">
+                    <ion-label stacked class="labelProfile">Repetir nova senha</ion-label>
+                    <ion-input class="inputProfile" type="password" value="" formControlName="usua_tx_nova_senha"></ion-input>
+                  </ion-item>
+                  <div *ngIf="frmProfile.hasError('senhaDiferente')" class="ctd-label-error">* As senhas estão diferentes.</div>
+                </ion-col>
+              </ion-row>
+            </ion-grid>
+          </ion-item-group>
+        </ion-col>
+      </ion-row>
+    </ion-grid>
+    <ion-grid>
+      <ion-row>
+        <ion-col>
+          <div id="btnSalvar">
+            <button class="btnSalvar" full ion-button type="submit" [disabled]="!frmProfile.valid" block>Salvar</button>
+          </div>
+        </ion-col>
+      </ion-row>
+    </ion-grid>
+    <!-- <ion-row>
       <ion-col>
         <div id="btnSalvar">
-          <button class="btnSalvar" ion-button type="submit" [disabled]="!frmProfile.valid" block>Salvar</button>
+          <button class="btnSalvar" full ion-button type="submit" [disabled]="!frmProfile.valid" block>Salvar</button>
         </div>
       </ion-col>
-    </ion-row>
+    </ion-row> -->
   </form>
 </ion-content>
+<!-- <ion-footer>
+  <div id="btnSalvar">
+    <button class="btnSalvar" full ion-button type="submit" [disabled]="!frmProfile.valid" block>Salvar</button>
+  </div>
+</ion-footer> -->

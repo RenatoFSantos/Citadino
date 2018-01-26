@@ -29,4 +29,13 @@ export class EmpresaService {
   public getEmpresaByCnpj(cnpj: string) {
     return this.empresaRef.orderByChild('empr_nr_documento').equalTo(cnpj).once('value');
   }
+
+  public getEmpresaParceira() {
+    return this.empresaRef.orderByChild('empr_in_parceiro').equalTo(true).once('value');
+  }
+
+  public getMunicipioEmpresaKey(uidEmpresa:string) {
+    return this.empresaRef.child(uidEmpresa).child("municipio").once("value");
+  }
+
 }

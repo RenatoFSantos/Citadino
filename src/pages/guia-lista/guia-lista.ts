@@ -1,3 +1,4 @@
+import { GlobalVar } from './../../shared/global-var';
 import { SmartsiteVO } from './../../model/smartSiteVO';
 import { SmartSiteService } from './../../providers/service/smartSite-services';
 import { SmartSitePage } from './../smartSite/smartSite';
@@ -6,7 +7,7 @@ import { EmpresaService } from './../../providers/service/empresa-service';
 import { GuiaService } from './../../providers/service/guia-service';
 import { GuiaContatoPage } from './../guia-contato/guia-contato';
 import { Component, OnInit } from '@angular/core';
-import { NavController, NavParams, ToastController, LoadingController } from 'ionic-angular';
+import { NavController, NavParams, ToastController, LoadingController, ViewController } from 'ionic-angular';
 
 @Component({
   selector: 'page-guia-lista',
@@ -19,6 +20,7 @@ export class GuiaListaPage implements OnInit {
   public empresasKey: any = [];
   private toastAlert: any;
 
+  private municipioAnterior: string = "";
 
   constructor(public navCtrl: NavController,
     public navParams: NavParams,
@@ -26,8 +28,11 @@ export class GuiaListaPage implements OnInit {
     public emprSrv: EmpresaService,
     private smartSrv: SmartSiteService,
     private toastCtrl: ToastController,
-    private loadingCtrl: LoadingController) {
+    private loadingCtrl: LoadingController,
+    private viewCtrl: ViewController,
+    private glbVar:GlobalVar) {
 
+    this.municipioAnterior = this.glbVar.getMunicipioPadrao().muni_sq_id;
     this.categoriaNome = navParams.get("categNm");
     this.empresasKey = navParams.get("emprKeys");
   }
@@ -36,7 +41,11 @@ export class GuiaListaPage implements OnInit {
     this.loadEmpresas();
   }
 
-  ionViewDidLoad() {
+  ionViewDidEnter() {
+    if (this.municipioAnterior != this.glbVar.getMunicipioPadrao().muni_sq_id) {
+     this.viewCtrl.dismiss();
+      this.municipioAnterior = this.glbVar.getMunicipioPadrao().muni_sq_id;
+    }
   }
 
   openGuia(empresa: EmpresaVO) {
@@ -133,9 +142,7 @@ export class GuiaListaPage implements OnInit {
     return promAll;
   }
 
-
-
-  createAlert(errorMessage: string) {
+  private createAlert(errorMessage: string) {
 
     if (this.toastAlert != null) {
       this.toastAlert.dismiss();

@@ -1,3 +1,4 @@
+import { MunicipioVO } from './municipioVO';
 import { CtdFuncoes } from './../shared/ctdFuncoes';
 import * as enums from './../model/dominio/ctdEnum';
 import { EmpresaVO } from './empresaVO';
@@ -20,7 +21,7 @@ export class UsuarioVO {
     public usua_in_ajuda:boolean;
     public empresa: EmpresaVO;
     public usua_sg_perfil:string; //USU USUARIO  ADM ADMINISTRADOR //PAR PARCEIRO /COL COLUNISTA
-
+    public municipio:MunicipioVO = new MunicipioVO();
  
     constructor() {
         this.usua_sq_id = '';
@@ -39,5 +40,6 @@ export class UsuarioVO {
         this.empresa = new EmpresaVO();
         this.usua_sg_perfil = '';      
         this.usua_tx_urlprofile = "";
+        this.municipio  = new MunicipioVO();
     }
 }

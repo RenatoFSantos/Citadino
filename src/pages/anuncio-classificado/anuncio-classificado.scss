@@ -1,4 +1,4 @@
-page-minhas-publicacoes {
+page-anuncio-classificado {
     ion-card.ctd-card {
         padding: 0px;
         border-radius: 10px;
@@ -91,12 +91,33 @@ page-minhas-publicacoes {
     }
 
     .fixed-content {
-        margin-bottom: 56px !important;
-        margin-top: 63px !important;
+        margin-bottom: 60px !important;
+        margin-top: 78px !important;
+        padding: 1px !important;
     }
 
     .scroll-content {
-        margin-top: 63px !important;
+        margin-top: 78px !important;
+        padding: 0px !important;
     }
 
+    .grid {
+        padding: 0px !important;
+    }
+    .col {
+        padding: 0px !important;
+    }
+
+    .btnAnuncioBack {
+        margin: -2px 15px !important;
+
+    }
+    .btnAnuncioIcon {
+        font-size: 1.7rem !important;
+        font-weight: 700 !important;
+    }
+    
+    .toolbar-md {
+      min-height: 50px !important;
+    }   
 }

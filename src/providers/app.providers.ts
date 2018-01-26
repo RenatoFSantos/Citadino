@@ -1,3 +1,8 @@
+import { FileTransfer } from '@ionic-native/file-transfer';
+import { DownloadImageService } from './service/download-image-service';
+import { MunicipioService } from './service/municipio-service';
+import { CupomCriadoService } from './service/cupom-criado-service';
+import { CurrencyMask } from './../shared/currency-mask';
 import { VitrineCurtirService } from './service/vitrine-curtir-service';
 import { CupomService } from './service/cupom-service';
 import { UsuarioCupomService } from './service/usuario-cupom-service';
@@ -30,6 +35,7 @@ import { Camera } from '@ionic-native/camera';
 import { BackgroundMode } from '@ionic-native/background-mode';
 import { SqlLiteService } from './database/sqlLite-service';
 import { PromocaoService } from './service/promocao-service';
+import { File } from '@ionic-native/file';
 
 
 export const APP_PROVIDERS = [
@@ -64,5 +70,11 @@ export const APP_PROVIDERS = [
     CupomService,
     UsuarioCupomService,
     PromocaoService,
-    VitrineCurtirService    
+    VitrineCurtirService,
+    CurrencyMask,
+    CupomCriadoService,
+    MunicipioService,
+    DownloadImageService,
+    FileTransfer,
+    File
 ];

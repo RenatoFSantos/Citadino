@@ -43,8 +43,10 @@ export class UsuarioService {
 
 
   //Desconecta usuário Logado
-  signOut() {
-    this.deletarUsuarioLogadoSq();
+  signOut(isCordova: boolean) {
+    if (isCordova) {
+      this.deletarUsuarioLogadoSq();
+    }
     return this.fbService.getFireBase().auth().signOut();
   }
 
@@ -80,7 +82,7 @@ export class UsuarioService {
   }
 
   public getMensagens() {
-    let usuarioid:string = "";
+    let usuarioid: string = "";
 
     if (this.getLoggedInUser() != null) {
       usuarioid = this.getLoggedInUser().uid;
@@ -89,6 +91,10 @@ export class UsuarioService {
     else {
       return null;
     }
+  }
+
+  public atualizaEmail(usuario: UsuarioVO, email:string) {
+    this.usersRef.child(usuario.usua_sq_id).child('usua_ds_email').set(email);
   }
 
   public saveToken(uid: string, token: string) {

@@ -32,8 +32,6 @@ export class UsuarioSqlService {
     let self = this;
     let connection: any;
 
-    console.log("Plataforma " + self.plt.is(('ios')));
-
     var promise = new Promise(function (resolve, reject) {
       if (self.plt.is('ios')) {
         self.sqlSrv.createDataBaseIos().then((db: SQLiteObject) => {
@@ -85,6 +83,38 @@ export class UsuarioSqlService {
 
       querys.push(query);
 
+      // var query = "DROP TABLE IF EXISTS cupom";
+      query = "CREATE TABLE IF NOT EXISTS meu_cupom ( ";
+      query = query + "cupo_sq_id TEXT,";
+      query = query + "cupo_tx_titulo TEXT,";
+      query = query + "cupo_tx_descricao TEXT,";
+      query = query + "cupo_tx_regulamento TEXT,";
+      query = query + "cupo_dt_validade TEXT,";
+      query = query + "cupo_nr_desconto INTEGER,";
+      query = query + "cupo_tx_urlimagem TEXT,";
+      query = query + "cupo_nr_vlatual REAL,";
+      query = query + "cupo_nr_vlcomdesconto REAL,";
+      query = query + "empr_sq_id TEXT,";
+      query = query + "empr_nm_fantasia TEXT,";
+      query = query + "empr_tx_endereco TEXT,";
+      query = query + "empr_tx_bairro TEXT,";
+      query = query + "empr_tx_cidade TEXT,";
+      query = query + "empr_tx_telefone_1 TEXT,";
+      query = query + "empr_nr_documento TEXT,";
+      query = query + "muni_sq_id TEXT)";
+
+      querys.push(query);
+
+      querys.push(query);
+
+      // var query = "DROP TABLE IF EXISTS cupom";
+      query = "CREATE TABLE IF NOT EXISTS municipio ( ";
+      query = query + "muni_sq_id TEXT,";
+      query = query + "muni_nm_municipio TEXT )";
+
+      querys.push(query);
+
+
       db.sqlBatch(querys).then((data) => {
         resolve({ self, db });
         console.log("Tabela Usuario e usuario-logado criada " + data);
@@ -94,7 +124,6 @@ export class UsuarioSqlService {
           console.error('Não foi possível criar a tabela usuario e usuario-logado : ', error);
         });
     });
-
     return promise;
   }
 
@@ -103,8 +132,12 @@ export class UsuarioSqlService {
     return this.dataBase;
   }
 
-  public deletarPorId(sqlDelete: string, id: any) {
-    return this.dataBase.executeSql(sqlDelete, { id });
+  public deletarParamentro(sqlDelete: string, id: any) {
+    return this.dataBase.executeSql(sqlDelete, id);
+  }
+
+  public deletarTodos(sqlDelete: string) {
+    return this.dataBase.executeSql(sqlDelete, {});
   }
 
   public listarTodos(sqlList: string) {
@@ -123,15 +156,14 @@ export class UsuarioSqlService {
   }
 
   public inserir(sqlInsert: string, sqlParam: any) {
-    console.log("teste paramentros " + sqlParam);
+    console.log("Lista parametros " + sqlParam);
     return this.dataBase.executeSql(sqlInsert, sqlParam);
   }
 
-
   public pesquisar(sqlquery: any, sqlParm: any) {
     console.log("Query " + sqlquery);
-    console.log("Parametros " + sqlParm);
+    console.log("Lista Parametros " + sqlParm);
     return this.dataBase.executeSql(sqlquery, sqlParm);
-  }
+  } 
 
 }

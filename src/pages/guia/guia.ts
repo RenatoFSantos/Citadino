@@ -1,3 +1,6 @@
+import { MappingsService } from './../../providers/service/_mappings-service';
+import { MunicipioService } from './../../providers/service/municipio-service';
+import { MunicipioVO } from './../../model/municipioVO';
 import { SlideVO } from './../../model/slideVO';
 import { AnuncioFullPage } from './../anuncio-full/anuncio-full';
 import { VitrineVO } from './../../model/vitrineVO';
@@ -31,6 +34,9 @@ export class GuiaPage implements OnInit {
   private loadCtrl: any;
   private toastAlert: any;
 
+  private municipios: MunicipioVO[] = [];
+  private municipioAnterior: string = "";
+
   constructor(public navCtrl: NavController,
     public guiaSrv: GuiaService,
     public loadingCtrl: LoadingController,
@@ -38,9 +44,12 @@ export class GuiaPage implements OnInit {
     private netService: NetworkService,
     private globalVar: GlobalVar,
     private toastCtrl: ToastController,
-    public events: Events) {
+    public events: Events,
+    private muniSrv: MunicipioService,
+    private mapSrv: MappingsService) {
     this.searchControl = new FormControl();
 
+    this.municipioAnterior = this.globalVar.getMunicipioPadrao().muni_sq_id;
     this.getLoadCategorias();
   }
 
@@ -54,9 +63,22 @@ export class GuiaPage implements OnInit {
   //   }
   // }
 
+  ionViewDidEnter() {
+    if (this.municipioAnterior != this.globalVar.getMunicipioPadrao().muni_sq_id) {
+      this.carregaDadosDescritorEmpresa(this.searchControl.value);
+      this.municipioAnterior = this.globalVar.getMunicipioPadrao().muni_sq_id;
+    }
+  }
+
+
   ionViewDidLoad() {
     this.onSearchCategoria();
     this.bancoDadosOnlineEvent();
+    this.onChangeMunicipioEvent();
+  }
+
+  ionViewWillUnload() {
+    this.events.unsubscribe("guia:municipio", null);
   }
 
   public onSearchInput() {
@@ -66,6 +88,13 @@ export class GuiaPage implements OnInit {
   public onCleanInput() {
     this.searching = true;
     this.empresas = [];
+
+    let loader = this.loadingCtrl.create({
+      content: 'Aguarde...',
+      dismissOnPageChange: true,
+      duration: 700
+    });
+    loader.present();
   }
 
 
@@ -78,59 +107,63 @@ export class GuiaPage implements OnInit {
       )
       .map(v => v.toLowerCase().trim())
       .subscribe((value: any) => {
-        self.empresas = []
         this.searching = false;
+        this.carregaDadosDescritorEmpresa(value);
+      });
+  }
 
-        if (value != "") {
-          let loader = this.loadingCtrl.create({
-            content: 'Aguarde...',
-            dismissOnPageChange: true
-          });
+  private carregaDadosDescritorEmpresa(value: any) {
+    let self = this;
+    self.empresas = []
 
-          loader.present();
+    if (value != "") {
+      let loader = this.loadingCtrl.create({
+        content: 'Aguarde...',
+        dismissOnPageChange: true
+      });
 
-          this.guiaSrv.getDescritorPorNome(value).then(snapShot => {
-            if (snapShot != null && snapShot.numChildren() > 0) {
-              snapShot.forEach(element => {
-                if (element.val() != null && element.val().empresa != null) {
-                  let itensEmpresas: any = Object.keys(element.val().empresa);
+      loader.present();
 
-                  itensEmpresas.forEach(item => {
-                    let pkVitrine: string = item;
+      this.guiaSrv.getDescritorPorNome(self.globalVar.getMunicipioPadrao().muni_sq_id, value).then(snapShot => {
+        if (snapShot != null && snapShot.numChildren() > 0) {
+          snapShot.forEach(element => {
+            if (element.val() != null && element.val().empresa != null) {
+              let itensEmpresas: any = Object.keys(element.val().empresa);
 
-                    if (self.empresas != null && self.empresas.length > 0) {
-                      let exist: boolean = self.empresas.some(campo =>
-                        campo.empr_sq_id == pkVitrine);
+              itensEmpresas.forEach(item => {
+                let pkVitrine: string = item;
 
-                      if (!exist) {
-                        self.empresas.push(element.val().empresa[item]);
-                      }
-                    } else {
-                      self.empresas.push(element.val().empresa[item]);
-                    }
-                    self.empresas = this.itemSrv.orderBy(self.empresas, ['empr_nm_razaosocial'], ['asc'])
-                  });
+                if (self.empresas != null && self.empresas.length > 0) {
+                  let exist: boolean = self.empresas.some(campo =>
+                    campo.empr_sq_id == pkVitrine);
+
+                  if (!exist) {
+                    self.empresas.push(element.val().empresa[item]);
+                  }
+                } else {
+                  self.empresas.push(element.val().empresa[item]);
                 }
+                self.empresas = this.itemSrv.orderBy(self.empresas, ['empr_nm_razaosocial'], ['asc'])
               });
-              loader.dismiss();
-            }
-            if (self.empresas.length == 0) {
-              this.descritorEnable = false;
-              self.empresas = [];
-            }
-            else {
-              this.descritorEnable = true;
             }
           });
           loader.dismiss();
         }
-        else {
-          self.empresas = [];
+        if (self.empresas.length == 0) {
           this.descritorEnable = false;
+          self.empresas = [];
+        }
+        else {
+          this.descritorEnable = true;
         }
       });
+      loader.dismiss();
+    }
+    else {
+      self.empresas = [];
+      this.descritorEnable = false;
+    }
   }
-
 
   private getLoadCategorias() {
 
@@ -210,6 +243,7 @@ export class GuiaPage implements OnInit {
 
 
   openGuiaCategoria(categoriaNm: string, categoriaKey: string, cate_in_tipo: string) {
+    let self = this;
     let loader = this.loadingCtrl.create({
       content: 'Aguarde...',
       dismissOnPageChange: true
@@ -219,7 +253,7 @@ export class GuiaPage implements OnInit {
 
     if (cate_in_tipo == 'CT' || cate_in_tipo == '' || typeof cate_in_tipo === 'undefined') {
       let empresaskey: any = [];
-      this.guiaSrv.getEmpresaByCategoria(categoriaKey).then((snapShot) => {
+      this.guiaSrv.getEmpresaByCategoria(self.globalVar.getMunicipioPadrao().muni_sq_id, categoriaKey).then((snapShot) => {
         snapShot.forEach(element => {
           empresaskey.push(element.key);
         });
@@ -229,7 +263,7 @@ export class GuiaPage implements OnInit {
     } else if (cate_in_tipo == 'PF') {
       let vitrine: VitrineVO = new VitrineVO();
 
-      this.guiaSrv.getPathPlantaoFarmacia().then((url: any) => {
+      this.guiaSrv.getPathPlantaoFarmacia(this.municipioAnterior).then((url: any) => {
         let slides: SlideVO[] = [];
 
         let slide: SlideVO = new SlideVO();
@@ -249,7 +283,7 @@ export class GuiaPage implements OnInit {
     else if (cate_in_tipo == 'HO') {
       let vitrine: VitrineVO = new VitrineVO();
 
-      this.guiaSrv.getPathHorarioOnibus().then((paths: any) => {
+      this.guiaSrv.getPathHorarioOnibus(this.municipioAnterior).then((paths: any) => {
 
         let slides: SlideVO[] = [];
         let slide: SlideVO = new SlideVO();
@@ -274,10 +308,9 @@ export class GuiaPage implements OnInit {
         loader.dismiss();
         this.navCtrl.push(AnuncioFullPage, { slideParam: slides, isExcluirImagem: false });
 
-      })
-        .catch((error) => {
+      }).catch((error) => {
 
-        });
+      });
     }
   }
 
@@ -317,8 +350,35 @@ export class GuiaPage implements OnInit {
             (this.categorias != null && this.categorias.length == 0)) {
             this.getLoadCategorias();
           }
+
+          if (self.globalVar.getMunicipios() == null) {
+            self.carregaMunicipio();
+          }
+
         }, 2500);
       }
+    });
+  }
+
+  private onChangeMunicipioEvent() {
+    let self = this;
+    this.events.subscribe("guia:municipio", () => {
+      self.municipioAnterior = this.globalVar.getMunicipioPadrao().muni_sq_id;
+      self.carregaDadosDescritorEmpresa(self.searchControl.value);
+    })
+  }
+
+  private carregaMunicipio() {
+    let self = this;
+
+    self.muniSrv.listMunicipio().then((snapEmpr) => {
+      var munickey: any[] = Object.keys(snapEmpr.val());
+      munickey.forEach(element => {
+        var munic: MunicipioVO = self.mapSrv.getMunicipio(snapEmpr.val()[element]);
+        if (self.globalVar.getMunicipios() == null) {
+          self.globalVar.setMunicipios(munic);
+        }
+      });
     });
   }
 }

@@ -214,7 +214,7 @@ export class VitrinePublicacaoPage {
       let anuncios: any = [];
       var uidUsuario: string = self.usuaSrv.getLoggedInUser().uid;
 
-      self.vitrineSrv.getVitrineMunicipio(self.seqMunicipio, self.limitPage, self.startPk)
+      self.vitrineSrv.getVitrineMunicipio(self.seqMunicipio, self.limitPage, self.startPk )
         .then((snapshot: any) => {
 
           anuncios = self.itemsService.getPropertyValues(snapshot.val(), "vitr_sq_ordem");

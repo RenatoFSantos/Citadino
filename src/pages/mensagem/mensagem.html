@@ -1,6 +1,19 @@
 <ion-header>
-    <ion-navbar color="ctd-navbar">
+    <!-- <ion-navbar color="ctd-navbar">
         <ctd-header-modal [titulo]=[(mens_nm_enviado)] [pathImage]=[(mens_tx_logo_enviado)]></ctd-header-modal>
+    </ion-navbar> -->
+    <ion-navbar color="ctd-navbar">
+        <ion-avatar item-left style="float:left" *ngIf="pathImage != ''">
+            <img class="avatar" src="{{mens_tx_logo_enviado}}" />
+        </ion-avatar>
+        <ion-title>
+            {{mens_nm_enviado}}
+        </ion-title>
+        <ion-buttons right>
+            <button ion-button right (click)="close()">
+                <ion-icon name="md-arrow-back"></ion-icon>
+            </button>
+        </ion-buttons>
     </ion-navbar>
 </ion-header>
 
@@ -28,10 +41,13 @@
                 <ion-spinner *ngIf="!(mensagens)"></ion-spinner>
             </ion-col>-->
             <ion-col col-10 [hidden]="!mensagens">
-                <ion-textarea maxlength="1500" autoresize="100" placeholder="Entre com a mensagem" [(ngModel)]="mens_txt_mensagem" autocomplete="true" spellcheck="true"></ion-textarea>
+                <ion-textarea maxlength="1500" autoresize="100" placeholder="Entre com a mensagem" [(ngModel)]="mens_txt_mensagem" autocomplete="true"
+                    spellcheck="true"></ion-textarea>
             </ion-col>
-            <ion-col class="colSend" col-2 [hidden]="!mensagens" >
-                <button ion-button (click)="enviarMensagem()"><ion-icon name="send"></ion-icon></button>
+            <ion-col class="colSend" col-2 [hidden]="!mensagens">
+                <button ion-button (click)="enviarMensagem()">
+                    <ion-icon name="send"></ion-icon>
+                </button>
             </ion-col>
         </ion-row>
     </ion-toolbar>

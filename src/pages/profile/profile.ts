@@ -1,3 +1,6 @@
+import { ItemsService } from './../../providers/service/_items-service';
+import { MunicipioVO } from './../../model/municipioVO';
+import { MunicipioService } from './../../providers/service/municipio-service';
 import { ValidationResult } from './../../shared/interfaces';
 import { FirebaseService } from './../../providers/database/firebase-service';
 import { BackgroundService } from './../../providers/service/background-service';
@@ -24,6 +27,8 @@ export class ProfilePage {
   uidUsuario: string;
   changeImageProfile: boolean = false;
 
+  private municipioSelected: MunicipioVO;
+  public municipios: Array<MunicipioVO> = [];
 
   constructor(public navCtrl: NavController,
     public navParams: NavParams,
@@ -36,9 +41,12 @@ export class ProfilePage {
     private toastCtrl: ToastController,
     private fbs: FirebaseService,
     private event: Events,
-    private loadingCtrl: LoadingController) {
-      
-     this.createForm();
+    private loadingCtrl: LoadingController,
+    private municSrv: MunicipioService,
+    private itenSrv: ItemsService) {
+
+    this.createForm();
+    this.listaMunicipio();
 
   }
 
@@ -52,7 +60,8 @@ export class ProfilePage {
       'usua_ds_telefone': '',
       'usua_tx_senha_atual': ['', Validators.compose([Validators.minLength(6)])],
       'usua_tx_senha': ['', Validators.compose([Validators.minLength(6)])],
-      'usua_tx_nova_senha': ['', Validators.compose([Validators.minLength(6)])]
+      'usua_tx_nova_senha': ['', Validators.compose([Validators.minLength(6)])],
+      'muni_sq_id': ['', Validators.compose([Validators.required])]
     }, { validator: senhaDiferente('usua_tx_senha', 'usua_tx_nova_senha') });
 
 
@@ -88,6 +97,18 @@ export class ProfilePage {
         this.myPhoto = 'assets/img/profile/profile.png';
       }
     })
+  }
+
+  private listaMunicipio() {
+    let self = this;
+
+    self.municSrv.listMunicipio().then((municSnap) => {
+      var munickey: any[] = Object.keys(municSnap.val());
+      munickey.forEach(element => {
+        var munic: MunicipioVO = self.mapSrv.getMunicipio(municSnap.val()[element]);
+        self.municipios.push(munic);
+      });
+    });
   }
 
   onSubmit(formProfile: any): void {
@@ -194,6 +215,10 @@ export class ProfilePage {
 
       self.usuaSrv.getUsersRef().child(self.uidUsuario).child('usua_nm_usuario').set(self.usuario.usua_nm_usuario);
       self.usuaSrv.getUsersRef().child(self.uidUsuario).child('usua_ds_telefone').set(self.usuario.usua_ds_telefone);
+
+      if (self.municipioSelected != null) {
+        self.usuaSrv.getUsersRef().child(self.uidUsuario).child('municipio').set(self.municipioSelected);
+      }
 
       if (urlProfile != '') {
         self.usuario.usua_tx_urlprofile = urlProfile;
@@ -304,5 +329,10 @@ export class ProfilePage {
     });
 
     this.toastAlert.present();
+  }
+
+  public onChangeMunicipio(value: string) {
+    let self = this;
+    self.municipioSelected = self.itenSrv.findElement(self.municipios, (v: any) => v.muni_sq_id == value);
   }
 }

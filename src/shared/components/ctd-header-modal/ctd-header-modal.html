@@ -1,13 +1,16 @@
-<ion-navbar>
-    <ion-avatar item-left style="float:left" *ngIf="pathImage != ''">
-        <img class="avatar" src="{{pathImage}}" />
-    </ion-avatar>
-    <ion-title class="citadino">
-        {{titulo}}
-    </ion-title>
-    <ion-buttons right>
-        <button ion-button right (click)="close()">
-        <ion-icon name="md-arrow-back" ></ion-icon>
-    </button>
-    </ion-buttons>
-</ion-navbar>
+<ion-toolbar color="ctd-navbar">
+    <ion-grid>
+      <ion-row>
+        <ion-col col-1 align-self-center>
+          <ion-buttons class="btnAnuncioBack">
+            <button ion-button (click)="close()">
+              <ion-icon class="btnAnuncioIcon" name="md-arrow-back"></ion-icon>
+            </button>
+          </ion-buttons>
+        </ion-col>
+        <ion-col col-11 align-self-start class="ctd-title-nav-bar">
+          <ion-title>{{titulo}}</ion-title>
+        </ion-col>
+      </ion-row>
+    </ion-grid>
+  </ion-toolbar>

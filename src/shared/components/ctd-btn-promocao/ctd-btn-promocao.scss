@@ -1,0 +1,32 @@
+ctd-btn-promocao {
+    ion-badge {
+        font-size: 70% !important;
+        // background-color: #ccc;
+        background-color:black;      
+    }
+    
+    .btnEvento {
+        color:#696969;
+        margin-top: -2px;
+        height: 42px;
+        width: 42px;
+    }
+
+    .btnEvento.salvar {
+        color:#3111E9 !important;  
+        margin-top: 0px;             
+    }
+
+
+    [icon-only] ion-icon {
+        margin-top: 13px !important;
+        margin-left: -14px !important;
+    }
+
+    .barraBtnEvento {
+        height: 40px;
+        background-color: rgba(204, 204, 204, 0.59);
+        text-align: right !important;
+        padding: 1px !important;    
+    }
+}

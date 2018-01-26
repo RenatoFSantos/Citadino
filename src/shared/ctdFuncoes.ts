@@ -67,4 +67,11 @@ export class CtdFuncoes {
         return strTexto;
     }
 
+    public static removeMaskNrDocumento(value:string):string {
+        var strTexto:string = "" ;
+
+        strTexto = value.replace("/","").replace(".","").replace("-","");
+
+        return strTexto;
+    }  
 }

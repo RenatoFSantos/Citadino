@@ -1,0 +1,181 @@
+page-anuncio-promocao-detalhe {
+    .ctd-btn-call {
+        color: #387ef5 !important;
+        font-size: 2.4rem !important;
+
+    }
+    ion-card.ctd-card {
+        padding: 0px;
+        border-radius: 10px;
+        line-height: 20%;
+    }
+
+    p {
+        text-align: justify;
+    }
+
+    .card-content-md {
+        padding: 2px 2px !important;
+    }
+
+    .ctd-head-promocao {
+        max-height: 400px;
+    }
+
+    .card-title-md {
+        margin: 0 auto;
+        line-height: 40%;
+        font-size: 2.0rem;
+        padding: 5px 0 5px 0;
+    }
+
+    ion-content {
+        background-color: #c2b49a !important;
+    }
+
+    ion-card-content.ctd-faixa {
+        background-color: #000 !important;
+        color: #fff;
+        text-align: center;
+        padding:3px 0px 0px 3px !important;
+    }
+
+    ion-card-content.ctd-texto {
+        text-align: justify; 
+        padding:8px;
+    }  
+
+    .ctd-subtitulo {
+        color: white !important;   
+    } 
+    
+    .ctd-noticia_titulo {
+        overflow: hidden;
+        text-overflow: ellipsis;     
+        -webkit-box-orient: vertical;
+        -webkit-line-clamp: 1; /* number of lines to show */
+        max-height: 1.5em;
+        line-height: 1.4em;
+    }  
+    
+    .ctd-noticia {
+        overflow: hidden;
+        text-overflow: ellipsis;
+        display: -webkit-box;
+        -webkit-box-orient: vertical;
+        -webkit-line-clamp: 4; /* number of lines to show */
+        max-height: 220px;
+        line-height: 1.4
+    }
+
+    .ctd_noticia_exibir {
+        max-height: 800px;
+        overflow: hidden;
+        -moz-transition: height 1s ease;
+        -webkit-transition: height 1s ease;
+        -o-transition: height 1s ease;
+        transition: max-height 0.25s ease-in;
+    }
+
+    .ctd-noticia-head {
+        background-color:#e7a904 !important;
+    }
+
+    .ctd-btn-vitrine{
+        height: 40px;
+        background-color: rgba(204, 204, 204, 0.59);
+        text-align: right !important;
+        padding: 1px !important;
+        // border-radius: 5px;
+        // width: 102%;
+        // margin-left: -2px;
+    }
+
+    .ctd-ver-mais {
+        text-align: right;
+        padding: 2px 8px 0px 0px;
+    }
+
+    ion-fab[bottom] {
+        bottom: -50px !important;
+    }
+    ion-fab[right] {
+        right: 10px !important;
+    }
+
+    .fixed-content {
+        // margin-bottom: 52px !important;
+        // margin-top: 78px !important;
+        padding: 1px !important;
+    }
+
+    .ctd-promocao.detalhe {
+        // margin-top: 78px !important;
+        padding: 0px !important;
+        // margin-bottom: 51 !important;
+    }
+
+    .grid {
+        padding: 2px !important;
+    }
+    .col {
+        padding: 2px !important;
+    }
+
+    .label-md {
+        margin: 0px !important;
+    }
+
+    .card-header-md {
+        padding: 0px 0px 10px 0px !important;
+    }
+
+    .card-header-md {
+        padding: 0px 0px 10px 0px !important;
+    }
+
+    .ctd-card.card-md {
+        margin: 3px 0px 10px 2px !important;
+        width: calc(100% - 2px) !important;
+    }
+
+    .ctd-divider-promocao.item-divider-md {
+        padding-left: 0px !important;
+        color: black !important;
+        background-color: #c2b49a !important;
+        font-weight: bold !important;
+    }
+
+    .ctd-descricao-promocao { 
+        margin: 0 0 2px;
+        font-size: 1.4rem;
+        font-weight: normal;
+        line-height: 1.5;
+        color: #222;
+        min-height: 40px;
+        border: 1px solid #dedede;      
+    }
+
+    ion-footer {
+        margin-bottom: -4px;
+        background-color: white;
+    }
+
+    .ctd-bt-promocao.button-md {
+      height: 5rem !important;  
+    }
+
+    .ctd-perc-desc {
+        // font-size: 2.4rem !important;
+        font-weight: bold !important;
+        color: red !important;
+        margin: 0 auto !important;     
+        padding: 2px 0 2px 0 !important;
+    }
+
+    .ctd-dt-validade {
+        background-color: #faec8c !important;
+        font-weight: bold !important;
+    
+    }
+}

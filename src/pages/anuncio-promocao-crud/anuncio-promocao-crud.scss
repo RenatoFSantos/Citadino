@@ -1,0 +1,75 @@
+page-anuncio-promocao-crud {
+ 
+    ion-content {
+        // background-color: #c2b49a !important;
+    }
+    
+    .avatarVitrine {
+        float: left;
+        width:48px; 
+        height:48px; 
+        -webkit-border-radius: 50%;
+        -moz-border-radius: 50%;
+        border-radius: 50%;
+    }
+
+    .labelProfile {
+        margin: 8px 8px 0px 0px !important;
+    }
+
+    .ctd-label-error {
+        color: red !important;
+        margin-left: 10px !important;
+    }
+    
+    ion-scroll[scrollX] {
+    white-space: nowrap;
+    height: 120px;
+    overflow: hidden;
+
+        .scroll-item {
+            display: inline-block;
+        }
+    
+        .selectable-icon{
+            margin: 10px 20px 10px 20px;
+            color: red;
+            font-size: 100px;
+        }
+    
+        ion-avatar img{          
+            width:90px !important; 
+            height:90px !important; 
+            border: 1px solid #ffffff !important;
+        }
+        }
+    
+        ion-scroll[scroll-avatar]{
+        height: 91px;
+        }
+    
+        /* Hide ion-content scrollbar */
+        ::-webkit-scrollbar{
+        display:none;
+        margin: 0px 0px 0px 0px;
+        }
+
+        .text-input-md {
+            margin: 4px 8px !important;
+        }
+
+        .txtQtdeCupom {
+            margin: 2px 8px !important;
+        }
+
+        .datetime-md {
+            padding: 5px 8px 5px 16px !important;
+        }
+
+        .grid {
+            padding: 0px !important;
+        }
+        .col {
+            padding: 0px !important;
+        }  
+}

@@ -1,7 +1,8 @@
+import { MunicipioVO } from './../../model/municipioVO';
+import { UsuarioVO } from './../../model/usuarioVO';
 import { VitrineCurtirService } from './../../providers/service/vitrine-curtir-service';
 import { VitrineCrudPage } from './../vitrine-crud/vitrine-crud';
 import { GlobalVar } from './../../shared/global-var';
-
 import { CtdFuncoes } from './../../shared/ctdFuncoes';
 import { VitrineService } from './../../providers/service/vitrine-service';
 import { MinhasPublicacoesService } from './../../providers/service/minhas-publicacoes';
@@ -18,18 +19,20 @@ import { ItemsService } from './../../providers/service/_items-service';
 import { UsuarioService } from './../../providers/service/usuario-service';
 import { VitrineVO } from './../../model/vitrineVO';
 import { Component } from '@angular/core';
-import { IonicPage, NavController, NavParams, Events, LoadingController, ToastController } from 'ionic-angular';
+import { IonicPage, NavController, NavParams, Events, LoadingController, ToastController, ModalController } from 'ionic-angular';
 import * as enums from './../../model/dominio/ctdEnum';
 
 @Component({
-  selector: 'page-minhas-publicacoes',
-  templateUrl: 'minhas-publicacoes.html',
+  selector: 'page-anuncio-publicidade',
+  templateUrl: 'anuncio-publicidade.html',
 })
-export class MinhasPublicacoesPage {
+export class AnuncioPublicidadePage {
 
   private vitrines: any = [];
   private usuario: any;
+  private muniEmpr: MunicipioVO;
   private toastAlert: any;
+  public titulo: string = "Meus Anúncios"
 
   constructor(private minhasPublicSrv: MinhasPublicacoesService,
     private usuaSrv: UsuarioService,
@@ -44,13 +47,14 @@ export class MinhasPublicacoesPage {
     private toastCtrl: ToastController,
     private vitrineSrv: VitrineService,
     private globalVar: GlobalVar,
-    private vtrCurt:VitrineCurtirService) {
+    private vtrCurt: VitrineCurtirService,
+    private mdlCtrl: ModalController) {
 
-    this.usuario = this.usuaSrv.getLoggedInUser();
+    this.usuario = this.globalVar.usuarioLogado;
+    this.getMunicipioEmpresa(this.usuario);
   }
 
   ionViewDidLoad() {
-    this.vitrines = [];
     this.publicarEvent();
     this.excluirVitrineEvent();
     this.carregaPublicacaoEvent();
@@ -66,12 +70,26 @@ export class MinhasPublicacoesPage {
     this.carregaMinhaVitrine();
   }
 
+  private getMunicipioEmpresa(usuario: UsuarioVO) {
+    let self = this;
+    if (usuario.empresa != null) {
+      this.emprSrv.getMunicipioEmpresaKey(usuario.empresa.empr_sq_id).then((snap) => {
+        var emprKey:any = Object.keys(snap.val());
+        self.muniEmpr = self.mapSrv.getMunicipio(snap.val()[emprKey]);
+      })
+    }
+  }
+
   public adicionarVitrine() {
-    this.navCtrl.push(VitrineCrudPage);
+    let vitrineCrud = this.mdlCtrl.create(VitrineCrudPage);
+    vitrineCrud.present();
+
+    // this.navCtrl.push(VitrineCrudPage);
   }
 
   private carregaMinhaVitrine() {
     let self = this;
+    this.vitrines = [];
 
     var loadCtrl = this.loadingCtrl.create({
       spinner: 'circles'
@@ -81,20 +99,16 @@ export class MinhasPublicacoesPage {
 
     this.minhasPublicSrv.getMinhasPublicacoesRef().once("value").then((snapShot) => {
       if (snapShot.exists()) {
-        this.minhasPublicSrv.getMinhasPublicacoesPorUsuario(self.usuario.uid)
+        this.minhasPublicSrv.getMinhasPublicacoesPorUsuario(self.usuario.usua_sq_id)
           .once('value').then((snapPublic) => {
             snapPublic.forEach(element => {
               var pkVitrine = element.val().vitr_sq_id;
               let newVitrine: VitrineVO = self.mapSrv.getVitrine(element.val(), pkVitrine);
               self.itemsService.addItemToStart(self.vitrines, newVitrine);
             });
-            // loadCtrl.dismiss();
           }).catch((error) => {
             loadCtrl.dismiss();
           });
-        // this.minhasPublicSrv.getMinhasPublicacoesPorUsuario(this.usuario.uid)
-        //   .on('child_added', this.onPublicacaoAdded);
-        // self.loadCtrl.dismiss();
         loadCtrl.dismiss();
       }
       else {
@@ -236,7 +250,7 @@ export class MinhasPublicacoesPage {
 
         var dtAtual = CtdFuncoes.convertDateToStr(new Date(), enums.DateFormat.enUS);
         var newOrder = String(new Date().getTime());
-
+       
         self.vitrineSrv.getVitrineByKey(vitrine.muni_sq_id, vitrine.vitr_sq_id)
           .then((snapVitrine) => {
             let updates = {};
@@ -246,10 +260,10 @@ export class MinhasPublicacoesPage {
 
             if (snapVitrine.val() != null) {
 
-              updates['/minhaspublicacoes/' + self.usuario.uid + '/' + vitrine.vitr_sq_id + '/vitr_dt_agendada'] = dtAtual;
-              updates['/minhaspublicacoes/' + self.usuario.uid + '/' + vitrine.vitr_sq_id + '/vitr_sq_ordem'] = newOrder;
+              updates['/minhaspublicacoes/' + self.usuario.usua_sq_id + '/' + vitrine.vitr_sq_id + '/vitr_dt_agendada'] = dtAtual;
+              updates['/minhaspublicacoes/' + self.usuario.usua_sq_id + '/' + vitrine.vitr_sq_id + '/vitr_sq_ordem'] = newOrder;
 
-              updates['/vitrine/' + vitrine.muni_sq_id + '/' + vitrine.vitr_sq_id + '/vitr_dt_agendada'] = dtAtual;
+              updates['/vitrine/' + vitrine.muni_sq_id+ '/' + vitrine.vitr_sq_id + '/vitr_dt_agendada'] = dtAtual;
               updates['/vitrine/' + vitrine.muni_sq_id + '/' + vitrine.vitr_sq_id + '/vitr_sq_ordem'] = newOrder;
 
               self.minhasPublicSrv.getDataBaseRef().update(updates);
@@ -257,8 +271,8 @@ export class MinhasPublicacoesPage {
             }
             else {
 
-              updates['/minhaspublicacoes/' + self.usuario.uid + '/' + vitrine.vitr_sq_id + '/vitr_dt_agendada'] = dtAtual;
-              updates['/minhaspublicacoes/' + self.usuario.uid + '/' + vitrine.vitr_sq_id + '/vitr_sq_ordem'] = newOrder;
+              updates['/minhaspublicacoes/' + self.usuario.usua_sq_id + '/' + vitrine.vitr_sq_id + '/vitr_dt_agendada'] = dtAtual;
+              updates['/minhaspublicacoes/' + self.usuario.usua_sq_id + '/' + vitrine.vitr_sq_id + '/vitr_sq_ordem'] = newOrder;
               updates['/vitrine/' + vitrine.muni_sq_id + '/' + vitrine.vitr_sq_id] = vitrine;
 
               self.minhasPublicSrv.getDataBaseRef().update(updates);
@@ -284,7 +298,7 @@ export class MinhasPublicacoesPage {
     this.events.subscribe('excluirPublicacao:true', (vitrine: VitrineVO) => {
       if (vitrine != null) {
         let loader = this.loadingCtrl.create({
-          content: 'Aguarde...',
+          spinner: 'circles',
           dismissOnPageChange: true
         });
 
@@ -342,7 +356,7 @@ export class MinhasPublicacoesPage {
         self.carregaListaImagens(self, publicacao)
           .then(self.excluirImages)
           .then(() => {
-            self.minhasPublicSrv.excluir(self.usuario.uid, publicacao.vitr_sq_id).then(() => {
+            self.minhasPublicSrv.excluir(self.usuario.usua_sq_id, publicacao.vitr_sq_id).then(() => {
               resolve({ self, result });
             })
               .catch(err => {
@@ -387,40 +401,7 @@ export class MinhasPublicacoesPage {
     return promise;
   }
 
-  // private excluirVitrine = function (param) {
-  //   let self = param.self;
-  //   let vitrine = param.vitrine;
-  //   let publicacao = param.publicacao;
-
-  //   var result: boolean = true;
-
-  //   let promise = new Promise(function (resolve, reject) {
-
-  //     if (vitrine != null) {
-  //       self.carregaListaImagens(self, vitrine)
-  //         .then(self.excluirImages)
-  //         .then(() => {
-  //           self.vitrineSrv.excluir(vitrine).then(() => {
-  //             resolve({ self, publicacao, result });
-  //           })
-  //             .catch(err => {
-  //               reject(err);
-  //             });
-  //         })
-  //         .catch((err) => {
-  //           reject(err);
-  //         }
-  //         );
-  //     }
-  //     else {
-  //       resolve({ self, publicacao, result });
-  //     }
-  //   });
-
-  //   return promise;
-  // }
-
-  private carregaListaImagens = function (self: any, vitrine: VitrineVO) {
+   private carregaListaImagens = function (self: any, vitrine: VitrineVO) {
     let promises: any = [];
 
     let slides: SlideVO[] = self.retornaLisSlide(vitrine);
@@ -455,7 +436,6 @@ export class MinhasPublicacoesPage {
     return promAll;
   }
 
-
   public carregaPublicacaoEvent() {
     let self = this;
     this.events.subscribe('carregaPublicacao:true', () => {
@@ -463,7 +443,37 @@ export class MinhasPublicacoesPage {
       this.carregaMinhaVitrine();
     });
   }
-
-
-
 }
+
+ // private excluirVitrine = function (param) {
+  //   let self = param.self;
+  //   let vitrine = param.vitrine;
+  //   let publicacao = param.publicacao;
+
+  //   var result: boolean = true;
+
+  //   let promise = new Promise(function (resolve, reject) {
+
+  //     if (vitrine != null) {
+  //       self.carregaListaImagens(self, vitrine)
+  //         .then(self.excluirImages)
+  //         .then(() => {
+  //           self.vitrineSrv.excluir(vitrine).then(() => {
+  //             resolve({ self, publicacao, result });
+  //           })
+  //             .catch(err => {
+  //               reject(err);
+  //             });
+  //         })
+  //         .catch((err) => {
+  //           reject(err);
+  //         }
+  //         );
+  //     }
+  //     else {
+  //       resolve({ self, publicacao, result });
+  //     }
+  //   });
+
+  //   return promise;
+  // }
