@@ -263,7 +263,7 @@ export class GuiaPage implements OnInit {
     } else if (cate_in_tipo == 'PF') {
       let vitrine: VitrineVO = new VitrineVO();
 
-      this.guiaSrv.getPathPlantaoFarmacia().then((url: any) => {
+      this.guiaSrv.getPathPlantaoFarmacia(this.municipioAnterior).then((url: any) => {
         let slides: SlideVO[] = [];
 
         let slide: SlideVO = new SlideVO();
@@ -283,7 +283,7 @@ export class GuiaPage implements OnInit {
     else if (cate_in_tipo == 'HO') {
       let vitrine: VitrineVO = new VitrineVO();
 
-      this.guiaSrv.getPathHorarioOnibus().then((paths: any) => {
+      this.guiaSrv.getPathHorarioOnibus(this.municipioAnterior).then((paths: any) => {
 
         let slides: SlideVO[] = [];
         let slide: SlideVO = new SlideVO();
