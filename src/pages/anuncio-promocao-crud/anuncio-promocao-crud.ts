@@ -64,6 +64,7 @@ export class AnuncioPromocaoCrudPage {
     this.dtAtual = CtdFuncoes.convertDateToStr(data, enums.DateFormat.enUS);
 
     this.usuario = glbVar.usuarioLogado;
+    this.cupom.tipoCupom = 1;
 
     this.excluirImagemEvent();
     this.criarFormulario();
@@ -84,7 +85,7 @@ export class AnuncioPromocaoCrudPage {
     this.imagemPadrao.path = "assets/img/camera.png";
 
     this.frmPromocaoCrud = new FormGroup({
-      tipoCupom: new FormControl('', [Validators.required]),
+      tipoCupom: new FormControl('', ),
       cupo_tx_titulo: new FormControl('', [Validators.required]),
       cupo_tx_descricao: new FormControl('', [Validators.required]),
       cupo_tx_regulamento: new FormControl('', [Validators.required]),
@@ -110,9 +111,9 @@ export class AnuncioPromocaoCrudPage {
 
       var cupomId = self.cupoCriaSrv.getNewUidCpom(this.usuario.usua_sq_id);
 
-      var usuarioParam:UsuarioCupomDTO = new UsuarioCupomDTO();
+      var usuarioParam: UsuarioCupomDTO = new UsuarioCupomDTO();
       usuarioParam.usua_sq_id = this.usuario.usua_sq_id;
-      usuarioParam.usua_nm_usuario = this.usuario.usua_nm_usuario; 
+      usuarioParam.usua_nm_usuario = this.usuario.usua_nm_usuario;
 
       self.cupom.usuario = usuarioParam;
       self.cupom.cupo_sq_id = cupomId;
@@ -408,8 +409,8 @@ export class AnuncioPromocaoCrudPage {
           cupomEmpresa.empr_tx_cidade = empresa.empr_tx_cidade;
           cupomEmpresa.empr_tx_endereco = empresa.empr_tx_endereco;
           cupomEmpresa.empr_tx_telefone_1 = empresa.empr_tx_telefone_1;
-          cupomEmpresa.empr_nr_documento = empresa.empr_nr_documento           
-          cupomEmpresa.municipio =  empresa.municipio;
+          cupomEmpresa.empr_nr_documento = empresa.empr_nr_documento
+          cupomEmpresa.municipio = empresa.municipio;
 
           self.cupom.empresa = cupomEmpresa;
 
