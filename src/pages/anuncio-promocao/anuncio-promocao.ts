@@ -143,9 +143,10 @@ export class AnuncioPromocaoPage {
       if (cupom != null) {
 
         let loader = this.loadingCtrl.create({
-          content: 'Aguarde...',
-          dismissOnPageChange: true
+          spinner: 'circles'
         });
+
+        loader.present();
 
         var dtAtual = CtdFuncoes.convertDateToStr(new Date(), enums.DateFormat.enUS);
         var newOrder = String(new Date().getTime());
