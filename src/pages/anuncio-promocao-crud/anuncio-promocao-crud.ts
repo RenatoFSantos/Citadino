@@ -62,6 +62,7 @@ export class AnuncioPromocaoCrudPage {
     this.dateMin = data.getFullYear();
     this.dateMax = data.getFullYear() + 2;
     this.dtAtual = CtdFuncoes.convertDateToStr(data, enums.DateFormat.enUS);
+    this.cupom.tipoCupom = 1;
 
     this.usuario = glbVar.usuarioLogado;
 
@@ -84,7 +85,6 @@ export class AnuncioPromocaoCrudPage {
     this.imagemPadrao.path = "assets/img/camera.png";
 
     this.frmPromocaoCrud = new FormGroup({
-      tipoCupom: new FormControl('', [Validators.required]),
       cupo_tx_titulo: new FormControl('', [Validators.required]),
       cupo_tx_descricao: new FormControl('', [Validators.required]),
       cupo_tx_regulamento: new FormControl('', [Validators.required]),
