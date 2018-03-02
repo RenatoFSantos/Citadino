@@ -617,15 +617,16 @@ export class MyApp implements OnInit {
     var promise = new Promise(function (resolve, reject) {
 
       if (eventoToken == enums.eventoTokenPush.usuarioAlterar) {
+        
+        self.tokenSrv.getTokenDeviceRef().child(tokenVinculadoUsuario).child(usuarioVinculadoToken).set(null);
 
         self.tokenSrv.saveToken(self.tokenPushAtual, usuarioLogado.usua_sq_id);
 
-        self.usuaSrv.usersRef.child(usuarioVinculadoToken)
-          .child("tokendevice").child(tokenVinculadoUsuario).set(null);
+        // self.usuaSrv.usersRef.child(usuarioVinculadoToken)
+        //   .child("tokendevice").child(tokenVinculadoUsuario).set(null);
 
         self.usuaSrv.usersRef.child(usuarioLogado.usua_sq_id)
           .child("tokendevice").set(self.tokenPushAtual).set(true);
-
       }
       else if (eventoToken == enums.eventoTokenPush.usuarioSalvar) {
 
