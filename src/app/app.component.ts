@@ -247,7 +247,8 @@ export class MyApp implements OnInit {
     }
     else {
       // self.rootPage = AjudaPage;
-      this.app.getRootNav().setRoot(AjudaPage);
+      // this.app.getRootNav().setRoot(AjudaPage);
+      this.app.getRootNav().setRoot(TabsPage);
       // this.app.getActiveNavs()[0].setRoot(AjudaPage);
     }
   }
