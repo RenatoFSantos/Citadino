@@ -169,7 +169,21 @@ export class AnuncioPromocaoPage {
             loader.dismiss();
             self.createAlert("Publicação realizada com sucesso.");
 
-            self.enviarNotificacao("CITADINO - " + cupom.cupo_tx_titulo);
+            var msg:string = "";
+            msg = '<h5>'
+            msg = msg + cupom.empresa.empr_nm_fantasia + ' está com uma promoção para você ! <br><br>' 
+            msg = msg + cupom.cupo_tx_descricao + '<br>'
+            msg = msg  + '</h5>'
+            msg = msg  + '<h2>' 
+            msg = msg  + 'Desconto de ' + cupom.cupo_nr_desconto + '%'
+            msg = msg  + '</h2>' 
+
+            var dadosNotif = {
+              titulo: 'Pegue seu cupom agora !!!',
+              descricao: msg
+            }
+
+            self.enviarNotificacao(cupom.cupo_tx_titulo, dadosNotif);
           })
             .catch((err) => {
               loader.dismiss();
@@ -376,7 +390,7 @@ export class AnuncioPromocaoPage {
     });
   }
 
-  private enviarNotificacao(titulo: string) {
+  private enviarNotificacao(titulo: string, dadosNotif) {
     var self = this;
 
     self.pesquisarTokensNotificacao()
@@ -385,7 +399,7 @@ export class AnuncioPromocaoPage {
         var tokens: string[] = result.tokens;
 
         if (tokens.length > 0) {
-          self.notifSrv.sendUidMensagem(tokens, titulo, "Pegue seu cupom agora!!!", enums.eventTypePush.vitrine).then(() => {
+          self.notifSrv.sendUidMensagem(tokens, titulo, "Pegue seu cupom agora!!!", dadosNotif).then(() => {
             // this.createAlert("Notificação enviada com sucesso.");
           }).catch((error) => {
             // this.createAlert("Não foi possível enviar a notificação.");

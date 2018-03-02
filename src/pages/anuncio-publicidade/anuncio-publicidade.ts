@@ -1,3 +1,5 @@
+import { TokenDeviceService } from './../../providers/service/token-device';
+import { NotificacaoService } from './../../providers/service/notificacao-service';
 import { MunicipioVO } from './../../model/municipioVO';
 import { UsuarioVO } from './../../model/usuarioVO';
 import { VitrineCurtirService } from './../../providers/service/vitrine-curtir-service';
@@ -48,7 +50,9 @@ export class AnuncioPublicidadePage {
     private vitrineSrv: VitrineService,
     private globalVar: GlobalVar,
     private vtrCurt: VitrineCurtirService,
-    private mdlCtrl: ModalController) {
+    private mdlCtrl: ModalController,
+    private notifSrv: NotificacaoService,
+    private tokenSrv: TokenDeviceService) {
 
     this.usuario = this.globalVar.usuarioLogado;
     this.getMunicipioEmpresa(this.usuario);
@@ -268,6 +272,19 @@ export class AnuncioPublicidadePage {
 
               self.minhasPublicSrv.getDataBaseRef().update(updates);
 
+              var msg:string = "";
+              msg = '<h5>'
+              msg = msg + vitrine.empr_nm_fantasia + ' adicionou um novo item na vitrine.<br><br>' 
+              msg = msg  + '</h5>'
+
+  
+              var dadosNotif = {
+                titulo: 'Não deixe de conferir !!!',
+                descricao: msg
+              }              
+
+              self.enviarNotificacao("", dadosNotif);
+
             }
             else {
 
@@ -276,6 +293,19 @@ export class AnuncioPublicidadePage {
               updates['/vitrine/' + vitrine.muni_sq_id + '/' + vitrine.vitr_sq_id] = vitrine;
 
               self.minhasPublicSrv.getDataBaseRef().update(updates);
+
+              var msg:string = "";
+              msg = '<h5>'
+              msg = msg + vitrine.empr_nm_fantasia + ' adicionou um novo item na vitrine.<br><br>' 
+              msg = msg  + '</h5>'
+
+  
+              var dadosNotif = {
+                titulo: 'Não deixe de conferir !!!',
+                descricao: msg
+              }         
+
+              self.enviarNotificacao("", dadosNotif);
             }
 
             // self.vitrines = this.itemsService.orderBy(self.vitrines, ['vitr_sq_ordem'], ['desc'])
@@ -442,6 +472,58 @@ export class AnuncioPublicidadePage {
       this.vitrines = [];
       this.carregaMinhaVitrine();
     });
+  }
+
+  private enviarNotificacao(titulo: string, dadosNotif) {
+    var self = this;
+
+    self.pesquisarTokensNotificacao()
+      .then((result: any) => {
+
+        var tokens: string[] = result.tokens;
+
+        if (tokens.length > 0) {
+          self.notifSrv.sendUidMensagem(tokens, 'Tem novidade na vitrine!!!', 'Não deixe de conferir.', dadosNotif).then(() => {
+            // this.createAlert("Notificação enviada com sucesso.");
+          }).catch((error) => {
+            // this.createAlert("Não foi possível enviar a notificação.");
+          });
+        }
+      })
+  }
+
+  private pesquisarTokensNotificacao = function () {
+    var self = this;
+    var tokens: string[] = [];
+    var count = 0;
+
+    var promise = new Promise(function (resolve, reject) {
+
+      self.tokenSrv.getTokenDeviceRef().once("value")
+        .then((snapTokens) => {
+          if (snapTokens != null) {
+            var values: any = Object.keys(snapTokens.val());
+
+            values.forEach(element => {
+              tokens.push(element);
+              count++;
+            });
+
+            if (count == values.length) {
+              resolve({ self, tokens });
+            }
+          }
+          else {
+
+            resolve({ self, tokens });
+          }
+        })
+        .catch((error) => {
+          reject(error);
+        });
+    });
+
+    return promise;
   }
 }
 

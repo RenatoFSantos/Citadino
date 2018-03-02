@@ -1,3 +1,4 @@
+import { SmartSiteCrudPage } from './../pages/smart-site-crud/smart-site-crud';
 import { AnuncioPromocaoDetalhePage } from './../pages/anuncio-promocao-detalhe/anuncio-promocao-detalhe';
 import { CtdListaMunicipio } from './../shared/components/ctd-lista-municipio/ctd-lista-municipio';
 import { CtdBtnPromocaoComponent } from './../shared/components/ctd-btn-promocao/ctd-btn-promocao';
@@ -121,7 +122,8 @@ export const firebaseConfig = {
     CtdBtnPromocaoComponent,
     CtdHeaderMunicipio,
     CtdListaMunicipio,
-    AnuncioPromocaoDetalhePage
+    AnuncioPromocaoDetalhePage,
+    SmartSiteCrudPage
   ],
   imports: [
     BrowserModule,
@@ -176,7 +178,8 @@ export const firebaseConfig = {
     CtdBtnPromocaoComponent,
     CtdHeaderMunicipio,
     CtdListaMunicipio,
-    AnuncioPromocaoDetalhePage
+    AnuncioPromocaoDetalhePage,
+    SmartSiteCrudPage
   ],
   providers: [APP_PROVIDERS,
     {provide: LOCALE_ID, useValue: 'pt-PT'}]

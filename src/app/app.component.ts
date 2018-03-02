@@ -1,3 +1,4 @@
+import { SmartSiteCrudPage } from './../pages/smart-site-crud/smart-site-crud';
 import { MunicipioService } from './../providers/service/municipio-service';
 import { MunicipioVO } from './../model/municipioVO';
 import { MeusAnunciosPage } from './../pages/meus-anuncios/meus-anuncios';
@@ -248,6 +249,8 @@ export class MyApp implements OnInit {
     else {
       // self.rootPage = AjudaPage;
       this.app.getRootNav().setRoot(AjudaPage);
+      // this.app.getRootNav().setRoot(TabsPage);
+
       // this.app.getActiveNavs()[0].setRoot(AjudaPage);
     }
   }
@@ -421,6 +424,9 @@ export class MyApp implements OnInit {
 
     this.pages.push({ title: 'Minha Conta', component: ProfilePage, icon: 'contact', typeMenu: enums.ETypeMenu.default });
 
+    this.pages.push({ title: 'Smart Site', component: SmartSiteCrudPage, icon: 'ios-home', typeMenu: enums.ETypeMenu.default });
+
+
     if (usuario.usua_sg_perfil == "ADM" || this.glbVar.isBtnAdicionarVitrine() == true) {
       this.pages.push({ title: 'Meus Anúncios', component: MeusAnunciosPage, icon: 'md-create', typeMenu: enums.ETypeMenu.default });
     }
@@ -469,44 +475,54 @@ export class MyApp implements OnInit {
     var self = this;
 
     //Producao
-    let headers = {
-      "Content-Type": "application/json; charset=utf-8",
-      "Authorization": "Basic 02655c01-f40d-4b22-ac0d-07358b012b57"
-    };
-
-    //Desenvolvimento
     // let headers = {
     //   "Content-Type": "application/json; charset=utf-8",
-    //   "Authorization": "Basic dde460af-2898-4f1a-88b8-ff9fd97be308"
+    //   "Authorization": "Basic 02655c01-f40d-4b22-ac0d-07358b012b57"
     // };
+
+    //Desenvolvimento
+    let headers = {
+      "Content-Type": "application/json; charset=utf-8",
+      "Authorization": "Basic dde460af-2898-4f1a-88b8-ff9fd97be308"
+    };
 
     //Chamado quando recebe uma notificacao com o app aberto
     let notificationReceivedCallback = function (jsonData) {
       console.log('notificationReceivedCallback: ' + JSON.stringify(jsonData));
+
     };
 
-    //Chamado quando abre um notificacao com a app em background
+    //Chamado quando recebe uma notificacao com a app em background
     let notificationOpenedCallback = function (data: any) {
-      self.redirectToPage(data);
+      self.showAlert(data);
+      // self.redirectToPage(data);
     };
-
 
     //Producao
-    window.plugins.OneSignal
-      .startInit("02655c01-f40d-4b22-ac0d-07358b012b57", "960817085241")
-      .handleNotificationOpened(notificationOpenedCallback)
-      .handleNotificationReceived(notificationReceivedCallback)
-      .inFocusDisplaying(self.oneSignal.OSInFocusDisplayOption.None)
-      .endInit();
-
-    //Desenvolvimento
     // window.plugins.OneSignal
-    //   .startInit("dde460af-2898-4f1a-88b8-ff9fd97be308", "180769307423")
+    //   .startInit("02655c01-f40d-4b22-ac0d-07358b012b57", "960817085241")
     //   .handleNotificationOpened(notificationOpenedCallback)
     //   .handleNotificationReceived(notificationReceivedCallback)
     //   .inFocusDisplaying(self.oneSignal.OSInFocusDisplayOption.None)
     //   .endInit();
 
+    //Desenvolvimento
+    window.plugins.OneSignal
+      .startInit("dde460af-2898-4f1a-88b8-ff9fd97be308", "180769307423")
+      .handleNotificationOpened(notificationOpenedCallback)
+      .handleNotificationReceived(notificationReceivedCallback)
+      .inFocusDisplaying(self.oneSignal.OSInFocusDisplayOption.None)
+      .endInit();
+  }
+
+  private showAlert(data: any) {
+    let alert = this.alertCtrl.create({
+      title: data.notification.payload.additionalData.dadosNotif.titulo,
+      message: data.notification.payload.additionalData.dadosNotif.descricao,
+      cssClass:'alertNotif', 
+      buttons: ['Fechar']
+    });
+    alert.present();
   }
 
   private redirectToPage(data: any) {
@@ -617,15 +633,16 @@ export class MyApp implements OnInit {
     var promise = new Promise(function (resolve, reject) {
 
       if (eventoToken == enums.eventoTokenPush.usuarioAlterar) {
+        
+        self.tokenSrv.getTokenDeviceRef().child(tokenVinculadoUsuario).child(usuarioVinculadoToken).set(null);
 
         self.tokenSrv.saveToken(self.tokenPushAtual, usuarioLogado.usua_sq_id);
 
-        self.usuaSrv.usersRef.child(usuarioVinculadoToken)
-          .child("tokendevice").child(tokenVinculadoUsuario).set(null);
+        // self.usuaSrv.usersRef.child(usuarioVinculadoToken)
+        //   .child("tokendevice").child(tokenVinculadoUsuario).set(null);
 
         self.usuaSrv.usersRef.child(usuarioLogado.usua_sq_id)
           .child("tokendevice").set(self.tokenPushAtual).set(true);
-
       }
       else if (eventoToken == enums.eventoTokenPush.usuarioSalvar) {
 

@@ -36,8 +36,9 @@ export class CtdBtnPromocaoComponent {
 
   public publicarPromocao() {
     let confirm = this.alertCtrl.create({
-      title: "Cupom",
-      message: "Confirma a publicação ?",
+      title: "Cupom de promoção",
+      message: "<h6>Confirma a publicação ?</h6>",
+      cssClass:"alertNotif",
       buttons: [{
         text: "Sim",
         handler: () => {
@@ -57,8 +58,9 @@ export class CtdBtnPromocaoComponent {
 
   public showExclusao() {
     let confirm = this.alertCtrl.create({
-      title: "Cupom",
-      message: "Confirma a exclusão ?",
+      title: "Exclusão de cupom",
+      message: "<h6>Confirma a exclusão ?</h6>",
+      cssClass:"alertNotif",
       buttons: [{
         text: "Sim",
         handler: () => {
