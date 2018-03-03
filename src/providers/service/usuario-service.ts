@@ -127,7 +127,7 @@ export class UsuarioService {
       query = query + "Values (?, ?, ?, ?, ?, ?, ? )";
 
       self.usuSqSrv.inserir(query, [uid, user.usua_nm_usuario, user.usua_ds_email,
-        user.usua_tx_senha, user.usua_in_ajuda, user.usua_ds_telefone, ""]).then((data) => {
+        user.usua_tx_senha, true, user.usua_ds_telefone, ""]).then((data) => {
 
           if (data.rowsAffected > 0) {
             result = data.insertId;
@@ -166,13 +166,15 @@ export class UsuarioService {
           usuario.usua_nm_usuario = result.rows.item(0).usua_nm_usuario;
           usuario.usua_ds_email = result.rows.item(0).usua_ds_email;
           usuario.usua_tx_senha = result.rows.item(0).usua_tx_senha;
-          if (result.rows.item(0).usua_in_ajuda == "true"
-            || result.rows.item(0).usua_in_ajuda == true) {
-            usuario.usua_in_ajuda = true;
-          }
-          else {
-            usuario.usua_in_ajuda = false;
-          }
+          usuario.usua_in_ajuda = true;
+
+          // if (result.rows.item(0).usua_in_ajuda == "true"
+          //   || result.rows.item(0).usua_in_ajuda == true) {
+          //   usuario.usua_in_ajuda = true;
+          // }
+          // else {
+          //   usuario.usua_in_ajuda = false;
+          // }
           usuario.usua_ds_telefone = result.rows.item(0).usua_ds_telefone;
           usuario.usua_tx_urlprofile = result.rows.item(0).usua_tx_urlprofile;
 
@@ -227,13 +229,14 @@ export class UsuarioService {
           usuario.usua_nm_usuario = result.rows.item(0).usua_nm_usuario;
           usuario.usua_ds_email = result.rows.item(0).usua_ds_email;
           usuario.usua_tx_senha = result.rows.item(0).usua_tx_senha;
-          if (result.rows.item(0).usua_in_ajuda == "true"
-            || result.rows.item(0).usua_in_ajuda == true) {
-            usuario.usua_in_ajuda = true;
-          }
-          else {
-            usuario.usua_in_ajuda = false;
-          }
+          usuario.usua_in_ajuda = true;
+          // if (result.rows.item(0).usua_in_ajuda == "true"
+          //   || result.rows.item(0).usua_in_ajuda == true) {
+          //   usuario.usua_in_ajuda = true;
+          // }
+          // else {
+          //   usuario.usua_in_ajuda = false;
+          // }
           usuario.usua_ds_telefone = result.rows.item(0).usua_ds_telefone;
           usuario.usua_tx_urlprofile = result.rows.item(0).usua_tx_urlprofile;
 
