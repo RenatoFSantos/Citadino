@@ -173,7 +173,7 @@ export class MyApp implements OnInit {
           if (userRef.val() != null) {
             var usuario: UsuarioVO = self.mapSrv.getUsuario(userRef);
             if (usuario.usua_ds_email == "") {
-              self.usuaSrv.atualizaEmail(usuario, userCurrent.email);
+              self.usuaSrv.atualizaEmail(usuario, userCurrent);
             }
 
             if (window.cordova) {
@@ -249,8 +249,6 @@ export class MyApp implements OnInit {
     else {
       // self.rootPage = AjudaPage;
       this.app.getRootNav().setRoot(AjudaPage);
-      // this.app.getRootNav().setRoot(TabsPage);
-
       // this.app.getActiveNavs()[0].setRoot(AjudaPage);
     }
   }
@@ -641,8 +639,10 @@ export class MyApp implements OnInit {
         // self.usuaSrv.usersRef.child(usuarioVinculadoToken)
         //   .child("tokendevice").child(tokenVinculadoUsuario).set(null);
 
-        self.usuaSrv.usersRef.child(usuarioLogado.usua_sq_id)
-          .child("tokendevice").set(self.tokenPushAtual).set(true);
+        if (usuarioLogado != null && usuarioLogado.usua_sq_id != "" && self.tokenPushAtual != "") {
+          self.usuaSrv.usersRef.child(usuarioLogado.usua_sq_id)
+            .child("tokendevice").set(self.tokenPushAtual).set(true);
+        }
       }
       else if (eventoToken == enums.eventoTokenPush.usuarioSalvar) {
 

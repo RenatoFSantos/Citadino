@@ -59,24 +59,24 @@ registerLocaleData(ptBr)
 import { APP_PROVIDERS } from '../providers/app.providers';
 
 //Desenvolvimento
-// export const firebaseConfig = {
-//   apiKey: "AIzaSyC0maPdTdMQ7ccxuiXHLcZ1IsgeX7qVD6I",
-//   authDomain: "citadinodsv.firebaseapp.com",
-//   databaseURL: "https://citadinodsv.firebaseio.com",
-//   projectId: "citadinodsv",
-//   storageBucket: "citadinodsv.appspot.com",
-//   messagingSenderId: "180769307423"
-// };
+export const firebaseConfig = {
+  apiKey: "AIzaSyC0maPdTdMQ7ccxuiXHLcZ1IsgeX7qVD6I",
+  authDomain: "citadinodsv.firebaseapp.com",
+  databaseURL: "https://citadinodsv.firebaseio.com",
+  projectId: "citadinodsv",
+  storageBucket: "citadinodsv.appspot.com",
+  messagingSenderId: "180769307423"
+};
 
 //Producao
-export const firebaseConfig = {
-  apiKey: "AIzaSyCuOY5Kt7_Zo08khwYFiLsIQC4kFe5LWwE",
-  authDomain: "citadinoprd-13651.firebaseapp.com",
-  databaseURL: "https://citadinoprd-13651.firebaseio.com",
-  projectId: "citadinoprd-13651",
-  storageBucket: "citadinoprd-13651.appspot.com",
-  messagingSenderId: "960817085241"
-};
+// export const firebaseConfig = {
+//   apiKey: "AIzaSyCuOY5Kt7_Zo08khwYFiLsIQC4kFe5LWwE",
+//   authDomain: "citadinoprd-13651.firebaseapp.com",
+//   databaseURL: "https://citadinoprd-13651.firebaseio.com",
+//   projectId: "citadinoprd-13651",
+//   storageBucket: "citadinoprd-13651.appspot.com",
+//   messagingSenderId: "960817085241"
+// };
 
 
 @NgModule({
