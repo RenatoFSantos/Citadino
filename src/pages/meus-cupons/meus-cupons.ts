@@ -61,6 +61,7 @@ export class MeusCuponsPage {
 
     var self = this;
     this.carregaMeuCupomEvent();
+    this.sorteioValidadoSucessoEvent();
 
     var loader = this.loadingCtrl.create({
       content: 'Aguarde...'
@@ -382,6 +383,19 @@ export class MeusCuponsPage {
     });
 
     return promise;
+  }
+
+  private sorteioValidadoSucessoEvent() {
+    var self = this;
+    self.events.subscribe("sorteiovalidadosucesso", (result) => {
+      if (result == true) {
+
+        var params: Object = {
+          self: self
+        }
+        self.carregaMeuCupom(params);
+      }
+    })
   }
 
 

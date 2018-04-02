@@ -1,6 +1,6 @@
 import { CupomUsuarioDTO } from './../../model/dominio/cupomUsuarioDTO';
 import { CupomEmpresaDTO } from './../../model/dominio/cupomEmpresaDTO';
-import { ToastController } from 'ionic-angular';
+import { ToastController, Events } from 'ionic-angular';
 import { CupomCriadoItemVO } from './../../model/cupomCriadoItemVO';
 import { UsuarioSqlService } from './../database/usuario-sql-service';
 import { DownloadImageService } from './download-image-service';
@@ -26,7 +26,7 @@ export class SorteioCriadoService {
   constructor(private fbService: FirebaseService,
     private mapSrv: MappingsService, private glbVar: GlobalVar,
     private downSrv: DownloadImageService, private meuCupomSqlSrv: UsuarioSqlService,
-    private toastCtrl: ToastController) {
+    private toastCtrl: ToastController, private event: Events) {
     this.sorteioCriadoRef = this.fbService.getDataBase().ref('sorteiocriado');
     this.sorteioAtivoRef = this.fbService.getDataBase().ref('sorteioativo');
     this.sorteioUsuarioRef = this.fbService.getDataBase().ref('sorteiousuario');
@@ -168,6 +168,7 @@ export class SorteioCriadoService {
     self.atualizarCupomSorteio(sorteio)
       .then(self.sorteioSalvarUsuario)
       .then(() => {
+        self.event.publish("sorteiovalidadosucesso", true);        
         self.createAlert("Parabéns! Você está participando do sorteio do mês.");
       })
       .catch((error) => {
