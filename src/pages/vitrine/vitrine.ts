@@ -1,3 +1,8 @@
+import { CupomCriadoItemVO } from './../../model/cupomCriadoItemVO';
+import { UsuarioSqlService } from './../../providers/database/usuario-sql-service';
+import { DownloadImageService } from './../../providers/service/download-image-service';
+import { CupomCriadoVO } from './../../model/cupomCriadoVO';
+import { SorteioCriadoService } from './../../providers/service/sorteio-criado-service';
 import { CupomCriadoService } from './../../providers/service/cupom-criado-service';
 import { AnuncioPromocaoDetalhePage } from './../anuncio-promocao-detalhe/anuncio-promocao-detalhe';
 import { MunicipioVO } from './../../model/municipioVO';
@@ -27,6 +32,7 @@ import { Component, OnInit } from '@angular/core';
 import { NavController, NavParams, AlertController, Events, LoadingController, ToastController, ModalController } from 'ionic-angular';
 import { VitrineCurtirService } from '../../providers/service/vitrine-curtir-service';
 import { Promise } from 'firebase/app';
+import { CupomEmpresaDTO } from '../../model/dominio/cupomEmpresaDTO';
 
 @Component({
   selector: 'page-vitrine',
@@ -55,7 +61,7 @@ export class VitrinePage implements OnInit {
     public navCtrl: NavController,
     public navParams: NavParams,
     public events: Events,
-    public globalVar: GlobalVar,
+    public glbVar: GlobalVar,
     public loadingCtrl: LoadingController,
     private alertCtrl: AlertController,
     private vitrineSrv: VitrineService,
@@ -71,9 +77,10 @@ export class VitrinePage implements OnInit {
     private vtrCut: VitrineCurtirService,
     private muniSrv: MunicipioService,
     public mdlCtrl: ModalController,
-    private compCriadoSrv: CupomCriadoService) {
+    private cupomCriadoSrv: CupomCriadoService,
+    private sorteioSrv: SorteioCriadoService) {
 
-    this.municipioAnterior = this.globalVar.getMunicipioPadrao().muni_sq_id;
+    this.municipioAnterior = this.glbVar.getMunicipioPadrao().muni_sq_id;
     this.loadVitrines();
   }
 
@@ -85,7 +92,7 @@ export class VitrinePage implements OnInit {
     self.rowCurrent = 0;
     self.vitrines = [];
 
-    if (this.globalVar.getIsFirebaseConnected()) {
+    if (this.glbVar.getIsFirebaseConnected()) {
 
       this.loadCtrl = this.loadingCtrl.create({
         spinner: 'circles'
@@ -98,7 +105,8 @@ export class VitrinePage implements OnInit {
 
           self.connectRealTime();
 
-          self.vitrineSrv.getVitrineRefTotal(self.globalVar.getMunicipioPadrao().muni_sq_id).then((snapShot) => {
+          self.vitrineSrv.getVitrineRefTotal(self.glbVar.getMunicipioPadrao().muni_sq_id).then((snapShot) => {
+
             if (snapShot.val() != null) {
               self.rowCount = snapShot.numChildren();
               this.getVitrines().then(() => {
@@ -135,9 +143,9 @@ export class VitrinePage implements OnInit {
   }
 
   ionViewDidEnter() {
-    if (this.municipioAnterior != this.globalVar.getMunicipioPadrao().muni_sq_id) {
+    if (this.municipioAnterior != this.glbVar.getMunicipioPadrao().muni_sq_id) {
       this.atualizaDadosVitrine();
-      this.municipioAnterior = this.globalVar.getMunicipioPadrao().muni_sq_id;
+      this.municipioAnterior = this.glbVar.getMunicipioPadrao().muni_sq_id;
     }
   }
 
@@ -167,9 +175,9 @@ export class VitrinePage implements OnInit {
 
     return new Promise((resolve) => {
       let anuncios: any = [];
-      var usuario: UsuarioVO = self.globalVar.usuarioLogado;
+      var usuario: UsuarioVO = self.glbVar.usuarioLogado;
 
-      self.vitrineSrv.getVitrineMunicipio(self.globalVar.getMunicipioPadrao().muni_sq_id, self.limitPage, self.startPk)
+      self.vitrineSrv.getVitrineMunicipio(self.glbVar.getMunicipioPadrao().muni_sq_id, self.limitPage, self.startPk)
         .then((snapshot: any) => {
 
           anuncios = self.itemsService.getPropertyValues(snapshot.val(), "vitr_sq_ordem");
@@ -309,34 +317,20 @@ export class VitrinePage implements OnInit {
 
     loader.present();
 
-    self.compCriadoSrv.pesquisarCupomPorId(vitrine.usua_sq_id, vitrine.cupo_sq_id)
+    this.cupomCriadoSrv.pesquisarCupomPorId(vitrine.usua_sq_id, vitrine.cupo_sq_id)
       .then((cupomSnap) => {
         var cupom = self.mapSrv.getCupomCriado(cupomSnap.val());
         let promocaoModal = this.mdlCtrl.create(AnuncioPromocaoDetalhePage,
           { cupom: cupom, isBtnPegarCupom: true, isBtnUsarCupom: false, isControleManual: false });
         loader.dismiss();
         promocaoModal.present();
+      }).catch((error) => {
+        console.log(error);
+
       });
   }
 
-  // showPromocao() {
-  //   let confirm = this.alertCtrl.create({
-  //     title: 'Parabéns!',
-  //     message: 'Você ganhou este cupom de desconto!<br>Guarde este número para resgatar esta promoção!<br>CTDN943587220012',
-  //     buttons: [
-  //       {
-  //         text: 'Obrigado!',
-  //         handler: () => {
-  //           console.log('Agree clicked');
-  //         }
-  //       }
-  //     ]
-  //   });
-  //   confirm.present();
-  // }
-
-
-  createAlert(errorMessage: string) {
+  private createAlert(errorMessage: string) {
     if (this.toastAlert != null) {
       this.toastAlert.dismiss();
     }
@@ -358,15 +352,16 @@ export class VitrinePage implements OnInit {
     var promise = new Promise(function (resolve, reject) {
       var uidUsuario: string = self.usuaSrv.getLoggedInUser().uid;
 
-      self.minhaVitrineSrv.pesquisaPorUidVitrine(uidUsuario, uidVitrine).then((vitrineSalva) => {
-        if (vitrineSalva.val() != null) {
-          isSalvo = 1;
-        }
-        resolve(isSalvo);
+      self.minhaVitrineSrv.pesquisaPorUidVitrine(uidUsuario, uidVitrine)
+        .then((vitrineSalva) => {
+          if (vitrineSalva.val() != null) {
+            isSalvo = 1;
+          }
+          resolve(isSalvo);
 
-      }).catch((error) => {
-        reject(error);
-      });
+        }).catch((error) => {
+          reject(error);
+        });
     });
 
     return promise;
@@ -530,7 +525,7 @@ export class VitrinePage implements OnInit {
         setTimeout(() => {
           if (self.vitrines == null || (self.vitrines != null && self.vitrines.length == 0)) {
             this.loadVitrines();
-          }          
+          }
         }, 2500);
       }
     });
@@ -547,47 +542,109 @@ export class VitrinePage implements OnInit {
   public chutarCurtirEvent() {
     var self = this;
     this.events.subscribe('chutarCurtir:true', (vitrine: VitrineVO) => {
-      self.vitrineSrv.curtirVitrien(vitrine);
+      var nrVisitaRef = self.vitrineSrv.curtirVitrine(vitrine);
+      self.curtirTransaction(nrVisitaRef, vitrine);
     });
   }
 
   public curtirVitrineEvent() {
     let self = this;
-    let usuario: UsuarioVO = this.globalVar.usuarioLogado;
+    let usuario: UsuarioVO = this.glbVar.usuarioLogado;
 
     this.events.subscribe('curtirVitrine:true', (vitrine: VitrineVO) => {
-      self.vtrCut.getVitrineCurtirByKey(vitrine.vitr_sq_id, usuario.usua_sq_id).then((result) => {
-        if (result.val() == null) {
-          self.vtrCut.salvar(vitrine.vitr_sq_id, usuario.usua_sq_id, true).then(() => {
-            self.vitrineSrv.curtirVitrien(vitrine);
+      try {
+        self.vtrCut.getVitrineCurtirByKey(vitrine.vitr_sq_id, usuario.usua_sq_id)
+          .then((result) => {
+            if (result.val() == null) {
+              self.vtrCut.salvar(vitrine.vitr_sq_id, usuario.usua_sq_id, true).then(() => {
+                var nrVisitaRef = self.vitrineSrv.curtirVitrine(vitrine);
+                self.curtirTransaction(nrVisitaRef, vitrine);
+              });
+            }
           });
-        }
-      });
+      } catch (error) {
+        self.createAlert(error);
+      }
     });
   }
 
+  private curtirTransaction(nrVisita: any, vitrine: VitrineVO) {
+    let self = this;
+
+    nrVisita.transaction(function (currentRank) {
+      return currentRank + 1;
+    }, function (error, committed, snapshot) {
+      if (error) {
+        throw new Error(error);
+      } else if (!committed) {
+        throw new Error("Não foi possível curtir o anúncio");
+      } else {
+        self.sorteioCurtir(vitrine);
+      }
+    });
+  }
+
+  private sorteioCurtir(vitrine: VitrineVO) {
+    let self = this;
+    var sorteioItens: Array<CupomCriadoItemVO> = new Array<CupomCriadoItemVO>();
+
+    self.sorteioSrv.getStatusConexao()
+      .then((statusConnect: boolean) => {
+
+        if (statusConnect == true) {
+          self.sorteioSrv.getSorteioAtivo()
+            .then((snap) => {
+              if (snap != null && snap.val() != null) {
+
+                var sorteioObject: any = snap.val()[Object.keys(snap.val())[0]];
+                var sorteio: CupomCriadoVO = self.mapSrv.getCupomCriado(sorteioObject);
+                sorteio.cupo_in_status = true;
+
+                var sorteioItem: CupomCriadoItemVO = new CupomCriadoItemVO();
+                sorteioItem.cupo_sq_id = sorteio.cupo_sq_id;
+                sorteioItem.cupo_in_status = true;
+                sorteioItens.push(sorteioItem);
+
+                sorteio.cupomItens = sorteioItens;
+
+                var empresa: CupomEmpresaDTO = new CupomEmpresaDTO();
+                empresa.empr_sq_id = vitrine.empr_sq_id;
+                empresa.empr_nm_fantasia = vitrine.empr_nm_fantasia;
+                empresa.empr_nr_documento = vitrine.empr_nr_documento;
+
+                sorteioItem.empresa = empresa;
+
+                self.sorteioSrv.gerarNumeroSorteio(sorteio, 1);
+              }
+            })
+            .catch((error) => {
+              throw new Error(error);
+            });
+        } else {
+          console.log("Não foi possível conectar a internet.");
+        }
+      })
+      .catch((error) => {
+        throw new Error(error);
+      });
+  }
 
   private statusVitrineMarcada = function (self: any, vitrine: VitrineVO, usuario: UsuarioVO) {
-
     var promise = new Promise(function (resolve, reject) {
-
       self.meusMarcadosSrv.pesquisaPorUidVitrine(usuario.usua_sq_id, vitrine.vitr_sq_id)
         .then((vitrineSalva) => {
-
           if (vitrineSalva.val() != null) {
             vitrine.anun_nr_salvos = 1;
           }
           else {
             vitrine.anun_nr_salvos = 0;
           }
-
           resolve({ self, vitrine, usuario });
         })
         .catch((error) => {
           reject(error);
         });
     });
-
     return promise
   }
 
@@ -612,17 +669,17 @@ export class VitrinePage implements OnInit {
         }).catch((error) => {
           return false;
         })
-
     });
 
     return promise;
   }
 
+
   public onChangeMunicipioEvent() {
     let self = this;
 
     this.events.subscribe("vitrine:onChangeMunicipio", () => {
-      self.municipioAnterior = this.globalVar.getMunicipioPadrao().muni_sq_id;
+      self.municipioAnterior = this.glbVar.getMunicipioPadrao().muni_sq_id;
       self.atualizaDadosVitrine();
     });
   }
@@ -630,22 +687,22 @@ export class VitrinePage implements OnInit {
   private disconectRealTime() {
 
     let self = this;
-    this.vitrineSrv.getVitrineRef().child(self.globalVar.getMunicipioPadrao().muni_sq_id).off('child_added');
+    this.vitrineSrv.getVitrineRef().child(self.glbVar.getMunicipioPadrao().muni_sq_id).off('child_added');
 
-    this.vitrineSrv.getVitrineRef().child(self.globalVar.getMunicipioPadrao().muni_sq_id).off('child_removed');
+    this.vitrineSrv.getVitrineRef().child(self.glbVar.getMunicipioPadrao().muni_sq_id).off('child_removed');
 
-    this.vitrineSrv.getVitrineRef().child(self.globalVar.getMunicipioPadrao().muni_sq_id).off('child_changed');
+    this.vitrineSrv.getVitrineRef().child(self.glbVar.getMunicipioPadrao().muni_sq_id).off('child_changed');
   }
 
   private connectRealTime() {
 
     let self = this;
 
-    this.vitrineSrv.getVitrineRef().child(self.globalVar.getMunicipioPadrao().muni_sq_id).on('child_added', this.onVitrineAdded);
+    this.vitrineSrv.getVitrineRef().child(self.glbVar.getMunicipioPadrao().muni_sq_id).on('child_added', this.onVitrineAdded);
 
-    this.vitrineSrv.getVitrineRef().child(self.globalVar.getMunicipioPadrao().muni_sq_id).on('child_removed', this.onVitrineRemove);
+    this.vitrineSrv.getVitrineRef().child(self.glbVar.getMunicipioPadrao().muni_sq_id).on('child_removed', this.onVitrineRemove);
 
-    this.vitrineSrv.getVitrineRef().child(self.globalVar.getMunicipioPadrao().muni_sq_id).on('child_changed', this.onVitrineChange);
+    this.vitrineSrv.getVitrineRef().child(self.glbVar.getMunicipioPadrao().muni_sq_id).on('child_changed', this.onVitrineChange);
   }
 
   public onVitrineAdded = (childSnapshot, prevChildKey) => {

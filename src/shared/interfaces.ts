@@ -5,6 +5,7 @@ export interface IMenu {
     tabComponent?: any;
     typeMenu?: number;
     index?: number;
+    params?:{}
 }
 
 export interface UserCredentials {

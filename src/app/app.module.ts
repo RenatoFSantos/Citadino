@@ -1,3 +1,6 @@
+import { NotificacaoPage } from './../pages/notificacao/notificacao';
+import { AnuncioSorteioCrudPage } from './../pages/anuncio-sorteio-crud/anuncio-sorteio-crud';
+import { AnuncioSorteioPage } from './../pages/anuncio-sorteio/anuncio-sorteio';
 import { SmartSiteCrudPage } from './../pages/smart-site-crud/smart-site-crud';
 import { AnuncioPromocaoDetalhePage } from './../pages/anuncio-promocao-detalhe/anuncio-promocao-detalhe';
 import { CtdListaMunicipio } from './../shared/components/ctd-lista-municipio/ctd-lista-municipio';
@@ -52,6 +55,7 @@ import { registerLocaleData } from '@angular/common';
 import ptBr from '@angular/common/locales/pt';
 import { BrMaskerModule } from 'brmasker-ionic-3';
 import { CtdHeaderMunicipio } from '../shared/components/ctd-header-municipio/ctd-header-municipio';
+
 
 registerLocaleData(ptBr)
 
@@ -123,7 +127,10 @@ export const firebaseConfig = {
     CtdHeaderMunicipio,
     CtdListaMunicipio,
     AnuncioPromocaoDetalhePage,
-    SmartSiteCrudPage
+    SmartSiteCrudPage,
+    AnuncioSorteioPage,
+    AnuncioSorteioCrudPage,
+    NotificacaoPage
   ],
   imports: [
     BrowserModule,
@@ -179,7 +186,10 @@ export const firebaseConfig = {
     CtdHeaderMunicipio,
     CtdListaMunicipio,
     AnuncioPromocaoDetalhePage,
-    SmartSiteCrudPage
+    SmartSiteCrudPage,
+    AnuncioSorteioPage,
+    AnuncioSorteioCrudPage,
+    NotificacaoPage
   ],
   providers: [APP_PROVIDERS,
     {provide: LOCALE_ID, useValue: 'pt-PT'}]

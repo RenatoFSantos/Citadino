@@ -362,15 +362,15 @@ export class MyApp implements OnInit {
     switch (page.typeMenu) {
       case enums.ETypeMenu.default:
 
-        if (page.index) {
-          params = { tabIndex: page.index };
+        if (page.params != null) {
+           params = page.params;
         }
 
         if (this.nav.getActiveChildNavs()[0] && page.index != undefined) {
           this.nav.getActiveChildNavs()[0].select(page.index);
         } else {
           this.nav.push(page.component, params).catch((err: any) => {
-            console.log(`Didn't set nav root: ${err}`);
+            console.log(`Não pode enviar para a página selecionada: ${err}`);
           });
         }
         break;
@@ -422,14 +422,16 @@ export class MyApp implements OnInit {
 
     this.pages.push({ title: 'Minha Conta', component: ProfilePage, icon: 'contact', typeMenu: enums.ETypeMenu.default });
 
-    this.pages.push({ title: 'Smart Site', component: SmartSiteCrudPage, icon: 'ios-home', typeMenu: enums.ETypeMenu.default });
+    // this.pages.push({ title: 'Smart Site', component: SmartSiteCrudPage, icon: 'ios-home', typeMenu: enums.ETypeMenu.default });
 
 
     if (usuario.usua_sg_perfil == "ADM" || this.glbVar.isBtnAdicionarVitrine() == true) {
       this.pages.push({ title: 'Meus Anúncios', component: MeusAnunciosPage, icon: 'md-create', typeMenu: enums.ETypeMenu.default });
     }
 
-    this.pages.push({ title: 'Meus Cupons', component: MeusCuponsPage, icon: 'ios-cash-outline', typeMenu: enums.ETypeMenu.default });
+    this.pages.push({ title: 'Cupons de Descontos', component: MeusCuponsPage, icon: 'ios-cash-outline', typeMenu: enums.ETypeMenu.default, params:{tipoCupom:1} });
+
+    this.pages.push({ title: 'Cupons de Sorteio', component: MeusCuponsPage, icon: 'md-happy', typeMenu: enums.ETypeMenu.default, params:{tipoCupom:2} });
 
     this.pages.push({ title: 'Meus Marcados', component: MeusMarcadosPage, icon: 'md-bookmark', typeMenu: enums.ETypeMenu.default });
 

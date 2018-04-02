@@ -1,3 +1,4 @@
+import { SorteioCriadoService } from './service/sorteio-criado-service';
 import { FileTransfer } from '@ionic-native/file-transfer';
 import { DownloadImageService } from './service/download-image-service';
 import { MunicipioService } from './service/municipio-service';
@@ -5,7 +6,6 @@ import { CupomCriadoService } from './service/cupom-criado-service';
 import { CurrencyMask } from './../shared/currency-mask';
 import { VitrineCurtirService } from './service/vitrine-curtir-service';
 import { CupomService } from './service/cupom-service';
-import { UsuarioCupomService } from './service/usuario-cupom-service';
 import { BarcodeScanner } from '@ionic-native/barcode-scanner';
 import { UsuarioSqlService } from './database/usuario-sql-service';
 import { MinhasPublicacoesService } from './service/minhas-publicacoes';
@@ -37,7 +37,6 @@ import { SqlLiteService } from './database/sqlLite-service';
 import { PromocaoService } from './service/promocao-service';
 import { File } from '@ionic-native/file';
 
-
 export const APP_PROVIDERS = [
     SplashScreen,
     StatusBar,    
@@ -68,7 +67,6 @@ export const APP_PROVIDERS = [
     UsuarioSqlService,
     BarcodeScanner,
     CupomService,
-    UsuarioCupomService,
     PromocaoService,
     VitrineCurtirService,
     CurrencyMask,
@@ -76,5 +74,6 @@ export const APP_PROVIDERS = [
     MunicipioService,
     DownloadImageService,
     FileTransfer,
-    File
+    File,
+    SorteioCriadoService
 ];

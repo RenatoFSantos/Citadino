@@ -1,7 +1,7 @@
 import { CupomUsuarioDTO } from './../../model/dominio/cupomUsuarioDTO';
-import { CupomEmpresaDTO } from './../../model/dominio/cupomEmpresaDTO';
-import { CupomCriadoService } from './../../providers/service/cupom-criado-service';
+import { SorteioCriadoService } from './../../providers/service/sorteio-criado-service';
 import { CupomCriadoVO } from './../../model/cupomCriadoVO';
+import { CupomEmpresaDTO } from './../../model/dominio/cupomEmpresaDTO';
 import { UsuarioVO } from './../../model/usuarioVO';
 import { CtdFuncoes } from './../../shared/ctdFuncoes';
 import { MappingsService } from './../../providers/service/_mappings-service';
@@ -22,16 +22,15 @@ import { AlertController } from 'ionic-angular/components/alert/alert-controller
 import * as enums from './../../model/dominio/ctdEnum';
 import { GlobalVar } from '../../shared/global-var';
 
-
 @Component({
-  selector: 'page-anuncio-promocao-crud',
-  templateUrl: 'anuncio-promocao-crud.html',
+  selector: 'page-anuncio-sorteio-crud',
+  templateUrl: 'anuncio-sorteio-crud.html',
 })
-export class AnuncioPromocaoCrudPage {
+export class AnuncioSorteioCrudPage {
 
-  public frmPromocaoCrud: FormGroup;
-  public cupom: CupomCriadoVO = new CupomCriadoVO();
-  public titulo: string = "Criar Promoção";
+  public frmSorteioCrud: FormGroup;
+  public sorteio: CupomCriadoVO = new CupomCriadoVO();
+  public titulo: string = "Criar Sorteio";
   public imagens: any[] = [];
   public dateMin: any = "";
   public dateMax: any = "";
@@ -56,7 +55,7 @@ export class AnuncioPromocaoCrudPage {
     private mapSrv: MappingsService,
     private loadingCtrl: LoadingController,
     private glbVar: GlobalVar,
-    private cupoCriaSrv: CupomCriadoService) {
+    private cupoCriaSrv: SorteioCriadoService) {
 
     var data: Date = new Date();
     this.dateMin = data.getFullYear();
@@ -64,7 +63,6 @@ export class AnuncioPromocaoCrudPage {
     this.dtAtual = CtdFuncoes.convertDateToStr(data, enums.DateFormat.enUS);
 
     this.usuario = glbVar.usuarioLogado;
-   
     this.excluirImagemEvent();
     this.criarFormulario();
   }
@@ -83,14 +81,12 @@ export class AnuncioPromocaoCrudPage {
     this.imagemPadrao.index = 99;
     this.imagemPadrao.path = "assets/img/camera.png";
 
-    this.frmPromocaoCrud = new FormGroup({
+    this.frmSorteioCrud = new FormGroup({
       cupo_tx_titulo: new FormControl('', [Validators.required]),
       cupo_tx_descricao: new FormControl('', [Validators.required]),
       cupo_tx_regulamento: new FormControl('', [Validators.required]),
       cupo_dt_validade: new FormControl('', [Validators.required]),
       cupo_nr_qtdecupom: new FormControl('', [Validators.required]),
-      cupo_nr_desconto: new FormControl('', [Validators.required]),
-      cupo_nr_vlatual: new FormControl('', [Validators.required]),
       cupo_in_status: new FormControl()
     });
 
@@ -105,32 +101,32 @@ export class AnuncioPromocaoCrudPage {
 
     let self = this;
 
-    if (self.frmPromocaoCrud.valid) {
+    if (self.frmSorteioCrud.valid) {
 
-      var cupomId = self.cupoCriaSrv.getNewUidCpom(this.usuario.usua_sq_id);
+      var cupomId = self.cupoCriaSrv.getNewUidCpom();
 
       var usuarioParam: CupomUsuarioDTO = new CupomUsuarioDTO();
       usuarioParam.usua_sq_id = this.usuario.usua_sq_id;
       usuarioParam.usua_nm_usuario = this.usuario.usua_nm_usuario;
 
-      self.cupom.tipo_tx_anuncio = 'TPA-DESCONTO';
-      self.cupom.tipoCupom = 1;
-      self.cupom.usuario = usuarioParam;
-      self.cupom.cupo_sq_id = cupomId;
-      self.cupom.cupo_tx_titulo = self.frmPromocaoCrud.controls.cupo_tx_titulo.value;
-      self.cupom.cupo_tx_descricao = self.frmPromocaoCrud.controls.cupo_tx_descricao.value;
-      self.cupom.cupo_tx_regulamento = self.frmPromocaoCrud.controls.cupo_tx_regulamento.value;
-      self.cupom.cupo_dt_validade = self.frmPromocaoCrud.controls.cupo_dt_validade.value;
-      self.cupom.cupo_nr_qtdecupom = self.frmPromocaoCrud.controls.cupo_nr_qtdecupom.value;
-      self.cupom.cupo_nr_qtdedisponivel = self.cupom.cupo_nr_qtdecupom;
-      self.cupom.cupo_nr_vlatual = self.frmPromocaoCrud.controls.cupo_nr_vlatual.value;
-      self.cupom.cupo_nr_desconto = self.frmPromocaoCrud.controls.cupo_nr_desconto.value;
+      self.sorteio.tipo_tx_anuncio = 'TPA-SORTEIO';
+      self.sorteio.tipoCupom = 2;
+      self.sorteio.usuario = usuarioParam;
+      self.sorteio.cupo_sq_id = cupomId;
+      self.sorteio.cupo_tx_titulo = self.frmSorteioCrud.controls.cupo_tx_titulo.value;
+      self.sorteio.cupo_tx_descricao = self.frmSorteioCrud.controls.cupo_tx_descricao.value;
+      self.sorteio.cupo_tx_regulamento = self.frmSorteioCrud.controls.cupo_tx_regulamento.value;
+      self.sorteio.cupo_dt_validade = self.frmSorteioCrud.controls.cupo_dt_validade.value;
+      self.sorteio.cupo_nr_qtdecupom = self.frmSorteioCrud.controls.cupo_nr_qtdecupom.value;
+      self.sorteio.cupo_nr_qtdedisponivel = 0;
+      self.sorteio.cupo_nr_vlatual = 0;
+      self.sorteio.cupo_nr_desconto = 0;
 
-      self.cupom.cupo_in_status = true;
-      self.cupom.cupo_dt_cadastro = self.dtAtual;
-      self.cupom.cupo_sq_ordem = String(new Date().getTime());
-      self.cupom.cupo_nr_vlcomdesconto = self.getVlDesconto(self.cupom);
-      self.cupom.cupo_dt_publicado = null;
+      self.sorteio.cupo_in_status = true;
+      self.sorteio.cupo_dt_cadastro = self.dtAtual;
+      self.sorteio.cupo_sq_ordem = String(new Date().getTime());
+      self.sorteio.cupo_nr_vlcomdesconto = 0
+      self.sorteio.cupo_dt_publicado = null;
 
       var loader = self.loadingCtrl.create({
         content: 'Aguarde...',
@@ -139,7 +135,7 @@ export class AnuncioPromocaoCrudPage {
 
       loader.present();
 
-      self.carregaListaImagens(self, "images/promocoes/")
+      self.carregaListaImagens(self, "images/sorteios/")
         .then(self.salvarImages)
         .then(() => {
           self.salvarCupom(self).then(() => {
@@ -165,7 +161,7 @@ export class AnuncioPromocaoCrudPage {
   private carregaListaImagens = function (self: any, pathImagem: string) {
     let promises: any = [];
 
-    var cupomId: string = self.cupom.cupo_sq_id;
+    var cupomId: string = self.sorteio.cupo_sq_id;
 
     self.itemsService.removeItems(this.imagens, this.imagemPadrao);
 
@@ -201,16 +197,16 @@ export class AnuncioPromocaoCrudPage {
   }
 
   private salvarCupom = function (self: any) {
-    let cupomId = self.cupom.cupo_sq_id;
+    let cupomId = self.sorteio.cupo_sq_id;
     let imgs: any[] = self.pathImagens;
 
     var promise = new Promise(function (resolve, reject) {
 
       if (imgs.length == 1) {
-        self.cupom.cupo_tx_urlimagem = imgs[0];
+        self.sorteio.cupo_tx_urlimagem = imgs[0];
       }
 
-      self.cupoCriaSrv.salvar(self.usuaKey, cupomId, self.cupom).then(() => {
+      self.cupoCriaSrv.salvar(cupomId, self.sorteio).then(() => {
         resolve(self);
       })
         .catch((error) => {
@@ -224,11 +220,11 @@ export class AnuncioPromocaoCrudPage {
 
   currencyChange() {
     let self = this;
-    self.cupom.cupo_nr_vlatual = self.currencyMask.detectAmount(self.cupom.cupo_nr_vlatual);
+    self.sorteio.cupo_nr_vlatual = self.currencyMask.detectAmount(self.sorteio.cupo_nr_vlatual);
   }
 
   clearDate() {
-    this.cupom.cupo_dt_validade = null;
+    this.sorteio.cupo_dt_validade = null;
   }
 
   private selecionarTipoImagem(imagem: ViewImageDTO, imagens: ViewImageDTO[]) {
@@ -412,7 +408,7 @@ export class AnuncioPromocaoCrudPage {
           cupomEmpresa.empr_nr_documento = empresa.empr_nr_documento
           cupomEmpresa.municipio = empresa.municipio;
 
-          self.cupom.empresa = cupomEmpresa;
+          self.sorteio.empresa = cupomEmpresa;
 
         }).catch((error) => {
           console.log(error);
@@ -421,23 +417,16 @@ export class AnuncioPromocaoCrudPage {
     });
   }
 
-  private getVlDesconto(cupom: CupomCriadoVO): number {
-    var valorDesconto: number = 0.00;
 
-    if (cupom.cupo_nr_desconto > 0 && cupom.cupo_nr_vlatual > 0) {
-      valorDesconto = (cupom.cupo_nr_vlatual - (cupom.cupo_nr_vlatual * (cupom.cupo_nr_desconto / 100)));
-    }
-    return valorDesconto;
-  }
+  // onSelectChange(selectedValue: any) {
+  //   if (selectedValue == 1) {
+  //     this.frmSorteioCrud.addControl('cupo_nr_desconto', new FormControl("", Validators.required));
+  //     this.frmSorteioCrud.addControl('cupo_nr_vlatual', new FormControl("", Validators.required));
+  //   }
+  //   else {
+  //     this.frmSorteioCrud.removeControl('cupo_nr_desconto');
+  //     this.frmSorteioCrud.removeControl('cupo_nr_vlatual');
+  //   }
+  // }
 
-  onSelectChange(selectedValue: any) {
-    if (selectedValue == 1) {
-      this.frmPromocaoCrud.addControl('cupo_nr_desconto', new FormControl("", Validators.required));
-      this.frmPromocaoCrud.addControl('cupo_nr_vlatual', new FormControl("", Validators.required));
-    }
-    else {
-      this.frmPromocaoCrud.removeControl('cupo_nr_desconto');
-      this.frmPromocaoCrud.removeControl('cupo_nr_vlatual');
-    }
-  }
 }

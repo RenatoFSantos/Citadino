@@ -6,7 +6,7 @@
     <ion-card-header>
       <img src="{{cupom.cupo_tx_urlimagem}}" class="ctd-noticia" (click)="openPromocao(cupom)">
     </ion-card-header>
-    <ion-card-content (click)="openPromocao(cupom)">
+    <ion-card-content>
       <ion-card-title>
         {{cupom.cupo_tx_titulo}}
       </ion-card-title>
@@ -15,30 +15,13 @@
       </p>
       <ion-grid>
         <ion-row>
-          <ion-col col-5 class="ctd-perc-desc" text-left>
-            {{cupom.cupo_nr_desconto}}% Desc.
-          </ion-col>
-          <ion-col col-4 text-left>
-            {{cupom.cupo_nr_vlcomdesconto | currency:'BRL':true:'1.2-2'}}
-          </ion-col>
-          <ion-col col-3 text-left>
-            <div style="text-decoration: line-through">{{cupom.cupo_nr_vlatual | currency:'BRL':true:'1.2-2'}}</div>
-          </ion-col>
-        </ion-row>
-        <ion-row>
-          <ion-col col-5 class="ctd-label">
+          <ion-col class="ctd-label">
             <ion-label>Nr. Cupons</ion-label>
-          </ion-col>
-          <ion-col col-7 class="ctd-label">
-            <ion-label>Nr. Disponível</ion-label>
           </ion-col>
         </ion-row>
         <ion-row class="ctd-row-conteudo">
-          <ion-col col-5>
+          <ion-col>
             <ion-label>{{cupom.cupo_nr_qtdecupom}}</ion-label>
-          </ion-col>
-          <ion-col col-7>
-            <ion-label>{{cupom.cupo_nr_qtdedisponivel}}</ion-label>
           </ion-col>
         </ion-row>
         <ion-row>
@@ -69,7 +52,7 @@
     <ctd-btn-promocao [isBtnPublicar]=true [isBtnExcluir]="isExcluirCupom(cupom)" [cupom]=(cupom)></ctd-btn-promocao>
   </ion-card>
   <ion-fab right bottom>
-    <button ion-fab (click)="adicionarPromocao()">
+    <button ion-fab (click)="adicionarSorteio()">
       <ion-icon name="add"></ion-icon>
     </button>
   </ion-fab>

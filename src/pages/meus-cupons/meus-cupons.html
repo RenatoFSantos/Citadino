@@ -1,74 +1,77 @@
 <ion-header>
-    <ion-navbar color="ctd-navbar">
-      <ion-title>Meus Cupons</ion-title>
-    </ion-navbar>
-  </ion-header>
-  <ion-content>
-    <ion-card class="ctd-card" *ngFor="let item of meusCupons">
-      <div (click)="openPromocao(item)" *ngIf="item.tipoCupom == 1">
-        <ion-card-header>
-          <img src="{{item.cupo_tx_urlimagem}}" class="ctd-head-promocao">       
-        </ion-card-header>
-        <ion-card-content>
-          <ion-card-title class="card-title-promocao">
-            {{item.cupo_tx_titulo}}
-          </ion-card-title>
-          <p class="card-subtitle-promocao">
-            {{item.empresa.empr_nm_fantasia}}
-          </p>
-          <ion-grid>
-            <ion-row>
-              <ion-col col-4 class="ctd-perc-desc" text-left>
-                {{item.cupo_nr_desconto}}% Desc.
+  <ion-navbar color="ctd-navbar">
+    <ion-title>Meus Cupons</ion-title>
+  </ion-navbar>
+</ion-header>
+<ion-content>
+  <ion-card class="ctd-card" *ngFor="let item of meusCupons">
+    <div (click)="openPromocao(item)" *ngIf="item.tipoCupom == 1">
+      <ion-card-header>
+        <img src="{{item.cupo_tx_urlimagem}}" class="ctd-head-promocao">
+      </ion-card-header>
+      <ion-card-content>
+        <ion-card-title class="card-title-promocao">
+          {{item.cupo_tx_titulo}}
+        </ion-card-title>
+        <p class="card-subtitle-promocao">
+          {{item.empresa.empr_nm_fantasia}}
+        </p>
+        <ion-grid>
+          <ion-row>
+            <ion-col col-4 class="ctd-perc-desc" text-left>
+              {{item.cupo_nr_desconto}}% Desc.
+            </ion-col>
+            <ion-col col-4 text-right>
+              {{item.cupo_nr_vlcomdesconto | currency:'BRL':true:'1.2-2'}}
+            </ion-col>
+            <ion-col col-4 text-right>
+              <div style="text-decoration: line-through">{{item.cupo_nr_vlatual | currency:'BRL':true:'1.2-2'}}</div>
+            </ion-col>
+          </ion-row>
+          <ion-row>
+            <ion-col col-12 text-center class="ctd-dt-validade">
+              Válido até {{item.cupo_dt_validade | date: 'shortDate'}}
+            </ion-col>
+          </ion-row>
+        </ion-grid>
+      </ion-card-content>
+    </div>
+    <div *ngIf="item.tipoCupom == 2">
+      <ion-card-header>
+        <img src="{{item.cupo_tx_urlimagem}}" class="ctd-head-promocao">
+      </ion-card-header>
+      <ion-row>
+        <ion-col col-12 text-center class="ctd-dt-validade">
+          Válido até {{item.cupo_dt_validade | date: 'shortDate'}}
+        </ion-col>
+      </ion-row>
+      <ion-card-content class="ctd-card-sorteio">
+        <ion-grid>
+          <ion-row class="ctd-row_head-sorteio">
+            <ion-col col-8 text-left>
+              <ion-label class="ctd-lable-sorteio">Empresa</ion-label>
+            </ion-col>
+            <ion-col col-4 text-rigth>
+              <ion-label class="ctd-lable-sorteio">Número</ion-label>
+            </ion-col>
+          </ion-row>
+          <ion-item *ngFor="let itemCupom of item.cupomItens" class="ctd-item-sorteio ctd-item-sorteio-block ctd-item-sorteio-inner">
+            <ion-row class="ctd-row_content-sorteio">
+              <ion-col col-8 text-left>
+                <div>{{itemCupom.empresa.empr_nm_fantasia}}</div>
               </ion-col>
-              <ion-col col-4 text-right>
-                {{item.cupo_nr_vlcomdesconto | currency:'BRL':true:'1.2-2'}}
-              </ion-col>
-              <ion-col col-4 text-right>
-                <div style="text-decoration: line-through">{{item.cupo_nr_vlatual | currency:'BRL':true:'1.2-2'}}</div>
+              <ion-col col-4 text-right class="ctd-col-validar">
+                <div *ngIf="itemCupom.cupo_nr_cupom != null">{{itemCupom.cupo_nr_cupom}}</div>
+                <div *ngIf="itemCupom.cupo_nr_cupom == null">
+                  <button ion-button color="danger" (click)="validarSorteio(itemCupom)" class="ctd-button-validar">
+                      Validar
+                  </button>
+                </div>
               </ion-col>
             </ion-row>
-            <ion-row>
-              <ion-col col-12 text-center class="ctd-dt-validade">
-                Válido até {{item.cupo_dt_validade | date: 'shortDate'}}
-              </ion-col>
-            </ion-row>
-          </ion-grid>
-        </ion-card-content>
-      </div>
-      <div *ngIf="item.tipoCupom != 1">
-        <ion-card-header>
-          <img src="{{item.cupo_tx_urlimagem}}" class="ctd-head-promocao">
-          <div style="border:5px solid green">
-            {{item.cupo_tx_urlimagem}}
-          </div>
-        </ion-card-header>
-        <ion-card-content>
-          <ion-card-title class="card-title-promocao">
-            {{item.cupo_tx_titulo}}
-          </ion-card-title>
-          <p class="card-subtitle-promocao">
-            {{item.empresa.empr_nm_fantasia}}
-          </p>
-          <ion-grid>
-            <ion-row>
-              <ion-col col-4 class="ctd-perc-desc" text-left>
-                {{item.cupo_nr_desconto}}% Desc.
-              </ion-col>
-              <ion-col col-4 text-right>
-                {{item.cupo_nr_vlcomdesconto | currency:'BRL':true:'1.2-2'}}
-              </ion-col>
-              <ion-col col-4 text-right>
-                <div style="text-decoration: line-through">{{item.cupo_nr_vlatual | currency:'BRL':true:'1.2-2'}}</div>
-              </ion-col>
-            </ion-row>
-            <ion-row>
-              <ion-col col-12 text-center class="ctd-dt-validade">
-                Válido até {{item.cupo_dt_validade | date: 'shortDate'}}
-              </ion-col>
-            </ion-row>
-          </ion-grid>
-        </ion-card-content>
-      </div>
-    </ion-card>
-  </ion-content>
+          </ion-item>
+        </ion-grid>
+      </ion-card-content>
+    </div>
+  </ion-card>
+</ion-content>

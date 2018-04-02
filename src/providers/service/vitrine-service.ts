@@ -71,21 +71,8 @@ export class VitrineService {
     });
   }
 
-  public curtirVitrien(vitrine: VitrineVO) {
-    var nrVisita = this.vitrineRef.child(vitrine.muni_sq_id).child(vitrine.vitr_sq_id).child("anun_nr_curtidas");
-
-    nrVisita.transaction(function (currentRank) {
-      return currentRank + 1;
-    }, function (error, committed, snapshot) {
-      if (error) {
-        console.log('Transaction failed abnormally!', error);
-      } else if (!committed) {
-        console.log('We aborted the transaction (because ada already exists).');
-      } else {
-        console.log('User ada added!');
-      }
-      console.log("Ada's data: ", snapshot.val());
-    });
+  public curtirVitrine(vitrine: VitrineVO) {
+    return this.vitrineRef.child(vitrine.muni_sq_id).child(vitrine.vitr_sq_id).child("anun_nr_curtidas");
   }
 
   public baixarCupomTransacion(municipioKey:string, vitrineKey:String) {

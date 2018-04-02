@@ -1,0 +1,74 @@
+<ion-header>
+  <ctd-header-modal [titulo]=[(titulo)] [modal]=true></ctd-header-modal>
+</ion-header>
+<ion-content>
+  <form [formGroup]="frmSorteioCrud" (ngSubmit)="salvar(frmSorteioCrud.value)">
+    <ion-grid>
+      <ion-row>
+        <ion-col col-12>
+          <ion-item>
+            <ion-label stacked class="labelProfile">Título</ion-label>
+            <ion-input type="text" maxlength="40" [(ngModel)]="sorteio.cupo_tx_titulo" formControlName="cupo_tx_titulo" autocomplete="true"
+              spellcheck="true"></ion-input>
+          </ion-item>
+          <div *ngIf="!frmSorteioCrud.controls.cupo_tx_titulo.valid && frmSorteioCrud.controls.cupo_tx_titulo.touched" class="ctd-label-error">*Informe o título.</div>
+        </ion-col>
+      </ion-row>
+      <ion-row>
+        <ion-col col-12>
+          <ion-item>
+            <ion-label stacked class="labelProfile">Descrição</ion-label>
+            <ion-textarea maxlength="500" autoresize="150" [(ngModel)]="sorteio.cupo_tx_descricao" formControlName="cupo_tx_descricao"
+              autocomplete="true" spellcheck="true"></ion-textarea>
+          </ion-item>
+          <div *ngIf="(!frmSorteioCrud.controls.cupo_tx_descricao.valid && frmSorteioCrud.controls.cupo_tx_descricao.touched)" class="ctd-label-error">*Informe a descrição.</div>
+        </ion-col>
+      </ion-row>
+      <ion-row>
+        <ion-col col-12>
+          <ion-item>
+            <ion-label stacked class="labelProfile">Regulamento</ion-label>
+            <ion-textarea maxlength="1000" autoresize="150" [(ngModel)]="sorteio.cupo_tx_regulamento" formControlName="cupo_tx_regulamento"
+              autocomplete="true" spellcheck="true"></ion-textarea>
+          </ion-item>
+          <div *ngIf="(!frmSorteioCrud.controls.cupo_tx_regulamento.valid && frmSorteioCrud.controls.cupo_tx_regulamento.touched)"
+            class="ctd-label-error">*Informe o regulamento.</div>
+        </ion-col>
+      </ion-row>
+      <ion-row>
+        <ion-col col-6>
+          <ion-item>
+            <ion-label stacked>Dt. Validade</ion-label>
+            <ion-datetime displayFormat="DD/MM/YYYY" pickerFormat="DD MM YYYY" [(ngModel)]="sorteio.cupo_dt_validade" formControlName="cupo_dt_validade"
+              cancelText="Cancelar" doneText="Confirmar" [min]="dateMin" [max]="dateMax" (ionCancel)="clearDate()"></ion-datetime>
+          </ion-item>
+          <div *ngIf="(!frmSorteioCrud.controls.cupo_dt_validade.valid && frmSorteioCrud.controls.cupo_dt_validade.touched)" class="ctd-label-error">*Informe a validade.</div>
+        </ion-col>
+        <ion-col col-6>
+          <ion-item>
+            <ion-label stacked>Quantidade</ion-label>
+            <ion-input type="number" clearInput [(ngModel)]="sorteio.cupo_nr_qtdecupom" formControlName="cupo_nr_qtdecupom" [brmasker]="{mask:'00000000', len:8}"></ion-input>
+          </ion-item>
+          <div *ngIf="(!frmSorteioCrud.controls.cupo_nr_qtdecupom.valid && frmSorteioCrud.controls.cupo_nr_qtdecupom.touched)" class="ctd-label-error">*Informe a quantidade.</div>
+        </ion-col>
+      </ion-row>  
+      <ion-row>
+        <ion-col>
+          <ion-item no-lines>
+            <ion-scroll scrollX="true" scroll-avatar>
+              <ion-avatar>
+                <img src="{{avatar.path}}" *ngFor="let avatar of imagens" class="scroll-item" (click)="selecionarTipoImagem(avatar, imagens)"
+                />
+              </ion-avatar>
+            </ion-scroll>
+          </ion-item>
+        </ion-col>
+      </ion-row>
+      <ion-row>
+        <ion-col>
+          <button ion-button full large [disabled]="!frmSorteioCrud.valid">Salvar</button>
+        </ion-col>
+      </ion-row>
+    </ion-grid>
+  </form>
+</ion-content>

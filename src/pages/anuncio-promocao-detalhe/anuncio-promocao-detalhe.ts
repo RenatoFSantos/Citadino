@@ -1,7 +1,10 @@
+import { CupomCriadoItemVO } from './../../model/cupomCriadoItemVO';
+import { ExceptionDTO } from './../../model/dominio/exceptionDTO';
+import { CupomEmpresaDTO } from './../../model/dominio/cupomEmpresaDTO';
+import { SorteioCriadoService } from './../../providers/service/sorteio-criado-service';
 import { GlobalVar } from './../../shared/global-var';
 import { BarcodeScanner } from '@ionic-native/barcode-scanner';
 import { UsuarioSqlService } from './../../providers/database/usuario-sql-service';
-import { ExceptionDTO } from './../../model/dominio/exceptionDTO';
 import { Promise } from 'firebase/app';
 import { DownloadImageService } from './../../providers/service/download-image-service';
 import { VitrineService } from './../../providers/service/vitrine-service';
@@ -28,6 +31,7 @@ export class AnuncioPromocaoDetalhePage {
   public isControleManual: boolean = false;
   private toastAlert: any;
   private meuCupom: CupomCriadoVO;
+  private qrCode: string = "";
 
   constructor(private navCtrl: NavController, private params: NavParams,
     private compCriadoSrv: CupomCriadoService, private events: Events,
@@ -35,7 +39,7 @@ export class AnuncioPromocaoDetalhePage {
     private downSrv: DownloadImageService, private meuCupomSqlSrv: UsuarioSqlService,
     private loadingCtrl: LoadingController, private mdlCtrl: ModalController,
     private barcodeScanner: BarcodeScanner, private toastCtrl: ToastController,
-    private glbVar: GlobalVar) {
+    private glbVar: GlobalVar, private sorteioSrv: SorteioCriadoService) {
 
     var self = this;
     self.cupom = params.get("cupom");
@@ -112,9 +116,14 @@ export class AnuncioPromocaoDetalhePage {
     loader.present();
 
     self.pegarCupom(self)
+      .then(this.salvarImagemCupom)
       .then(this.salvarMeuCupomDevice)
       .then(() => {
         self.createAlert("Cupom pego com sucesso.")
+
+        //Gerar cupom do sorteio
+        self.sorteioPegarDesconto();
+
         self.isBtnPegarCupom = false;
         self.isBtnUsarCupom = true;
         loader.dismiss();
@@ -125,9 +134,9 @@ export class AnuncioPromocaoDetalhePage {
       });
   }
 
-  private pegarCupom = function (self) {
+  private pegarCupom = function (paramSelf) {
+    let self = paramSelf;
     let exception: ExceptionDTO = new ExceptionDTO();
-    let urlImage: string = "";
 
     let promise = new Promise(function (resolve, reject) {
 
@@ -150,21 +159,37 @@ export class AnuncioPromocaoDetalhePage {
           exception.message = "Quantidade indisponível";
           reject(exception);
         } else {
-          var nameFile: string = self.cupom.cupo_sq_id + ".jpg";
-          var urlTo: string = self.glbVar.getAppPathStorage() + self.glbVar.getMyPathStorage() + "/" + nameFile;
-
-          self.downSrv.donwload(self.cupom.cupo_tx_urlimagem, urlTo)
-            .then((value) => {
-              urlImage = self.glbVar.getMyPathStorage() + "/" + nameFile;
-              resolve({ self, urlImage });
+          self.compCriadoSrv.salvarCupomUsuario(self.cupom.cupo_sq_id, self.cupom.usuario.usua_sq_id)
+            .then(() => {
+              resolve(self);
             })
             .catch((error) => {
-              exception.stack = "0";
-              exception.message = error.message;
-              reject(exception);
+              reject(error);
             });
         }
       });
+    });
+
+    return promise;
+  }
+
+  private salvarImagemCupom = function (param) {
+    let self = param;
+    let urlImage: string = "";
+    let result: any;
+
+    var promise = new Promise(function (resolve, reject) {
+      var nameFile: string = self.cupom.cupo_sq_id + ".jpg";
+      var urlTo: string = self.glbVar.getAppPathStorage() + self.glbVar.getMyPathStorage() + "/" + nameFile;
+
+      self.downSrv.donwload(self.cupom.cupo_tx_urlimagem, urlTo)
+        .then((value) => {
+          urlImage = self.glbVar.getMyPathStorage() + "/" + nameFile;
+          resolve({ self, urlImage });
+        })
+        .catch((error) => {
+          reject(error);
+        });
     });
 
     return promise;
@@ -185,9 +210,10 @@ export class AnuncioPromocaoDetalhePage {
       query = query + "cupo_nr_vlcomdesconto,empr_sq_id,";
       query = query + "empr_nm_fantasia,empr_tx_endereco,";
       query = query + "empr_tx_bairro,empr_tx_cidade,";
-      query = query + "empr_tx_telefone_1,empr_nr_documento,muni_sq_id) ";
+      query = query + "empr_tx_telefone_1,empr_nr_documento,muni_sq_id,";
+      query = query + "tipoCupom,cupo_in_status) ";
       query = query + "Values (?, ?, ?, ?, ?, ?, ?, ?,";
-      query = query + "?, ?, ?, ?, ?, ?, ?, ?, ?)";
+      query = query + "?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
 
       self.meuCupomSqlSrv.inserir(query, [
         self.cupom.cupo_sq_id, self.cupom.cupo_tx_titulo,
@@ -198,7 +224,7 @@ export class AnuncioPromocaoDetalhePage {
         self.cupom.empresa.empr_nm_fantasia, self.cupom.empresa.empr_tx_endereco,
         self.cupom.empresa.empr_tx_bairro, self.cupom.empresa.empr_tx_cidade,
         self.cupom.empresa.empr_tx_telefone_1, self.cupom.empresa.empr_nr_documento,
-        self.cupom.empresa.municipiomuni_sq_id])
+        self.cupom.empresa.municipiomuni_sq_id, self.cupom.tipoCupom, 1])
         .then((registro) => {
 
           if (registro.rowsAffected > 0) {
@@ -216,8 +242,11 @@ export class AnuncioPromocaoDetalhePage {
     return promise;
   }
 
+
   public usarCupom() {
     var self = this;
+    var statusConexao: boolean = false;
+
     let loader = this.loadingCtrl.create({
       dismissOnPageChange: true,
       content: 'Aguarde...'
@@ -225,40 +254,69 @@ export class AnuncioPromocaoDetalhePage {
 
     loader.present();
 
-    this.barcodeScanner.scan().then((barcodeData) => {
-      if (barcodeData.cancelled) {
-        loader.dismiss();
-        return false;
-      }
-      if (barcodeData.text != null) {
-        var resultScan: string[] = barcodeData.text.split(",");
+    statusConexao = self.glbVar.getIsFirebaseConnected();
 
-        if (resultScan[0].trim() == CtdFuncoes.removeMaskNrDocumento(self.cupom.empresa.empr_nr_documento)) {
-          self.pesquisarCupomPego()
-            .then(self.deletarCupom)
-            .then(self.deletarImage)
-            .then(() => {
-              self.createAlert("Cupom utilizado com sucesso.");
-              loader.dismiss();
-              self.events.publish("carregaMeuCupomEvent", true);
-              this.navCtrl.pop();
-            })
-            .catch((error) => {
-              self.createAlert("Cupom inválido.");
-              loader.dismiss();
-            });
-        } else {
-          self.createAlert("Cupom inválido.");
+    this.barcodeScanner.scan()
+      .then((barcodeData) => {
+
+        if (barcodeData.cancelled) {
           loader.dismiss();
+          return false;
         }
-      }
-      else {
-        return false;
-      }
-    }, (err) => {
-      loader.dismiss();
-      console.log(err);
+
+        if (barcodeData.text != null) {
+          self.qrCode = barcodeData.text.split(",")[0].trim();
+
+          if (self.qrCode == CtdFuncoes.removeMaskNrDocumento(self.cupom.empresa.empr_nr_documento)) {
+            self.pesquisarCupomPego()
+              .then(self.deletarCupom)
+              .then(self.deletarImage)
+              .then(self.sorteioInativoLocal)
+              .then(self.atualizarStatusSorteio)
+              .then((result) => {
+                self.createAlert("Cupom utilizado com sucesso.");
+                loader.dismiss();
+                self.events.publish("carregaMeuCupomEvent", true);
+                this.navCtrl.pop();
+
+                //Ativar Cupom Sorteio
+                self.sorteioUsarDesconto(result.sorteioLocal, statusConexao);
+
+              })
+              .catch((error) => {
+                self.createAlert("Cupom inválido.");
+                loader.dismiss();
+              });
+          } else {
+            self.createAlert("Cupom inválido.");
+            loader.dismiss();
+          }
+        }
+        else {
+          return false;
+        }
+      })
+      .catch((err) => {
+        loader.dismiss();
+        console.log(err);
+      });
+  }
+
+  private atualizarStatusSorteio = function (param) {
+    var self = param.self;
+    var sorteioLocal: CupomCriadoVO = param.sorteioLocal;
+
+    var promise = new Promise(function (resolve, reject) {
+      self.sorteioSrv.atualizarCupomSorteio(sorteioLocal)
+        .then(() => {
+          resolve({ self, sorteioLocal });
+        })
+        .catch((error) => {
+          reject(error);
+        })
     });
+
+    return promise;
   }
 
   private deletarCupom = function (params) {
@@ -307,7 +365,7 @@ export class AnuncioPromocaoDetalhePage {
       self.downSrv.removeFile(pathApp, file)
         .then((result) => {
           result = true;
-          resolve({ self, result });
+          resolve({ self, result, meuCupom });
         })
         .catch((error) => {
           var exception: ExceptionDTO = new ExceptionDTO();
@@ -384,6 +442,183 @@ export class AnuncioPromocaoDetalhePage {
     });
   }
 
+  private pesquisarSorteioAtivo = function (param) {
+    let self = param.self;
+    let statusConexao: boolean = param.statusConexao;
+    let nrDocumento: string = param.nrDocumento;
+
+    var sorteioKey: string = null;
+    var nrQuantidadeCupom: number = 0;
+
+    var promise = new Promise(function (resolve, reject) {
+
+      if (statusConexao == true) {
+        self.sorteioSrv.getCupomAtivo()
+          .then((snap) => {
+
+            if (snap != null && snap.val() != null) {
+              sorteioKey = Object.keys(snap.val())[0];
+
+              self.sorteioSrv.getQuantidadeDisponivel(sorteioKey)
+                .then((snap) => {
+                  nrQuantidadeCupom = snap.val();
+
+                  resolve({ self, sorteioKey, nrQuantidadeCupom });
+
+                })
+                .catch((error) => {
+                  reject(error);
+                });
+            }
+            else {
+              var error: Error = new Error("Não existe sorteio ativo");
+              reject(error);
+            }
+          })
+          .catch((error) => {
+            reject(error);
+          });
+      }
+      else {
+        resolve({ self, sorteioKey, nrQuantidadeCupom });
+      }
+    });
+    return promise;
+  }
+
+  private sorteioPegarDesconto() {
+    let self = this;
+    var sorteioItens: Array<CupomCriadoItemVO> = new Array<CupomCriadoItemVO>();
+
+    self.sorteioSrv.getStatusConexao()
+      .then((statusConnect: boolean) => {
+        if (statusConnect == true) {
+          self.sorteioSrv.getSorteioAtivo()
+            .then((snap) => {
+              if (snap != null && snap.val() != null) {
+                var sorteioObject: any = snap.val()[Object.keys(snap.val())[0]];
+                var sorteio: CupomCriadoVO = self.mapSrv.getCupomCriado(sorteioObject);
+                sorteio.cupo_in_status = true;
+
+                var sorteioItem: CupomCriadoItemVO = new CupomCriadoItemVO();
+                sorteioItem.cupo_sq_id = sorteio.cupo_sq_id;
+                sorteioItem.cupo_in_status = false;
+                sorteioItens.push(sorteioItem);
+
+                sorteio.cupomItens = sorteioItens;
+
+                var empresa: CupomEmpresaDTO = new CupomEmpresaDTO();
+                empresa.empr_sq_id = self.cupom.empresa.empr_sq_id;
+                empresa.empr_nm_fantasia = self.cupom.empresa.empr_nm_fantasia;
+                empresa.empr_nr_documento = self.cupom.empresa.empr_nr_documento;
+
+                sorteioItem.empresa = empresa;
+
+                self.sorteioSrv.salvarSorteioDesconto(sorteio);
+              }
+            })
+            .catch((error) => {
+              throw new Error(error);
+            });
+        }
+        else {
+          console.log("Não foi possível conectar a internet.");
+        }
+      })
+      .catch((error) => {
+        throw new Error(error);
+      });
+  }
+
+  private sorteioUsarDesconto( sorteioLocal: CupomCriadoVO, statusConexao: boolean) {
+    let self = this;
+    var sorteioItens: Array<CupomCriadoItemVO> = new Array<CupomCriadoItemVO>();
+
+    if (statusConexao == true) {
+
+      self.sorteioAtivoWeb()
+        .then((sorteioWeb: CupomCriadoVO) => {
+          sorteioLocal.cupo_nr_qtdecupom = sorteioWeb.cupo_nr_qtdecupom;
+          self.sorteioSrv.gerarNumeroSorteio(sorteioLocal, 2);
+        })
+        .catch(error => {
+
+        })
+    } else {
+      self.createAlert("Valide sua participação no sorteio do mês.");
+    }
+  }
+
+  public sorteioAtivoWeb = function () {
+    var self = this;
+    var sorteioWeb: CupomCriadoVO = null;
+
+    var promise = new Promise(function (resolve, reject) {
+
+      self.sorteioSrv.getSorteioAtivo()
+        .then((snap) => {
+          if (snap != null && snap.val() != null) {
+
+            var sorteioObject: any = snap.val()[Object.keys(snap.val())[0]];
+            sorteioWeb = self.mapSrv.getCupomCriado(sorteioObject);
+
+            resolve(sorteioWeb);
+
+          } else {
+            reject(Error("Não existe sorteio ativo."));
+          }
+        })
+        .catch((error) => {
+          reject(error);
+        })
+    });
+
+    return promise;
+  }
+
+  public sorteioInativoLocal = function (param: any) {
+    var self = param.self;
+    var nrQrcode = self.qrCode;
+    var sorteioLocal: CupomCriadoVO = null;
+
+    var promise = new Promise(function (resolve, reject) {
+
+      self.sorteioSrv.pesquisarSorteioInativoDevice(nrQrcode)
+        .then((result: any) => {
+
+          if (result.sorteios.length > 0) {
+            sorteioLocal = result.sorteios[0];
+          }
+
+          resolve({ self, sorteioLocal });
+
+        })
+    });
+
+    return promise;
+  }
+
+  public sorteioLocalId = function (sorteioItemId: number) {
+    var self = this;
+    var nrQrcode = self.qrCode;
+    var sorteioLocal: CupomCriadoVO = null;
+
+    var promise = new Promise(function (resolve, reject) {
+
+      self.sorteioSrv.pesquisarSorteioItemIdDevice(sorteioItemId)
+        .then((result: any) => {
+
+          if (result.sorteios.length > 0) {
+            sorteioLocal = result.sorteios[0];
+          }
+
+          resolve({ self, sorteioLocal });
+
+        })
+    });
+
+    return promise;
+  }
 
   // public listarDiretorio() {
 
