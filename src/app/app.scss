@@ -171,3 +171,32 @@ image-viewer.ion-page {
         font-size: 1.2rem !important;
     }
   }
+
+  .alertNotif .alert-wrapper {
+    background-color: white !important;
+   }
+
+   .alertNotif .alert-head {
+    background-color: #696969 !important;
+    padding: 10px 10px 10px 10px !important;
+    color: white !important;
+   }
+
+   .alertNotif .alert-message, .alert-md .alert-input-group {   
+    padding: 2px 5px 10px 10px !important;
+    h2 {
+        color: red !important;
+    }
+    h6 {
+        color:black !important;
+        font-weight: bold !important;
+    }
+   }
+
+   .alertNotif .alert-button-group {
+        background-color: #cccccc !important;
+   }
+
+   .alertNotif .alert-button {
+    color: 387ef5 !important;
+   }

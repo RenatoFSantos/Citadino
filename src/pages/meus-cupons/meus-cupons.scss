@@ -180,6 +180,55 @@ page-meus-cupons {
     
     }
 
+    .ctd-card-sorteio.card-content-md {
+        padding: 0px 2px 0px 2px !important;
+        font-size: 1.6rem !important;
+        .label-md {
+            margin: 0px !important;
+        }
+        .col{
+            border-left: 0.5px solid;
+        }
+    }
+
+    .ctd-lable-sorteio.label-md {
+        margin: 5px 2px 5px 5px; 
+    }
+
+    .ctd-row_head-sorteio.row {
+        background-color: #cccccc !important;
+        border: 0.5px solid !important;
+    }
+
+    .ctd-row_content-sorteio.row {      
+        border: 0.5px solid !important;
+    }
+
+    .ctd-item-sorteio.item-md {
+        padding-left: 0px !important;
+    }
+
+    .ctd-item-sorteio-block.item-block {
+        min-height: 0rem !important;           
+    } 
+
+    .ctd-item-sorteio-inner.item-md.item-block .item-inner {
+        padding-right: 0px !important;
+    }
+
+    .ctd-button-validar {
+        color: #fff !important;
+        background-color: #f53d3d !important;
+        height: 2.2rem !important;
+        width: 90% !important;
+        font-size: 1.2rem !important;
+        margin: 0px !important;
+    }
+
+    .ctd-col-validar.col {
+        padding: 2px !important;
+    }
+
       //   //============
       // versao promocao
     //   .tabs-md .tabbar {

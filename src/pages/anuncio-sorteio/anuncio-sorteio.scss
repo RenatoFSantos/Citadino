@@ -1,4 +1,4 @@
-page-anuncio-publicidade {
+page-anuncio-sorteio {
     ion-card.ctd-card {
         padding: 0px;
         border-radius: 10px;
@@ -51,7 +51,7 @@ page-anuncio-publicidade {
         display: -webkit-box;
         -webkit-box-orient: vertical;
         -webkit-line-clamp: 4; /* number of lines to show */
-        max-height: 5.5em;
+        max-height: 220px;
         line-height: 1.4
     }
 
@@ -71,7 +71,7 @@ page-anuncio-publicidade {
     .ctd-btn-vitrine{
         height: 40px;
         background-color: rgba(204, 204, 204, 0.59);
-        // text-align: right !important;
+        text-align: right !important;
         padding: 1px !important;
         // border-radius: 5px;
         // width: 102%;
@@ -106,7 +106,15 @@ page-anuncio-publicidade {
     }
     .col {
         padding: 2px !important;
-    }  
+    }
+
+    .label-md {
+        margin: 0px !important;
+    }
+
+    .card-header-md {
+        padding: 0px 0px 10px 0px !important;
+    }
 
     .card-header-md {
         padding: 0px 0px 10px 0px !important;
@@ -117,10 +125,33 @@ page-anuncio-publicidade {
         width: calc(100% - 2px) !important;
     }
 
-    .ctd-title-vitrine {
+    .ctd-perc-desc {
         font-size: 1.4rem !important;
         font-weight: bold !important;
+        color: red !important;
+        margin: 0 auto !important;     
+        padding: 2px 0 2px 0 !important;
     }
 
-    
+    .ctd-label {
+        font-size: 1.4rem !important;
+        font-weight: bold !important;
+        color: black !important;
+        margin: 0 auto !important;     
+        padding: 2px 0 2px 0 !important;
+    }
+
+    .card-content-md {
+        padding: 5px 5px;
+    }
+
+    .ctd-row-conteudo {
+        line-height: 0.9 !important;       
+    }
+
+    .card-descricao-promocao {
+        font-size: 1.4rem !important;
+        margin: 0 auto !important;     
+        padding: 5px 0px 0px 0px !important;
+    }
 }

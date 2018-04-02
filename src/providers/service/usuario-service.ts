@@ -94,7 +94,7 @@ export class UsuarioService {
   }
 
   public atualizaEmail(usuario: UsuarioVO, email:string) {
-    this.usersRef.child(usuario.usua_sq_id).child('usua_ds_email').set(email);
+    this.usersRef.child(usuario.usua_sq_id).child('usua_ds_email').set(email.toLowerCase());
   }
 
   public saveToken(uid: string, token: string) {
@@ -167,7 +167,6 @@ export class UsuarioService {
           usuario.usua_ds_email = result.rows.item(0).usua_ds_email;
           usuario.usua_tx_senha = result.rows.item(0).usua_tx_senha;
           usuario.usua_in_ajuda = true;
-
           // if (result.rows.item(0).usua_in_ajuda == "true"
           //   || result.rows.item(0).usua_in_ajuda == true) {
           //   usuario.usua_in_ajuda = true;

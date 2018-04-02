@@ -25,3 +25,4 @@ import { BrMaskerModule } from 'brmasker-ionic-3';
 <ion-item>
 	<ion-input type="text" name="cpf" placeholder="CPF/CNPJ" [brmasker]="{person: true}"></ion-input>
 </ion-item>
+

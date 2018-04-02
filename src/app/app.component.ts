@@ -1,3 +1,4 @@
+import { SmartSiteCrudPage } from './../pages/smart-site-crud/smart-site-crud';
 import { MunicipioService } from './../providers/service/municipio-service';
 import { MunicipioVO } from './../model/municipioVO';
 import { MeusAnunciosPage } from './../pages/meus-anuncios/meus-anuncios';
@@ -172,7 +173,7 @@ export class MyApp implements OnInit {
           if (userRef.val() != null) {
             var usuario: UsuarioVO = self.mapSrv.getUsuario(userRef);
             if (usuario.usua_ds_email == "") {
-              self.usuaSrv.atualizaEmail(usuario, userCurrent.email);
+              self.usuaSrv.atualizaEmail(usuario, userCurrent);
             }
 
             if (window.cordova) {
@@ -361,15 +362,15 @@ export class MyApp implements OnInit {
     switch (page.typeMenu) {
       case enums.ETypeMenu.default:
 
-        if (page.index) {
-          params = { tabIndex: page.index };
+        if (page.params != null) {
+           params = page.params;
         }
 
         if (this.nav.getActiveChildNavs()[0] && page.index != undefined) {
           this.nav.getActiveChildNavs()[0].select(page.index);
         } else {
           this.nav.push(page.component, params).catch((err: any) => {
-            console.log(`Didn't set nav root: ${err}`);
+            console.log(`Não pode enviar para a página selecionada: ${err}`);
           });
         }
         break;
@@ -421,11 +422,16 @@ export class MyApp implements OnInit {
 
     this.pages.push({ title: 'Minha Conta', component: ProfilePage, icon: 'contact', typeMenu: enums.ETypeMenu.default });
 
+    // this.pages.push({ title: 'Smart Site', component: SmartSiteCrudPage, icon: 'ios-home', typeMenu: enums.ETypeMenu.default });
+
+
     if (usuario.usua_sg_perfil == "ADM" || this.glbVar.isBtnAdicionarVitrine() == true) {
       this.pages.push({ title: 'Meus Anúncios', component: MeusAnunciosPage, icon: 'md-create', typeMenu: enums.ETypeMenu.default });
     }
 
-    this.pages.push({ title: 'Meus Cupons', component: MeusCuponsPage, icon: 'ios-cash-outline', typeMenu: enums.ETypeMenu.default });
+    this.pages.push({ title: 'Cupons de Descontos', component: MeusCuponsPage, icon: 'ios-cash-outline', typeMenu: enums.ETypeMenu.default, params:{tipoCupom:1} });
+
+    this.pages.push({ title: 'Cupons de Sorteio', component: MeusCuponsPage, icon: 'md-happy', typeMenu: enums.ETypeMenu.default, params:{tipoCupom:2} });
 
     this.pages.push({ title: 'Meus Marcados', component: MeusMarcadosPage, icon: 'md-bookmark', typeMenu: enums.ETypeMenu.default });
 
@@ -469,44 +475,54 @@ export class MyApp implements OnInit {
     var self = this;
 
     //Producao
-    let headers = {
-      "Content-Type": "application/json; charset=utf-8",
-      "Authorization": "Basic 02655c01-f40d-4b22-ac0d-07358b012b57"
-    };
-
-    //Desenvolvimento
     // let headers = {
     //   "Content-Type": "application/json; charset=utf-8",
-    //   "Authorization": "Basic dde460af-2898-4f1a-88b8-ff9fd97be308"
+    //   "Authorization": "Basic 02655c01-f40d-4b22-ac0d-07358b012b57"
     // };
+
+    //Desenvolvimento
+    let headers = {
+      "Content-Type": "application/json; charset=utf-8",
+      "Authorization": "Basic dde460af-2898-4f1a-88b8-ff9fd97be308"
+    };
 
     //Chamado quando recebe uma notificacao com o app aberto
     let notificationReceivedCallback = function (jsonData) {
       console.log('notificationReceivedCallback: ' + JSON.stringify(jsonData));
+
     };
 
-    //Chamado quando abre um notificacao com a app em background
+    //Chamado quando recebe uma notificacao com a app em background
     let notificationOpenedCallback = function (data: any) {
-      self.redirectToPage(data);
+      self.showAlert(data);
+      // self.redirectToPage(data);
     };
-
 
     //Producao
-    window.plugins.OneSignal
-      .startInit("02655c01-f40d-4b22-ac0d-07358b012b57", "960817085241")
-      .handleNotificationOpened(notificationOpenedCallback)
-      .handleNotificationReceived(notificationReceivedCallback)
-      .inFocusDisplaying(self.oneSignal.OSInFocusDisplayOption.None)
-      .endInit();
-
-    //Desenvolvimento
     // window.plugins.OneSignal
-    //   .startInit("dde460af-2898-4f1a-88b8-ff9fd97be308", "180769307423")
+    //   .startInit("02655c01-f40d-4b22-ac0d-07358b012b57", "960817085241")
     //   .handleNotificationOpened(notificationOpenedCallback)
     //   .handleNotificationReceived(notificationReceivedCallback)
     //   .inFocusDisplaying(self.oneSignal.OSInFocusDisplayOption.None)
     //   .endInit();
 
+    //Desenvolvimento
+    window.plugins.OneSignal
+      .startInit("dde460af-2898-4f1a-88b8-ff9fd97be308", "180769307423")
+      .handleNotificationOpened(notificationOpenedCallback)
+      .handleNotificationReceived(notificationReceivedCallback)
+      .inFocusDisplaying(self.oneSignal.OSInFocusDisplayOption.None)
+      .endInit();
+  }
+
+  private showAlert(data: any) {
+    let alert = this.alertCtrl.create({
+      title: data.notification.payload.additionalData.dadosNotif.titulo,
+      message: data.notification.payload.additionalData.dadosNotif.descricao,
+      cssClass:'alertNotif', 
+      buttons: ['Fechar']
+    });
+    alert.present();
   }
 
   private redirectToPage(data: any) {
@@ -625,8 +641,10 @@ export class MyApp implements OnInit {
         // self.usuaSrv.usersRef.child(usuarioVinculadoToken)
         //   .child("tokendevice").child(tokenVinculadoUsuario).set(null);
 
-        self.usuaSrv.usersRef.child(usuarioLogado.usua_sq_id)
-          .child("tokendevice").set(self.tokenPushAtual).set(true);
+        if (usuarioLogado != null && usuarioLogado.usua_sq_id != "" && self.tokenPushAtual != "") {
+          self.usuaSrv.usersRef.child(usuarioLogado.usua_sq_id)
+            .child("tokendevice").set(self.tokenPushAtual).set(true);
+        }
       }
       else if (eventoToken == enums.eventoTokenPush.usuarioSalvar) {
 

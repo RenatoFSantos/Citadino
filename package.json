@@ -1,6 +1,6 @@
 {
-  "name": "Citadino",
-  "version": "2.0.2",
+  "name": "CitadinoDsv",
+  "version": "2.0.3",
   "author": "Midilabs",
   "homepage": "http://citadino.com.br",
   "private": true,
@@ -21,7 +21,7 @@
     "@angular/platform-browser": "5.0.3",
     "@angular/platform-browser-dynamic": "5.0.3",
     "@ionic-native/background-mode": "^4.4.0",
-    "@ionic-native/barcode-scanner": "^4.4.2",
+    "@ionic-native/barcode-scanner": "^4.6.0",
     "@ionic-native/call-number": "^4.4.0",
     "@ionic-native/camera": "^4.4.0",
     "@ionic-native/core": "4.4.0",
@@ -41,7 +41,6 @@
     "brmasker-ionic-3": "^1.0.3",
     "call-number": "^1.0.1",
     "chart.js": "^2.7.1",
-    "cordova-android": "~6.3.0",
     "cordova-ios": "^4.3.1",
     "cordova-plugin-background-mode": "^0.7.2",
     "cordova-plugin-camera": "^2.4.1",
@@ -61,13 +60,14 @@
     "ionic-img-viewer": "^2.7.3",
     "ionic-plugin-keyboard": "^2.2.1",
     "ionicons": "3.0.0",
-    "mx.ferreyra.callnumber": "~0.0.2",
+    "mx.ferreyra.callnumber": "0.0.2",
     "onesignal-cordova-plugin": "^2.2.2",
-    "phonegap-plugin-barcodescanner": "^7.0.0",
+    "phonegap-plugin-barcodescanner": "^7.1.0",
     "promise-polyfill": "^6.0.2",
     "rxjs": "5.5.2",
     "sw-toolbox": "3.6.0",
-    "zone.js": "0.8.18"
+    "zone.js": "0.8.18",
+    "cordova-android": "~6.3.0"
   },
   "devDependencies": {
     "@ionic/app-scripts": "3.1.4",
@@ -89,9 +89,10 @@
       "cordova-plugin-crop": {},
       "cordova-plugin-inappbrowser": {},
       "mx.ferreyra.callnumber": {},
-      "phonegap-plugin-barcodescanner": {},
       "cordova-plugin-file-transfer": {},
-      "cordova-plugin-file": {}
+      "cordova-plugin-file": {},
+      "call-number": {},
+      "phonegap-plugin-barcodescanner": {}
     },
     "platforms": [
       "android"

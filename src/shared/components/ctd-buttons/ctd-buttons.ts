@@ -161,7 +161,8 @@ export class CtdButtonsComponent {
 
     let confirm = this.alertCtrl.create({
       title: "Publicação",
-      message: "Confirma a exclusão ?",
+      message: "<h6>Confirma a exclusão ?</h6>",
+      cssClass:"alertNotif",
       buttons: [{
         text: "Sim",
         handler: () => {
@@ -184,7 +185,8 @@ export class CtdButtonsComponent {
 
     this.confirmPublic = this.alertCtrl.create({
       title: "Publicação",
-      message: "Confirma a publicação ?",
+      message: "<h6>Confirma a publicação ?</h6>",
+      cssClass:"alertNotif",
       buttons: [{
         text: "Sim",
         handler: () => {

@@ -32,27 +32,29 @@
 
 
   <script src="https://www.gstatic.com/firebasejs/3.9.0/firebase.js"></script>
+  <script src="https://unpkg.com/querybase@0.6.0"></script>
+
   <script>
     // Initialize Firebase
-    //Desenvolvimento
-    // var config = {
-    //   apiKey: "AIzaSyC0maPdTdMQ7ccxuiXHLcZ1IsgeX7qVD6I",
-    //   authDomain: "citadinodsv.firebaseapp.com",
-    //   databaseURL: "https://citadinodsv.firebaseio.com",
-    //   projectId: "citadinodsv",
-    //   storageBucket: "citadinodsv.appspot.com",
-    //   messagingSenderId: "180769307423"
-    // };
+    // Desenvolvimento
+    var config = {
+      apiKey: "AIzaSyC0maPdTdMQ7ccxuiXHLcZ1IsgeX7qVD6I",
+      authDomain: "citadinodsv.firebaseapp.com",
+      databaseURL: "https://citadinodsv.firebaseio.com",
+      projectId: "citadinodsv",
+      storageBucket: "citadinodsv.appspot.com",
+      messagingSenderId: "180769307423"
+    };
 
     //Producao
-    var config = {
-      apiKey: "AIzaSyCuOY5Kt7_Zo08khwYFiLsIQC4kFe5LWwE",
-      authDomain: "citadinoprd-13651.firebaseapp.com",
-      databaseURL: "https://citadinoprd-13651.firebaseio.com",
-      projectId: "citadinoprd-13651",
-      storageBucket: "citadinoprd-13651.appspot.com",
-      messagingSenderId: "960817085241"
-    };
+    // var config = {
+    //   apiKey: "AIzaSyCuOY5Kt7_Zo08khwYFiLsIQC4kFe5LWwE",
+    //   authDomain: "citadinoprd-13651.firebaseapp.com",
+    //   databaseURL: "https://citadinoprd-13651.firebaseio.com",
+    //   projectId: "citadinoprd-13651",
+    //   storageBucket: "citadinoprd-13651.appspot.com",
+    //   messagingSenderId: "960817085241"
+    // };
 
     firebase.initializeApp(config);
   </script>
@@ -72,6 +74,9 @@
 
   <!-- google maps script is loaded last as to not block rendering -->
   <!-- <script async defer src="https://maps.googleapis.com/maps/api/js"></script> -->
+
+
+
 
 </body>
 

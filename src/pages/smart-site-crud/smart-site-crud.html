@@ -1,0 +1,168 @@
+<ion-header>
+  <ion-navbar color="ctd-navbar">
+    <ion-title>Smart Site</ion-title>
+  </ion-navbar>
+</ion-header>
+<ion-content>
+  <ion-item-group>
+    <ion-item-divider class="ctd-divider" light>Dados Básicos</ion-item-divider>
+    <ion-grid>
+      <ion-row>
+        <ion-col>
+          <ion-item class="ctd-item">
+            <ion-label stacked class="labelProfile">Razão Social</ion-label>
+            <ion-input type="text"></ion-input>
+          </ion-item>
+        </ion-col>
+      </ion-row>
+      <ion-row>
+        <ion-col>
+          <ion-item class="ctd-item">
+            <ion-label stacked class="labelProfile">Nome Fantasia</ion-label>
+            <ion-input type="text"></ion-input>
+          </ion-item>
+        </ion-col>
+      </ion-row>
+      <ion-row>
+        <ion-col>
+          <ion-item class="ctd-item">
+            <ion-label stacked class="labelProfile">Insc. Estadual</ion-label>
+            <ion-input type=""></ion-input>
+          </ion-item>
+        </ion-col>
+        <ion-col>
+          <ion-item class="ctd-item">
+            <ion-label stacked class="labelProfile">Insc. Municipal</ion-label>
+            <ion-input type=""></ion-input>
+          </ion-item>
+        </ion-col>
+      </ion-row>
+      <ion-row>
+        <ion-col>
+          <ion-item class="ctd-item">
+            <ion-label stacked class="labelProfile">Tel. Principal</ion-label>
+            <ion-input type="text"></ion-input>
+          </ion-item>
+        </ion-col>
+        <ion-col>
+          <ion-item class="ctd-item">
+            <ion-label stacked class="labelProfile">Tel. Secundário</ion-label>
+            <ion-input type="text"></ion-input>
+          </ion-item>
+        </ion-col>
+      </ion-row>
+    </ion-grid>
+  </ion-item-group>
+  <ion-item-group>
+    <ion-item-divider class="ctd-divider" light>Endereço Comercial</ion-item-divider>
+    <ion-grid>
+      <ion-row>
+        <ion-col>
+          <ion-item class="ctd-item">
+            <ion-label stacked class="labelProfile">Endereço</ion-label>
+            <ion-input type="text"></ion-input>
+          </ion-item>
+        </ion-col>
+      </ion-row>
+      <ion-row>
+        <ion-col>
+          <ion-item class="ctd-item">
+            <ion-label stacked class="labelProfile">Bairro</ion-label>
+            <ion-input type="text"></ion-input>
+          </ion-item>
+        </ion-col>
+      </ion-row>
+      <ion-row>
+        <ion-col>
+          <ion-item class="ctd-item">
+            <ion-label stacked class="labelProfile">Cep</ion-label>
+            <ion-input type="text"></ion-input>
+          </ion-item>
+        </ion-col>
+        <ion-col>
+          <ion-item class="ctd-item">
+            <ion-label stacked class="labelProfile">UF</ion-label>
+            <ion-input type="text"></ion-input>
+          </ion-item>
+        </ion-col>
+      </ion-row>
+      <ion-row>
+        <ion-col>
+          <ion-item class="ctd-item">
+            <ion-label stacked class="labelProfile">Município</ion-label>
+            <!-- <ion-select [(ngModel)]="usuario.municipio.muni_sq_id" (ngModelChange)="onChangeMunicipio($event)" formControlName="muni_sq_id"
+            interface="popover">
+            <ion-option *ngFor="let munic of municipios" value="{{munic.muni_sq_id}}">{{munic.muni_nm_municipio}}</ion-option>
+          </ion-select> -->
+          </ion-item>
+        </ion-col>
+      </ion-row>
+    </ion-grid>
+  </ion-item-group>
+  <ion-item-group>
+    <ion-item-divider class="ctd-divider" light>Site</ion-item-divider>
+    <ion-grid>
+      <ion-row>
+        <ion-col>
+          <ion-item class="ctd-item">
+            <ion-label stacked class="labelProfile">Sobre</ion-label>
+            <ion-textarea maxlength="1500" autoresize="150" autocomplete="true" spellcheck="true"></ion-textarea>
+          </ion-item>
+        </ion-col>
+      </ion-row>
+      <ion-row>
+        <ion-col>
+          <ion-item class="ctd-item">
+            <ion-label stacked class="labelProfile">Observação</ion-label>
+            <ion-textarea maxlength="1000" autoresize="150" autocomplete="true" spellcheck="true"></ion-textarea>
+          </ion-item>
+        </ion-col>
+      </ion-row>
+      <ion-row>
+        <ion-col>
+          <ion-item class="ctd-item">
+            <ion-label stacked class="labelProfile">Site</ion-label>
+            <ion-input type="text"></ion-input>
+          </ion-item>
+        </ion-col>
+      </ion-row>
+      <ion-row>
+        <ion-col>
+          <ion-item class="ctd-item">
+            <ion-label stacked class="labelProfile">E-mail</ion-label>
+            <ion-input type="text"></ion-input>
+          </ion-item>
+        </ion-col>
+      </ion-row>
+      <ion-row>
+        <ion-col>
+          <ion-label stacked class="labelProfile">Logo Marca</ion-label>
+        </ion-col>
+        <ion-col>
+          <ion-label stacked class="labelProfile">Fotos</ion-label>
+        </ion-col>
+      </ion-row>
+      <ion-row>
+        <ion-col>
+          <ion-item no-lines>
+              <ion-scroll scrollX="true" scroll-avatar>
+                <ion-avatar id="ctd-avatar">
+                  <img src="{{myPhoto}}"  class="scroll-item" />
+                </ion-avatar>
+              </ion-scroll>
+            </ion-item>
+        </ion-col>
+        <ion-col>
+            <ion-item no-lines>
+                <ion-scroll scrollX="true" scroll-avatar>
+                  <ion-avatar>
+                    <img src="{{myPhoto}}"  class="scroll-item" />
+                  </ion-avatar>
+                </ion-scroll>
+              </ion-item>
+        </ion-col>
+      </ion-row>
+    </ion-grid>
+  </ion-item-group>
+
+</ion-content>

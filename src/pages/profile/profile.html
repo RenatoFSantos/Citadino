@@ -3,18 +3,15 @@
     <ion-title>Minha Conta</ion-title>
   </ion-navbar>
 </ion-header>
-
 <ion-content id="profileForm">
   <form [formGroup]="frmProfile" (ngSubmit)="onSubmit(frmProfile.value)">
     <ion-grid>
       <ion-row>
         <ion-col class="ctd-background-profile">
-          <ion-item class="ctd-item-background-profile">
-            <!-- <div id="imgwrap"> -->
+          <ion-item class="ctd-item-background-profile">            
             <ion-avatar class="avatar_profile">
               <img src="{{myPhoto}}" (click)="selecionarTipoUpload()">
-            </ion-avatar>
-            <!-- </div> -->
+            </ion-avatar> 
           </ion-item>
         </ion-col>
       </ion-row>

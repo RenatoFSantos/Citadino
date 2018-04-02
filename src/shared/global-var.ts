@@ -14,6 +14,7 @@ export class GlobalVar {
   private municipios: Array<MunicipioVO> = null;
   private appPathStorage: string;
   private myPathStorage: string = "";
+  private versaoApp:string = "1"; 
 
   constructor() {
     this.isNetworkConnected = false;
@@ -22,7 +23,7 @@ export class GlobalVar {
     this.isCordova = false;
     this.municipioPadrao = null;
     this.appPathStorage = "";
-    this.myPathStorage = "";
+    this.myPathStorage = "";   
   }
 
   public getIsNetworkConnected(): boolean {
@@ -104,4 +105,8 @@ export class GlobalVar {
   public getMyPathStorage() {
     return this.myPathStorage;
   }
+
+  public getVersaoApp() {
+    return this.versaoApp;
+  } 
 }

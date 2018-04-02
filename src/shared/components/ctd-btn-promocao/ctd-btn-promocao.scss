@@ -29,4 +29,34 @@ ctd-btn-promocao {
         text-align: right !important;
         padding: 1px !important;    
     }
+
+    .alertNotif .alert-wrapper {
+        background-color: white !important;
+       }
+    
+    .alertNotif .alert-head {
+        background-color: #696969 !important;
+        padding: 10px 10px 10px 10px !important;
+        color: white !important;
+    }
+
+    .alertNotif .alert-message, .alert-md .alert-input-group {   
+        padding: 20px 5px 20px 10px !important;
+    h2 {
+        color: red !important;
+    }
+    h6 {
+        color:black !important;
+        font-weight: bold !important;
+    }
+    }
+
+    .alertNotif .alert-button-group {
+        background-color: #cccccc !important;
+        padding: 2px !important;
+    }
+
+    .alertNotif .alert-button {
+        color: 387ef5 !important;
+    }
 }

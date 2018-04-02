@@ -62,6 +62,8 @@ export class VitrineCrudPage {
 
     this.criarFormulario();
     this.excluirImagemEvent();
+
+    this.vitrine.tian_sq_id = "TPA-PUBLICIDADE"
   }
 
   ionViewDidLoad() {

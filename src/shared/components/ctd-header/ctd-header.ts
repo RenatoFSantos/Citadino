@@ -23,6 +23,9 @@ export class CtdHeaderComponent {
   private municipios: MunicipioVO[] = [];
 
   constructor(private glb: GlobalVar) {
-    this.titulo = glb.getMunicipioPadrao().muni_nm_municipio;
+
+    if (glb.getMunicipioPadrao() != null) {
+      this.titulo = glb.getMunicipioPadrao().muni_nm_municipio;
+    }
   }
 }

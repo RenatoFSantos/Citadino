@@ -8,21 +8,23 @@ import { Injectable } from '@angular/core';
 export class CupomCriadoService {
 
   private cupomCriadoRef: any;
+  private cupomUsuarioRef: any;
 
   constructor(private fbService: FirebaseService,
     private mapSrv: MappingsService) {
     this.cupomCriadoRef = this.fbService.getDataBase().ref('cupomcriado');
+    this.cupomUsuarioRef = this.fbService.getDataBase().ref('cupomusuario');
   }
 
-    //Retorna Ref de storage
-    public getStorageRef() {
-      return this.fbService.getStorageRef();
-    }
-  
-    //Retorna storage
-    public getStorage() {
-      return this.fbService.getStorage();
-    }
+  //Retorna Ref de storage
+  public getStorageRef() {
+    return this.fbService.getStorageRef();
+  }
+
+  //Retorna storage
+  public getStorage() {
+    return this.fbService.getStorage();
+  }
 
   public getDataBaseRef() {
     return this.fbService.getDataBase().ref();
@@ -53,8 +55,12 @@ export class CupomCriadoService {
     return this.cupomCriadoRef.child(uidUsuario).orderByChild('cupo_sq_ordem').once("value");
   }
 
-  public baixarCupomTransacion(usuariokey:string, cupomKey:String) {
+  public baixarCupomTransacion(usuariokey: string, cupomKey: String) {
     return this.getCupomRef().child(usuariokey).child(cupomKey).child("cupo_nr_qtdedisponivel");
+  }
+
+  public salvarCupomUsuario(uidCupom: string, uidUsuario: string) {
+    return this.cupomUsuarioRef.child(uidCupom).child(uidUsuario).set(true);
   }
 
 }

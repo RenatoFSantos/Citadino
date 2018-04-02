@@ -8,14 +8,14 @@ export class NotificacaoService {
   constructor() {
   }
 
-  sendUidMensagem(uid: Array<string>, subtitle: string, content: string, eventTypePush: number) {
+  sendUidMensagem(uid: Array<string>, subtitle: string, content: string, dadosNotif:any) {
 
 
     var promise = new Promise(function (resolve, reject) {
 
       window.plugins.OneSignal.getIds(function (ids) {
         var notificationObj = {
-          data: { eventType: eventTypePush },
+          data: { dadosNotif },
           headings: { "en": subtitle },
           contents: { "en": content },
           include_player_ids: uid,

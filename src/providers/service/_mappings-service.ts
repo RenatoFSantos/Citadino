@@ -1,6 +1,9 @@
+import { CupomUsuarioDTO } from './../../model/dominio/cupomUsuarioDTO';
+import { CupomCriadoItemVO } from './../../model/cupomCriadoItemVO';
+import { ItemsService } from './_items-service';
+import { GlobalVar } from './../../shared/global-var';
 import { CupomCriadoVO } from './../../model/cupomCriadoVO';
 import { CupomEmpresaDTO } from './../../model/dominio/cupomEmpresaDTO';
-import { UsuarioCupomDTO } from './../../model/dominio/usuarioCupomDTO';
 import { MunicipioVO } from './../../model/municipioVO';
 import { CupomVO } from './../../model/cupomVO';
 import { EmpresaVO } from './../../model/empresaVO';
@@ -14,7 +17,8 @@ import { CategoriaVO } from '../../model/categoriaVO';
 @Injectable()
 export class MappingsService {
 
-    constructor() { }
+    constructor(private glbVar: GlobalVar,
+        private itenSrv: ItemsService) { }
 
     public getVitrines(snapshot: any): Array<VitrineVO> {
         let vitrines: Array<VitrineVO> = [];
@@ -345,7 +349,7 @@ export class MappingsService {
     public getCupomCriado(snapCupo: any): CupomCriadoVO {
         var empresa: CupomEmpresaDTO = null;
         var municipio: MunicipioVO = null;
-        var usuario: UsuarioCupomDTO = null;
+        var usuario: CupomUsuarioDTO = null;
 
         if (snapCupo.empresa != undefined) {
             empresa = new CupomEmpresaDTO();
@@ -367,7 +371,7 @@ export class MappingsService {
         }
 
         if (snapCupo.usuario != undefined && snapCupo.usuario != null) {
-            usuario = new UsuarioCupomDTO();
+            usuario = new CupomUsuarioDTO();
             usuario.usua_sq_id = snapCupo.usuario.usua_sq_id;
             usuario.usua_nm_usuario = snapCupo.usuario.usua_nm_usuario;
         }
@@ -375,6 +379,7 @@ export class MappingsService {
 
         let cupomCriado: CupomCriadoVO = {
             usuario: usuario,
+            cupo_id: snapCupo.cupo_id != undefined ? snapCupo.cupo_id : null,
             cupo_sq_id: snapCupo.cupo_sq_id,
             cupo_nr_desconto: snapCupo.cupo_nr_desconto,
             cupo_tx_urlimagem: snapCupo.cupo_tx_urlimagem,
@@ -392,7 +397,10 @@ export class MappingsService {
             cupo_in_status: snapCupo.cupo_in_status,
             cupo_sq_ordem: snapCupo.cupo_sq_ordem != undefined ? snapCupo.cupo_sq_ordem : "",
             vitr_sq_id: snapCupo.vitr_sq_id != undefined ? snapCupo.vitr_sq_id : "",
-            cupo_dt_publicado: snapCupo.cupo_dt_publicado != undefined ? snapCupo.cupo_dt_publicado : null
+            cupo_dt_publicado: snapCupo.cupo_dt_publicado != undefined ? snapCupo.cupo_dt_publicado : null,
+            tipo_tx_anuncio: snapCupo.tipo_tx_anuncio != undefined ? snapCupo.tipo_tx_anuncio : "",
+            cupomItens: null,
+            sort_sq_id: snapCupo.sort_sq_id != undefined ? snapCupo.sort_sq_id : ""
         }
 
         return cupomCriado;
@@ -431,6 +439,7 @@ export class MappingsService {
         }
 
         let cupom: CupomVO = {
+            cupo_id: snapCupo.cupo_id != undefined ? snapCupo.cupo_id : null,
             cupo_sq_id: snapCupo.cupo_sq_id,
             cupo_nr_desconto: snapCupo.cupo_nr_desconto,
             cupo_tx_urlimagem: snapCupo.cupo_tx_urlimagem,
@@ -448,7 +457,9 @@ export class MappingsService {
             cupo_in_status: snapCupo.cupo_in_status,
             cupo_sq_ordem: snapCupo.cupo_sq_ordem != undefined ? snapCupo.cupo_sq_ordem : "",
             vitr_sq_id: snapCupo.vitr_sq_id != undefined ? snapCupo.vitr_sq_id : "",
-            cupo_dt_publicado: snapCupo.cupo_dt_publicado != undefined ? snapCupo.cupo_dt_publicado : null
+            cupo_dt_publicado: snapCupo.cupo_dt_publicado != undefined ? snapCupo.cupo_dt_publicado : null,
+            tipo_tx_anuncio: snapCupo.tipo_tx_anuncio != undefined ? snapCupo.tipo_tx_anuncio : "",
+            sort_sq_id: snapCupo.sort_sq_id != undefined ? snapCupo.sort_sq_id : ""
         }
         return cupom;
     }
@@ -541,7 +552,7 @@ export class MappingsService {
             empr_tx_telefone_1: cupom.empresa.empr_tx_telefone_1,
             empr_nr_documento: cupom.empresa.empr_nr_documento,
             muni_sq_id: cupom.empresa.municipio.muni_sq_id,
-            tian_sq_id: "TPA-DESCONTO",
+            tian_sq_id: cupom.tipo_tx_anuncio,
             agen_sq_id: null,
             anun_in_smartsite: null,
             usua_sq_id: cupom.usuario.usua_sq_id,
@@ -572,6 +583,10 @@ export class MappingsService {
         meuCupom.cupo_tx_urlimagem = cupom.cupo_tx_urlimagem;
         meuCupom.cupo_nr_vlatual = cupom.cupo_nr_vlatual;
         meuCupom.cupo_nr_vlcomdesconto = cupom.cupo_nr_vlcomdesconto;
+        meuCupom.tipoCupom = cupom.tipoCupom;
+        meuCupom.tipo_tx_anuncio = cupom.tipo_tx_anuncio;
+        meuCupom.sort_sq_id = cupom.sort_sq_id;
+        meuCupom.cupomItens = null;
 
         var empresa: CupomEmpresaDTO = new CupomEmpresaDTO();
         empresa.empr_sq_id = cupom.empr_sq_id;
@@ -588,8 +603,129 @@ export class MappingsService {
         empresa.municipio = municipio;
         meuCupom.empresa = empresa;
 
-
         return meuCupom;
+    }
+
+    public getCupomCriadoSQL(obj: any): Array<CupomCriadoVO> {
+        var empresa: CupomEmpresaDTO = null;
+        var municipio: MunicipioVO = null;
+        var usuario: CupomUsuarioDTO = null;
+        var cupomCriado: CupomCriadoVO = null;
+        var cupons: Array<CupomCriadoVO> = [];
+        var cuponsItens: Array<CupomCriadoItemVO> = null;
+        var objecFind: CupomCriadoVO = null;
+
+        if (obj != null && obj.rows.length > 0) {
+            for (let index = 0; index < obj.rows.length; index++) {
+
+                var cupomSqId: string = obj.rows.item(index).cupo_sq_id;
+
+                if (cupons != null && cupons.length > 0) {
+                    objecFind = this.itenSrv.findElement(cupons, (v: any) => v.cupo_sq_id == cupomSqId);
+                }
+
+                if (objecFind == null) {
+                    cupomCriado = new CupomCriadoVO();
+
+                    if (obj.rows.item(index).empr_sq_id != null) {
+                        empresa = new CupomEmpresaDTO();
+                        empresa.empr_sq_id = obj.rows.item(index).empr_sq_id;
+                        empresa.empr_nm_fantasia = obj.rows.item(index).empr_nm_fantasia;
+                        empresa.empr_tx_endereco = obj.rows.item(index).empr_tx_endereco;
+                        empresa.empr_tx_bairro = obj.rows.item(index).empr_tx_bairro;
+                        empresa.empr_tx_cidade = obj.rows.item(index).empr_tx_cidade;
+                        empresa.empr_tx_telefone_1 = obj.rows.item(index).empr_tx_telefone_1;
+                        empresa.empr_nr_documento = obj.rows.item(index).empr_nr_documento;
+
+                        if (obj.rows.item(index).muni_sq_id != null) {
+                            municipio = new MunicipioVO();
+                            municipio.muni_sq_id = obj.rows.item(index).muni_sq_id;
+
+                            empresa.municipio = municipio;
+                        } else {
+                            municipio = new MunicipioVO();
+                            empresa.municipio = municipio;
+                        }
+
+                        cupomCriado.empresa = empresa;
+                    }
+                    else {
+                        empresa = new CupomEmpresaDTO();
+                        cupomCriado.empresa = empresa;
+                    }
+
+                    usuario = new CupomUsuarioDTO();
+                    cupomCriado.usuario = usuario;
+     
+                    cupomCriado.cupo_sq_id = cupomSqId;
+                    cupomCriado.cupo_tx_titulo = obj.rows.item(index).cupo_tx_titulo;
+                    cupomCriado.cupo_tx_descricao = obj.rows.item(index).cupo_tx_descricao;
+                    cupomCriado.cupo_tx_regulamento = obj.rows.item(index).cupo_tx_regulamento;
+                    cupomCriado.cupo_dt_validade = obj.rows.item(index).cupo_dt_validade;
+                    cupomCriado.cupo_nr_desconto = obj.rows.item(index).cupo_nr_desconto;
+                    cupomCriado.sort_sq_id = obj.rows.item(index).sort_sq_id;
+
+                    var pathApp: string = this.glbVar.getAppPathStorage().replace("file:///", "/");
+                    var pathImg: string = pathApp + obj.rows.item(index).cupo_tx_urlimagem;
+                    cupomCriado.cupo_tx_urlimagem = pathImg
+
+                    cupomCriado.cupo_nr_vlatual = obj.rows.item(index).cupo_nr_vlatual;
+                    cupomCriado.cupo_nr_vlcomdesconto = obj.rows.item(index).cupo_nr_vlcomdesconto;
+                    cupomCriado.tipoCupom = obj.rows.item(index).tipoCupom;
+                    cupomCriado.cupo_in_status = obj.rows.item(index).cupo_in_status
+
+                    cupomCriado.cupo_dt_cadastro = null;
+                    cupomCriado.cupo_nr_qtdecupom = 0;
+                    cupomCriado.cupo_nr_qtdedisponivel = 0;
+                    cupomCriado.cupo_sq_ordem = "";
+                    cupomCriado.vitr_sq_id = "";
+                    cupomCriado.cupo_dt_publicado = null;
+                    cupomCriado.tipo_tx_anuncio = "";
+
+                    //Cupom de sorteio
+                    if (cupomCriado.tipoCupom == 2) {
+                        cuponsItens = new Array<CupomCriadoItemVO>();
+                        var cupomItem: CupomCriadoItemVO = new CupomCriadoItemVO();
+
+                        cupomItem.id = obj.rows.item(index).coi_id;
+                        cupomItem.cupo_sq_id = obj.rows.item(index).coi_cupo_sq_id;
+                        cupomItem.cupo_nr_cupom = obj.rows.item(index).coi_cupo_nr_cupom;
+
+                        var empresa:CupomEmpresaDTO = new CupomEmpresaDTO();
+                        empresa.empr_sq_id = obj.rows.item(index).coi_empr_sq_id;
+                        empresa.empr_nm_fantasia = obj.rows.item(index).coi_empr_nm_fantasia;
+                        empresa.empr_nr_documento = obj.rows.item(index).coi_empr_nr_documento;  cupomItem.empresa = empresa;
+                        
+                        cupomItem.cupo_in_status = obj.rows.item(index).coi_cupo_in_status;
+
+                        cuponsItens.push(cupomItem);
+                        cupomCriado.cupomItens = cuponsItens;
+                    }
+
+                    cupons.push(cupomCriado);
+
+                }
+                else {
+
+                    var cupomItem: CupomCriadoItemVO = new CupomCriadoItemVO();
+
+                    cupomItem.cupo_sq_id = obj.rows.item(index).coi_cupo_sq_id;
+                    cupomItem.cupo_nr_cupom = obj.rows.item(index).coi_cupo_nr_cupom;
+
+                    var empresa:CupomEmpresaDTO = new CupomEmpresaDTO();
+                    empresa.empr_sq_id = obj.rows.item(index).coi_empr_sq_id;
+                    empresa.empr_nm_fantasia = obj.rows.item(index).coi_empr_nm_fantasia;
+                    empresa.empr_nr_documento = obj.rows.item(index).coi_empr_nr_documento;  cupomItem.empresa = empresa;
+
+                    cupomItem.cupo_in_status = obj.rows.item(index).coi_cupo_in_status;
+
+                    objecFind.cupomItens.push(cupomItem);
+
+                }
+            }
+        }
+
+        return cupons;
     }
 
 }

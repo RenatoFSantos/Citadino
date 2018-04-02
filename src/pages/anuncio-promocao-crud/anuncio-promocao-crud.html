@@ -4,17 +4,6 @@
 <ion-content>
   <form [formGroup]="frmPromocaoCrud" (ngSubmit)="salvar(frmPromocaoCrud.value)">
     <ion-grid>
-      <ion-row *ngIf="usuario.usua_sg_perfil == 'ADM'">
-        <ion-col col-12>
-          <ion-item>
-            <ion-label stacked class="labelProfile">Tipo</ion-label>
-            <ion-select [(ngModel)]="cupom.tipoCupom" formControlName="tipoCupom" interface="popover">
-              <ion-option value="1">% Desconto</ion-option>
-              <ion-option value="2">Sorteio</ion-option>
-            </ion-select>
-          </ion-item>
-        </ion-col>
-      </ion-row>
       <ion-row>
         <ion-col col-12>
           <ion-item>
@@ -58,12 +47,12 @@
         <ion-col col-6>
           <ion-item>
             <ion-label stacked>Quantidade</ion-label>
-            <ion-input type="number" clearInput [(ngModel)]="cupom.cupo_nr_qtdecupom" formControlName="cupo_nr_qtdecupom" [brmasker]="{mask:'000', len:3}"></ion-input>
+            <ion-input type="number" clearInput [(ngModel)]="cupom.cupo_nr_qtdecupom" formControlName="cupo_nr_qtdecupom" [brmasker]="{mask:'00000000', len:8}"></ion-input>
           </ion-item>
           <div *ngIf="(!frmPromocaoCrud.controls.cupo_nr_qtdecupom.valid && frmPromocaoCrud.controls.cupo_nr_qtdecupom.touched)" class="ctd-label-error">*Informe a quantidade.</div>
         </ion-col>
       </ion-row>
-      <ion-row *ngIf="cupom.tipoCupom == 1">
+      <ion-row>
         <ion-col width-25>
           <ion-item>
             <ion-label stacked>Vl. Atual</ion-label>
@@ -75,12 +64,12 @@
           <ion-item>
             <ion-label stacked>% Desconto</ion-label>
             <ion-input type="number" maxlength=9 placeholder="0%" [brmasker]="{mask:'00', len:2}" clearInput [(ngModel)]="cupom.cupo_nr_desconto"
-              formControlName="cupo_nr_desconto"></ion-input>
+              formControlName="cupo_nr_desconto"  ></ion-input>
           </ion-item>
           <div *ngIf="(!frmPromocaoCrud.controls.cupo_nr_desconto.valid && frmPromocaoCrud.controls.cupo_nr_desconto.touched)" class="ctd-label-error">*Informe o desconto.</div>
         </ion-col>
       </ion-row>
-      <ion-row *ngIf="cupom.tipoCupom == 1">
+      <ion-row>
         <ion-col>
           <ion-item no-lines>
             <ion-scroll scrollX="true" scroll-avatar>

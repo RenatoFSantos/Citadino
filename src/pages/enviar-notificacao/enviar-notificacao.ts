@@ -59,7 +59,19 @@ export class EnviarNotificacaoPage implements OnInit {
         var tokens: string[] = result.tokens;
 
         if (tokens.length > 0) {
-          self.notifSrv.sendUidMensagem(tokens, CtdFuncoes.ellipsis(signupForm.notif_tx_titulo, 20), CtdFuncoes.ellipsis(signupForm.notif_tx_mensagem, 1000), enums.eventTypePush.vitrine)
+
+          var msg:string = "";
+          msg = '<h5>'
+          msg = msg + CtdFuncoes.ellipsis(signupForm.notif_tx_mensagem, 1000) 
+          msg = msg  + '</h5>'
+
+
+          var dadosNotif = {
+            titulo: CtdFuncoes.ellipsis(signupForm.notif_tx_titulo, 20),
+            descricao: msg
+          }  
+
+          self.notifSrv.sendUidMensagem(tokens, CtdFuncoes.ellipsis(signupForm.notif_tx_titulo, 20), CtdFuncoes.ellipsis(signupForm.notif_tx_mensagem, 1000), dadosNotif)
             .then(() => {
               this.resetForm();
               loader.dismiss();

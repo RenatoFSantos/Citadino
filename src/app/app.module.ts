@@ -1,3 +1,7 @@
+import { NotificacaoPage } from './../pages/notificacao/notificacao';
+import { AnuncioSorteioCrudPage } from './../pages/anuncio-sorteio-crud/anuncio-sorteio-crud';
+import { AnuncioSorteioPage } from './../pages/anuncio-sorteio/anuncio-sorteio';
+import { SmartSiteCrudPage } from './../pages/smart-site-crud/smart-site-crud';
 import { AnuncioPromocaoDetalhePage } from './../pages/anuncio-promocao-detalhe/anuncio-promocao-detalhe';
 import { CtdListaMunicipio } from './../shared/components/ctd-lista-municipio/ctd-lista-municipio';
 import { CtdBtnPromocaoComponent } from './../shared/components/ctd-btn-promocao/ctd-btn-promocao';
@@ -52,30 +56,31 @@ import ptBr from '@angular/common/locales/pt';
 import { BrMaskerModule } from 'brmasker-ionic-3';
 import { CtdHeaderMunicipio } from '../shared/components/ctd-header-municipio/ctd-header-municipio';
 
+
 registerLocaleData(ptBr)
 
 // providers
 import { APP_PROVIDERS } from '../providers/app.providers';
 
 //Desenvolvimento
-// export const firebaseConfig = {
-//   apiKey: "AIzaSyC0maPdTdMQ7ccxuiXHLcZ1IsgeX7qVD6I",
-//   authDomain: "citadinodsv.firebaseapp.com",
-//   databaseURL: "https://citadinodsv.firebaseio.com",
-//   projectId: "citadinodsv",
-//   storageBucket: "citadinodsv.appspot.com",
-//   messagingSenderId: "180769307423"
-// };
+export const firebaseConfig = {
+  apiKey: "AIzaSyC0maPdTdMQ7ccxuiXHLcZ1IsgeX7qVD6I",
+  authDomain: "citadinodsv.firebaseapp.com",
+  databaseURL: "https://citadinodsv.firebaseio.com",
+  projectId: "citadinodsv",
+  storageBucket: "citadinodsv.appspot.com",
+  messagingSenderId: "180769307423"
+};
 
 //Producao
-export const firebaseConfig = {
-  apiKey: "AIzaSyCuOY5Kt7_Zo08khwYFiLsIQC4kFe5LWwE",
-  authDomain: "citadinoprd-13651.firebaseapp.com",
-  databaseURL: "https://citadinoprd-13651.firebaseio.com",
-  projectId: "citadinoprd-13651",
-  storageBucket: "citadinoprd-13651.appspot.com",
-  messagingSenderId: "960817085241"
-};
+// export const firebaseConfig = {
+//   apiKey: "AIzaSyCuOY5Kt7_Zo08khwYFiLsIQC4kFe5LWwE",
+//   authDomain: "citadinoprd-13651.firebaseapp.com",
+//   databaseURL: "https://citadinoprd-13651.firebaseio.com",
+//   projectId: "citadinoprd-13651",
+//   storageBucket: "citadinoprd-13651.appspot.com",
+//   messagingSenderId: "960817085241"
+// };
 
 
 @NgModule({
@@ -121,7 +126,11 @@ export const firebaseConfig = {
     CtdBtnPromocaoComponent,
     CtdHeaderMunicipio,
     CtdListaMunicipio,
-    AnuncioPromocaoDetalhePage
+    AnuncioPromocaoDetalhePage,
+    SmartSiteCrudPage,
+    AnuncioSorteioPage,
+    AnuncioSorteioCrudPage,
+    NotificacaoPage
   ],
   imports: [
     BrowserModule,
@@ -176,7 +185,11 @@ export const firebaseConfig = {
     CtdBtnPromocaoComponent,
     CtdHeaderMunicipio,
     CtdListaMunicipio,
-    AnuncioPromocaoDetalhePage
+    AnuncioPromocaoDetalhePage,
+    SmartSiteCrudPage,
+    AnuncioSorteioPage,
+    AnuncioSorteioCrudPage,
+    NotificacaoPage
   ],
   providers: [APP_PROVIDERS,
     {provide: LOCALE_ID, useValue: 'pt-PT'}]
