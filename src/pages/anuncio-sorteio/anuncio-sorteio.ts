@@ -148,7 +148,7 @@ export class AnuncioSorteioPage {
         var msg: string = "";
         msg = '<h5>'
         msg = msg + 'Lançamos um novo sorteio para você ! <br><br>'
-        msg = msg + 'Para participar consulte as regras no menu ajuda.' + '<br>'
+        msg = msg + 'Para participar consulte as regras em nossos canais de atendimento.' + '<br>'
         msg = msg + '</h5>'
 
         var dadosNotif = {
