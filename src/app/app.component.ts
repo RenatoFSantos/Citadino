@@ -363,7 +363,7 @@ export class MyApp implements OnInit {
       case enums.ETypeMenu.default:
 
         if (page.params != null) {
-           params = page.params;
+          params = page.params;
         }
 
         if (this.nav.getActiveChildNavs()[0] && page.index != undefined) {
@@ -429,9 +429,9 @@ export class MyApp implements OnInit {
       this.pages.push({ title: 'Meus Anúncios', component: MeusAnunciosPage, icon: 'md-create', typeMenu: enums.ETypeMenu.default });
     }
 
-    this.pages.push({ title: 'Cupons de Descontos', component: MeusCuponsPage, icon: 'ios-cash-outline', typeMenu: enums.ETypeMenu.default, params:{tipoCupom:1} });
+    this.pages.push({ title: 'Cupons de Descontos', component: MeusCuponsPage, icon: 'ios-cash-outline', typeMenu: enums.ETypeMenu.default, params: { tipoCupom: 1 } });
 
-    this.pages.push({ title: 'Cupons de Sorteio', component: MeusCuponsPage, icon: 'md-happy', typeMenu: enums.ETypeMenu.default, params:{tipoCupom:2} });
+    this.pages.push({ title: 'Cupons de Sorteio', component: MeusCuponsPage, icon: 'md-happy', typeMenu: enums.ETypeMenu.default, params: { tipoCupom: 2 } });
 
     this.pages.push({ title: 'Meus Marcados', component: MeusMarcadosPage, icon: 'md-bookmark', typeMenu: enums.ETypeMenu.default });
 
@@ -519,7 +519,7 @@ export class MyApp implements OnInit {
     let alert = this.alertCtrl.create({
       title: data.notification.payload.additionalData.dadosNotif.titulo,
       message: data.notification.payload.additionalData.dadosNotif.descricao,
-      cssClass:'alertNotif', 
+      cssClass: 'alertNotif',
       buttons: ['Fechar']
     });
     alert.present();
@@ -633,7 +633,7 @@ export class MyApp implements OnInit {
     var promise = new Promise(function (resolve, reject) {
 
       if (eventoToken == enums.eventoTokenPush.usuarioAlterar) {
-        
+
         self.tokenSrv.getTokenDeviceRef().child(tokenVinculadoUsuario).child(usuarioVinculadoToken).set(null);
 
         self.tokenSrv.saveToken(self.tokenPushAtual, usuarioLogado.usua_sq_id);
@@ -707,10 +707,12 @@ export class MyApp implements OnInit {
         var munic: MunicipioVO = self.mapSrv.getMunicipio(snapEmpr.val()[element]);
         if (self.glbVar.getMunicipios() == null) {
           self.glbVar.setMunicipios(munic);
+        } else {
+          self.glbVar.getMunicipios().push(munic);
         }
       });
-    });
-  }
+  });
+}
 
 
 
