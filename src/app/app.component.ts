@@ -1,3 +1,4 @@
+import { ItemsService } from './../providers/service/_items-service';
 import { SmartSiteCrudPage } from './../pages/smart-site-crud/smart-site-crud';
 import { MunicipioService } from './../providers/service/municipio-service';
 import { MunicipioVO } from './../model/municipioVO';
@@ -76,7 +77,8 @@ export class MyApp implements OnInit {
     private tokenSrv: TokenDeviceService,
     private oneSignal: OneSignal,
     private mapSrv: MappingsService,
-    private muniSrv: MunicipioService) {
+    private muniSrv: MunicipioService,
+    private itemsService: ItemsService) {
 
     this.platform.ready().then(() => {
       var self = this;
@@ -248,7 +250,7 @@ export class MyApp implements OnInit {
     }
     else {
       // self.rootPage = AjudaPage;
-       this.app.getRootNav().setRoot(AjudaPage);      
+      this.app.getRootNav().setRoot(AjudaPage);
       // this.app.getActiveNavs()[0].setRoot(AjudaPage);
     }
   }
@@ -507,12 +509,12 @@ export class MyApp implements OnInit {
       .endInit();
 
     //Desenvolvimento
-  //   window.plugins.OneSignal
-  //     .startInit("dde460af-2898-4f1a-88b8-ff9fd97be308", "180769307423")
-  //     .handleNotificationOpened(notificationOpenedCallback)
-  //     .handleNotificationReceived(notificationReceivedCallback)
-  //     .inFocusDisplaying(self.oneSignal.OSInFocusDisplayOption.None)
-  //     .endInit();
+    //   window.plugins.OneSignal
+    //     .startInit("dde460af-2898-4f1a-88b8-ff9fd97be308", "180769307423")
+    //     .handleNotificationOpened(notificationOpenedCallback)
+    //     .handleNotificationReceived(notificationReceivedCallback)
+    //     .inFocusDisplaying(self.oneSignal.OSInFocusDisplayOption.None)
+    //     .endInit();
   }
 
   private showAlert(data: any) {
@@ -708,11 +710,15 @@ export class MyApp implements OnInit {
         if (self.glbVar.getMunicipios() == null) {
           self.glbVar.setMunicipios(munic);
         } else {
-          self.glbVar.getMunicipios().push(munic);
+          var objResult: any = self.itemsService.findElement(self.glbVar.getMunicipios(), (v: any) => v.muni_sq_id == munic.muni_sq_id);
+
+          if (objResult == null) {
+            self.glbVar.getMunicipios().push(munic);
+          }
         }
       });
-  });
-}
+    });
+  }
 
 
 
