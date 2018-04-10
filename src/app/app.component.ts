@@ -1,3 +1,4 @@
+import { ItemsService } from './../providers/service/_items-service';
 import { SmartSiteCrudPage } from './../pages/smart-site-crud/smart-site-crud';
 import { MunicipioService } from './../providers/service/municipio-service';
 import { MunicipioVO } from './../model/municipioVO';
@@ -76,7 +77,8 @@ export class MyApp implements OnInit {
     private tokenSrv: TokenDeviceService,
     private oneSignal: OneSignal,
     private mapSrv: MappingsService,
-    private muniSrv: MunicipioService) {
+    private muniSrv: MunicipioService,
+    private itemsService: ItemsService) {
 
     this.platform.ready().then(() => {
       var self = this;
@@ -708,11 +710,15 @@ export class MyApp implements OnInit {
         if (self.glbVar.getMunicipios() == null) {
           self.glbVar.setMunicipios(munic);
         } else {
-          self.glbVar.getMunicipios().push(munic);
+          var objResult: any = self.itemsService.findElement(self.glbVar.getMunicipios(), (v: any) => v.muni_sq_id == munic.muni_sq_id);
+
+          if (objResult == null) {
+            self.glbVar.getMunicipios().push(munic);
+          }
         }
       });
-  });
-}
+    });
+  }
 
 
 
