@@ -708,6 +708,9 @@ export class MyApp implements OnInit {
         if (self.glbVar.getMunicipios() == null) {
           self.glbVar.setMunicipios(munic);
         }
+        else {
+          self.glbVar.getMunicipios().push(munic);
+        }
       });
     });
   }
