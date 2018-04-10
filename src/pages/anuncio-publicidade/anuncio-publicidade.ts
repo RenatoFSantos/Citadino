@@ -272,18 +272,18 @@ export class AnuncioPublicidadePage {
 
               self.minhasPublicSrv.getDataBaseRef().update(updates);
 
-              var msg:string = "";
-              msg = '<h5>'
-              msg = msg + vitrine.empr_nm_fantasia + ' adicionou um novo item na vitrine.<br><br>' 
-              msg = msg  + '</h5>'
+              // var msg:string = "";
+              // msg = '<h5>'
+              // msg = msg + vitrine.empr_nm_fantasia + ' adicionou um novo item na vitrine.<br><br>' 
+              // msg = msg  + '</h5>'
 
   
-              var dadosNotif = {
-                titulo: 'Não deixe de conferir !!!',
-                descricao: msg
-              }              
+              // var dadosNotif = {
+              //   titulo: 'Não deixe de conferir !!!',
+              //   descricao: msg
+              // }              
 
-              self.enviarNotificacao("", dadosNotif);
+              // self.enviarNotificacao("", dadosNotif);
 
             }
             else {
