@@ -63,24 +63,42 @@ export class VitrineService {
     return this.vitrineRef.child(municipioKey).child(vitrineKey).once('value');
   }
 
-  public atualizarNrVisita(vitrine: VitrineVO) {
-    var nrVisita = this.vitrineRef.child(vitrine.muni_sq_id).child(vitrine.vitr_sq_id).child("anun_nr_visitas");
-
-    nrVisita.transaction(function (currentRank) {
-      return currentRank + 1;
-    });
+  public visitarVitrine(vitrine: VitrineVO) {
+    return  this.vitrineRef.child(vitrine.muni_sq_id).child(vitrine.vitr_sq_id).child("anun_nr_visitas");
   }
 
   public curtirVitrine(vitrine: VitrineVO) {
     return this.vitrineRef.child(vitrine.muni_sq_id).child(vitrine.vitr_sq_id).child("anun_nr_curtidas");
   }
 
-  public baixarCupomTransacion(municipioKey:string, vitrineKey:String) {
+  public baixarCupomTransacion(municipioKey: string, vitrineKey: String) {
     return this.vitrineRef.child(municipioKey).child(vitrineKey).child("cupo_nr_qtdedisponivel");
   }
 
-  public baixarCupom() {
-    return this.cupomCriadoRef.child("3rWFZa3v3KTWcks1DSlZJj476Bo2/-L39lWkpyuoBLP_w94j4/cupo_nr_qtdedisponivel");
- 
+  public atualizaCurtirVitrineTodos(keyMunicipio: string, vitrine: VitrineVO, nrCurtida: any) {
+    let self = this;
+
+    self.vitrineRef.child(keyMunicipio).child(vitrine.vitr_sq_id).once("value")
+      .then(snapChild => {
+        if (snapChild.exists()) {
+          this.vitrineRef.child(keyMunicipio).child(vitrine.vitr_sq_id).child("anun_nr_curtidas").set(nrCurtida);
+        }
+      });
   }
+
+  public atualizaNrVisitaTodos(keyMunicipio: string, vitrine: VitrineVO, nrVisitas: any) {
+    let self = this;
+
+    self.vitrineRef.child(keyMunicipio).child(vitrine.vitr_sq_id).once("value")
+      .then(snapChild => {
+        if (snapChild.exists()) {
+          this.vitrineRef.child(keyMunicipio).child(vitrine.vitr_sq_id).child("anun_nr_visitas").set(nrVisitas);
+        }
+      });
+  }
+
+  // public baixarCupom() {
+  //   return this.cupomCriadoRef.child("3rWFZa3v3KTWcks1DSlZJj476Bo2/-L39lWkpyuoBLP_w94j4/cupo_nr_qtdedisponivel");
+
+  // }
 }

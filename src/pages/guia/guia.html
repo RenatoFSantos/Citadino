@@ -1,5 +1,21 @@
 <ion-header>
-    <ctd-header-municipio tela="GUIA"></ctd-header-municipio>
+    <ion-navbar color="ctd-navbar">
+        <ion-grid>
+            <ion-row>
+                <ion-col col-2>
+                    <button ion-button menuToggle left>
+                        <ion-icon name="menu"></ion-icon>
+                    </button>
+                </ion-col>
+                <ion-col col-7 class="municipioSelecionado">
+                    {{this.glbVar.getMunicipioPadraoGuia().muni_nm_municipio}}
+                </ion-col>
+                <ion-col col-3 text-center>
+                    <ion-icon (click)="openCidade()" class="btnGeolocalizacao" name="md-pin"></ion-icon>
+                </ion-col>            
+            </ion-row>
+        </ion-grid>
+    </ion-navbar>
 </ion-header>
 
 <ion-content>

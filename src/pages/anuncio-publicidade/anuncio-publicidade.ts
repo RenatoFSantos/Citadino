@@ -33,6 +33,7 @@ export class AnuncioPublicidadePage {
   private vitrines: any = [];
   private usuario: any;
   private muniEmpr: MunicipioVO;
+  private municTodos:MunicipioVO;
   private toastAlert: any;
   public titulo: string = "Meus Anúncios"
 
@@ -56,6 +57,8 @@ export class AnuncioPublicidadePage {
 
     this.usuario = this.globalVar.usuarioLogado;
     this.getMunicipioEmpresa(this.usuario);
+
+    this.municTodos = this.globalVar.getMunicipioTodos();
   }
 
   ionViewDidLoad() {
@@ -268,7 +271,13 @@ export class AnuncioPublicidadePage {
               updates['/minhaspublicacoes/' + self.usuario.usua_sq_id + '/' + vitrine.vitr_sq_id + '/vitr_sq_ordem'] = newOrder;
 
               updates['/vitrine/' + vitrine.muni_sq_id+ '/' + vitrine.vitr_sq_id + '/vitr_dt_agendada'] = dtAtual;
+
               updates['/vitrine/' + vitrine.muni_sq_id + '/' + vitrine.vitr_sq_id + '/vitr_sq_ordem'] = newOrder;
+
+              //Vitrine Todos
+              updates['/vitrine/' + self.municTodos.muni_sq_id + '/' + vitrine.vitr_sq_id + '/vitr_dt_agendada'] = dtAtual;
+
+              updates['/vitrine/' + self.municTodos.muni_sq_id + '/' + vitrine.vitr_sq_id + '/vitr_sq_ordem'] = newOrder;               
 
               self.minhasPublicSrv.getDataBaseRef().update(updates);
 
@@ -288,9 +297,14 @@ export class AnuncioPublicidadePage {
             }
             else {
 
+              //TABELA MINHAS PUBLICACOES
               updates['/minhaspublicacoes/' + self.usuario.usua_sq_id + '/' + vitrine.vitr_sq_id + '/vitr_dt_agendada'] = dtAtual;
+              
               updates['/minhaspublicacoes/' + self.usuario.usua_sq_id + '/' + vitrine.vitr_sq_id + '/vitr_sq_ordem'] = newOrder;
+              
+              //TABELA VITRINE
               updates['/vitrine/' + vitrine.muni_sq_id + '/' + vitrine.vitr_sq_id] = vitrine;
+              updates['/vitrine/' + self.municTodos.muni_sq_id + '/' + vitrine.vitr_sq_id] = vitrine;
 
               self.minhasPublicSrv.getDataBaseRef().update(updates);
 

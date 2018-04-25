@@ -10,20 +10,23 @@ export class GlobalVar {
   private isFirebaseConnected: boolean;
   private isSqlConnected: boolean;
   private isCordova: boolean;
-  private municipioPadrao: MunicipioVO;
+  private municipioPadraoVitrine: MunicipioVO;
+  private municipioPadraoGuia: MunicipioVO;
+  private municipioTodos: MunicipioVO;
   private municipios: Array<MunicipioVO> = null;
   private appPathStorage: string;
   private myPathStorage: string = "";
-  private versaoApp:string = "1"; 
+  private versaoApp: string = "1";
 
   constructor() {
     this.isNetworkConnected = false;
     this.isFirebaseConnected = false;
     this.isSqlConnected = false;
     this.isCordova = false;
-    this.municipioPadrao = null;
+    this.municipioPadraoVitrine = null;
+    this.municipioPadraoGuia = null;
     this.appPathStorage = "";
-    this.myPathStorage = "";   
+    this.myPathStorage = "";
   }
 
   public getIsNetworkConnected(): boolean {
@@ -70,12 +73,20 @@ export class GlobalVar {
     return result;
   }
 
-  public setMunicipioPadrao(munic: MunicipioVO) {
-    this.municipioPadrao = munic;
+  public setMunicipioPadraoGuia(munic: MunicipioVO) {
+    this.municipioPadraoGuia = munic;
   }
 
-  public getMunicipioPadrao() {
-    return this.municipioPadrao;
+  public getMunicipioPadraoGuia() {
+    return this.municipioPadraoGuia;
+  }
+
+  public setMunicipioPadraoVitrine(munic: MunicipioVO) {
+    this.municipioPadraoVitrine = munic;
+  }
+
+  public getMunicipioPadraoVitrine() {
+    return this.municipioPadraoVitrine;
   }
 
   public setMunicipios(municipio: MunicipioVO) {
@@ -108,5 +119,13 @@ export class GlobalVar {
 
   public getVersaoApp() {
     return this.versaoApp;
-  } 
+  }
+
+  public getMunicipioTodos() {
+    return this.municipioTodos;
+  }
+
+  public setMunicipioTodos(value: MunicipioVO) {
+    this.municipioTodos = value;
+  }
 }

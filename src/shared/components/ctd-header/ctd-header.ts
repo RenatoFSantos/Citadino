@@ -24,8 +24,8 @@ export class CtdHeaderComponent {
 
   constructor(private glb: GlobalVar) {
 
-    if (glb.getMunicipioPadrao() != null) {
-      this.titulo = glb.getMunicipioPadrao().muni_nm_municipio;
+    if (glb.getMunicipioPadraoGuia() != null) {
+      this.titulo = glb.getMunicipioPadraoGuia().muni_nm_municipio;
     }
   }
 }

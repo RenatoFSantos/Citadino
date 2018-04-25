@@ -1,19 +1,19 @@
 <ion-navbar color="ctd-navbar">
     <ion-grid>
         <ion-row>
-            <ion-col col-7 class="municipioSelecionado">
-                <!-- {{municipioSelected.muni_nm_municipio}} -->
-                {{this.glbVar.getMunicipioPadrao().muni_nm_municipio}}
-            </ion-col>
-            <ion-col col-2 text-center>
-                <!-- <button ion-button icon-only (click)="openCidade()"> -->
-                    <ion-icon  (click)="openCidade()" class="btnGeolocalizacao" name="md-pin"></ion-icon>
-                <!-- </button> -->
-            </ion-col>
-            <ion-col col-3 text-right>
-                <button ion-button menuToggle right>
+            <ion-col col-2>
+                <button ion-button menuToggle left>
                     <ion-icon name="menu"></ion-icon>
                 </button>
+            </ion-col>
+            <ion-col col-7 class="municipioSelecionado">
+                {{this.glbVar.getMunicipioPadraoGuia().muni_nm_municipio}}
+            </ion-col>
+            <ion-col col-3 text-center *ngIf="exibirTodos == false">
+                <ion-icon (click)="openCidade()" class="btnGeolocalizacao" name="md-pin"></ion-icon>
+            </ion-col>
+            <ion-col col-3 text-right *ngIf="exibirTodos == true">
+                <ion-icon class="btnGeolocalizacao" name="md-search"></ion-icon>
             </ion-col>
         </ion-row>
     </ion-grid>
