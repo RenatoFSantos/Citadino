@@ -51,9 +51,6 @@ export class CtdButtonsComponent {
   @Input()
   public isBtnNrCurtir: Boolean = false;
 
-  @Input()
-  public isBtnChutarCurti: Boolean = false;
-
 
   private usuarioLogado: UsuarioVO;
   private toastAlert: any;
@@ -227,13 +224,6 @@ export class CtdButtonsComponent {
     }
   }
 
-
-  public chutarCurtir() {
-    this.events.publish("chutarCurtir:true", (this.vitrine));
-  }
-
-
-
   createToast(errorMessage: string) {
     if (this.toastAlert != null) {
       this.toastAlert.dismiss();
@@ -316,9 +306,6 @@ export class CtdButtonsComponent {
     //return this.isBtnNrVisita;
   }
 
-  public exibirBtnChutarCurtir(): Boolean {
-    return this.usuarioLogado.usua_sg_perfil == "ADM" && this.isBtnChutarCurti == true;
-  }
 
   public exibirBtnCurtir(): Boolean {
 

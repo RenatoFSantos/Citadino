@@ -17,8 +17,6 @@ export class CtdListaMunicipio {
   public municSelected: MunicipioVO = new MunicipioVO();
   public municipios: MunicipioVO[] = [];
   private tela: string;
-  private exibirTodos: boolean;
-
 
   constructor(private muniSrv: MunicipioService,
     private mapSrv: MappingsService,
@@ -30,43 +28,26 @@ export class CtdListaMunicipio {
     private app: App) {
 
     this.tela = param.get("tela");
-    this.exibirTodos = param.get("exibirTodos");
-
     this.carregaMunicipio();
-
-    if (this.tela == "VITRINE") {
-      this.municSelected = this.glbVar.getMunicipioPadraoVitrine();
-    }
-    else {
-      this.municSelected = this.glbVar.getMunicipioPadraoGuia();
-    }
+    this.municSelected = this.glbVar.getMunicipioPadrao();
   }
 
   private carregaMunicipio() {
 
-    if (this.exibirTodos == true) {
-      this.municipios.push(this.glbVar.getMunicipioTodos());
-    }
-
-    this.glbVar.getMunicipios().forEach(element => {
-      this.municipios.push(element);
-    });
+    this.municipios = this.glbVar.getMunicipios();
 
   }
 
   public municipioSelecionado(munic: MunicipioVO) {
 
     if (this.municSelected.muni_sq_id != munic.muni_sq_id) {
+      this.glbVar.setMunicipioPadrao(munic);
+      this.municSelected = this.glbVar.getMunicipioPadrao();
 
       if (this.tela == "VITRINE") {
-        this.glbVar.setMunicipioPadraoVitrine(munic);
-        this.municSelected = this.glbVar.getMunicipioPadraoVitrine();
-
         this.events.publish("vitrine:onChangeMunicipio");
       }
       else if (this.tela == "GUIA") {
-        this.glbVar.setMunicipioPadraoGuia(munic);
-        this.municSelected = this.glbVar.getMunicipioPadraoGuia();
         this.events.publish("guia:municipio");
       }
     }

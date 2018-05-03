@@ -13,37 +13,24 @@ import { Component, Input } from '@angular/core';
 })
 
 export class CtdHeaderMunicipio {
-
+  
   @Input()
   public tela: string = "";
 
-  @Input()
-  public exibirTodos: boolean = false;
-
   public municipios: MunicipioVO[] = [];
-  public municipioSelected: MunicipioVO;
-
+  public municipioSelected:MunicipioVO;
+  
   constructor(private muniSrv: MunicipioService,
-    private mapSrv: MappingsService,
-    private glbVar: GlobalVar,
-    private mdlCtrl: ModalController) {
-
-    if (this.exibirTodos == true) {
-      this.municipioSelected = this.glbVar.getMunicipioPadraoVitrine();
-    }
-    else {
-      this.municipioSelected = this.glbVar.getMunicipioPadraoGuia();
-    }
+              private mapSrv: MappingsService,
+              private glbVar: GlobalVar,
+              private mdlCtrl: ModalController) {
+               
+    this.municipioSelected = this.glbVar.getMunicipioPadrao();
   }
 
   public openCidade() {
-    let modal = this.mdlCtrl.create(CtdListaMunicipio, { tela: this.tela, exibirTodos: this.exibirTodos });
+    let modal = this.mdlCtrl.create(CtdListaMunicipio,{tela: this.tela});
     modal.present();
-  }
-
-  public ionViewDidEnter() {
-    console.log("ok");
-
   }
 
 }

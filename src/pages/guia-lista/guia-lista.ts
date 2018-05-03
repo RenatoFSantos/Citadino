@@ -32,7 +32,7 @@ export class GuiaListaPage implements OnInit {
     private viewCtrl: ViewController,
     private glbVar:GlobalVar) {
 
-    this.municipioAnterior = this.glbVar.getMunicipioPadraoGuia().muni_sq_id;
+    this.municipioAnterior = this.glbVar.getMunicipioPadrao().muni_sq_id;
     this.categoriaNome = navParams.get("categNm");
     this.empresasKey = navParams.get("emprKeys");
   }
@@ -42,9 +42,9 @@ export class GuiaListaPage implements OnInit {
   }
 
   ionViewDidEnter() {
-    if (this.municipioAnterior != this.glbVar.getMunicipioPadraoGuia().muni_sq_id) {
+    if (this.municipioAnterior != this.glbVar.getMunicipioPadrao().muni_sq_id) {
      this.viewCtrl.dismiss();
-      this.municipioAnterior = this.glbVar.getMunicipioPadraoGuia().muni_sq_id;
+      this.municipioAnterior = this.glbVar.getMunicipioPadrao().muni_sq_id;
     }
   }
 

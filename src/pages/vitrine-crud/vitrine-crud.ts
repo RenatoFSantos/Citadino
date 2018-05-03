@@ -96,7 +96,7 @@ export class VitrineCrudPage {
             self.vitrine.muni_sq_id = munic.muni_sq_id;
           }
           else {
-            self.vitrine.muni_sq_id = self.glbVar.getMunicipioPadraoVitrine().muni_sq_id;
+            self.vitrine.muni_sq_id = self.glbVar.getMunicipioPadrao().muni_sq_id;
           }
 
           if (snapEmpresa.child("smartsite").exists()) {
@@ -143,7 +143,7 @@ export class VitrineCrudPage {
       var newOrder = String(new Date().getTime());
       var newOrdeMunic = newOrder + '_' + self.vitrine.muni_sq_id;
 
-      var vitrineId = self.vtSrv.getNewUidVitrine(self.glbVar.getMunicipioPadraoVitrine().muni_sq_id);
+      var vitrineId = self.vtSrv.getNewUidVitrine(self.glbVar.getMunicipioPadrao().muni_sq_id);
       var dtAtual = CtdFuncoes.convertDateToStr(new Date(), enums.DateFormat.enUS);
       var nmEmpresa = self.vitrine.empr_nm_fantasia;
 

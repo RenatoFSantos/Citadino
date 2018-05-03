@@ -22,6 +22,15 @@ export class MinhasPublicacoesService {
     return this.minhasPublicacoesRef;
   }
 
+  public curtirPublicacao(vitrine: VitrineVO) {
+    return this.minhasPublicacoesRef.child(vitrine.usua_sq_id).child(vitrine.vitr_sq_id).child("anun_nr_curtidas");
+  }
+
+  public visitarPublicacao(vitrine: VitrineVO) {
+    return this.minhasPublicacoesRef.child(vitrine.usua_sq_id).child(vitrine.vitr_sq_id).child("anun_nr_visitas");
+  }
+
+  
   public getMinhasPublicacoesPorUsuario(uidUsuario: string) {
     return this.minhasPublicacoesRef.child(uidUsuario).orderByChild('vitr_sq_ordem');
   }

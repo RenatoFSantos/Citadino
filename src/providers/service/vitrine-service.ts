@@ -27,6 +27,10 @@ export class VitrineService {
     return this.fbService.getStorage();
   }
 
+  public getDataBaseRef() {
+    return this.fbService.getDataBase().ref();
+  }
+
   public getVitrineRefTotal(seqMunicipio: string) {
     return this.vitrineRef.child(seqMunicipio).orderByChild('vitr_sq_ordem').once('value')
   }
@@ -63,8 +67,9 @@ export class VitrineService {
     return this.vitrineRef.child(municipioKey).child(vitrineKey).once('value');
   }
 
-  public visitarVitrine(vitrine: VitrineVO) {
-    return  this.vitrineRef.child(vitrine.muni_sq_id).child(vitrine.vitr_sq_id).child("anun_nr_visitas");
+
+  public atualizarNrCurtida(vitrine: VitrineVO, nrCurtida) {
+    this.vitrineRef.child(vitrine.muni_sq_id).child(vitrine.vitr_sq_id).child("anun_nr_visitas").set(nrCurtida);
   }
 
   public curtirVitrine(vitrine: VitrineVO) {
@@ -75,30 +80,8 @@ export class VitrineService {
     return this.vitrineRef.child(municipioKey).child(vitrineKey).child("cupo_nr_qtdedisponivel");
   }
 
-  public atualizaCurtirVitrineTodos(keyMunicipio: string, vitrine: VitrineVO, nrCurtida: any) {
-    let self = this;
+  public baixarCupom() {
+    return this.cupomCriadoRef.child("3rWFZa3v3KTWcks1DSlZJj476Bo2/-L39lWkpyuoBLP_w94j4/cupo_nr_qtdedisponivel");
 
-    self.vitrineRef.child(keyMunicipio).child(vitrine.vitr_sq_id).once("value")
-      .then(snapChild => {
-        if (snapChild.exists()) {
-          this.vitrineRef.child(keyMunicipio).child(vitrine.vitr_sq_id).child("anun_nr_curtidas").set(nrCurtida);
-        }
-      });
   }
-
-  public atualizaNrVisitaTodos(keyMunicipio: string, vitrine: VitrineVO, nrVisitas: any) {
-    let self = this;
-
-    self.vitrineRef.child(keyMunicipio).child(vitrine.vitr_sq_id).once("value")
-      .then(snapChild => {
-        if (snapChild.exists()) {
-          this.vitrineRef.child(keyMunicipio).child(vitrine.vitr_sq_id).child("anun_nr_visitas").set(nrVisitas);
-        }
-      });
-  }
-
-  // public baixarCupom() {
-  //   return this.cupomCriadoRef.child("3rWFZa3v3KTWcks1DSlZJj476Bo2/-L39lWkpyuoBLP_w94j4/cupo_nr_qtdedisponivel");
-
-  // }
 }

@@ -1,4 +1,3 @@
-import { CtdListaMunicipio } from './../../shared/components/ctd-lista-municipio/ctd-lista-municipio';
 import { CupomCriadoItemVO } from './../../model/cupomCriadoItemVO';
 import { UsuarioSqlService } from './../../providers/database/usuario-sql-service';
 import { DownloadImageService } from './../../providers/service/download-image-service';
@@ -81,8 +80,57 @@ export class VitrinePage implements OnInit {
     private cupomCriadoSrv: CupomCriadoService,
     private sorteioSrv: SorteioCriadoService) {
 
-    // this.municipioAnterior = this.glbVar.getMunicipioPadraoVitrine().muni_sq_id;
+    // this.municipioAnterior = this.glbVar.getMunicipioPadrao().muni_sq_id;
     // this.loadVitrines();
+  }
+
+  loadVitrines() {
+    var self = this;
+
+    self.startPk = "";
+    self.rowCount = 0;
+    self.rowCurrent = 0;
+    self.vitrines = [];
+
+    if (this.glbVar.getIsFirebaseConnected()) {
+
+      this.loadCtrl = this.loadingCtrl.create({
+        spinner: 'circles'
+      });
+
+      this.loadCtrl.present();
+
+      this.vitrineSrv.getVitrineRef().once("value").then((snapShot) => {
+        if (snapShot.exists()) {
+
+          self.connectRealTime();
+
+          self.vitrineSrv.getVitrineRefTotal(self.glbVar.getMunicipioPadrao().muni_sq_id).then((snapShot) => {
+
+            if (snapShot.val() != null) {
+              self.rowCount = snapShot.numChildren();
+              this.getVitrines().then(() => {
+                this.loadCtrl.dismiss();
+                this.municipioAnterior = self.municipioAnterior = self.glbVar.getMunicipioPadrao().muni_sq_id;
+              });
+            } else {
+              this.createAlert("Não existe publicação para essa cidade.");
+              this.loadCtrl.dismiss();
+            }
+
+          }).catch((error) => {
+            this.loadCtrl.dismiss();
+            console.log(error);
+            self.rowCount = 0;
+          })
+        }
+        else {
+          this.loadCtrl.dismiss();
+        }
+      })
+    } else {
+      this.createAlert("Ops!!! Não estou conseguindo carregar a vitrine. Tente mais tarde!");
+    }
   }
 
   ionViewDidLoad() {
@@ -91,13 +139,11 @@ export class VitrinePage implements OnInit {
     this.bancoDadosOnlineEvent();
     this.atualizarNrVisitaEvent();
     this.curtirVitrineEvent();
-    this.chutarCurtirEvent();
     this.onChangeMunicipioEvent();
   }
 
   ionViewDidEnter() {
-
-    if (this.municipioAnterior != this.glbVar.getMunicipioPadraoVitrine().muni_sq_id) {
+    if (this.municipioAnterior != this.glbVar.getMunicipioPadrao().muni_sq_id) {
       this.atualizaDadosVitrine();
     }
   }
@@ -112,63 +158,6 @@ export class VitrinePage implements OnInit {
   }
 
   ngOnInit() { }
-
-  public onChangeMunicipioEvent() {
-    let self = this;
-
-    this.events.subscribe("vitrine:onChangeMunicipio", () => {
-      self.atualizaDadosVitrine();
-    });
-  }
-
-  loadVitrines() {
-    var self = this;
-
-    self.startPk = "";
-    self.rowCount = 0;
-    self.rowCurrent = 0;
-    self.vitrines = [];
-
-    if (self.glbVar.getIsFirebaseConnected()) {
-
-      self.loadCtrl = self.loadingCtrl.create({
-        spinner: 'circles'
-      });
-
-      self.loadCtrl.present();
-
-      self.connectRealTime();
-
-      self.vitrineSrv.getVitrineRef().once("value").then((snapShot) => {
-        if (snapShot.exists()) {
-
-          self.vitrineSrv.getVitrineRefTotal(self.glbVar.getMunicipioPadraoVitrine().muni_sq_id).then((snapShot) => {
-
-            if (snapShot.val() != null) {
-              self.rowCount = snapShot.numChildren();
-              self.getVitrines().then(() => {
-                self.loadCtrl.dismiss();
-                self.municipioAnterior = self.glbVar.getMunicipioPadraoVitrine().muni_sq_id;
-              });
-            } else {
-              self.loadCtrl.dismiss();
-              self.createAlert("Não existe publicação para essa cidade.");
-            }
-
-          }).catch((error) => {
-            self.loadCtrl.dismiss();
-            console.log(error);
-            self.rowCount = 0;
-          })
-        }
-        else {
-          self.loadCtrl.dismiss();
-        }
-      })
-    } else {
-      self.createAlert("Ops!!! Não estou conseguindo carregar a vitrine. Tente mais tarde!");
-    }
-  }
 
   getVitrines() {
     var self = this;
@@ -187,7 +176,7 @@ export class VitrinePage implements OnInit {
       let anuncios: any = [];
       var usuario: UsuarioVO = self.glbVar.usuarioLogado;
 
-      self.vitrineSrv.getVitrineMunicipio(self.glbVar.getMunicipioPadraoVitrine().muni_sq_id, self.limitPage, self.startPk)
+      self.vitrineSrv.getVitrineMunicipio(self.glbVar.getMunicipioPadrao().muni_sq_id, self.limitPage, self.startPk)
         .then((snapshot: any) => {
 
           anuncios = self.itemsService.getPropertyValues(snapshot.val(), "vitr_sq_ordem");
@@ -267,9 +256,7 @@ export class VitrinePage implements OnInit {
 
 
   openPage(vitrine: VitrineVO) {
-    var nrVisitaRef = this.vitrineSrv.visitarVitrine(vitrine);
-    this.visitaTransaction(nrVisitaRef, vitrine);
-
+    this.atualizarNrVisita(vitrine);
     if (vitrine.anun_tx_urlslide1 != null && vitrine.anun_tx_urlslide1 != "") {
       this.openSlideNoticia(vitrine);
     }
@@ -546,18 +533,68 @@ export class VitrinePage implements OnInit {
   public atualizarNrVisitaEvent() {
     let self = this;
     this.events.subscribe('atualizarNrVisita:true', (vitrine: VitrineVO) => {
-      var nrVisitaRef = self.vitrineSrv.visitarVitrine(vitrine);
-      self.visitaTransaction(nrVisitaRef, vitrine);
+      var visualizarRef = self.minhaPubSrv.visitarPublicacao(vitrine);
+      self.visualizarTransaction(visualizarRef, vitrine);
     });
   }
 
+  public atualizarNrVisita(vitrine:VitrineVO) {
+    let self = this;   
+    var visualizarRef = self.minhaPubSrv.visitarPublicacao(vitrine);
+    self.visualizarTransaction(visualizarRef, vitrine);   
+  }
 
-  public chutarCurtirEvent() {
-    var self = this;
-    this.events.subscribe('chutarCurtir:true', (vitrine: VitrineVO) => {
-      var nrVisitaRef = self.vitrineSrv.curtirVitrine(vitrine);
-      self.curtirTransaction(nrVisitaRef, vitrine);
+  private visualizarTransaction(visualizarRef: any, vitrine: VitrineVO) {
+    let self = this;
+
+    visualizarRef.transaction(function (currentRank) {
+      return currentRank + 1;
+    }, function (error, committed, snapshot) {
+      if (error) {
+        throw new Error(error);
+      } else if (!committed) {
+        throw new Error("Não foi possível visualizar o anúncio");
+      } else {
+
+        self.atualizarNrVisitas(vitrine, snapshot.val())
+          .then((updates) => {
+            self.vitrineSrv.getDataBaseRef().update(updates);
+          });
+      }
     });
+  }
+
+  private atualizarNrVisitas = function (vitrine: VitrineVO, nrVisitas: any) {
+    var self = this;
+    let updates = {};
+
+    var promise = new Promise(function (resolve, reject) {
+
+      self.emprSrv.getEmpresaPorKey(vitrine.empr_sq_id)
+        .then((snapEmpresa) => {
+          if (snapEmpresa.val() != null && snapEmpresa.val().municipioanuncio != null) {
+            var municipiosKey: String[] = Object.keys(snapEmpresa.val().municipioanuncio);
+
+            var count = 0;
+            var totalMunic = municipiosKey.length;
+
+            municipiosKey.forEach(element => {
+              count++;
+
+              updates['/vitrine/' + element + '/' + vitrine.vitr_sq_id + '/anun_nr_visitas'] = nrVisitas;
+
+              if (totalMunic == count) {
+                resolve(updates);
+              }
+            });
+          }
+        })
+        .catch((error) => {
+          reject(error);
+        });
+    });
+
+    return promise;
   }
 
   public curtirVitrineEvent() {
@@ -570,8 +607,8 @@ export class VitrinePage implements OnInit {
           .then((result) => {
             if (result.val() == null) {
               self.vtrCut.salvar(vitrine.vitr_sq_id, usuario.usua_sq_id, true).then(() => {
-                var nrVisitaRef = self.vitrineSrv.curtirVitrine(vitrine);
-                self.curtirTransaction(nrVisitaRef, vitrine);
+                var nrCurtidaRef = self.minhaPubSrv.curtirPublicacao(vitrine);
+                self.curtirTransaction(nrCurtidaRef, vitrine);
               });
             }
           });
@@ -581,7 +618,7 @@ export class VitrinePage implements OnInit {
     });
   }
 
-  private visitaTransaction(nrVisita: any, vitrine: VitrineVO) {
+  private curtirTransaction(nrVisita: any, vitrine: VitrineVO) {
     let self = this;
 
     nrVisita.transaction(function (currentRank) {
@@ -590,38 +627,17 @@ export class VitrinePage implements OnInit {
       if (error) {
         throw new Error(error);
       } else if (!committed) {
-        throw new Error("Não foi possível visitar o anúncio");
-      } else {
-        self.atualizaVisitarVitrineTodos(vitrine, snapshot.val());
-      }
-    });
-  }
-
-  private curtirTransaction(nrCurtir: any, vitrine: VitrineVO) {
-    let self = this;
-
-    nrCurtir.transaction(function (currentRank) {
-      return currentRank + 1;
-    }, function (error, committed, snapshot) {
-      if (error) {
-        throw new Error(error);
-      } else if (!committed) {
         throw new Error("Não foi possível curtir o anúncio");
       } else {
-        self.atualizaCurtirVitrineTodos(vitrine, snapshot.val());
-        self.sorteioCurtir(vitrine);
+
+        self.atualizarNrCurtida(vitrine, snapshot.val())
+          .then((updates) => {
+            self.vitrineSrv.getDataBaseRef().update(updates);
+            self.sorteioCurtir(vitrine);
+          });
+
       }
     });
-  }
-
-  private atualizaCurtirVitrineTodos(vitrine: VitrineVO, nrCurtida: any) {
-    var municTodos: MunicipioVO = this.glbVar.getMunicipioTodos();
-    this.vitrineSrv.atualizaCurtirVitrineTodos(municTodos.muni_sq_id, vitrine, nrCurtida);
-  }
-
-  private atualizaVisitarVitrineTodos(vitrine: VitrineVO, nrVisita: any) {
-    var municTodos: MunicipioVO = this.glbVar.getMunicipioTodos();
-    this.vitrineSrv.atualizaNrVisitaTodos(municTodos.muni_sq_id, vitrine, nrVisita);
   }
 
   private sorteioCurtir(vitrine: VitrineVO) {
@@ -667,6 +683,39 @@ export class VitrinePage implements OnInit {
       .catch((error) => {
         throw new Error(error);
       });
+  }
+
+  private atualizarNrCurtida = function (vitrine: VitrineVO, nrCurtir: any) {
+    var self = this;
+    let updates = {};
+
+    var promise = new Promise(function (resolve, reject) {
+
+      self.emprSrv.getEmpresaPorKey(vitrine.empr_sq_id)
+        .then((snapEmpresa) => {
+          if (snapEmpresa.val() != null && snapEmpresa.val().municipioanuncio != null) {
+            var municipiosKey: String[] = Object.keys(snapEmpresa.val().municipioanuncio);
+
+            var count = 0;
+            var totalMunic = municipiosKey.length;
+
+            municipiosKey.forEach(element => {
+              count++;
+
+              updates['/vitrine/' + element + '/' + vitrine.vitr_sq_id + '/anun_nr_curtidas'] = nrCurtir;
+
+              if (totalMunic == count) {
+                resolve(updates);
+              }
+            });
+          }
+        })
+        .catch((error) => {
+          reject(error);
+        });
+    });
+
+    return promise;
   }
 
   private statusVitrineMarcada = function (self: any, vitrine: VitrineVO, usuario: UsuarioVO) {
@@ -715,17 +764,24 @@ export class VitrinePage implements OnInit {
   }
 
 
+  public onChangeMunicipioEvent() {
+    let self = this;
+
+    this.events.subscribe("vitrine:onChangeMunicipio", () => {
+      self.atualizaDadosVitrine();
+    });
+  }
+
   private disconectRealTime() {
 
     let self = this;
 
     if (self.municipioAnterior != "") {
+      self.vitrineSrv.getVitrineRef().child(self.municipioAnterior).off('child_added');
 
-      this.vitrineSrv.getVitrineRef().child(self.municipioAnterior).off('child_added');
+      self.vitrineSrv.getVitrineRef().child(self.municipioAnterior).off('child_removed');
 
-      this.vitrineSrv.getVitrineRef().child(self.municipioAnterior).off('child_removed');
-
-      this.vitrineSrv.getVitrineRef().child(self.municipioAnterior).off('child_changed');
+      self.vitrineSrv.getVitrineRef().child(self.municipioAnterior).off('child_changed');
     }
   }
 
@@ -733,13 +789,11 @@ export class VitrinePage implements OnInit {
 
     let self = this;
 
-    self.municipioAnterior;
+    this.vitrineSrv.getVitrineRef().child(self.glbVar.getMunicipioPadrao().muni_sq_id).on('child_added', this.onVitrineAdded);
 
-    this.vitrineSrv.getVitrineRef().child(self.glbVar.getMunicipioPadraoVitrine().muni_sq_id).on('child_added', this.onVitrineAdded);
+    this.vitrineSrv.getVitrineRef().child(self.glbVar.getMunicipioPadrao().muni_sq_id).on('child_removed', this.onVitrineRemove);
 
-    this.vitrineSrv.getVitrineRef().child(self.glbVar.getMunicipioPadraoVitrine().muni_sq_id).on('child_removed', this.onVitrineRemove);
-
-    this.vitrineSrv.getVitrineRef().child(self.glbVar.getMunicipioPadraoVitrine().muni_sq_id).on('child_changed', this.onVitrineChange);
+    this.vitrineSrv.getVitrineRef().child(self.glbVar.getMunicipioPadrao().muni_sq_id).on('child_changed', this.onVitrineChange);
   }
 
   public onVitrineAdded = (childSnapshot, prevChildKey) => {
@@ -803,12 +857,12 @@ export class VitrinePage implements OnInit {
         oldVitrine = self.mapSrv.copyVitrine(oldVitrine, newVitrine);
 
 
-        // if (newVitrine.usua_sq_id != "" && inStatusCurtida != false) {
-        //   newVitrine.anun_in_curtida = inStatusCurtida;
-        self.minhaPubSrv.atualizarDadosVitrine(newVitrine);
-        // }
+        if (newVitrine.usua_sq_id != "" && inStatusCurtida != false) {
+          newVitrine.anun_in_curtida = inStatusCurtida;
+          self.minhaPubSrv.atualizarDadosVitrine(newVitrine);
+        }
       }
-      else if (oldVitrine.vitr_sq_ordem != newVitrine.vitr_sq_ordem) {
+      else {
         self.newVitrines.push(newVitrine);
         self.events.publish('thread:created', self.newVitrines);
 
@@ -817,11 +871,6 @@ export class VitrinePage implements OnInit {
         }
       }
     }
-  }
-
-  public openCidade() {
-    let modal = this.mdlCtrl.create(CtdListaMunicipio, { tela: 'VITRINE', exibirTodos: true });
-    modal.present();
   }
 
   private atualizaDadosVitrine() {

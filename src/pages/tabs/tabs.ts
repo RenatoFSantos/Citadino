@@ -80,6 +80,7 @@ export class TabsPage implements OnInit {
           if (element.val() == true) {
             totalMensage++;
           }
+
           this.events.publish('mensagem:nova', totalMensage);
         });
       });
@@ -88,28 +89,20 @@ export class TabsPage implements OnInit {
 
   private setMunicipioPadrao() {
 
-    var municTotos: MunicipioVO = new MunicipioVO();
-    municTotos.muni_sq_id = "9999999999";
-    municTotos.muni_nm_municipio = "Todos";
-    this.glbVar.setMunicipioTodos(municTotos);
-
     if (this.glbVar.usuarioLogado != null) {
       var usuario: UsuarioVO = this.glbVar.usuarioLogado;
 
       if (usuario.municipio != null && usuario.municipio.muni_sq_id != null) {
-        this.glbVar.setMunicipioPadraoGuia(usuario.municipio);
-        this.glbVar.setMunicipioPadraoVitrine(usuario.municipio);
+        this.glbVar.setMunicipioPadrao(usuario.municipio);
       }
       else {
-
         var munic: MunicipioVO = new MunicipioVO();
         munic.muni_sq_id = "-KoJyCiR1SOOUrRGimAS";
         munic.muni_nm_municipio = "Bicas";
-        this.glbVar.setMunicipioPadraoGuia(munic);
-        this.glbVar.setMunicipioPadraoVitrine(this.glbVar.getMunicipioTodos());
+
+        this.glbVar.setMunicipioPadrao(munic);
       }
     }
-
   }
 
 }

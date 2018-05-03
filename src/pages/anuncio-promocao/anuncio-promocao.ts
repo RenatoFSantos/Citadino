@@ -169,9 +169,6 @@ export class AnuncioPromocaoPage {
 
           updates['/vitrine/' + vitrine.muni_sq_id + '/' + vitrine.vitr_sq_id] = vitrine;
 
-          //TODOS MUNICIPIOS
-          updates['/vitrine/' + self.glbVar.getMunicipioTodos().muni_sq_id + '/' + vitrine.vitr_sq_id] = vitrine;
-
           self.cupoCriaSrv.getDataBaseRef().update(updates).then(() => {
             loader.dismiss();
             self.createAlert("Publicação realizada com sucesso.");

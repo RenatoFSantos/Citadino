@@ -1,4 +1,3 @@
-import { CtdListaMunicipio } from './../../shared/components/ctd-lista-municipio/ctd-lista-municipio';
 import { MappingsService } from './../../providers/service/_mappings-service';
 import { MunicipioService } from './../../providers/service/municipio-service';
 import { MunicipioVO } from './../../model/municipioVO';
@@ -14,7 +13,7 @@ import { CategoriaVO } from './../../model/categoriaVO';
 import { GuiaService } from './../../providers/service/guia-service';
 import { GuiaListaPage } from './../guia-lista/guia-lista';
 import { Component, OnInit } from '@angular/core';
-import { NavController, LoadingController, ToastController, Events, ModalController } from 'ionic-angular';
+import { NavController, LoadingController, ToastController, Events } from 'ionic-angular';
 import { debounceTime } from 'rxjs/operators/debounceTime';
 import { distinctUntilChanged } from 'rxjs/operators/distinctUntilChanged';
 
@@ -43,15 +42,14 @@ export class GuiaPage implements OnInit {
     public loadingCtrl: LoadingController,
     private itemSrv: ItemsService,
     private netService: NetworkService,
-    private glbVar: GlobalVar,
+    private globalVar: GlobalVar,
     private toastCtrl: ToastController,
     public events: Events,
     private muniSrv: MunicipioService,
-    private mapSrv: MappingsService,
-    public mdlCtrl: ModalController) {
+    private mapSrv: MappingsService) {
     this.searchControl = new FormControl();
 
-    this.municipioAnterior = this.glbVar.getMunicipioPadraoGuia().muni_sq_id;
+    this.municipioAnterior = this.globalVar.getMunicipioPadrao().muni_sq_id;
     this.getLoadCategorias();
   }
 
@@ -66,9 +64,9 @@ export class GuiaPage implements OnInit {
   // }
 
   ionViewDidEnter() {
-    if (this.municipioAnterior != this.glbVar.getMunicipioPadraoGuia().muni_sq_id) {
+    if (this.municipioAnterior != this.globalVar.getMunicipioPadrao().muni_sq_id) {
       this.carregaDadosDescritorEmpresa(this.searchControl.value);
-      this.municipioAnterior = this.glbVar.getMunicipioPadraoGuia().muni_sq_id;
+      this.municipioAnterior = this.globalVar.getMunicipioPadrao().muni_sq_id;
     }
   }
 
@@ -126,7 +124,7 @@ export class GuiaPage implements OnInit {
 
       loader.present();
 
-      this.guiaSrv.getDescritorPorNome(self.glbVar.getMunicipioPadraoGuia().muni_sq_id, value).then(snapShot => {
+      this.guiaSrv.getDescritorPorNome(self.globalVar.getMunicipioPadrao().muni_sq_id, value).then(snapShot => {
         if (snapShot != null && snapShot.numChildren() > 0) {
           snapShot.forEach(element => {
             if (element.val() != null && element.val().empresa != null) {
@@ -169,7 +167,7 @@ export class GuiaPage implements OnInit {
 
   private getLoadCategorias() {
 
-    if (this.glbVar.getIsFirebaseConnected()) {
+    if (this.globalVar.getIsFirebaseConnected()) {
 
       if (this.loadCtrl != null) {
         this.loadCtrl.dismiss();
@@ -255,7 +253,7 @@ export class GuiaPage implements OnInit {
 
     if (cate_in_tipo == 'CT' || cate_in_tipo == '' || typeof cate_in_tipo === 'undefined') {
       let empresaskey: any = [];
-      this.guiaSrv.getEmpresaByCategoria(self.glbVar.getMunicipioPadraoGuia().muni_sq_id, categoriaKey).then((snapShot) => {
+      this.guiaSrv.getEmpresaByCategoria(self.globalVar.getMunicipioPadrao().muni_sq_id, categoriaKey).then((snapShot) => {
         snapShot.forEach(element => {
           empresaskey.push(element.key);
         });
@@ -353,7 +351,7 @@ export class GuiaPage implements OnInit {
             this.getLoadCategorias();
           }
 
-          if (self.glbVar.getMunicipios() == null) {
+          if (self.globalVar.getMunicipios() == null) {
             self.carregaMunicipio();
           }
 
@@ -365,7 +363,7 @@ export class GuiaPage implements OnInit {
   private onChangeMunicipioEvent() {
     let self = this;
     this.events.subscribe("guia:municipio", () => {
-      self.municipioAnterior = this.glbVar.getMunicipioPadraoGuia().muni_sq_id;
+      self.municipioAnterior = this.globalVar.getMunicipioPadrao().muni_sq_id;
       self.carregaDadosDescritorEmpresa(self.searchControl.value);
     })
   }
@@ -377,15 +375,10 @@ export class GuiaPage implements OnInit {
       var munickey: any[] = Object.keys(snapEmpr.val());
       munickey.forEach(element => {
         var munic: MunicipioVO = self.mapSrv.getMunicipio(snapEmpr.val()[element]);
-        if (self.glbVar.getMunicipios() == null) {
-          self.glbVar.setMunicipios(munic);
+        if (self.globalVar.getMunicipios() == null) {
+          self.globalVar.setMunicipios(munic);
         }
       });
     });
-  }
-
-  public openCidade() {
-    let modal = this.mdlCtrl.create(CtdListaMunicipio, { tela: 'GUIA', exibirTodos:false });
-    modal.present();
   }
 }

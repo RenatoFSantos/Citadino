@@ -424,7 +424,7 @@ export class MyApp implements OnInit {
 
     this.pages.push({ title: 'Minha Conta', component: ProfilePage, icon: 'contact', typeMenu: enums.ETypeMenu.default });
 
-    this.pages.push({ title: 'Smart Site', component: SmartSiteCrudPage, icon: 'ios-home', typeMenu: enums.ETypeMenu.default });
+    // this.pages.push({ title: 'Smart Site', component: SmartSiteCrudPage, icon: 'ios-home', typeMenu: enums.ETypeMenu.default });
 
 
     if (usuario.usua_sg_perfil == "ADM" || this.glbVar.isBtnAdicionarVitrine() == true) {

@@ -1,28 +1,12 @@
 <ion-header>
-    <ion-navbar color="ctd-navbar">
-        <ion-grid>
-            <ion-row>
-                <ion-col col-2>
-                    <button ion-button menuToggle left>
-                        <ion-icon name="menu"></ion-icon>
-                    </button>
-                </ion-col>
-                <ion-col col-7 class="municipioSelecionado">
-                    {{this.glbVar.getMunicipioPadraoVitrine().muni_nm_municipio}}
-                </ion-col>
-                <ion-col col-3 text-right>
-                    <ion-icon (click)="openCidade()" class="btnGeolocalizacao" name="md-search"></ion-icon>
-                </ion-col>
-            </ion-row>
-        </ion-grid>
-    </ion-navbar>
+    <ctd-header-municipio tela="VITRINE"></ctd-header-municipio>
 </ion-header>
 <ion-content>
     <div *ngIf="loading">
         <img src="assets/img/ring.gif" style="display:block; margin:auto" />
     </div>
     <ion-card class="ctd-card" *ngFor="let item of vitrines">
-
+                             
         <div *ngIf="item.tian_sq_id != 'TPA-DESCONTO'">
             <ion-item (click)="openPage(item)">
                 <ion-avatar item-left *ngIf="item.anun_tx_urlavatar != ''">
@@ -48,8 +32,7 @@
             <ion-row>
                 <ion-col width-100 class="ctd-btn-vitrine">
                     <ctd-buttons [urlSlide]=(item.anun_tx_urlslide1) [smartSite]=(item.anun_in_smartsite) [empresaKey]=(item.empr_sq_id) [vitrine]=(item)
-                        [vitrineSalva]=(item.anun_nr_salvos) [usuarioVitrine]=[null] [isBtnNrVisita]=true [isBtnNrCurtir]=true
-                        [isBtnChutarCurti]=true></ctd-buttons>
+                        [vitrineSalva]=(item.anun_nr_salvos) [usuarioVitrine]=[null] [isBtnNrVisita]=true [isBtnNrCurtir]=true></ctd-buttons>
                 </ion-col>
             </ion-row>
         </div>
