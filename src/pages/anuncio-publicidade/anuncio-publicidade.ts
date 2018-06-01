@@ -1,3 +1,4 @@
+import { Promise } from 'firebase/app';
 import { TokenDeviceService } from './../../providers/service/token-device';
 import { NotificacaoService } from './../../providers/service/notificacao-service';
 import { MunicipioVO } from './../../model/municipioVO';
@@ -78,7 +79,7 @@ export class AnuncioPublicidadePage {
     let self = this;
     if (usuario.empresa != null) {
       this.emprSrv.getMunicipioEmpresaKey(usuario.empresa.empr_sq_id).then((snap) => {
-        var emprKey:any = Object.keys(snap.val());
+        var emprKey: any = Object.keys(snap.val());
         self.muniEmpr = self.mapSrv.getMunicipio(snap.val()[emprKey]);
       })
     }
@@ -254,65 +255,50 @@ export class AnuncioPublicidadePage {
 
         var dtAtual = CtdFuncoes.convertDateToStr(new Date(), enums.DateFormat.enUS);
         var newOrder = String(new Date().getTime());
-       
+
         self.vitrineSrv.getVitrineByKey(vitrine.muni_sq_id, vitrine.vitr_sq_id)
           .then((snapVitrine) => {
-            let updates = {};
 
+            let updates = {};
             vitrine.vitr_dt_agendada = dtAtual;
             vitrine.vitr_sq_ordem = newOrder;
 
             if (snapVitrine.val() != null) {
 
-              updates['/minhaspublicacoes/' + self.usuario.usua_sq_id + '/' + vitrine.vitr_sq_id + '/vitr_dt_agendada'] = dtAtual;
-              updates['/minhaspublicacoes/' + self.usuario.usua_sq_id + '/' + vitrine.vitr_sq_id + '/vitr_sq_ordem'] = newOrder;
+              self.updatePublicar(vitrine, true)
+                .then((updates) => {
+                  self.minhasPublicSrv.getDataBaseRef().update(updates);
 
-              updates['/vitrine/' + vitrine.muni_sq_id+ '/' + vitrine.vitr_sq_id + '/vitr_dt_agendada'] = dtAtual;
-              updates['/vitrine/' + vitrine.muni_sq_id + '/' + vitrine.vitr_sq_id + '/vitr_sq_ordem'] = newOrder;
+                  loader.dismiss();
+                  self.createAlert("Publicação realizada com sucesso.");
 
-              self.minhasPublicSrv.getDataBaseRef().update(updates);
-
-              // var msg:string = "";
-              // msg = '<h5>'
-              // msg = msg + vitrine.empr_nm_fantasia + ' adicionou um novo item na vitrine.<br><br>' 
-              // msg = msg  + '</h5>'
-
-  
-              // var dadosNotif = {
-              //   titulo: 'Não deixe de conferir !!!',
-              //   descricao: msg
-              // }              
-
-              // self.enviarNotificacao("", dadosNotif);
+                });
 
             }
             else {
 
-              updates['/minhaspublicacoes/' + self.usuario.usua_sq_id + '/' + vitrine.vitr_sq_id + '/vitr_dt_agendada'] = dtAtual;
-              updates['/minhaspublicacoes/' + self.usuario.usua_sq_id + '/' + vitrine.vitr_sq_id + '/vitr_sq_ordem'] = newOrder;
-              updates['/vitrine/' + vitrine.muni_sq_id + '/' + vitrine.vitr_sq_id] = vitrine;
+              self.updatePublicar(vitrine, false)
+                .then((updates) => {
+                  self.minhasPublicSrv.getDataBaseRef().update(updates);
 
-              self.minhasPublicSrv.getDataBaseRef().update(updates);
+                  loader.dismiss();
+                  self.createAlert("Publicação realizada com sucesso.");
 
-              var msg:string = "";
-              msg = '<h5>'
-              msg = msg + vitrine.empr_nm_fantasia + ' adicionou um novo item na vitrine.<br><br>' 
-              msg = msg  + '</h5>'
+                  var msg: string = "";
+                  msg = '<h5>'
+                  msg = msg + vitrine.empr_nm_fantasia + ' adicionou um novo item na vitrine.<br><br>'
+                  msg = msg + '</h5>'
 
-  
-              var dadosNotif = {
-                titulo: 'Não deixe de conferir !!!',
-                descricao: msg
-              }         
 
-              self.enviarNotificacao("", dadosNotif);
+                  var dadosNotif = {
+                    titulo: 'Não deixe de conferir !!!',
+                    descricao: msg
+                  }
+
+                  self.enviarNotificacao("", dadosNotif);
+
+                });
             }
-
-            // self.vitrines = this.itemsService.orderBy(self.vitrines, ['vitr_sq_ordem'], ['desc'])
-
-            loader.dismiss();
-            self.createAlert("Publicação realizada com sucesso.");
-            // self.navCtrl.pop();
 
           })
           .catch((err) => {
@@ -321,6 +307,48 @@ export class AnuncioPublicidadePage {
           });
       }
     });
+  }
+
+  private updatePublicar = function (vitrine: VitrineVO, isRepublicar: Boolean) {
+    let self = this;
+    let updates = {};
+
+    var promise = new Promise(function (resolve, reject) {
+
+      updates['/minhaspublicacoes/' + self.usuario.usua_sq_id + '/' + vitrine.vitr_sq_id + '/vitr_dt_agendada'] = vitrine.vitr_dt_agendada;
+      updates['/minhaspublicacoes/' + self.usuario.usua_sq_id + '/' + vitrine.vitr_sq_id + '/vitr_sq_ordem'] = vitrine.vitr_sq_ordem;
+
+      self.emprSrv.getEmpresaPorKey(vitrine.empr_sq_id)
+        .then((snapEmpresa) => {
+          if (snapEmpresa.val() != null && snapEmpresa.val().municipioanuncio != null) {
+            var municipiosKey: String[] = Object.keys(snapEmpresa.val().municipioanuncio);
+
+            var count = 0;
+            var totalMunic = municipiosKey.length;
+
+            municipiosKey.forEach(element => {
+              count++;
+
+              if (isRepublicar == false) {
+                updates['/vitrine/' + element + '/' + vitrine.vitr_sq_id] = vitrine;
+              }
+              else {
+                updates['/vitrine/' + element + '/' + vitrine.vitr_sq_id + '/vitr_dt_agendada'] = vitrine.vitr_dt_agendada;
+                updates['/vitrine/' + element + '/' + vitrine.vitr_sq_id + '/vitr_sq_ordem'] = vitrine.vitr_sq_ordem;
+              }
+
+              if (totalMunic == count) {
+                resolve(updates);
+              }
+            });
+          }
+        })
+        .catch((error) => {
+          reject(error)
+        });
+    });
+
+    return promise;
   }
 
   public excluirVitrineEvent() {
@@ -431,7 +459,7 @@ export class AnuncioPublicidadePage {
     return promise;
   }
 
-   private carregaListaImagens = function (self: any, vitrine: VitrineVO) {
+  private carregaListaImagens = function (self: any, vitrine: VitrineVO) {
     let promises: any = [];
 
     let slides: SlideVO[] = self.retornaLisSlide(vitrine);
@@ -457,10 +485,10 @@ export class AnuncioPublicidadePage {
 
     self.pathImagens = [];
 
-    var promAll = Promise.all(promises).then((values) => {
-    })
-      .catch(err => {
-        throw new Error(err);
+    var promAll = Promise.all(promises)
+      .then((values) => { })
+      .catch((error) => {
+        throw new Error(error.message);
       });
 
     return promAll;

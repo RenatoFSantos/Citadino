@@ -27,6 +27,10 @@ export class VitrineService {
     return this.fbService.getStorage();
   }
 
+  public getDataBaseRef() {
+    return this.fbService.getDataBase().ref();
+  }
+
   public getVitrineRefTotal(seqMunicipio: string) {
     return this.vitrineRef.child(seqMunicipio).orderByChild('vitr_sq_ordem').once('value')
   }
@@ -63,24 +67,21 @@ export class VitrineService {
     return this.vitrineRef.child(municipioKey).child(vitrineKey).once('value');
   }
 
-  public atualizarNrVisita(vitrine: VitrineVO) {
-    var nrVisita = this.vitrineRef.child(vitrine.muni_sq_id).child(vitrine.vitr_sq_id).child("anun_nr_visitas");
 
-    nrVisita.transaction(function (currentRank) {
-      return currentRank + 1;
-    });
+  public atualizarNrCurtida(vitrine: VitrineVO, nrCurtida) {
+    this.vitrineRef.child(vitrine.muni_sq_id).child(vitrine.vitr_sq_id).child("anun_nr_visitas").set(nrCurtida);
   }
 
   public curtirVitrine(vitrine: VitrineVO) {
     return this.vitrineRef.child(vitrine.muni_sq_id).child(vitrine.vitr_sq_id).child("anun_nr_curtidas");
   }
 
-  public baixarCupomTransacion(municipioKey:string, vitrineKey:String) {
+  public baixarCupomTransacion(municipioKey: string, vitrineKey: String) {
     return this.vitrineRef.child(municipioKey).child(vitrineKey).child("cupo_nr_qtdedisponivel");
   }
 
   public baixarCupom() {
     return this.cupomCriadoRef.child("3rWFZa3v3KTWcks1DSlZJj476Bo2/-L39lWkpyuoBLP_w94j4/cupo_nr_qtdedisponivel");
- 
+
   }
 }

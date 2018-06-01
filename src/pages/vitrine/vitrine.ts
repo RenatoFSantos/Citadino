@@ -80,8 +80,8 @@ export class VitrinePage implements OnInit {
     private cupomCriadoSrv: CupomCriadoService,
     private sorteioSrv: SorteioCriadoService) {
 
-    this.municipioAnterior = this.glbVar.getMunicipioPadrao().muni_sq_id;
-    this.loadVitrines();
+    // this.municipioAnterior = this.glbVar.getMunicipioPadrao().muni_sq_id;
+    // this.loadVitrines();
   }
 
   loadVitrines() {
@@ -111,6 +111,7 @@ export class VitrinePage implements OnInit {
               self.rowCount = snapShot.numChildren();
               this.getVitrines().then(() => {
                 this.loadCtrl.dismiss();
+                this.municipioAnterior = self.municipioAnterior = self.glbVar.getMunicipioPadrao().muni_sq_id;
               });
             } else {
               this.createAlert("Não existe publicação para essa cidade.");
@@ -138,14 +139,12 @@ export class VitrinePage implements OnInit {
     this.bancoDadosOnlineEvent();
     this.atualizarNrVisitaEvent();
     this.curtirVitrineEvent();
-    this.chutarCurtirEvent();
     this.onChangeMunicipioEvent();
   }
 
   ionViewDidEnter() {
     if (this.municipioAnterior != this.glbVar.getMunicipioPadrao().muni_sq_id) {
       this.atualizaDadosVitrine();
-      this.municipioAnterior = this.glbVar.getMunicipioPadrao().muni_sq_id;
     }
   }
 
@@ -257,7 +256,7 @@ export class VitrinePage implements OnInit {
 
 
   openPage(vitrine: VitrineVO) {
-    this.vitrineSrv.atualizarNrVisita(vitrine);
+    this.atualizarNrVisita(vitrine);
     if (vitrine.anun_tx_urlslide1 != null && vitrine.anun_tx_urlslide1 != "") {
       this.openSlideNoticia(vitrine);
     }
@@ -534,17 +533,68 @@ export class VitrinePage implements OnInit {
   public atualizarNrVisitaEvent() {
     let self = this;
     this.events.subscribe('atualizarNrVisita:true', (vitrine: VitrineVO) => {
-      this.vitrineSrv.atualizarNrVisita(vitrine);
+      var visualizarRef = self.minhaPubSrv.visitarPublicacao(vitrine);
+      self.visualizarTransaction(visualizarRef, vitrine);
     });
   }
 
+  public atualizarNrVisita(vitrine:VitrineVO) {
+    let self = this;   
+    var visualizarRef = self.minhaPubSrv.visitarPublicacao(vitrine);
+    self.visualizarTransaction(visualizarRef, vitrine);   
+  }
 
-  public chutarCurtirEvent() {
-    var self = this;
-    this.events.subscribe('chutarCurtir:true', (vitrine: VitrineVO) => {
-      var nrVisitaRef = self.vitrineSrv.curtirVitrine(vitrine);
-      self.curtirTransaction(nrVisitaRef, vitrine);
+  private visualizarTransaction(visualizarRef: any, vitrine: VitrineVO) {
+    let self = this;
+
+    visualizarRef.transaction(function (currentRank) {
+      return currentRank + 1;
+    }, function (error, committed, snapshot) {
+      if (error) {
+        throw new Error(error);
+      } else if (!committed) {
+        throw new Error("Não foi possível visualizar o anúncio");
+      } else {
+
+        self.atualizarNrVisitas(vitrine, snapshot.val())
+          .then((updates) => {
+            self.vitrineSrv.getDataBaseRef().update(updates);
+          });
+      }
     });
+  }
+
+  private atualizarNrVisitas = function (vitrine: VitrineVO, nrVisitas: any) {
+    var self = this;
+    let updates = {};
+
+    var promise = new Promise(function (resolve, reject) {
+
+      self.emprSrv.getEmpresaPorKey(vitrine.empr_sq_id)
+        .then((snapEmpresa) => {
+          if (snapEmpresa.val() != null && snapEmpresa.val().municipioanuncio != null) {
+            var municipiosKey: String[] = Object.keys(snapEmpresa.val().municipioanuncio);
+
+            var count = 0;
+            var totalMunic = municipiosKey.length;
+
+            municipiosKey.forEach(element => {
+              count++;
+
+              updates['/vitrine/' + element + '/' + vitrine.vitr_sq_id + '/anun_nr_visitas'] = nrVisitas;
+
+              if (totalMunic == count) {
+                resolve(updates);
+              }
+            });
+          }
+        })
+        .catch((error) => {
+          reject(error);
+        });
+    });
+
+    return promise;
   }
 
   public curtirVitrineEvent() {
@@ -557,8 +607,8 @@ export class VitrinePage implements OnInit {
           .then((result) => {
             if (result.val() == null) {
               self.vtrCut.salvar(vitrine.vitr_sq_id, usuario.usua_sq_id, true).then(() => {
-                var nrVisitaRef = self.vitrineSrv.curtirVitrine(vitrine);
-                self.curtirTransaction(nrVisitaRef, vitrine);
+                var nrCurtidaRef = self.minhaPubSrv.curtirPublicacao(vitrine);
+                self.curtirTransaction(nrCurtidaRef, vitrine);
               });
             }
           });
@@ -579,7 +629,13 @@ export class VitrinePage implements OnInit {
       } else if (!committed) {
         throw new Error("Não foi possível curtir o anúncio");
       } else {
-        self.sorteioCurtir(vitrine);
+
+        self.atualizarNrCurtida(vitrine, snapshot.val())
+          .then((updates) => {
+            self.vitrineSrv.getDataBaseRef().update(updates);
+            self.sorteioCurtir(vitrine);
+          });
+
       }
     });
   }
@@ -627,6 +683,39 @@ export class VitrinePage implements OnInit {
       .catch((error) => {
         throw new Error(error);
       });
+  }
+
+  private atualizarNrCurtida = function (vitrine: VitrineVO, nrCurtir: any) {
+    var self = this;
+    let updates = {};
+
+    var promise = new Promise(function (resolve, reject) {
+
+      self.emprSrv.getEmpresaPorKey(vitrine.empr_sq_id)
+        .then((snapEmpresa) => {
+          if (snapEmpresa.val() != null && snapEmpresa.val().municipioanuncio != null) {
+            var municipiosKey: String[] = Object.keys(snapEmpresa.val().municipioanuncio);
+
+            var count = 0;
+            var totalMunic = municipiosKey.length;
+
+            municipiosKey.forEach(element => {
+              count++;
+
+              updates['/vitrine/' + element + '/' + vitrine.vitr_sq_id + '/anun_nr_curtidas'] = nrCurtir;
+
+              if (totalMunic == count) {
+                resolve(updates);
+              }
+            });
+          }
+        })
+        .catch((error) => {
+          reject(error);
+        });
+    });
+
+    return promise;
   }
 
   private statusVitrineMarcada = function (self: any, vitrine: VitrineVO, usuario: UsuarioVO) {
@@ -679,7 +768,6 @@ export class VitrinePage implements OnInit {
     let self = this;
 
     this.events.subscribe("vitrine:onChangeMunicipio", () => {
-      self.municipioAnterior = this.glbVar.getMunicipioPadrao().muni_sq_id;
       self.atualizaDadosVitrine();
     });
   }
@@ -687,11 +775,14 @@ export class VitrinePage implements OnInit {
   private disconectRealTime() {
 
     let self = this;
-    this.vitrineSrv.getVitrineRef().child(self.glbVar.getMunicipioPadrao().muni_sq_id).off('child_added');
 
-    this.vitrineSrv.getVitrineRef().child(self.glbVar.getMunicipioPadrao().muni_sq_id).off('child_removed');
+    if (self.municipioAnterior != "") {
+      self.vitrineSrv.getVitrineRef().child(self.municipioAnterior).off('child_added');
 
-    this.vitrineSrv.getVitrineRef().child(self.glbVar.getMunicipioPadrao().muni_sq_id).off('child_changed');
+      self.vitrineSrv.getVitrineRef().child(self.municipioAnterior).off('child_removed');
+
+      self.vitrineSrv.getVitrineRef().child(self.municipioAnterior).off('child_changed');
+    }
   }
 
   private connectRealTime() {
